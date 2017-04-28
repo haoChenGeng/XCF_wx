@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no">
+	<meta name="Keywords" content="小牛新财富" />
+	<meta name="Description" content="小牛新财富" />
+	<meta name="robots" content="index,follow,noodp,noydir" />
+	<meta name="viewport" content="width=640px, maximum-scale=1.0, user-scalable=no, target-densitydpi=320" />
+	
+    <head>
+        <link rel="stylesheet" href="/data/css/style.css" />
+        <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+        <title>在线咨询</title>
+    </head>
+    <body>
+<!--        <header class="header_password">
+            <span>在线咨询</span>
+        </header>-->
+        <section class="content online_con">
+            <div class="online_title">
+                <span>客服热线：4006695666</span>
+                <a href="tel:4006695666">&nbsp;</a>
+            </div>
+            <ul class="online_ul">
+                <li>
+                    <a href="#">微信移动端需要下载安装吗？</a>
+                </li>
+                <dd>您好！不需要的。</dd>
+                <li>
+                    <a href="#">如何联系客服专员？</a>
+                </li>
+                <dd>您好！工作时间内拨打微信移动端客服热线：400-669-5666（服务时间周一至周五 9：00-20：30，周六周日：9:00-17:00）。</dd>
+                <li>
+                    <a href="#">如果用户收不到验证码怎么办？</a>
+                </li>
+                <dd>A：您好！可以点击重新发送验证短信。若排除信号网络等问题后屡次尝试仍接收不到验证短信，则可能则可能有以下三种情况：<br />
+                    1.建议客户与银行核实预留手机号码是否正确；<br />
+                    2.此前设置过拒收此类短信，客户可自行发送短信解除，解除方法：用户发送1111至1065712079及106571207931662；<br />
+                    3. 验证码短信被手机安全软件拦截。</dd>
+                <li>
+                    <a href="#">为什么注册时显示验证码出错？</a>
+                </li>
+                <dd>您好！验证码出错是因为验证码为一次性使用后失效，所以客户短时间内反复点击获取验证码就导致同时收到多条验证码短信，却使用了旧的已经失效的验证码。请大家以最后一次的验证码为准，如果短时间内点击获取超过三次，则需要半个小时后再重新尝试。</dd>
+                <li>
+                    <a href="#">为什么获取验证码点击“重新获取”没有反应？</a>
+                </li>
+                <dd>您好！同一个号码30秒内只能获取一条，1分钟内不能超过2条，30分钟内不能超过3条。</dd>  
+                <li>
+                    <a href="#">用户用多个手机号注册可以吗？</a>
+                </li>
+                <dd>您好！后台只以一个身份证号码登记为准。</dd>  				
+            </ul>
+        </section>
+        <script type="text/javascript">
+            $(function () {
+                $('.online_ul li').click(function () {
+                    if ($(this).hasClass('cur')) {
+                        $(this).removeClass('cur').next('dd').slideUp();
+                        return false;
+                    } else {
+                        $(this).addClass('cur').next('dd').slideDown().siblings('dd').slideUp();
+                        $(this).siblings('li').removeClass();
+                        return false;
+                    }
+                });
+                $('.online_ul li a').focus(function () {
+                    this.blur();
+                });
+            });
+        </script>
+    </body>
+</html>

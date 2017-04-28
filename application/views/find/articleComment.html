@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <?php echo file_get_contents('../Public/head.html'); ?> 
+        <title>写评论</title>
+    </head>
+    <body>
+<!--    <header class="header_password">
+            <a href="javascript:history.go(-1)"  class="fanhui">&nbsp;</a>
+            <span>写评论</span>
+        </header>-->
+        <form action="{:U('Find/articleComment')}" method="post" name="form" id="form">
+            <section class="content fing_par_review">
+                <textarea name="text" cols="" rows="" maxlength="100" placeholder="评论限制100字内...."></textarea>
+                <div class="btn">
+                    <a href="javascript:history.go(-1)" class="btn01">取消</a>
+                    <input type="submit" value="发送" class="btn02"/>
+                </div>
+            </section>
+            <input type="hidden" name="url" value="{$Think.get.url}" />
+            <input type="hidden" name="title" value="{$Think.get.title}" />
+        </form>    
+    </body>
+</html>
