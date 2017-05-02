@@ -1,0 +1,94 @@
+<?php
+
+if (!defined('BASEPATH')){
+	exit('No direct script access allowed');
+}
+
+if (!class_exists('Math_BigInteger')){
+	include 'data/encrpty/BigInteger.php';
+}
+if (!class_exists('Crypt_Hash')){
+	include 'data/encrpty/Hash.php';
+}
+if (!class_exists('Crypt_Rijndael')){
+	include 'data/encrpty/Rijndael.php';
+}
+if (!class_exists('Crypt_AES')){
+	include 'data/encrpty/AES.php';
+}
+
+class Fund_interface
+{
+	protected $CI;
+	private $fundUrl;
+	private $AESKey;
+	function __construct()
+	{
+		$this->CI =& get_instance();
+		$this->fundUrl = $this->CI->config->item('fundUrl');
+		$this->CI->load->database();
+		$this->CI->load->helper("comfunction");
+		$this->AESKey = $this->CI->db->select('AESkey')->where(array('platformName'=>'Fund'))->get('communctionkey')->row_array()['AESkey'];
+	}
+	
+	private function getCommunctionKey(){
+		return $this->CI->db->where(array('platformName'=>'Fund'))->get('communctionkey')->row_array()['AESkey'];
+	}
+	
+	private function getSubmitData($inputData){
+		$AES = new Crypt_AES(CRYPT_AES_MODE_ECB);
+		$AES->setKey($this->AESKey);
+		$submitData = base64_encode($AES->encrypt(json_encode($inputData)));
+var_dump($AES->decrypt(base64_decode($submitData)));
+		return array('data'=>$submitData);
+	}
+	
+	private function getReturnData($inputData){
+		$AES = new Crypt_AES(CRYPT_AES_MODE_ECB);
+		$AES->setKey($this->AESKey);
+		return json_decode($AES->decrypt(base64_decode($inputData)));
+	}
+	
+	function RenewFundAESKey($newKey) {
+		$public_key = $this->CI->config->item('fund_RSA_privatekey'); //获取RSA_加密公钥
+		if (!class_exists('Math_BigInteger')){
+			include 'data/encrpty/BigInteger.php';
+		}
+		if (!class_exists('Crypt_Hash')){
+			include 'data/encrpty/Hash.php';
+		}
+		if (!class_exists('Crypt_RSA')){
+			include 'data/encrpty/RSA.php';
+		}
+		// 加密类
+		$RSA = new Crypt_RSA();
+		$RSA->setEncryptionMode(CRYPT_RSA_ENCRYPTION_PKCS1);
+		$RSA->loadKey($public_key);
+		$AESKey = array('encryptkey'=>base64_encode($RSA->encrypt($newKey)));
+		if (!empty($AESKey)){
+			$res = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface/renewCryptKey',$AESKey);
+			var_dump($res);
+			if ($res == 'SUCESS'){
+				$XCFkey = $this->CI->db->where(array('platformName'=>'Fund'))->get('communctionkey')->row_array();
+				if(empty($XCFkey)){
+					$flag = $this->CI->db->set(array('platformName'=>'Fund','AESkey'=>$newKey))->insert('communctionkey');
+				}else{
+					$flag = $this->CI->db->set(array('AESkey'=>$newKey))->where(array('platformName'=>'Fund'))->update('communctionkey');
+				}
+				if ($flag){
+					return '重设基金后台通信秘钥成功';
+				}
+			}
+			return '重设基金后台通信秘钥失败，请重试';
+		}else{
+			return '基金后台通信秘钥不能为空，请重试';
+		}
+	}
+
+	function Trans_applied($startDate, $endDate){
+// var_dump($_SESSION['customer_name']);
+		$communctionData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'TransQuery','startDate'=>$startDate,'endDate'=>$endDate));
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$communctionData);
+		return ($this->getReturnData($returnData));
+	}
+}
