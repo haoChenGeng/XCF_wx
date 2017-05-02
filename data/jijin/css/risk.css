@@ -1,0 +1,161 @@
+body,fieldset,input {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	border-radius: 5px;
+	background: #eee;
+    font-family: Helvetica,Arial,Tahoma,sans-serif;
+}
+
+a {
+	text-decoration: none;
+}
+
+ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;	
+}
+
+input[type="radio"] {
+	float: left;
+	margin-right: 10px;
+	height: 21px;
+}
+
+@font-face {font-family: "iconfont-nav";
+  src:url('../iconfont/iconfont-nav.ttf?t=1461052530') format('truetype'); /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  
+}
+
+.iconfont {
+  font-family:"iconfont-nav" !important;
+  font-size:12px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.text-center {
+	text-align: center;
+}
+
+/* head */
+.m-item-wrap {
+	margin: 20px 0;
+}
+
+.m-item-5-wrap {
+    background-color: #f5bc44;
+    margin-top: 0;
+    border: none;
+    padding: 10px 0;
+    height: 64px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.m-item-5 {
+    width: 90%;
+    margin: 0 auto;
+    padding: 5px 0;
+    overflow: hidden;
+    color: #fff;
+    height: 44px;    
+}
+
+.m-item-5 > h3 {
+    line-height: 34px;
+    width: 100%;
+    font-size: 26px;
+    margin: 0 auto;
+}
+
+
+/* body */
+.risk-lab {
+	display: block;
+	line-height: 20px;
+}
+
+.ul-title {
+	padding: .5em 15px;
+	font-size: 14px;
+	color: white;
+	background: #f5bc44;
+	font-weight: bold;
+}
+
+.li-control {
+	margin: 10px 5px;
+	border: 1px solid #dcdcdc;
+	border-radius: 5px;
+}
+
+.li-radio {
+	margin: 5px 0;
+	padding: 5px 3px 5px 20px;
+	border-top: 1px solid #dcdcdc;
+}
+
+.li-radio:first-child {
+	border: none;
+}
+
+.risk-btn {
+	width: 70%;
+    height: 45px;
+	display: block;
+	margin: 15px auto;
+    background: #f5bc44;
+    color: #fff;
+    font-size: 20px;
+    border-radius: 5px;
+    border: 0;
+    text-align: center;
+	line-height: 33px;
+}
+
+.risk-btn-submit {
+	float: left;
+	width: 45%;
+	height: 45px;
+	display: block;
+	margin: 15px 2%;
+    background: #f5bc44;
+    color: #fff;
+    font-size: 20px;
+    border-radius: 5px;
+    border: 0;
+    text-align: center;
+	line-height: 33px;
+}
+
+.risk-back {
+	float: right;
+	width: 45%;
+	height: 45px;
+	display: block;
+	margin: 15px 2%;
+    background: #f5bc44;
+    color: #fff;
+    font-size: 20px;
+    border-radius: 5px;
+    border: 0;
+    text-align: center;
+	line-height: 33px;
+}
+
+.risk-result {
+	line-height: 45px;
+}
+
+.risk-result-icon {
+	display: block;
+	margin: 0 auto;
+	font-size: 50px;
+	color: #f5bc44;
+	text-align: center;
+}
