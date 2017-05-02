@@ -399,7 +399,7 @@ class User extends MY_Controller {
 		}
 		$select = substr($select,0,-1);
 		$arr = array('select'=>$select);
-		$url = $this->config->item('fund_url').'/jijin/InfoTransmit/fundInfo';
+		$url = '/jijin/InfoTransmit/fundInfo';
 		$res = comm_curl($url, $arr);
 		$funddata = json_decode($res,true);
 		if (is_array($funddata) && !empty($funddata)){

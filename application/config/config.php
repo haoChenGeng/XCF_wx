@@ -519,11 +519,17 @@ $config['JZ_AES_key'] = 'b5e0a60bc2f662a189eeb270fd585b60';                     
 $config['RSA_publickey'] = APPPATH.'config/rsa_public_key.pem';                         //储存RSA 公钥的文件路径
 $config['RSA_privatekey'] = APPPATH.'config/rsa_private_key.pem';                       //储存RSA 私钥的文件路径
 
+$config['fund_RSA_privatekey'] =  str_replace(array("\r","\n"), '',						//访问公募基金的RSA工钥
+'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfgdfpTRKmbVMNkkdO8PgNa/kD
+KrlxS5DEZ3gYvVo+pw7zxslb+AoO6K1WfwEDdJDzxrRXHSVEOFM7PgXnu2jkw26w
+xQfP9MI5T9r21q6oN0uHJc7X0336UfwYkoB/wb4Z9FYvJEr7lLdZa8DoTveMd4/T
+OFHhS33SmX/tPQpGCwIDAQAB');
+
 $config['unifyEntrance'] = '/Xnxcfindex/WK8YGc3Yi2oP3/';
 
 //定义需要跳转的网站
 // $config['member_url'] ='http://xcf.fortiddns.com:50280';                    //会员专区
-$config['fund_url'] = '';                     //基金系统
+$config['fundUrl'] = 'http://10.10.78.107';                     //基金系统
 
 date_default_timezone_set('Asia/ShangHai');
 $config['time_zone'] = date_default_timezone_get();

@@ -115,7 +115,7 @@ class Jz_fund extends MY_Controller
 	private function getHistoryApply($startDate = '',$endDate = '', $type = 0) {
 		//调用接口
 // $startDate = '20160103';
-		$res = $this->jz_interface->Trans_applied($_SESSION['JZ_account'], $startDate, $endDate);
+		$res = $this->fund_interface->Trans_applied($_SESSION['JZ_account'], $startDate, $endDate);
 		file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['JZ_account'].'进行历史交易申请查询('.$startDate.'-'.$endDate.')'.serialize($res)."\r\n\r\n",FILE_APPEND);
 		if ($type == 1){
 			$transConfirmed = $this->jz_interface->Trans_confirmed($_SESSION['JZ_account'], $startDate, $endDate);

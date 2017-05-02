@@ -23,7 +23,7 @@ class Fund_access extends MY_Controller
     	if (!isset($_SESSION['customer_id']))                          //用户未登录，用户作为访客，直接返回基金的访客首页的url
     	{
     		$arr['code']='m0';
-    		$arr['url']= $this->config->item('fund_url') . "/jijin/Jz_account/entrance";
+    		$arr['url']= "/jijin/Jz_account/entrance";
     		echo json_encode($arr);
     		exit;
     	}
@@ -60,7 +60,7 @@ class Fund_access extends MY_Controller
     				$arr['apply_code'] = $this->db->insert_id ();
 //     				$arr['url']= 'http://localhost:8080/client/Fund_access/access_auth';    //测试用
     				if ($post['access_type']<150)
-    					$arr['url']= $this->config->item('fund_url').'/jijin/Jz_account/entrance';
+    					$arr['url']= '/jijin/Jz_account/entrance';
     				else
     					$arr['url']= 'http://localhost/jijin/Jz_account/entrance';
     			}
@@ -178,7 +178,7 @@ class Fund_access extends MY_Controller
 //     	switch ($type)
 //     	{
 //     		case $type < 150:
-//     			$fund_url = $this->config->item('fund_url') . "/jijin/Jz_account/entrance" ;
+//     			$fund_url = . "/jijin/Jz_account/entrance" ;
 //     			break;
 //     		case $type >= 150:
 //     			$fund_url = "http://localhost/jijin/Jz_account/entrance";
