@@ -392,14 +392,15 @@ class User extends MY_Controller {
 	
 //获取最新的基金列表
 	private function getfunds(){
-		$select = '';
+ 		$select = '';
 		$arr = array('fundcode','tano','fundname','fundtype','nav','growthrate','fundincomeunit','shareclasses','risklevel','status');
 		foreach ($arr as $val){
 			$select .= $val.',';
 		}
 		$select = substr($select,0,-1);
-		$arr = array('select'=>$select);
-		$url = '/jijin/InfoTransmit/fundInfo';
+		$arr = array('select'=>$select); 
+		$url = $this->config->item('fundUrl').'/jijin/InfoTransmit/fundInfo';
+		$arr = array();
 		$res = comm_curl($url, $arr);
 		$funddata = json_decode($res,true);
 		if (is_array($funddata) && !empty($funddata)){

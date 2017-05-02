@@ -39,14 +39,13 @@ class Fund_interface
 		$AES = new Crypt_AES(CRYPT_AES_MODE_ECB);
 		$AES->setKey($this->AESKey);
 		$submitData = base64_encode($AES->encrypt(json_encode($inputData)));
-var_dump($AES->decrypt(base64_decode($submitData)));
 		return array('data'=>$submitData);
 	}
 	
 	private function getReturnData($inputData){
 		$AES = new Crypt_AES(CRYPT_AES_MODE_ECB);
 		$AES->setKey($this->AESKey);
-		return json_decode($AES->decrypt(base64_decode($inputData)));
+		return json_decode($AES->decrypt(base64_decode($inputData)),true);
 	}
 	
 	function RenewFundAESKey($newKey) {
@@ -91,4 +90,6 @@ var_dump($AES->decrypt(base64_decode($submitData)));
 		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$communctionData);
 		return ($this->getReturnData($returnData));
 	}
+	
+	function 
 }

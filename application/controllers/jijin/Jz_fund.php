@@ -11,7 +11,7 @@ class Jz_fund extends MY_Controller
         parent::__construct();
         $this->load->database();
         $this->load->helper(array("comfunction"));   
-        $this->load->library(array('Logincontroller'));
+        $this->load->library(array('Fund_interface','Logincontroller'));
         $this->logfile_suffix = '('.date('Y-m',time()).').txt';
     }
     
@@ -70,7 +70,7 @@ class Jz_fund extends MY_Controller
 		//调用接口
 		$fund_list = array();
 		if ($this->getAllFundInfo()){
-			$res = $this->db->get('jz_fundlist')->result_array();
+			$res = $this->db->get('fundlist')->result_array();
 			$this->load->config('jz_dict');
 			$i = 0;
 			foreach ($res as $key => $val)
@@ -115,10 +115,10 @@ class Jz_fund extends MY_Controller
 	private function getHistoryApply($startDate = '',$endDate = '', $type = 0) {
 		//调用接口
 // $startDate = '20160103';
-		$res = $this->fund_interface->Trans_applied($_SESSION['JZ_account'], $startDate, $endDate);
-		file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['JZ_account'].'进行历史交易申请查询('.$startDate.'-'.$endDate.')'.serialize($res)."\r\n\r\n",FILE_APPEND);
-		if ($type == 1){
-			$transConfirmed = $this->jz_interface->Trans_confirmed($_SESSION['JZ_account'], $startDate, $endDate);
+		$fund_list = $this->fund_interface->Trans_applied($_SESSION['JZ_account'], $startDate, $endDate);
+		file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['JZ_account'].'进行历史交易申请查询('.$startDate.'-'.$endDate.')'.serialize($fund_list)."\r\n\r\n",FILE_APPEND);
+/* 		if ($type == 1){
+			$transConfirmed = $this->fund_interface->Trans_confirmed($_SESSION['JZ_account'], $startDate, $endDate);
 			file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['JZ_account'].'进行历史交易确认查询('. $startDate.' - '.$endDate.')，返回信息：'.serialize($ConfirmedTrans)."\r\n\r\n",FILE_APPEND);
 			if (isset($transConfirmed['code']) && $transConfirmed['code'] == '0000' && is_array($transConfirmed['data'])){
 				$ConfirmedTrans = array();
@@ -131,7 +131,7 @@ class Jz_fund extends MY_Controller
 					}
 				}
 			}
-		}
+		} 
 		if (isset($res['code']) && $res['code'] == '0000'){
 			$this->load->config('jz_dict');
 			$fund_list['code'] = '0000';
@@ -181,7 +181,7 @@ class Jz_fund extends MY_Controller
 			}
 		}else{
 			file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['JZ_account'].'进行历史交易申请查询('. $startDate.' - '.$endDate.')失败'."\r\n\r\n",FILE_APPEND);
-		}
+		}*/
 		return $fund_list;
 	}
 	
@@ -209,7 +209,7 @@ class Jz_fund extends MY_Controller
 		
 // 		if (!is_null($get['tano']) && !is_null($get['fundid'])) {
 // 			$this->load->config('jz_dict');
-// 			$fund_list = $this->jz_interface->fund($get['tano'], $get['fundid']);
+// 			$fund_list = $this->fund_interface->fund($get['tano'], $get['fundid']);
 // 			if (isset($fund_list['code']) && $fund_list['code'] = '0000' && $fund_list['data'][0]['fundcode'] == $get['fundid']) {
 // 				$val = $fund_list['data'][0];
 // 				$tmp = isset($this->config->item('fundtype')[$val['fundtype']])?$this->config->item('fundtype')[$val['fundtype']]:null;
@@ -246,7 +246,7 @@ class Jz_fund extends MY_Controller
 	}
 	
 	private function getCancelableList(){
-		$cancelable_list = $this->jz_interface->cancelable($_SESSION['JZ_account']);
+		$cancelable_list = $this->fund_interface->cancelable($_SESSION['JZ_account']);
 		if (isset($cancelable_list['code']) && $cancelable_list['code'] = '0000') {
 			foreach ($cancelable_list['data'] as $key => $val)
 			{
@@ -267,7 +267,7 @@ class Jz_fund extends MY_Controller
 		$needtime = strtotime(date('Y-m-d',time()-32390).' 09:00:00');                //32400 = 3600*9-10  即8小时59分50秒  自动更新的时间点设为9:00所以提前10秒允许更新
 		$updatetime = $this->db->where(array('dealitem' => 'fundlist'))->get('dealitems')->row_array()['updatetime'];
 		if ($updatetime < $needtime){
-			$res = $this->jz_interface->fund_list();
+			$res = $this->fund_interface->fund_list();
 			file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'进行基金列表查询，返回信息：'.serialize($res)."\r\n\r\n",FILE_APPEND);
 			$flag = TRUE;
 			if (isset($res['code']) && $res['code'] == '0000' && isset($res['data'][0]) && !empty($res['data'][0])){
@@ -286,7 +286,7 @@ class Jz_fund extends MY_Controller
 				$i = 0;
 				foreach ($res['data'] as $key => $val)
 				{
-					$fundinfo = $this->jz_interface->fund($val['tano'], $val['fundcode']);
+					$fundinfo = $this->fund_interface->fund($val['tano'], $val['fundcode']);
 					file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'查询基金'.$val['fundcode']."返回信息为:".serialize($fundinfo)."\r\n\r\n",FILE_APPEND);
 					if (isset($fundinfo['code']) && $fundinfo['code'] == '0000' && isset($fundinfo['data'][0]['fundincomeunit'])){
 						$val['fundincomeunit'] = $fundinfo['data'][0]['fundincomeunit'];
