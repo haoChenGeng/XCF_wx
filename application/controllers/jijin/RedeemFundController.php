@@ -12,7 +12,7 @@ class RedeemFundController extends MY_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->library(array('Jz_interface','Logincontroller'));
+		$this->load->library(array('Fund_interface','Logincontroller'));
 		$this->load->model(array("Model_db"));
 		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
 	}
@@ -64,7 +64,7 @@ class RedeemFundController extends MY_Controller {
 		unset($_SESSION['rand_code']);
 		if ($div_bit !== false){                           //找到一次性随机验证码
 			$tpasswd = substr($decryptData, 0, $div_bit);
-			$res = $this->jz_interface->redemption($_SESSION['JZ_account'], $data['transactionaccountid'], $data['branchcode'], $data['tano'], $data['fundcode'], $data['sharetype'], $data['applicationval'], $data['largeRedemptionFlag'], $tpasswd);
+			$res = $this->fund_interface->redemption($_SESSION['JZ_account'], $data['transactionaccountid'], $data['branchcode'], $data['tano'], $data['fundcode'], $data['sharetype'], $data['applicationval'], $data['largeRedemptionFlag'], $tpasswd);
 			file_put_contents('log/trade/redeem'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行赎回，交易数据为:".serialize($data)."\r\n返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
 			if (isset($res['code'])){
 				if ($res['code'] == '0000' && isset($res['data'][0]['appsheetserialno'])){

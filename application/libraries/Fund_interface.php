@@ -92,9 +92,22 @@ class Fund_interface
 	}
 	
 	function fund_list(){
-		$communctionData = $this->getSubmitData(array("code"=>'fundlist'));
-		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$communctionData);
-		return ($this->getReturnData($returnData));
+		$startTime = strtotime(date('Y-m-d',time()).' 09:00:00');						//从9:00到10:00每隔5分钟自动更新基金列表
+		$endTime = strtotime(date('Y-m-d',time()).' 10:00:00');
+		$currentTime = time();
+		$this->CI->load->model("Model_db");
+		$updatetime = $this->CI->db->where(array('dealitem' => 'fundlist'))->get('dealitems')->row_array()['updatetime'];
+		if ($updatetime<$startTime || ($updatetime<$endTime && ($currentTime-$updatetime)>1800)){
+			$communctionData = $this->getSubmitData(array("code"=>'fundlist'));
+			$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$communctionData);
+			$funddata = $this->getReturnData($returnData)['data']['fundList'];
+			if (is_array($funddata) && !empty($funddata)){
+				$flag = $this->CI->Model_db->incremenUpdate('fundlist', $funddata, 'fundcode');
+				if ($flag){
+					$this->CI->db->set(array('updateTime' => time()))->where(array('dealitem' => 'fundlist'))->update('dealitems');
+				}
+			}
+		}
 	}
-// 	function 
+	
 }

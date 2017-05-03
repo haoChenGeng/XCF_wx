@@ -373,20 +373,8 @@ class User extends MY_Controller {
 	
 //获取最新的基金列表
 	private function getRecommendFunds(&$data){
-		$startTime = strtotime(date('Y-m-d',time()).' 09:00:00');						//从9:00到10:00每隔5分钟自动更新基金列表
-		$endTime = strtotime(date('Y-m-d',time()).' 10:00:00');
-		$currentTime = time();
-		$updatetime = $this->db->where(array('dealitem' => 'fundlist'))->get('dealitems')->row_array()['updatetime'];
-		if ($updatetime<$startTime || ($updatetime<$endTime && ($currentTime-$updatetime)>1800)){
-			$this->load->library('Fund_interface');
-			$funddata = $this->fund_interface->fund_list()['data']['fundList'];
-			if (is_array($funddata) && !empty($funddata)){
-				$flag = $this->Model_db->incremenUpdate('fundlist', $funddata, 'fundcode');
-				if ($flag){
-					$this->db->set(array('updateTime' => time()))->where(array('dealitem' => 'fundlist'))->update('dealitems');
-				}
-			}
-		}
+		$this->load->library('Fund_interface');
+		$this->fund_interface->fund_list();
  		$select = '';
 		$arr = array('fundcode','tano','fundname','fundtype','nav','growthrate','fundincomeunit','shareclasses','risklevel','status');
 		foreach ($arr as $val){

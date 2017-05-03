@@ -15,10 +15,6 @@ class Jz_fund extends MY_Controller
         $this->logfile_suffix = '('.date('Y-m',time()).').txt';
     }
     
-    function test(){
-    	$this->getAllFundInfo();
-    }
-    
 	//购买基金页面入口
 	function index($activePage = 'fund')
 	{
@@ -70,6 +66,7 @@ class Jz_fund extends MY_Controller
 		//调用接口
 		$fund_list = array();
 		if ($this->getAllFundInfo()){
+			$this->fund_interface->fund_list();
 			$res = $this->db->get('fundlist')->result_array();
 			$this->load->config('jz_dict');
 			$i = 0;
@@ -82,7 +79,7 @@ class Jz_fund extends MY_Controller
 					$tmp = $this->config->item('fundtype')[$val['fundtype']];
 					$json['fundtypename'] = is_null($tmp)?'-':$tmp;
 					$json['nav'] = $val['nav'];
-					$json['tano'] = $val['tano'];
+					$json['tano'] = $val['tano'].'/'.$val['taname'];
 						
 					$fund_list['data'][$i] = $json;
 						
@@ -189,7 +186,7 @@ class Jz_fund extends MY_Controller
 	{
 		$get = $this->input->get();
 // 		$post = $this->input->post();
-		$fund_list = $this->db->where(array('fundcode' => $get['fundid']))->get('jz_fundlist')->row_array();
+		$fund_list = $this->db->where(array('fundcode' => $get['fundid']))->get('fundlist')->row_array();
 		$this->load->config('jz_dict');
 // 		$fund_list = $fund_list['data'][0];
 		$tmp = isset($this->config->item('fundtype')[$fund_list['fundtype']])?$this->config->item('fundtype')[$fund_list['fundtype']]:null;
@@ -272,7 +269,7 @@ class Jz_fund extends MY_Controller
 			$flag = TRUE;
 			if (isset($res['code']) && $res['code'] == '0000' && isset($res['data'][0]) && !empty($res['data'][0])){
 				$this->load->config('jz_dict');
-				$dbFields = $this->db->list_fields('jz_fundlist');
+				$dbFields = $this->db->list_fields('fundlist');
 				$singleFund = $res['data'][0];
 				foreach ($dbFields as $key=>$val){
 					if (!isset($singleFund[$val])){
@@ -280,7 +277,7 @@ class Jz_fund extends MY_Controller
 					}
 				}
 				$dbFields[] = 'fundincomeunit';
-				$dbFunds = $this->db->get('jz_fundlist')->result_array();
+				$dbFunds = $this->db->get('fundlist')->result_array();
 				$dbFunds = setkey($dbFunds,'fundcode');
 				$insertFund = array();
 				$i = 0;
@@ -299,7 +296,7 @@ class Jz_fund extends MY_Controller
 							}
 						}
 						if (!empty($updateFund)){
-							$flag =  $flag && $this->db->set($updateFund)->where(array('fundcode'=>$val['fundcode']))->update('jz_fundlist');
+							$flag =  $flag && $this->db->set($updateFund)->where(array('fundcode'=>$val['fundcode']))->update('fundlist');
 						}
 					}else{
 						foreach ($dbFields as $v){
@@ -309,7 +306,7 @@ class Jz_fund extends MY_Controller
 					}
 				}
 				if (!empty($insertFund)){
-					$flag =  $flag && $this->db->insert_batch('jz_fundlist',$insertFund);
+					$flag =  $flag && $this->db->insert_batch('fundlist',$insertFund);
 				}
 			}else{
 				$flag = FALSE;

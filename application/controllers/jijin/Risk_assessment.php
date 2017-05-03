@@ -10,14 +10,14 @@ class Risk_assessment extends MY_Controller {
 	function __construct()
 	{
 		parent::__construct();
-        $this->load->library('Jz_interface');
+        $this->load->library('Fund_interface');
 	}
 	
 	//测试题目
 	function index() {
 		//获取题目	
-// 		$jz = new Jz_interface();
-		$ret = $this->jz_interface->risk_test_query('13','001','','','1','1');		
+// 		$jz = new fund_interface();
+		$ret = $this->fund_interface->risk_test_query('13','001','','','1','1');		
 		$ret_code = $ret['code'];
 		$ret_msg = $ret['msg'];
 		$ret_trantype = $ret['trantype'];
@@ -95,9 +95,9 @@ class Risk_assessment extends MY_Controller {
 // 		var_dump($answerList);
 		
 		
-// 		$jz = new Jz_interface();
+// 		$jz = new fund_interface();
 		
-		$ret = $this->jz_interface->risk_test_result($_SESSION['JZ_account'],'001',$answerList,$pointList,'1','1');
+		$ret = $this->fund_interface->risk_test_result($_SESSION['JZ_account'],'001',$answerList,$pointList,'1','1');
 		if (empty($ret)) {
 			$data['ret_code'] = 'xxxx1';
 			$data['ret_msg'] = '风险测试失败';

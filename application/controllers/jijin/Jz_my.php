@@ -10,7 +10,7 @@ class Jz_my extends MY_Controller
     {
         parent::__construct();
         $this->load->database();
-        $this->load->library(array('Logincontroller'));
+        $this->load->library(array('Fund_interface','Logincontroller'));
         $this->logfile_suffix = '('.date('Y-m',time()).').txt';
     }
 
@@ -150,7 +150,7 @@ class Jz_my extends MY_Controller
 	private function getMyFundList() {
 		
 		//调用接口
-		$res = $this->jz_interface->asset($_SESSION['JZ_account'],1,'');
+		$res = $this->fund_interface->asset($_SESSION['JZ_account'],1,'');
 		
 		file_put_contents('log/trade/Jz_my'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['JZ_account'].'进行资产查询，返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
 		$data['totalfundvolbalance'] = 0;
@@ -210,7 +210,7 @@ class Jz_my extends MY_Controller
 	//风险测试
 	private function getRiskLevel() {
 		//调用接口
-		$res = $this->jz_interface->account_info($_SESSION['JZ_account']);
+		$res = $this->fund_interface->account_info($_SESSION['JZ_account']);
 		
 		
 		$this->load->config('jz_dict');
@@ -228,7 +228,7 @@ class Jz_my extends MY_Controller
 	
 	private function bonusChangeAbleList() {
 		$custno = $_SESSION['JZ_account'];
-		$res =  $this->jz_interface->bonus_changeable($custno);
+		$res =  $this->fund_interface->bonus_changeable($custno);
 		
 		$this->load->config('jz_dict');
 		$bonusChangeList = array();
@@ -292,7 +292,7 @@ class Jz_my extends MY_Controller
 		}
 	
 		//调用接口
-		$res = $this->jz_interface->Trans_confirmed($_SESSION['JZ_account'], $startDate, $endDate, 25 ,700001, 1000);
+		$res = $this->fund_interface->Trans_confirmed($_SESSION['JZ_account'], $startDate, $endDate, 25 ,700001, 1000);
 	
 		
 		$this->load->config('jz_dict');

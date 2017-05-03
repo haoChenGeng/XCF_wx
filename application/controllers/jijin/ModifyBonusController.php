@@ -12,7 +12,7 @@ class ModifyBonusController extends MY_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->library('Jz_interface');
+		$this->load->library('Fund_interface');
 		$this->base = $this->config->item("base_url");
 		$this->load->database();
 		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
@@ -69,7 +69,7 @@ class ModifyBonusController extends MY_Controller {
 			$tpasswd = substr($decryptData, 0, $div_bit);
 			unset($data['fundname'],$data['dividendmethodname'],$data['sharetypename'],$data['nav'],$data['dividendmethod']);
 			$data['bonusType'] = $post['bonusType'];
-			$res = $this->jz_interface->bonus_mode($_SESSION['JZ_account'], $data['transactionaccountid'], $data['branchcode'], $data['fundcode'], $data['sharetype'], $data['bonusType'], $tpasswd);
+			$res = $this->fund_interface->bonus_mode($_SESSION['JZ_account'], $data['transactionaccountid'], $data['branchcode'], $data['fundcode'], $data['sharetype'], $data['bonusType'], $tpasswd);
 			file_put_contents('log/trade/modifybonus'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行赎回，交易数据为:".serialize($data)."\r\n返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
 			if (isset($res['code'])){
 				if ($res['code'] == '0000' && isset($res['data'][0]['appsheetserialno'])){

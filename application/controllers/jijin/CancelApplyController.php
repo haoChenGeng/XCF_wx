@@ -12,7 +12,7 @@ class CancelApplyController extends MY_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->library(array('Jz_interface','Logincontroller'));
+		$this->load->library(array('Fund_interface','Logincontroller'));
 		$this->load->database();
 		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
 	}
@@ -43,7 +43,7 @@ class CancelApplyController extends MY_Controller {
 		}
 		$data = $this->input->post();
 // var_dump($data);
-		$res = $this->jz_interface->revoke($_SESSION['JZ_account'], $data['appsheetserialno'], $transactorname='system', $transactorcerttype = 0, $transactorcertno='431003198702212590');
+		$res = $this->fund_interface->revoke($_SESSION['JZ_account'], $data['appsheetserialno'], $transactorname='system', $transactorcerttype = 0, $transactorcertno='431003198702212590');
 // $res['code'] = '1111';
 		file_put_contents('log/trade/cancelApply'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行撤单操作，交易数据为:".$data['appsheetserialno']."\r\n返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
 		if (isset($res['code'])){

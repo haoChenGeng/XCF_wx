@@ -10,7 +10,7 @@ class PurchaseController extends MY_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->library(array('Jz_interface','Logincontroller'));
+		$this->load->library(array('Fund_interface','Logincontroller'));
 		$this->load->helper(array("url"));
 		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
 	}
@@ -24,7 +24,7 @@ class PurchaseController extends MY_Controller {
 		$get = $this->input->get();
 		$data = json_decode(base64_decode($get['json']),true);
 		$data['purchasetype'] = $get['purchasetype'];
-		$bank_info =$this->jz_interface->bankcard_phone($_SESSION['JZ_account'], 1);
+		$bank_info =$this->fund_interface->bankcard_phone($_SESSION['JZ_account'], 1);
 		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."银行卡返回数据:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
 		if (isset($bank_info['code']) && $bank_info['code'] == '0000' )
 		{
@@ -46,7 +46,7 @@ class PurchaseController extends MY_Controller {
 				}
 			}
 			if (!empty($data['bank_info'])) {
-				$user_info = $this->jz_interface->account_info($_SESSION['JZ_account']);
+				$user_info = $this->fund_interface->account_info($_SESSION['JZ_account']);
 				file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."风险等级信息(account_info<520101>)返回数据:".serialize($user_info)."\r\n\r\n",FILE_APPEND);
 				if ($user_info['code'] == '0000' || !isset($user_info['data'][0]['certificateno'])){
 					$data['custrisk'] = intval($user_info['data'][0]['custrisk']);
@@ -55,7 +55,7 @@ class PurchaseController extends MY_Controller {
 					$this->load->config('jz_dict');
 					if (isset($this->config->item('custrisk')[$data['custrisk']])){
 						//查询首次购买标志
-						$FP = $this->jz_interface->first_purchase($data['fundcode'], $data['shareclasses'], $data['tano'], $_SESSION['JZ_account']);
+						$FP = $this->fund_interface->first_purchase($data['fundcode'], $data['shareclasses'], $data['tano'], $_SESSION['JZ_account']);
 						file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."首次购买信息(first_purchase<430406>)查询数据:fundcode=".$data['fundcode'].'shareclasses='.$data['shareclasses']."tano=".$data['tano']."\r\n返回数据:".serialize($FP)."\r\n\r\n",FILE_APPEND);
 						if (isset($FP['code']) && $FP['code'] = '0000' && $FP['data'][0]['isfirstbuy'] == 0){
 							$data['min_money'] = $data['con_per_min'];
@@ -187,13 +187,13 @@ class PurchaseController extends MY_Controller {
 			$branchcode = $data['bank_info'][$post['pay_way']]['paycenterid'];
 			$log_str = 'transactionaccountid:'.$data['transactionaccountid'] . ' branchcode:'.$branchcode . ' tano:'.$data['tano'] . ' fundcode:'.$data['fundcode']. ' sharetype:'.$data['shareclasses']. ' applicationamt:'.$post['sum']. ' moneyaccount:'.$moneyaccount. ' channelid:'.$channelid. ' buyflag:1';
 			//调用申购、认购接口
-			$purchase = $this->jz_interface->purchase($_SESSION['JZ_account'], $data['transactionaccountid'],$branchcode, $data['tano'], $data['fundcode'], $data['shareclasses'], $post['sum'], $moneyaccount, $channelid, 1, $tpasswd);
+			$purchase = $this->fund_interface->purchase($_SESSION['JZ_account'], $data['transactionaccountid'],$branchcode, $data['tano'], $data['fundcode'], $data['shareclasses'], $post['sum'], $moneyaccount, $channelid, 1, $tpasswd);
 			file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."进行".$post['purchasetype']."基金(purchase<520003>)操作\r\n申请数据为：".$log_str."\r\n返回数据:".serialize($purchase)."\r\n\r\n",FILE_APPEND);
 			if (isset($purchase['code'])){
 				if( $purchase['code'] == '0000' && isset($purchase['data'][0]['appsheetserialno'])){
 					$appsheetserialno = $purchase['data'][0]['appsheetserialno'];
 					$liqdate = $purchase['data'][0]['appsheetserialno'];
-					$paySend = $this->jz_interface->paySend($_SESSION['JZ_account'], $appsheetserialno, $moneyaccount, $data['fundcode'], $data['fundtype'], $liqdate, $data['mobileno']);
+					$paySend = $this->fund_interface->paySend($_SESSION['JZ_account'], $appsheetserialno, $moneyaccount, $data['fundcode'], $data['fundtype'], $liqdate, $data['mobileno']);
 					$log_str = 'appsheetserialno:'.$appsheetserialno.' moneyaccount:'.$moneyaccount.' fundcode:'.$data['fundcode'].' fundtype:'.$data['fundtype'].' liqdate:'.$liqdate.' mobileno:'.$data['mobileno'];
 					file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."进行支付操作(paySend)操作\r\n申请数据为：".$log_str."\r\n返回数据:".serialize($paySend)."\r\n\r\n",FILE_APPEND);
 					if (isset($paySend['code']) && $paySend['code'] == '0000' && isset($paySend['data']['0']['serialno']))
