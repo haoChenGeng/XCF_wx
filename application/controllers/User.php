@@ -101,26 +101,7 @@ class User extends MY_Controller {
 	}
 	
 	function home($type = 1){
-		$needtime = strtotime(date('Y-m-d',time()-32600).' 09:00:00');                         //32600 = 3600*9+200  即9小时3分20秒 即基金系统的基金列表信息更新3分20秒 后更新
-		$updatetime = $this->db->where(array('dealitem' => 'fundlist'))->get('dealitems')->row_array()['updatetime'];
-		if ($updatetime < $needtime){
-			$this->getfunds();
-		}
-		$RecommendFunds = $this->db->where(array('recommend' => 1))->get('fundlist')->result_array();
-		$totalFunds = count($RecommendFunds);
-		if ($totalFunds <3){
-			$RecommendFunds = $this->db->get('fundlist')->result_array();
-			$totalFunds = count($RecommendFunds);
-		}
-		if ($totalFunds > 0){
-			$RecommendNum = $totalFunds >3 ? 3 : $totalFunds;
-			$randSeq = array_rand(range(0,$totalFunds-1),$RecommendNum);
-			for($i = 0; $i<$RecommendNum; $i++){
-				$data['Recommend'][$i]['fundname'] = $RecommendFunds[$randSeq[$i]]['fundname'];
-				$data['Recommend'][$i]['fundtype'] = $RecommendFunds[$randSeq[$i]]['fundtype'];
-				$data['Recommend'][$i]['growthrate'] = ($RecommendFunds[$randSeq[$i]]['growthrate']*100).'%';
-			}
-		}
+		$this->getRecommendFunds($data);
 		$data['type'] = $type;
 		$this->load->view('index',$data);
 	}
@@ -391,22 +372,63 @@ class User extends MY_Controller {
 	}
 	
 //获取最新的基金列表
-	private function getfunds(){
+	private function getRecommendFunds(&$data){
+		$startTime = strtotime(date('Y-m-d',time()).' 09:00:00');						//从9:00到10:00每隔5分钟自动更新基金列表
+		$endTime = strtotime(date('Y-m-d',time()).' 10:00:00');
+		$currentTime = time();
+		$updatetime = $this->db->where(array('dealitem' => 'fundlist'))->get('dealitems')->row_array()['updatetime'];
+		if ($updatetime<$startTime || ($updatetime<$endTime && ($currentTime-$updatetime)>1800)){
+			$this->load->library('Fund_interface');
+			$funddata = $this->fund_interface->fund_list()['data']['fundList'];
+			if (is_array($funddata) && !empty($funddata)){
+				$flag = $this->Model_db->incremenUpdate('fundlist', $funddata, 'fundcode');
+				if ($flag){
+					$this->db->set(array('updateTime' => time()))->where(array('dealitem' => 'fundlist'))->update('dealitems');
+				}
+			}
+		}
  		$select = '';
 		$arr = array('fundcode','tano','fundname','fundtype','nav','growthrate','fundincomeunit','shareclasses','risklevel','status');
 		foreach ($arr as $val){
 			$select .= $val.',';
 		}
 		$select = substr($select,0,-1);
-		$arr = array('select'=>$select); 
-		$url = $this->config->item('fundUrl').'/jijin/InfoTransmit/fundInfo';
-		$arr = array();
-		$res = comm_curl($url, $arr);
-		$funddata = json_decode($res,true);
-		if (is_array($funddata) && !empty($funddata)){
-			$flag = $this->Model_db->incremenUpdate('fundlist', $funddata, 'fundcode');
-			if ($flag){
-				$this->db->set(array('updateTime' => time()))->where(array('dealitem' => 'fundlist'))->update('dealitems');
+		$arr = array('select'=>$select);
+		$this->load->config('jz_dict');
+		$RecommendFunds = $this->db->where(array('recommend' => 1))->get('fundlist')->result_array();
+		$totalFunds = count($RecommendFunds);
+		if ($totalFunds <3){
+			$RecommendFunds = $this->db->get('fundlist')->result_array();
+			$totalFunds = count($RecommendFunds);
+		}
+		foreach ($RecommendFunds as $key => $val){
+			foreach ($val as $k => $v){
+				switch ($k){
+/* 					case 'tano':
+						$RecommendFunds[$key]['tano'] = $v.'/'.$val['taname'];
+						break; */
+					case 'fundtype':
+						$RecommendFunds[$key][$k] = $this->config->item('fundtype')[$v];
+						break;
+					case 'shareclasses':
+/* 						$RecommendFunds[$key][$k] = $this->config->item('sharetype')[$v];
+						break;
+					case 'risklevel':
+						$RecommendFunds[$key][$k] = $this->config->item('custrisk')[intval($v)];
+						break;
+					case 'status':
+						$RecommendFunds[$key][$k] = $this->config->item('fund_status')[intval($v)]['status'];
+						break; */
+				}
+			}
+		}
+		if ($totalFunds > 0){
+			$RecommendNum = $totalFunds >3 ? 3 : $totalFunds;
+			$randSeq = array_rand(range(0,$totalFunds-1),$RecommendNum);
+			for($i = 0; $i<$RecommendNum; $i++){
+				$data['Recommend'][$i]['fundname'] = $RecommendFunds[$randSeq[$i]]['fundname'];
+				$data['Recommend'][$i]['fundtype'] = $RecommendFunds[$randSeq[$i]]['fundtype'];
+				$data['Recommend'][$i]['growthrate'] = ($RecommendFunds[$randSeq[$i]]['growthrate']*100).'%';
 			}
 		}
 	}

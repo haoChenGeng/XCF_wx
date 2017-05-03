@@ -86,10 +86,15 @@ class Fund_interface
 
 	function Trans_applied($startDate, $endDate){
 // var_dump($_SESSION['customer_name']);
-		$communctionData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'TransQuery','startDate'=>$startDate,'endDate'=>$endDate));
+		$communctionData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'transQuery','startDate'=>$startDate,'endDate'=>$endDate));
 		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$communctionData);
 		return ($this->getReturnData($returnData));
 	}
 	
-	function 
+	function fund_list(){
+		$communctionData = $this->getSubmitData(array("code"=>'fundlist'));
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$communctionData);
+		return ($this->getReturnData($returnData));
+	}
+// 	function 
 }
