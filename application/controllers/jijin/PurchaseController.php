@@ -28,7 +28,6 @@ class PurchaseController extends MY_Controller {
 		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."访问公募基金接口，返回数据为:".serialize($purchase_info)."\r\n\r\n",FILE_APPEND);
 var_dump($purchase_info,$data);
 // 		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."银行卡返回数据:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
-		$data = &$purchase_info['data'];
 		if (key_exists('code',$purchase_info)){
 			if ($purchase_info['code'] == '0000' ){
 				if (empty($purchase_info['data']['custrisk'])){
@@ -43,6 +42,7 @@ var_dump($purchase_info,$data);
 						$data['min_money'] = $data['first_per_min'];
 						$data['max_money'] = $data['first_per_max'];
 					}
+					$data['bank_info'] = $purchase_info['data']['bank_info'];
 					unset($data['first_per_min']);
 					unset($data['first_per_max']);
 					unset($data['con_per_min']);
@@ -54,10 +54,15 @@ var_dump($purchase_info,$data);
 					unset($json['max_money']);
 					unset($json['risklevel']);
 					unset($json['custrisk']);
-					unset($json['bank_msg']);
 					unset($json['fundname']);
 					unset($json['sharetypename']);
 					$data['json'] = base64_encode(json_encode($json));
+					//生成用户银行卡信息
+					foreach ($purchase_info['data']['bank_info'] as $key => $val){
+						if (!empty($val)){
+							$data['bank_msg'][$key] = $this->config->item('channelid')[$val['channelid']].' 卡号:'.$val['depositacct'];
+						}
+					}
 					if ($purchase_info['data']['custrisk'] >= intval($data['risklevel'])){
 						//生成用户信息
 						$data['bank_info'] = $purchase_info['data']['bank_info'];
@@ -149,7 +154,7 @@ var_dump($purchase_info,$data);
 			$channelid = $data['bank_info'][$post['pay_way']]['channelid'];
 			$moneyaccount = $data['bank_info'][$post['pay_way']]['moneyaccount'];
 			$branchcode = $data['bank_info'][$post['pay_way']]['paycenterid'];
-			$log_str = 'transactionaccountid:'.$data['transactionaccountid'] . ' branchcode:'.$branchcode . ' tano:'.$data['tano'] . ' fundcode:'.$data['fundcode']. ' sharetype:'.$data['shareclasses']. ' applicationamt:'.$post['sum']. ' moneyaccount:'.$moneyaccount. ' channelid:'.$channelid. ' buyflag:1';
+			$log_str = 'transactionaccountid:'.$data[$post['pay_way']]['transactionaccountid'] . ' branchcode:'.$branchcode . ' tano:'.$data['tano'] . ' fundcode:'.$data['fundcode']. ' sharetype:'.$data['shareclasses']. ' applicationamt:'.$post['sum']. ' moneyaccount:'.$moneyaccount. ' channelid:'.$channelid. ' buyflag:1';
 			//调用申购、认购接口
 			$purchase = $this->fund_interface->purchase($_SESSION['JZ_account'], $data['transactionaccountid'],$branchcode, $data['tano'], $data['fundcode'], $data['shareclasses'], $post['sum'], $moneyaccount, $channelid, 1, $tpasswd);
 			file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."进行".$post['purchasetype']."基金(purchase<520003>)操作\r\n申请数据为：".$log_str."\r\n返回数据:".serialize($purchase)."\r\n\r\n",FILE_APPEND);
