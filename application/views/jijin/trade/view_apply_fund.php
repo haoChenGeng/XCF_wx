@@ -82,9 +82,9 @@
 <input type="hidden" id="range" data-min="<?php echo $min_money;?>" data-max="<?php echo $max_money;?>" data-min =>
 </body>
 <script src="/data/lib/zepto.min.js"></script>
-<script src="/data/js/m.min.js"></script>
-<script src="/data/js/common.js"></script>
-<script src="/data/js/RSA.js"></script>
+<script src="/data/jijin/js/m.min.js"></script>
+<script src="/data/jijin/js/common.js"></script>
+<script src="/data/js/RSA.min.js"></script>
 <script>
     Zepto(function(){
         M.checkBoxInit();
