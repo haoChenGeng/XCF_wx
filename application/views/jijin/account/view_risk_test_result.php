@@ -6,7 +6,7 @@
 	<meta name="description" content="小牛资本管理集团公募基金代销系统">
 	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<title>风险评测结果</title>
-	<link rel="stylesheet" href="<?php echo $base ?>/data/css/risk.css">
+	<link rel="stylesheet" href="<?php echo $base ?>/data/jijin/css/risk.css">
 </head>
 <body>
 	<div data-role="page" id="pageone">

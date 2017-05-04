@@ -7,7 +7,7 @@
 	<title>风险评测</title>
 	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<meta name="format-detection" content="telephone=no">
-	<link rel="stylesheet" type="text/css" href="<?php echo $base ?>/data/css/risk.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $base ?>/data/jijin/css/risk.css">
 </head>
 <body>
 	<div data-role="page" id="pageone">
