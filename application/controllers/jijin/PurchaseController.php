@@ -26,7 +26,7 @@ class PurchaseController extends MY_Controller {
 		$data['purchasetype'] = $get['purchasetype'];
 		$purchase_info =$this->fund_interface->beforePurchase($data);
 		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."访问公募基金接口，返回数据为:".serialize($purchase_info)."\r\n\r\n",FILE_APPEND);
-var_dump($purchase_info,$data);
+// var_dump($purchase_info,$data);
 // 		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."银行卡返回数据:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
 		if (key_exists('code',$purchase_info)){
 			if ($purchase_info['code'] == '0000' ){
@@ -34,6 +34,9 @@ var_dump($purchase_info,$data);
 					$error_code =1;
 					$errMsg = '尚未进行风险等级测试';
 				}else{
+					//生成用户信息
+					$data['bank_info'] = $purchase_info['data']['bank_info'];
+					$data['mobileno'] = $purchase_info['data']['mobileno'];
 					//生成基金购买信息
 					if (key_exists('isfirstbuy',$purchase_info['data']) && $purchase_info['data']['isfirstbuy'] == 0){
 						$data['min_money'] = $data['con_per_min'];
@@ -42,7 +45,6 @@ var_dump($purchase_info,$data);
 						$data['min_money'] = $data['first_per_min'];
 						$data['max_money'] = $data['first_per_max'];
 					}
-					$data['bank_info'] = $purchase_info['data']['bank_info'];
 					unset($data['first_per_min']);
 					unset($data['first_per_max']);
 					unset($data['con_per_min']);
@@ -64,9 +66,6 @@ var_dump($purchase_info,$data);
 						}
 					}
 					if ($purchase_info['data']['custrisk'] >= intval($data['risklevel'])){
-						//生成用户信息
-						$data['bank_info'] = $purchase_info['data']['bank_info'];
-						$data['mobileno'] = $purchase_info['data']['mobileno'];
 						$data['base'] = $this->base;
 						$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
 						$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
@@ -150,57 +149,23 @@ var_dump($purchase_info,$data);
 		unset($_SESSION['rand_code']);
 		if ($div_bit !== false){                           //找到一次性随机验证码
 			$tpasswd = substr($decryptData, 0, $div_bit);
-			$data = json_decode(base64_decode($post['json']),true);
-			$channelid = $data['bank_info'][$post['pay_way']]['channelid'];
-			$moneyaccount = $data['bank_info'][$post['pay_way']]['moneyaccount'];
-			$branchcode = $data['bank_info'][$post['pay_way']]['paycenterid'];
-			$log_str = 'transactionaccountid:'.$data[$post['pay_way']]['transactionaccountid'] . ' branchcode:'.$branchcode . ' tano:'.$data['tano'] . ' fundcode:'.$data['fundcode']. ' sharetype:'.$data['shareclasses']. ' applicationamt:'.$post['sum']. ' moneyaccount:'.$moneyaccount. ' channelid:'.$channelid. ' buyflag:1';
+			$purchaseData = json_decode(base64_decode($post['json']),true);
+// var_dump($purchaseData,$post);
 			//调用申购、认购接口
-			$purchase = $this->fund_interface->purchase($_SESSION['JZ_account'], $data['transactionaccountid'],$branchcode, $data['tano'], $data['fundcode'], $data['shareclasses'], $post['sum'], $moneyaccount, $channelid, 1, $tpasswd);
-			file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."进行".$post['purchasetype']."基金(purchase<520003>)操作\r\n申请数据为：".$log_str."\r\n返回数据:".serialize($purchase)."\r\n\r\n",FILE_APPEND);
-			if (isset($purchase['code'])){
-				if( $purchase['code'] == '0000' && isset($purchase['data'][0]['appsheetserialno'])){
-					$appsheetserialno = $purchase['data'][0]['appsheetserialno'];
-					$liqdate = $purchase['data'][0]['appsheetserialno'];
-					$paySend = $this->fund_interface->paySend($_SESSION['JZ_account'], $appsheetserialno, $moneyaccount, $data['fundcode'], $data['fundtype'], $liqdate, $data['mobileno']);
-					$log_str = 'appsheetserialno:'.$appsheetserialno.' moneyaccount:'.$moneyaccount.' fundcode:'.$data['fundcode'].' fundtype:'.$data['fundtype'].' liqdate:'.$liqdate.' mobileno:'.$data['mobileno'];
-					file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."进行支付操作(paySend)操作\r\n申请数据为：".$log_str."\r\n返回数据:".serialize($paySend)."\r\n\r\n",FILE_APPEND);
-					if (isset($paySend['code']) && $paySend['code'] == '0000' && isset($paySend['data']['0']['serialno']))
-					{
-						$arr['ret_msg'] = '基金'.$post['purchasetype'].'成功';
-						$arr['ret_code'] = $paySend['code'];
-						$insert_data = array('XN_account' => $_SESSION ['customer_name'],
-								'JZ_account' => $_SESSION['JZ_account'],
-								'appsheetserialno' => $appsheetserialno,
-								'relevantserialno' => $paySend['data']['0']['serialno'],
-								'fundcode' => $data['fundcode'],
-								'buy_type' => $post['purchasetype'],
-								'sharetype' => $data['shareclasses'],
-								'sum' => $post['sum'],
-								'status' => 0,
-						);
-						$db_res = $this->db->insert('jz_fund_trade',$insert_data);     //写入数据库
-	 					$str =  ":\r\n用户:".$_SESSION ['customer_name']."进行基金".$post['purchasetype']."操作成功。\r\n写入数据库数据为：".serialize($insert_data);
-	 					if ($db_res){
-	 						$str .= ' 写入成功';
-	 					}else{
-	 						$str .= ' 写入失败,失败原因：'.serialize($this->db->error());
-	 					}
-	 					file_put_contents('log/trade/apply_fund'.$this->logfile_suffix, date('Y-m-d H:i:s',time()).$str."\r\n\r\n",FILE_APPEND);
-					}else{
-						$log_msg = '调用支付接口失败';
-						$arr['ret_code'] = $paySend['code'];
-						$arr['ret_msg'] = $post['purchasetype'].'申请已提交，请稍候查询'.$post['purchasetype'].'结果';
-					}
-				}else{
-					$arr['ret_code'] = $purchase['code'];
-					$log_msg = '调用'.$post['purchasetype'].'接口失败';
-					if ($purchase['code'] == '-409999999' && strpos($purchase['msg'],'密码') !== false){
-						$log_msg = $arr['ret_msg'] = '交易密码输入错误，请重试';
-					}
-					if ($purchase['code'] == '-400301031' && strpos($purchase['msg'],'委托金额不满足递增步长') !== false){
-						$log_msg = $arr['ret_msg'] = $purchase['msg'];
-					}
+			foreach ($purchaseData['bank_info'][$post['pay_way']] as $key=>$val){
+				$purchaseData[$key] = $val;
+			}
+			$purchaseData['tpasswd'] = $tpasswd;
+			$purchaseData['applicationamt'] = $post['sum'];
+			unset($purchaseData['bank_info']);
+			$purchase = $this->fund_interface->purchase($purchaseData);
+// var_dump($purchase);
+			file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."进行".$post['purchasetype']."基金(purchase<520003>)操作\r\n申请数据为：".serialize($purchaseData)."\r\n返回数据:".serialize($purchase)."\r\n\r\n",FILE_APPEND);
+			if (key_exists('code',$purchase)){
+				$arr['ret_code'] = $purchase['code'];
+				$log_msg = '调用'.$post['purchasetype'].'接口失败';
+				if ($purchase['code'] == '0016' || $purchase['code'] == '0017' || $purchase['code'] == '0018') {
+					$log_msg = $arr['ret_msg'] = $purchase['msg'];
 				}
 			}else{
 				$log_msg = '调用'.$post['purchasetype'].'接口失败';
@@ -208,7 +173,7 @@ var_dump($purchase_info,$data);
 			}		
 		}else{
 			$log_msg = '一次性随机验证码未找到';
-			$arr['ret_code'] = '0000';
+			$arr['ret_code'] = 'SJME';
 		}
 		if (isset($log_msg)){
 			file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name'].$post['purchasetype']."基金操作失败，失败原因为：".$log_msg."\r\n\r\n",FILE_APPEND);
