@@ -64,10 +64,10 @@ class Fund_interface
 		$RSA->setEncryptionMode(CRYPT_RSA_ENCRYPTION_PKCS1);
 		$RSA->loadKey($public_key);
 		$AESKey = array('encryptkey'=>base64_encode($RSA->encrypt($newKey)));
+// var_dump($AESKey,$this->CI->config->item('fundUrl').'/jijin/XCFinterface/renewCryptKey');
 		if (!empty($AESKey)){
 			$res = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface/renewCryptKey',$AESKey);
-			var_dump($res);
-			if ($res == 'SUCESS'){
+			if (strcmp($res,'SUCESS')){
 				$XCFkey = $this->CI->db->where(array('platformName'=>'Fund'))->get('communctionkey')->row_array();
 				if(empty($XCFkey)){
 					$flag = $this->CI->db->set(array('platformName'=>'Fund','AESkey'=>$newKey))->insert('communctionkey');
@@ -110,4 +110,16 @@ class Fund_interface
 		}
 	}
 	
+	function bankcard_phone(){
+		$communctionData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'bankAccount'));
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$communctionData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function beforePurchase(&$purchaseData){
+		$communctionData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'beforePurchase',
+				'fundcode'=>$purchaseData['fundcode'],'shareclasses'=>$purchaseData['shareclasses'],'tano'=>$purchaseData['tano']));
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$communctionData);
+		return ($this->getReturnData($returnData));
+	}
 }

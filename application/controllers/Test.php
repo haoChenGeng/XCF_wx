@@ -14,8 +14,8 @@ class Test extends MY_Controller
     }
     
     function index() {
-//     	$this->load->library('Fund_interface');
-//     	var_dump($this->fund_interface->RenewFundAESKey('123456'));
+    	$this->load->library('Fund_interface');
+    	var_dump($this->fund_interface->RenewFundAESKey('123456'));
 //     	$res = $this->fund_interface->Trans_applied('20170301', '20170501');
 //     	var_dump($res);
     	var_dump(date('Y-m-d H:i:s',1493716505));

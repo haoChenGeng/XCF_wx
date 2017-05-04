@@ -59,10 +59,7 @@ class Fund_access extends MY_Controller
     				$arr['type'] = $post['access_type'];
     				$arr['apply_code'] = $this->db->insert_id ();
 //     				$arr['url']= 'http://localhost:8080/client/Fund_access/access_auth';    //测试用
-    				if ($post['access_type']<150)
-    					$arr['url']= '/jijin/Jz_account/entrance';
-    				else
-    					$arr['url']= 'http://localhost/jijin/Jz_account/entrance';
+    				$arr['url']= '/jijin/Jz_account/entrance';
     			}
     			else {
     				$arr['code'] = 'e1';

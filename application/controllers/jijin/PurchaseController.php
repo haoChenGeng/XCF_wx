@@ -24,129 +24,93 @@ class PurchaseController extends MY_Controller {
 		$get = $this->input->get();
 		$data = json_decode(base64_decode($get['json']),true);
 		$data['purchasetype'] = $get['purchasetype'];
-		$bank_info =$this->fund_interface->bankcard_phone($_SESSION['JZ_account'], 1);
-		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."银行卡返回数据:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
-		if (isset($bank_info['code']) && $bank_info['code'] == '0000' )
-		{
-			$data['bank_info'] = array();
-			$this->load->config('jz_dict');
-			foreach ($bank_info['data'] as $key => $val){
-				$i =0;
-				if (!empty($val)){
-					if ($val['status'] == 0 && $val['isopenmobiletrade'] == 1){
-						$data['bank_msg'][$i] = $this->config->item('channelid')[$val['channelid']].' 卡号:'.$val['depositacct'];
-						unset($val['custno']);
-						unset($val['status']);
-						unset($val['isopenmobiletrade']);
-						unset($val['depositacct']);
-						//是否要给出银行卡支付渠道的信息？
-						$data['bank_info'][$i] = $val;
-						$i++;
-					}
-				}
-			}
-			if (!empty($data['bank_info'])) {
-				$user_info = $this->fund_interface->account_info($_SESSION['JZ_account']);
-				file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."风险等级信息(account_info<520101>)返回数据:".serialize($user_info)."\r\n\r\n",FILE_APPEND);
-				if ($user_info['code'] == '0000' || !isset($user_info['data'][0]['certificateno'])){
-					$data['custrisk'] = intval($user_info['data'][0]['custrisk']);
-					$data['transactionaccountid'] = $user_info['data'][0]['transactionaccountid'];
-					$data['mobileno'] = $user_info['data'][0]['mobileno'];
-					$this->load->config('jz_dict');
-					if (isset($this->config->item('custrisk')[$data['custrisk']])){
-						//查询首次购买标志
-						$FP = $this->fund_interface->first_purchase($data['fundcode'], $data['shareclasses'], $data['tano'], $_SESSION['JZ_account']);
-						file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."首次购买信息(first_purchase<430406>)查询数据:fundcode=".$data['fundcode'].'shareclasses='.$data['shareclasses']."tano=".$data['tano']."\r\n返回数据:".serialize($FP)."\r\n\r\n",FILE_APPEND);
-						if (isset($FP['code']) && $FP['code'] = '0000' && $FP['data'][0]['isfirstbuy'] == 0){
-							$data['min_money'] = $data['con_per_min'];
-							$data['max_money'] = $data['con_per_max'];
-						}else{
-							$data['min_money'] = $data['first_per_min'];
-							$data['max_money'] = $data['first_per_max'];
-						}
-						unset($data['first_per_min']);
-						unset($data['first_per_max']);
-						unset($data['con_per_min']);
-						unset($data['con_per_max']);
-						unset($data['nav']);
-						unset($data['fundtypename']);
-						$json = $data;
-						unset($json['min_money']);
-						unset($json['max_money']);
-						unset($json['risklevel']);
-						unset($json['custrisk']);
-						unset($json['bank_msg']);
-						unset($json['fundname']);
-						unset($json['sharetypename']);
-						$data['json'] = base64_encode(json_encode($json));
-						if ($data['custrisk'] >= intval($data['risklevel'])){
-							$data['base'] = $this->base;
-							$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
-							$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
-							$_SESSION['rand_code'] = $data['rand_code'];
-							ob_start();
-							$this->load->view('jijin/trade/view_apply_fund',$data);
-							ob_end_flush();
-							exit();
-						}else{
-							$error_code = 0;                              
-							$log_msg = '风险等级和产品不匹配';
-						}
-					}else{
-						$error_code =1;
-						$log_msg = '尚未进行风险等级测试';
-					}
+		$purchase_info =$this->fund_interface->beforePurchase($data);
+		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."访问公募基金接口，返回数据为:".serialize($purchase_info)."\r\n\r\n",FILE_APPEND);
+var_dump($purchase_info,$data);
+// 		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."银行卡返回数据:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
+		$data = &$purchase_info['data'];
+		if (key_exists('code',$purchase_info)){
+			if ($purchase_info['code'] == '0000' ){
+				if (empty($purchase_info['data']['custrisk'])){
+					$error_code =1;
+					$errMsg = '尚未进行风险等级测试';
 				}else{
-						$error_code =2;
-						$log_msg = '查询用户风险等级信息失败';
+					//生成基金购买信息
+					if (key_exists('isfirstbuy',$purchase_info['data']) && $purchase_info['data']['isfirstbuy'] == 0){
+						$data['min_money'] = $data['con_per_min'];
+						$data['max_money'] = $data['con_per_max'];
+					}else{
+						$data['min_money'] = $data['first_per_min'];
+						$data['max_money'] = $data['first_per_max'];
+					}
+					unset($data['first_per_min']);
+					unset($data['first_per_max']);
+					unset($data['con_per_min']);
+					unset($data['con_per_max']);
+					unset($data['nav']);
+					unset($data['fundtypename']);
+					$json = $data;
+					unset($json['min_money']);
+					unset($json['max_money']);
+					unset($json['risklevel']);
+					unset($json['custrisk']);
+					unset($json['bank_msg']);
+					unset($json['fundname']);
+					unset($json['sharetypename']);
+					$data['json'] = base64_encode(json_encode($json));
+					if ($purchase_info['data']['custrisk'] >= intval($data['risklevel'])){
+						//生成用户信息
+						$data['bank_info'] = $purchase_info['data']['bank_info'];
+						$data['mobileno'] = $purchase_info['data']['mobileno'];
+						$data['base'] = $this->base;
+						$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
+						$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
+						$_SESSION['rand_code'] = $data['rand_code'];
+						ob_start();
+						$this->load->view('jijin/trade/view_apply_fund',$data);
+						ob_end_flush();
+						exit();
+					}else{
+						$error_code = 0;
+						$errMsg = '风险等级和产品不匹配';
+					}
 				}
 			}else{
-				$error_code = 3;
-				$log_msg = '没有可交易的银行卡，请先增加银行卡';
+				$error_code = $purchase_info['code'];
+				$errMsg = $purchase_info['msg'];
 			}
 		}else{
-			$error_code = 5;
-			$log_msg = '查询银行卡信息失败';
+			$error_code = 'AAAA';
 		}
-		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."购买基金失败，失败原因为:".$log_msg."\r\n\r\n",FILE_APPEND);
 		if (isset($error_code)){
+			$arr['base'] = $this->base;
+			$arr['back_url'] = '/jijin/Jz_fund';
+			$arr['ret_msg'] = isset($errMsg) ? $errMsg :'系统故障，请稍候重试';
 			switch ($error_code){
 				case 0:
 					$arr['data'] = base64_encode(json_encode($data));
 					$arr['forward_url'] = '/jijin/PurchaseController/load_apply_fund';
 					$arr['forward_msg'] = '继续够买';
-					$arr['back_url'] = '/jijin/Jz_fund';
-					$arr['base'] = $this->base;
 					$arr['head_title'] = '购买提醒';
-					$arr['ret_msg'] = $log_msg;
 					$this->load->view('ui/operate_result2',$arr);
 					break;
 				case 1:
 					$arr['forward_url'] = '/jijin/Risk_assessment';
 					$arr['forward_msg'] = '进行风险等级测试';
-					$arr['back_url'] = '/jijin/Jz_fund';
-					$arr['base'] = $this->base;
 					$arr['head_title'] = '购买提醒';
-					$arr['ret_msg'] = $log_msg;
 					$_SESSION['url_afteroperation'] = '/jijin/Jz_fund';
 					$this->load->view('ui/operate_result2',$arr);
 					break;
 				case 3:
 					$arr['forward_url'] = '/jijin/Fund_bank/operation/bankcard_add';
 					$arr['forward_msg'] = '赠加银行卡';
-					$arr['back_url'] = '/jijin/Jz_fund';
-					$arr['base'] = $this->base;
 					$arr['head_title'] = '购买提醒';
-					$arr['ret_msg'] = $log_msg;
 					$_SESSION['url_afteroperation'] = '/jijin/Jz_fund';
 					$this->load->view('ui/operate_result2',$arr);
 				break;
 				default:
 					$arr['ret_code'] ='AAAA';
-					$arr['ret_msg'] = '系统故障，请稍候重试';
 					$arr['head_title'] = $data['purchasetype'].'结果';
-					$arr['back_url'] = '/jijin/Jz_fund';
-					$arr['base'] = $this->base;
 					$this->load->view('ui/view_operate_result',$arr);
 			}
 		}

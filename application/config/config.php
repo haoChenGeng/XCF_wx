@@ -529,7 +529,7 @@ $config['unifyEntrance'] = '/Xnxcfindex/WK8YGc3Yi2oP3/';
 
 //定义需要跳转的网站
 // $config['member_url'] ='http://xcf.fortiddns.com:50280';                    //会员专区
-$config['fundUrl'] = 'http://10.10.78.107';                     //基金系统
+$config['fundUrl'] = /* '10.10.78.107' */'http://10.17.2.101';                     //基金系统
 
 date_default_timezone_set('Asia/ShangHai');
 $config['time_zone'] = date_default_timezone_get();

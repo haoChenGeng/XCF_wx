@@ -79,7 +79,8 @@ class Jz_fund extends MY_Controller
 					$tmp = $this->config->item('fundtype')[$val['fundtype']];
 					$json['fundtypename'] = is_null($tmp)?'-':$tmp;
 					$json['nav'] = $val['nav'];
-					$json['tano'] = $val['tano'].'/'.$val['taname'];
+					$json['tano'] = $val['tano'];
+					$json['taname'] = $val['taname'];
 						
 					$fund_list['data'][$i] = $json;
 						
