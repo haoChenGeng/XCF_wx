@@ -38,8 +38,12 @@ class Jz_my extends MY_Controller
 	//获取“我的基金”页面的内容
 	public function getMyPageData($activePage = 'fund') {
 		
-		if (!$this->logincontroller->isLogin()) {
-			echo(json_encode(array('errorMsg'=>true)));
+		if (!isset($_SESSION['customer_id'])) {
+			echo(json_encode(array('error'=>true,'errorMsg'=>'您尚未登录,请先登录')));
+			exit;
+		}
+		if (!isset($_SESSION['JZ_user_id']) || $_SESSION['JZ_user_id'] == 0) {
+			echo(json_encode(array('error'=>true,'errorMsg'=>'您尚未开通基金账户,请先开户')));
 			exit;
 		}
 		
@@ -65,10 +69,9 @@ class Jz_my extends MY_Controller
 				case 'risk_test':
 					//获取风险测试
 					$res = $this->getRiskLevel();
-					
 					if (isset($res['code']) && isset($res['msg']) && isset($res['data']) && !empty($res['data'])) {
-						$data['custrisk'] = $res['data'][0]['custrisk'] ;
-						$data['custriskname'] = $res['data'][0]['custriskname'] ;
+						$data['custrisk'] = $res['data']['custrisk'] ;
+						$data['custriskname'] = $res['data']['custriskname'] ;
 					} else {
 						$data['custrisk'] = '查询失败';
 					}
@@ -150,110 +153,37 @@ class Jz_my extends MY_Controller
 	private function getMyFundList() {
 		
 		//调用接口
-		$res = $this->fund_interface->asset($_SESSION['JZ_account'],1,'');
-		
-		file_put_contents('log/trade/Jz_my'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['JZ_account'].'进行资产查询，返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
-		$data['totalfundvolbalance'] = 0;
-		$data['totalfundmarketvalue'] = 0;
-		$fund_list['code'] = $res['code'];
-		$fund_list['msg'] = $res['msg' ];
-		$data['fund_list'] = null;
-		if (isset($res['code']) && $res['code']=='0000' && !empty($res['data'][0])) {
-			$data['totalfundvolbalance'] = $res['data'][0]['totalfundvolbalance_mode1'];
-			$data['totalfundmarketvalue'] = $res['data'][0]['totalfundmarketvalue_mode1'];
-			$this->load->config('jz_dict');
-			$i = 0;
-			foreach ($res['data'] as $key => $val)
-			{
-				if (!empty($val)){
-					$list['fundcode'] = $val['fundcode'];
-					$list['fundname'] = $val['fundname'];
-					$list['fundvolbalance'] = $val['fundvolbalance'];
-					$list['nav'] = $val['nav'];
-					$tmp = $this->config->item('fundtype')[$val['fundtype']];
-					$list['fundtypename'] = is_null($tmp)?'-':$tmp;
-					$list['redeem'] = $this->config->item('fund_status')[$val['status']]['redeem'];
-					$fund_list['data'][$i] = $list;
-					unset($list['redeem']);
-					unset($list['nav']);
-					$list['sharetype'] = $val['sharetype'];
-					$list['transactionaccountid'] = $val['transactionaccountid'];
-					$list['fundfrozenbalance'] = $val['fundfrozenbalance'];
-					$list['availablevol'] = $val['availablevol'];
-					$list['branchcode'] = $val['branchcode'];
-					$list['tano'] = $val['tano'];
-					$fund_list['data'][$i]['json'] = base64_encode(json_encode($list));
-// 					$fund_list['data'][$i]['risklevel'] = $res['data'][$key]['risklevel'];
-// 					$fund_list['totalfundmarketvalue'] = $val['totalfundmarketvalue'];
-// 					$fund_list['totalfundmarketvalue'] = $val['totalfundmarketvalue'];
-// 					$fund_list['totalfundvolbalance_mode1'] = $val['totalfundvolbalance_mode1'];
-// 					$fund_list['totalfundmarketvalue_mode1'] = $val['totalfundmarketvalue_mode1'];
-					$i++;
-				}
+		$res = $this->fund_interface->asset();
+		file_put_contents('log/trade/Jz_my'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['customer_name'].'进行资产查询，返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
+		$data = &$res['data'];
+		foreach ($data['fund_list'] as $key=>$val){
+			if (is_array($val)){
+				$data['fund_list']['data'][$key] = $val;
+				$data['fund_list']['data'][$key]['json'] = base64_encode(json_encode($val));
+				unset($data['fund_list'][$key]);
 			}
-			$data['fund_list'] = $fund_list;
 		}
-		
-/* 		for ($i=0;$i<count($res['data']);$i++) {
-			if (!empty($res['data'][i])) {
-				$tmp = $this->config->item('fundtype')[$res['data'][$i]['fundtype']];
-				$res['data'][$i]['fundtypename'] = is_null($tmp)?'-':$tmp;
-				
-				$tmp = $this->config->item('sharetype')[$res['data'][$i]['sharetype']];
-				$res['data'][$i]['sharetypename'] = is_null($tmp)?'-':$tmp;
-			}
-		} */
-// file_put_contents('log/debug'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).serialize($res)."\r\n\r\n",FILE_APPEND);		
 		return $data;
 	}
 	
 	//风险测试
 	private function getRiskLevel() {
 		//调用接口
-		$res = $this->fund_interface->account_info($_SESSION['JZ_account']);
-		
-		
+		$res = $this->fund_interface->AccountInfo();
 		$this->load->config('jz_dict');
-		for ($i=0;$i<count($res['data']);$i++) {
-			if (!empty($res['data'][$i])) {
-				$tmp = null;
-				$tmp = $this->config->item('custrisk')[(int)$res['data'][$i]['custrisk']];
-				$res['data'][$i]['custriskname'] = is_null($tmp)?'-':$tmp;
-			}
+		if (!empty($res['data'])) {
+			$tmp = null;
+			$tmp = $this->config->item('custrisk')[(int)$res['data']['custrisk']];
+			$res['data']['custriskname'] = is_null($tmp)?'-':$tmp;
 		}
-		
 		return $res;
 	}
 	
-	
 	private function bonusChangeAbleList() {
-		$custno = $_SESSION['JZ_account'];
-		$res =  $this->fund_interface->bonus_changeable($custno);
-		
-		$this->load->config('jz_dict');
-		$bonusChangeList = array();
-		for ($i=0;$i<count($res['data']);$i++) {
-			if (!empty($res['data'][$i])) {
-				$tmp = null;
-				$tmp = $this->config->item('sharetype')[$res['data'][$i]['sharetype']];
-				$sharetypename = is_null($tmp)?'-':$tmp;
-					
-				$tmp = null;
-				$tmp = $this->config->item('dividendmethod')[$res['data'][$i]['dividendmethod']];
-				$dividendmethodname = is_null($tmp)?'-':$tmp;
-				
-				$bonusChangeList['data'][$i]['fundname'] = $res['data'][$i]['fundname'];
-				$bonusChangeList['data'][$i]['dividendmethodname'] = $dividendmethodname;
-				$bonusChangeList['data'][$i]['sharetypename'] = $sharetypename;
-				$bonusChangeList['data'][$i]['fundcode'] = $res['data'][$i]['fundcode'];
-				$bonusChangeList['data'][$i]['nav'] = $res['data'][$i]['nav'];
-				$bonusChangeList['data'][$i]['sharetype'] = $res['data'][$i]['sharetype'];
-				$bonusChangeList['data'][$i]['dividendmethod'] = $res['data'][$i]['dividendmethod'];
-				$bonusChangeList['data'][$i]['transactionaccountid'] = $res['data'][$i]['transactionaccountid'];
-				$bonusChangeList['data'][$i]['branchcode'] = $res['data'][$i]['branchcode'];
-				$bonusChangeList['data'][$i]['json'] = base64_encode(json_encode($bonusChangeList['data'][$i]));
-			}
-		}		
+		$bonusChangeList =  $this->fund_interface->bonus_changeable();
+		foreach ($bonusChangeList['data'] as $key=>$val){
+			$bonusChangeList['data'][$key]['json'] = base64_encode(json_encode($val));
+		}
 		return $bonusChangeList;
 	}
 	

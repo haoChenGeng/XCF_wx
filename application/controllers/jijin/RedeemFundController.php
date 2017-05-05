@@ -64,39 +64,15 @@ class RedeemFundController extends MY_Controller {
 		unset($_SESSION['rand_code']);
 		if ($div_bit !== false){                           //找到一次性随机验证码
 			$tpasswd = substr($decryptData, 0, $div_bit);
-			$res = $this->fund_interface->redemption($_SESSION['JZ_account'], $data['transactionaccountid'], $data['branchcode'], $data['tano'], $data['fundcode'], $data['sharetype'], $data['applicationval'], $data['largeRedemptionFlag'], $tpasswd);
+			$data['tpasswd'] = $tpasswd;
+			$res = $this->fund_interface->redemption($data);
+// var_dump($res,$data);
 			file_put_contents('log/trade/redeem'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行赎回，交易数据为:".serialize($data)."\r\n返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
 			if (isset($res['code'])){
-				if ($res['code'] == '0000' && isset($res['data'][0]['appsheetserialno'])){
-					$insert_data = array('XN_account' => $_SESSION ['customer_name'],
-							'JZ_account' => $_SESSION['JZ_account'],
-							'appsheetserialno' => $res['data'][0]['appsheetserialno'],
-							'fundcode' => $data['fundcode'],
-							'buy_type' => '赎回',
-							'sharetype' => $data['sharetype'],
-							'sum' => $data['applicationval'],
-							'status' => 0,
-					);
-					//写数据库
-					$db_res = $this->db->insert('jz_fund_trade',$insert_data);     //写入数据库
-					$str =  ":\r\n用户:".$_SESSION ['customer_name']."进行赎回操作成功。\r\n写入数据库数据为：".serialize($insert_data);
-					if ($db_res){
-						$str .= ' 写入成功';
-					}else{
-						$str .= ' 写入失败,失败原因：'.serialize($this->db->error());
-					}
-					file_put_contents('log/trade/redeem'.$this->logfile_suffix, date('Y-m-d H:i:s',time()).$str."\r\n\r\n",FILE_APPEND);
-					$data['ret_code'] = '0000';
-					$data['ret_msg'] = '基金赎回操作成功';
-				}else{
 					$data['ret_code'] = $res['code'];
-					if ($res['code'] == '-409999999' && strpos($res['msg'],'密码') !== false){
-						$data['ret_msg'] = '交易密码输入错误，请重试';
-					}
-					if ($res['code'] == '-400302030' && strpos($res['msg'],'最低限额') !== false){
+					if (in_array($res['code'], array('0016','0020','0021'))){
 						$data['ret_msg'] = $res['msg'];
 					}
-				}
 			}else{
 				$data['ret_code'] = 'AAAA';
 				$log_msg = '调用赎回接口失败';

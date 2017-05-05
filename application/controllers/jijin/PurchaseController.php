@@ -26,8 +26,7 @@ class PurchaseController extends MY_Controller {
 		$data['purchasetype'] = $get['purchasetype'];
 		$purchase_info =$this->fund_interface->beforePurchase($data);
 		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."访问公募基金接口，返回数据为:".serialize($purchase_info)."\r\n\r\n",FILE_APPEND);
-// var_dump($purchase_info,$data);
-// 		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."银行卡返回数据:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
+// var_dump($purchase_info,$data);exit;
 		if (key_exists('code',$purchase_info)){
 			if ($purchase_info['code'] == '0000' ){
 				if (empty($purchase_info['data']['custrisk'])){

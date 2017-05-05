@@ -17,16 +17,16 @@ class Jz_account extends MY_Controller
     
 	function register()
 	{
-		if (isset($_SESSION['JZ_user_id'])) {
-			redirect($this->base . "/jijin/Jz_home");
+		if (!empty($_SESSION['JZ_user_id'])) {
+			if ($_SESSION ['JZ_user_id'] < 0)
+			{
+				$_SESSION['next_url'] = $this->base . "/jijin/Jz_my";
+				redirect($this->base."/user/login");
+			}else{
+				redirect($this->base . "/jijin/Jz_fund");
+			}
 		}
-		if (!isset($_SESSION ['customer_name']))
-		{
-			$_SESSION['next_url'] = $this->base . "/jijin/Jz_fund";
-    		$this->logincontroller->gotoXnLogin();
-    		exit;
-		}
-		$res = $this->fund_interface->payment_channel();
+		$res = $this->fund_interface->paymentChannel();
 		file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询支付渠道返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
 		if ($res['code'] == '0000'){
 			$this->load->config('jz_dict');
@@ -88,6 +88,9 @@ class Jz_account extends MY_Controller
 				//查询数据库中该用户或输入身份证已开户
 				$sql = "SELECT * FROM jz_account WHERE certificateno = ? or XN_account = ?";
 				$user_info = $this->db->query($sql, array($post['certificateno'], $_SESSION ['customer_name']))->row_array();
+				
+				
+				
 				if (!isset($user_info['id']))
 				{
 					//查询金正系统该客户是否已开户，及记录log
@@ -429,7 +432,6 @@ class Jz_account extends MY_Controller
     	if (!$this->logincontroller->isLogin()) {
     		exit;
     	}
-    	
     	$post = $this->input->post();
     	if (!empty($post))
     	{
@@ -443,10 +445,10 @@ class Jz_account extends MY_Controller
     		if ($div_bit !== false){                      //找到一次性随机验证码
     			$oldpwd = substr($decryptData, 0, $div_bit);
     			$newpwd = substr($decryptData, $div_bit+7);
-    			$res = $this->fund_interface->password_change($_SESSION['JZ_account'], $oldpwd, $newpwd, $post['pwdtype'], '0000');
-    			if (is_array($res) && $res['code'] == '0000')
+    			$res = $this->fund_interface->revisePassward($oldpwd, $newpwd, $post['pwdtype']);
+    			file_put_contents('log/user/revise_passward'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."修改".$str_info.'密码，调用接口返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
+    			if (isset($res['code']) && $res['code'] == '0000')
     			{
-    				file_put_contents('log/user/revise_passward'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."修改".$str_info.'密码成功，调用接口返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
     				$this->db->set(array('tpasswd' => my_md5($_SESSION ['customer_name'], $newpwd)))->where(array('JZ_account'=>$_SESSION['JZ_account']))->update('jz_account');
     				Message(Array(
     						'msgTy' => 'sucess',

@@ -6,7 +6,7 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="keywords" content="小牛资本">
     <meta name="description" content="小牛资本管理集团公募基金代销系统">
-    <link href="/data/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="/data/jijin/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
     <title>银行卡记录</title>
 </head>
 <body>
@@ -24,8 +24,10 @@
                 <div class="color-blue">银行卡号：<?php echo substr($value['depositacct'],0,4).'***'.substr($value['depositacct'],-6);?></div>
                 <div class="color-black">状态：<?php echo $value['status'];?></div>
             </div>      
+<!--
             <a class="m-item-a bank-info-del" href="/jijin/Fund_bank/bankcard_delete/<?php echo $value['depositacct'].'/'.$value['channelid'];?>">删除</a>
-            <a class="m-item-a bank-info-del" href="/jijin/Fund_bank/operation/bankcard_change/<?php echo $value['depositacct'].'/'.$value['channelid'].'/'.$value['moneyaccount'];?>">更换</a>                  
+            <a class="m-item-a bank-info-del" href="/jijin/Fund_bank/operation/bankcard_change/<?php echo $value['depositacct'].'/'.$value['channelid'].'/'.$value['moneyaccount'];?>">更换</a>
+-->                   
         </div>
         <?php }}?>
     </section>
@@ -33,7 +35,7 @@
 <section class="m-btn-wrap">
 	<?php
 		if ($num_channel>0){
-			echo ('<a class="overhidden disb mr10" href="/jijin/Fund_bank/operation/bankcard_add"><img class="disb fr" src="/data/img/add-card.png" alt="添加银行卡"></a>');
+			echo ('<a class="overhidden disb mr10" href="/jijin/Fund_bank/operation/bankcard_add"><img class="disb fr" src="/data/jijin/img/add-card.png" alt="添加银行卡"></a>');
 		}
 	?>
 <!--     <a class="overhidden disb mr10" href="/jijin/Fund_bank/bank_add"><img class="disb fr" src="/data/img/add-card.png" alt="添加银行卡"></a> -->

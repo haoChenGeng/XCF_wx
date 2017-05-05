@@ -82,7 +82,12 @@ class User extends MY_Controller {
 					}
 					$_SESSION ['customer_id'] = $info ['id'];
 					$_SESSION ['customer_name'] = $info ['Customername'];
-					redirect ($this->base . "/User/home/".$type);
+					if (isset($_SESSION['next_url'])){
+						redirect ($_SESSION['next_url']);
+						unset($_SESSION['next_url']);
+					}else{
+						redirect ($this->base . "/User/home/".$type);
+					}
 					exit ();
 				}
 			}
@@ -204,6 +209,9 @@ class User extends MY_Controller {
 		}
 		if (isset ( $_SESSION ['customer_name'] )) {
 			unset ( $_SESSION ['customer_name'] );
+		}
+		if (isset($_SESSION['JZ_user_id'])) {
+			unset($_SESSION['JZ_user_id']);
 		}
 		session_destroy ();
 		redirect ( $this->base . "/user/login");

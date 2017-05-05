@@ -33,7 +33,8 @@ class Fund_bank extends MY_Controller
     			$oper_des = '';
     	}
     	//查询获得用户姓名、证件类型、证件号码信息
-    	$user_info = $this->fund_interface->account_info($_SESSION['JZ_account']);
+    	$user_info = $this->fund_interface->AccountInfo();
+// var_dump($user_info);
     	file_put_contents('log/user/'.$operation.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."信息(account_info<520101>)返回数据:".serialize($user_info)."\r\n\r\n",FILE_APPEND);
     	if ($user_info['code'] != '0000' || !isset($user_info['data'][0]['certificateno'])){
     		$log_msg = '查询用户信息(account_info<520101>)失败';
@@ -301,9 +302,9 @@ class Fund_bank extends MY_Controller
 		if (!$this->logincontroller->isLogin()) {
 			exit;
 		}
-		$bank_info =$this->fund_interface->bankcard_phone($_SESSION['JZ_account'], 1);
+		$bank_info =$this->fund_interface->bankCardPhone();
 		file_put_contents('log/user/bank_info'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."银行卡返回数据:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
-		if (is_array($bank_info) && $bank_info['code'] == '0000' && $bank_info['msg'] == '查询手机客户银行卡成功!')
+		if ($bank_info['code'] == '0000')
 		{
 			if (!empty($bank_info['data'][0]))
 			{
@@ -334,7 +335,7 @@ class Fund_bank extends MY_Controller
 	}
 	
 	private function void_paymentchannel($arr = ''){                        //获取未邦定银行卡的支付渠道
-		$channel_info = $this->fund_interface->payment_channel();
+		$channel_info = $this->fund_interface->paymentChannel();
 		if ($channel_info['code'] == '0000' && is_array($arr)){
 			foreach ($arr as $key =>$val){
 				if (!empty ($val)){

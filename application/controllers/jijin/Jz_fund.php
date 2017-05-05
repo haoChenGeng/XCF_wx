@@ -40,7 +40,7 @@ class Jz_fund extends MY_Controller
 				$data['apply'] = $this->getFundList('purchase');
 				break;
 			case 'today':
-				if (isset($_SESSION['JZ_user_id'])){
+				if (isset($_SESSION['customer_id'])){
 					$startdate = date('Ymd',time());
 					$enddate = date('Ymd',time()+86400);                  //因当天收市后下的单会归到下一天，因此结束时间加1天
 					$data['today'] = $this->getHistoryApply($startdate, $enddate);
@@ -113,8 +113,10 @@ class Jz_fund extends MY_Controller
 	private function getHistoryApply($startDate = '',$endDate = '', $type = 0) {
 		//调用接口
 // $startDate = '20160103';
-		$fund_list = $this->fund_interface->Trans_applied($_SESSION['JZ_account'], $startDate, $endDate);
-		file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['JZ_account'].'进行历史交易申请查询('.$startDate.'-'.$endDate.')'.serialize($fund_list)."\r\n\r\n",FILE_APPEND);
+		$fund_list = $this->fund_interface->Trans_applied($startDate, $endDate);
+		if (isset($_SESSION['customer_name'])){
+			file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['customer_name'].'进行历史交易申请查询('.$startDate.'-'.$endDate.')'.serialize($fund_list)."\r\n\r\n",FILE_APPEND);
+		}
 /* 		if ($type == 1){
 			$transConfirmed = $this->fund_interface->Trans_confirmed($_SESSION['JZ_account'], $startDate, $endDate);
 			file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['JZ_account'].'进行历史交易确认查询('. $startDate.' - '.$endDate.')，返回信息：'.serialize($ConfirmedTrans)."\r\n\r\n",FILE_APPEND);

@@ -17,9 +17,9 @@
 	 	type:'post',
 	 	timeout:30*1000, 
 	 	success:function (data) {
-	 		if (data.errorMsg) {
+	 		if (data.error) {
 	 			var fundList = document.getElementById('scroll1');
-	 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register" id="errorMsg">基金未开户，请先开户</a>';	 			
+	 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register" id="errorMsg">'+data.errorMsg+'</a>';	 			
 	 		}else {
 	 			document.getElementById('totalBalance').innerHTML = data.totalfundvolbalance;
 	 			var listWrap = document.getElementById('buyFundList');
@@ -76,9 +76,9 @@
 						 	type:'post',
 						 	timeout:30*1000,
 						 	success:function (data) {
-						 		if (data.errorMsg) {
+						 		if (data.error) {
 						 			var fundList = document.getElementById('scroll2');
-						 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register" id="errorMsg">基金未开户，请先开户</a>';						 			
+						 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register" id="errorMsg">'+data.errorMsg+'</a>';						 			
 						 		}else {
 							 		var listWrap = document.getElementById('bonus-mod');
 			 				 		var fragment = document.createDocumentFragment();
@@ -122,9 +122,9 @@
 					 			var nodeWrap = item3.querySelector('.mui-scroll'),
 					 				nodeChlid = item3.querySelector('.mui-scroll').childNodes;
 					 			nodeWrap.removeChild(nodeChlid[1]);
-						 		if (data.errorMsg) {
+						 		if (data.error) {
 						 			var fundList = document.getElementById('scroll3');
-						 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register" id="errorMsg">基金未开户，请先开户</a>';						 			
+						 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register" id="errorMsg">'+data.errorMsg+'</a>';						 			
 						 		} else {
 						 			var risk = document.getElementById('risk_result');
 						 			risk.innerHTML = '风险测试['+data.custrisk+':'+data.custriskname+']';						 			

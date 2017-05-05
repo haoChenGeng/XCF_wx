@@ -161,5 +161,3 @@ $config['paystatus'] = array(
 		'03' => '支付失败',
 		'07' => '托收成功',
 );
-
-$config['fundUrl'] = 'http://10.10.78.109:8080/xnconvert/XNConvertJZServlet';

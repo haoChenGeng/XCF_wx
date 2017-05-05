@@ -7,7 +7,7 @@
 	<meta name="format-detection" content="telephone=no" />
 	<meta name="keywords" content="小牛资本">
 	<meta name="description" content="小牛资本管理集团公募基金代销系统">
-	<link href="/data/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
+	<link href="/data/jijin/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
 	<title>密码修改</title>
 </head>
 
@@ -48,9 +48,9 @@
 </body>
 
 <script src="/data/lib/zepto.min.js"></script>
-<script src="/data/js/m.min.js"></script>
-<script src="/data/js/common.js"></script>
-<script src="/data/js/RSA.js"></script>
+<script src="/data/jijin/js/m.min.js"></script>
+<script src="/data/jijin/js/common.js"></script>
+<script src="/data/js/RSA.min.js"></script>
 
 <script>
     Zepto(function($){
