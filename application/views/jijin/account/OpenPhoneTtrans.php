@@ -5,8 +5,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<meta name="format-detection" content="telephone=no" />
-	<link href="/data/css/swiper.3.1.7.min.css" media="screen" rel="stylesheet" type="text/css">
-	<link href="/data/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
+	<link href="/data/jijin/css/swiper.3.1.7.min.css" media="screen" rel="stylesheet" type="text/css">
+	<link href="/data/jijin/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
 	<title>开通手机交易</title>
 	
 </head>
@@ -23,15 +23,17 @@
 				<div class="m-item">
 					<i class="icon icon-pwd"></i>
 					<label>
-						<input type="password" id="lpasswd" class="w80-p"  name="lpasswd"  data-reg=".+"  data-error="密码不能为空" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请输入基金登录密码" />
+						<input type="password" id="lpasswd" class="w80-p"  name="lpasswd"  data-reg=".+"  data-error="密码不能为空" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请输入基金交易密码" />
 					</label>
 				</div>
+<!--
 				<div class="m-item">
 					<i class="icon icon-pwd"></i>
 					<label>
 						<input type="password" id="tpasswd" class="w80-p"  name="tpasswd"  data-reg=".+"  data-error="密码不能为空" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请设置基金交易密码" />
 					</label>
 				</div>
+-->
 			</section>
 			<section class="m-btn-wrap">
 				<input class="btn" type="submit" value="下一步"/>
@@ -44,9 +46,9 @@
 <script src="http://apps.bdimg.com/libs/zepto/1.1.4/zepto.min.js"></script>
 <script>window.Zepto || document.write('<script src="/data/lib/zepto.min.js"><\/script>')</script>
 <!-- <script src="/data/lib/zepto.min.js"></script> -->
-<script src="/data/js/m.min.js"></script>
+<script src="/data/jijin/js/m.min.js"></script>
 <!-- <script src="/data/js/encrypted.js"></script> -->
-<script src="/data/js/RSA.js"></script>
+<script src="/data/js/RSA.min.js"></script>
 <script>
 	Zepto(function($) {
 		M.checkBoxInit();
@@ -54,7 +56,7 @@
             M.checkForm(function () {
             	var encrypt = new JSEncrypt();
 				encrypt.setPublicKey($('#lpasswd').attr('data-key'));
-                var encrypted = encrypt.encrypt($('#lpasswd').val()+$('#lpasswd').attr('data-code')+$('#tpasswd').val());
+                var encrypted = encrypt.encrypt($('#lpasswd').val()+$('#lpasswd').attr('data-code')+$('#lpasswd').val());  //+ $('#tpasswd').val() 
 				$('#lpasswd').val(encrypted);
 				$('#tpasswd').val('');
                 $('#login_form').attr('onsubmit','return true');

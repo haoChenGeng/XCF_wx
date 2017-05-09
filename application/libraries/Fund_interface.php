@@ -42,7 +42,7 @@ class Fund_interface
 		return array('data'=>$submitData);
 	}
 	
-	private function getReturnData($inputData){
+	/* private  */function getReturnData($inputData){
 		$AES = new Crypt_AES(CRYPT_AES_MODE_ECB);
 		$AES->setKey($this->AESKey);
 		return json_decode($AES->decrypt(base64_decode($inputData)),true);
@@ -67,7 +67,8 @@ class Fund_interface
 // var_dump($AESKey,$this->CI->config->item('fundUrl').'/jijin/XCFinterface/renewCryptKey');
 		if (!empty($AESKey)){
 			$res = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface/renewCryptKey',$AESKey);
-			if (strcmp($res,'SUCESS')){
+// var_dump($res,strstr($res,'SUCESS'));
+			if (strstr($res,'SUCESS')){
 				$XCFkey = $this->CI->db->where(array('platformName'=>'Fund'))->get('communctionkey')->row_array();
 				if(empty($XCFkey)){
 					$flag = $this->CI->db->set(array('platformName'=>'Fund','AESkey'=>$newKey))->insert('communctionkey');
@@ -198,6 +199,29 @@ class Fund_interface
 	
 	function revisePassward($oldpwd, $newpwd, $pwdtype){
 		$submitData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'RevisePassward','oldpwd'=>$oldpwd,'newpwd'=>$newpwd,'pwdtype'=>$pwdtype));
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function SeekAccount($certificatetype,$certificateno){
+		$submitData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'seekAccount','certificatetype'=>$certificatetype,'certificateno'=>$certificateno));
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function bgMsgSend(&$bgMsgSend){
+		$bgMsgSend['code'] = 'bgMsgSend';
+		$bgMsgSend['customerNo'] = $_SESSION['customer_name'];
+		$submitData = $this->getSubmitData($bgMsgSend);
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function openPhoneTrans(&$openPhoneTrans){
+		$openPhoneTrans['code'] = 'openPhoneTrans';
+		$openPhoneTrans['customerNo'] = $_SESSION['customer_name'];
+		$submitData = $this->getSubmitData($openPhoneTrans);
+// return $submitData;
 		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}

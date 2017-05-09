@@ -3,7 +3,8 @@ window.onload = function () {
 	var seeHeight = document.documentElement.clientHeight,
 		sliderHeight = document.getElementById('sliderSegmentedControl').clientHeight,
 		navHeight = document.querySelector('.mui-bar-tab').clientHeight,
-		topHeight = document.getElementById('header').clientHeight,
+//		topHeight = document.getElementById('header').clientHeight,
+		topHeight = 0;
 		control = document.querySelectorAll('.mui-control-content');
 
 	var h = seeHeight-sliderHeight-navHeight-topHeight-2;

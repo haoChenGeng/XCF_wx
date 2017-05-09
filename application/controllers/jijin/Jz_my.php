@@ -20,7 +20,6 @@ class Jz_my extends MY_Controller
 		
 		if (!$this->logincontroller->isLogin()) {
 			$_SESSION['next_url'] = $this->base.'/jijin/Jz_my';
-// 			$this->logincontroller->login();
 		}
 		
 		$data = array();
@@ -156,12 +155,16 @@ class Jz_my extends MY_Controller
 		$res = $this->fund_interface->asset();
 		file_put_contents('log/trade/Jz_my'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['customer_name'].'进行资产查询，返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
 		$data = &$res['data'];
-		foreach ($data['fund_list'] as $key=>$val){
-			if (is_array($val)){
-				$data['fund_list']['data'][$key] = $val;
-				$data['fund_list']['data'][$key]['json'] = base64_encode(json_encode($val));
-				unset($data['fund_list'][$key]);
+		if (!empty($res['data']['fund_list'])) {
+			foreach ($data['fund_list'] as $key=>$val){
+				if (is_array($val)){
+					$data['fund_list']['data'][$key] = $val;
+					$data['fund_list']['data'][$key]['json'] = base64_encode(json_encode($val));
+					unset($data['fund_list'][$key]);
+				}
 			}
+		}else{
+			$data['fund_list']['data'] = array();
 		}
 		return $data;
 	}
@@ -181,8 +184,12 @@ class Jz_my extends MY_Controller
 	
 	private function bonusChangeAbleList() {
 		$bonusChangeList =  $this->fund_interface->bonus_changeable();
-		foreach ($bonusChangeList['data'] as $key=>$val){
-			$bonusChangeList['data'][$key]['json'] = base64_encode(json_encode($val));
+		if (!empty($bonusChangeList['data'])){
+			foreach ($bonusChangeList['data'] as $key=>$val){
+				$bonusChangeList['data'][$key]['json'] = base64_encode(json_encode($val));
+			}
+		}else{
+			$bonusChangeList['data'] = array();
 		}
 		return $bonusChangeList;
 	}

@@ -18,6 +18,7 @@ class Jz_fund extends MY_Controller
 	//购买基金页面入口
 	function index($activePage = 'fund')
 	{
+		$this->logincontroller->isLogin();
 		$data = array();
 		if ($activePage != 'buy' && $activePage != 'apply' && $activePage != 'today' && $activePage != 'history') {
 			$activePage = isset($_SESSION['my_active_page'])? $_SESSION['my_active_page'] : 'buy';
@@ -66,7 +67,6 @@ class Jz_fund extends MY_Controller
 		//调用接口
 		$fund_list = array();
 		if ($this->getAllFundInfo()){
-			$this->fund_interface->fund_list();
 			$res = $this->db->get('fundlist')->result_array();
 			$this->load->config('jz_dict');
 			$i = 0;
@@ -268,6 +268,7 @@ class Jz_fund extends MY_Controller
 		$updatetime = $this->db->where(array('dealitem' => 'fundlist'))->get('dealitems')->row_array()['updatetime'];
 		if ($updatetime < $needtime){
 			$res = $this->fund_interface->fund_list();
+			var_dump($res);
 			file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'进行基金列表查询，返回信息：'.serialize($res)."\r\n\r\n",FILE_APPEND);
 			$flag = TRUE;
 			if (isset($res['code']) && $res['code'] == '0000' && isset($res['data'][0]) && !empty($res['data'][0])){

@@ -41,7 +41,7 @@ class Jz_account extends MY_Controller
 			Message(Array(
 					'msgTy' => 'fail',
 					'msgContent' => '<br/>注册失败，系统正在返回...',
-					'msgUrl' => $this->base . '/jijin/Jz_home',
+					'msgUrl' => $this->base . '/jijin/Jz_my',
 					'base' => $this->base
 					));
 		}
@@ -75,60 +75,42 @@ class Jz_account extends MY_Controller
 			$this->load->library('form_validation');
 			$this->form_validation->set_message('required', '%s不能为空.');
 			$this->form_validation->set_message('max_length', '%s长度超出限制.');
+			$this->form_validation->set_message('exact_length', '%s长度不符合要求.');
 			$this->form_validation->set_message('numeric', '%s必须为数字.');
 			
 			//--------以下设置判断客户输入信息检测规则--------------------------
-			$this->form_validation->set_rules('certificateno','身份证号','required|max_length[18]');
+			if ($post['certificatetype'] == 0){
+				$this->form_validation->set_rules('certificateno','身份证号码','required|exact_length[18]');
+			}
 			$this->form_validation->set_rules('depositacctname','银行帐户名','required|max_length[30]');
 			$this->form_validation->set_rules('depositacct','银行卡号','required|max_length[30]|numeric');
 			$this->form_validation->set_rules('mobiletelno','银行预留电话','required|max_length[20]|numeric');
 			
 			if ($this->form_validation->run() == TRUE)
 			{
-				//查询数据库中该用户或输入身份证已开户
-				$sql = "SELECT * FROM jz_account WHERE certificateno = ? or XN_account = ?";
-				$user_info = $this->db->query($sql, array($post['certificateno'], $_SESSION ['customer_name']))->row_array();
-				
-				
-				
-				if (!isset($user_info['id']))
-				{
-					//查询金正系统该客户是否已开户，及记录log
-					$res = $this->fund_interface->custno($post['certificatetype'], $post['certificateno']);
-					file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."身份证为:".$post['certificateno']."客户查询金正系统是否已开户返回数据".serialize($res)."\r\n\r\n",FILE_APPEND);
-					if ($res['code'] == '0000' && isset($res['data'][0]['custno'])){
-						$custno = $res['data'][0]['custno'];
-						$account_info = $this->fund_interface->account_info($custno);    //查询金证系统该客户是否已开通手机交易
-						file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."身份证为:".$post['certificateno']."客户调用金正account_info接口返回数据".serialize($account_info)."\r\n\r\n",FILE_APPEND);
-// $info_msg = '该证件已开户，未开通手机交易';
-						if ($account_info['code'] == '0000' && isset($account_info['data'][0]['tradingmethod'])){
-							if (strstr($account_info['data'][0]['tradingmethod'],'4'))          //已经开通手机交易，4表示已开通手机交易
-							{
-								$err_msg = '该证件已开户';
-							}
-							else
-							{
-								$info_msg = '该证件已开户，未开通手机交易';
-							}
-						}
-					}
-					else{
+				//查询该用户或输入身份证已开户
+				$seekAccount = $this->fund_interface->SeekAccount($post['certificatetype'],$post['certificateno']);
+// $seekAccount['code'] = '0033';
+// $seekAccount['custno'] = '37';
+				if (key_exists('code', $seekAccount)){
+					if ($seekAccount['code'] == '0000'){
 						//调用银行鉴权接口及log
-						$res_bMS = $this->fund_interface->bgMsgSend($post['certificatetype'], $post['certificateno'], $post['depositacctname'], $post['depositacct'], $post['channelid'], $post['mobiletelno'], $post['channelid']);
-						$str = 'certificatetype='.$post['certificatetype'] . ' certificateno=' . $post['certificateno'] . ' depositacctname=' . $post['depositacctname'] . ' depositacct='.$post['depositacct'] . ' subbankno='.$post['channelid'].' mobiletelno='.$post['mobiletelno'] . ' channelid='.$post['channelid'];
-						file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend数据为:".$str."\r\n调用bgMsgSend返回信息".serialize($res_bMS)."\r\n\r\n",FILE_APPEND);
+						$res_bMS = $this->fund_interface->bgMsgSend($post);
+var_dump($res_bMS);
+						file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend数据为:".$str."\r\n调用bgMsgSend返回信息".serialize($post)."\r\n\r\n",FILE_APPEND);
 						if ( !isset($res_bMS['code']) || $res_bMS['code'] != '0000' )        //鉴权失败  $res_bMS['data'][0]['comtype']表示该卡已经鉴权过
 						{
 							$err_msg = '银行鉴权失败';
 						}
+					}else{
+						if ($seekAccount['code'] == '0033'){
+							$info_msg = $seekAccount['msg'];
+						}else{
+							$err_msg = $seekAccount['msg'];
+						}
 					}
-				}
-				else
-				{
-					if ($user_info['certificateno'] == $post['certificateno'])
-						$err_msg = '该证件已开户';
-						if ($user_info['XN_account'] == $_SESSION ['customer_name'])
-							$err_msg = '您已开户,系统只允许用户开设一个基金账户';
+				}else{
+					$err_msg = '系统故障，请稍后重试';
 				}
 				if ( !isset($err_msg) && !isset($info_msg))                                                             //判断是否鉴权成功
 				{
@@ -154,7 +136,6 @@ class Jz_account extends MY_Controller
 			$err_msg = '系统故障';
 			$log_msg = '一次性随机验证码错误';
 		}
-		
 		if (isset($err_msg))
 		{
 			$str = isset($log_msg)?$log_msg:$err_msg;
@@ -162,11 +143,10 @@ class Jz_account extends MY_Controller
 			Message(Array(
 					'msgTy' => 'fail',
 					'msgContent' => $err_msg.'<br/>注册失败，系统正在返回...',
-					'msgUrl' => $this->base . '/jijin/Jz_home',
+					'msgUrl' => $this->base . '/jijin/Jz_my',
 					'base' => $this->base
 			));
 		}
-		
 		if (isset($info_msg)){
 			$str = isset($log_msg)?$log_msg:$info_msg;
 			file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."身份证为:".$post['certificateno']."开户失败原因为：".$str."\r\n\r\n",FILE_APPEND);
@@ -174,10 +154,10 @@ class Jz_account extends MY_Controller
 					'msgTy' => 'fail',
 					'msgContent' => $info_msg,
 					'msgUrl' => $this->base . '/jijin/Jz_account/open_phone_trans',
-					'returnUrl' => $this->base . '/jijin/Jz_home',
+					'returnUrl' => $this->base . '/jijin/Jz_my',
 					'base' => $this->base
 			);
-			$data_OPT = array('certificateno' => $post['certificateno'],'certificatetype' => $post['certificatetype'],'custno' => $custno);
+			$data_OPT = array('certificateno' => $post['certificateno'],'certificatetype' => $post['certificatetype'],'custno' => $seekAccount['custno']);
 			$_SESSION['data_OPT'] = $data_OPT;								//通过session记录证件类型、证件号、基金帐号等信息
 			Message_select('/jijin/account/info_OpenPhoneTtrans',$arr);
 		}
@@ -353,69 +333,52 @@ class Jz_account extends MY_Controller
     		openssl_private_decrypt(base64_decode($post['lpasswd']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
     		//判断一次性验证码是否存在
     		$div_bit = strpos($decryptData,(string)$_SESSION['rand_code']);
-    		
-    		foreach ($_SESSION['data_OPT'] as $key => $val){
-    			$post[$key] =$val;
-    		}
+    		$openPhoneTrans = $_SESSION['data_OPT'];
+$openPhoneTrans['certificateno'] =	'430104197704182539';
+$openPhoneTrans['custno'] =	'37';
     		unset($_SESSION['data_OPT']);
     		unset($_SESSION['rand_code']);
-    		
     		if ($div_bit !== false){                      //找到一次性验证码
-    			$post['lpasswd'] = '';
     			//----------- 记录解密后post数据 ---------------------
     			file_put_contents('log/user/OpenPhoneTtrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']." 解密后数据：".serialize($post)."\r\n\r\n",FILE_APPEND);
-    			$post['lpasswd'] = substr($decryptData, 0, $div_bit);
-    			$post['tpasswd'] = my_md5($_SESSION ['customer_name'], substr($decryptData, $div_bit+7));
-//     			$this->load->library('fund_interface');
+    			$openPhoneTrans['lpasswd'] = substr($decryptData, 0, $div_bit);
     			//开通用户手机交易功能
-    			$res = $this->fund_interface->open_phone_trans($post['certificatetype'], $post['certificateno'], $post['lpasswd']);
+    			$res = $this->fund_interface->openPhoneTrans($openPhoneTrans);
+// $data['data'] = $res['data'];
+// var_dump($res);
+// $data['url'] = $this->config->item('fundUrl').'/jijin/XCFinterface';
+// $this->load->view('UrlTest',$data);
+// var_dump($res);
+// return;
     			//log开通用户手机交易返回信息
-    			file_put_contents('log/user/OpenPhoneTtrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()). ":\r\n用户:".$_SESSION ['customer_name']."开通用户手机交易功能(open_phone_trans接口)返回数据".serialize($res)."\r\n\r\n",FILE_APPEND);
+    			file_put_contents('log/user/OpenPhoneTrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()). ":\r\n用户:".$_SESSION ['customer_name']."开通用户手机交易功能(open_phone_trans接口)返回数据".serialize($res)."\r\n\r\n",FILE_APPEND);
     			if ($res['code'] == '0000'){
-    				$arr = array(
-    						'XN_account' => $_SESSION ['customer_name'],
-    						'JZ_account' => $post['custno'],
-    						'tpasswd' => $post['tpasswd'],
-    						'certificateno' => $post['certificateno'],
-    				);
-    				$arr = $this->data_openphonetrans($arr,'log/user/OpenPhoneTtrans'.$this->logfile_suffix);   //获取客户有已鉴权的银行卡的信息
-    				//将开通手机交易的数据写入数据库
-    				$insert_res = $this->db->set($arr)->insert('jz_account');
-    				//依据数据库写入操作成功与否给予用户成功的提示，并log记录
-    				if ($insert_res){
-    					$_SESSION['JZ_account'] = $post['custno'];
-    					$_SESSION['JZ_user_id'] = $this->db->insert_id();
-    					file_put_contents('log/user/OpenPhoneTtrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开通手机交易成功，数据库写入成功".serialize($arr)."\r\n\r\n",FILE_APPEND);
-    					Message(Array(
-    							'msgTy' => 'sucess',
-    							'msgContent' => '开通手机交易成功',
-    							'msgUrl' => $this->base . '/jijin/Jz_my',                  //调用my界面
-    							'base' => $this->base
-    							));
-    				}else{
-    					$log_message = "开通手机交易成功,写入数据".serialize($arr)."失败,失败原因：".serialize($this->db->error());
-//     					file_put_contents('log/user/OpenPhoneTtrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开通手机交易成功,写入数据".serialize($arr)."失败,失败原因：".serialize($this->db->error())."\r\n\r\n",FILE_APPEND);
-    				}
+    				Message(Array(
+    						'msgTy' => 'sucess',
+    						'msgContent' => '开通手机交易成功',
+    						'msgUrl' => $this->base . '/jijin/Jz_my',                  //调用my界面
+    						'base' => $this->base
+    						));
     			}else{
-    				$log_message = serialize($res);
+    				if ($res['code'] == '0016'){
+    					$message = '交易密码输入错误，请重试！';
+    				}
     			}
     		}else{
     			$log_message = '一次性随机验证码未找到';
     		}
     		if (isset($log_message)){
-    			file_put_contents('log/user/OpenPhoneTtrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开通手机交易失败，失败原因：".$log_message."\r\n\r\n",FILE_APPEND);
-    			if (strpos($log_message,'密码错误') !== false){
-    				$message = '登录密码输入错误，请重试！';
-    			}else{
-    				$message = '开通手机交易失败，系统正在返回';
-    			}
-    			Message(Array(
-    					'msgTy' => 'fail',
-    					'msgContent' => $message,
-    					'msgUrl' => $this->base . '/jijin/Jz_my',                           //调用my界面
-    					'base' => $this->base
-    					));
+    			file_put_contents('log/user/OpenPhoneTrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开通手机交易失败，失败原因：".$log_message."\r\n\r\n",FILE_APPEND);
     		}
+    		if (!isset($message)){
+    			$message = '开通手机交易失败，系统正在返回';
+    		}
+    		Message(Array(
+    				'msgTy' => 'fail',
+    				'msgContent' => $message,
+    				'msgUrl' => $this->base . '/jijin/Jz_my',                           //调用my界面
+    				'base' => $this->base
+    				));
     	}
     	else                                                                                   //调用来自info_OpenPhoneTtrans
     	{
@@ -449,7 +412,6 @@ class Jz_account extends MY_Controller
     			file_put_contents('log/user/revise_passward'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."修改".$str_info.'密码，调用接口返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
     			if (isset($res['code']) && $res['code'] == '0000')
     			{
-    				$this->db->set(array('tpasswd' => my_md5($_SESSION ['customer_name'], $newpwd)))->where(array('JZ_account'=>$_SESSION['JZ_account']))->update('jz_account');
     				Message(Array(
     						'msgTy' => 'sucess',
     						'msgContent' => $str_info.'密码修改成功',
