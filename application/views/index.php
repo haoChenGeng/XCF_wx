@@ -82,10 +82,6 @@
     </article>
 </section>
 
-
-<script src="/data/js/RSA.min.js"></script>
-<script src="/data/js/aes.js"></script>
-<script src="/data/js/aes-json-format.js"></script> 
 <script src="/data/js/zepto.min.js"></script>
 <script src="/data/js/idangerous.swiper-2.1.min.js"></script>
 
