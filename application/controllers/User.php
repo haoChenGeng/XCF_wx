@@ -337,6 +337,118 @@ class User extends MY_Controller {
 			$_SESSION['rand_code'] = $data['rand_code'];
 			$this->load->view('user/xglogin_password', $data);
 	}
+	public function ndf_sendsms() { //牛鼎丰的短信发送渠道 
+		$post = $this->input->post ();
+		if (empty ( $post ['userCode'] )) {
+			echo "请输入图形验证码!";
+			return;
+		}
+		if ($post ['userCode'] != $_SESSION ['rand_code']) {
+			echo "图形验证码不对!";
+			return;
+		}
+		
+		if (empty ( $post ['tel'] )) {
+			echo '手机号不能为空';
+		} else if (strlen ( $post ['tel'] ) > 11) {
+			echo '手机号错误';
+		} else if (ISTESTING) {
+			$_SESSION ['telcode'] = $telcode = '1234';
+			echo '您的验证码为:1234';
+		} else {
+			$_SESSION ['telcode'] = $telcode = TelCode ();
+			$content = "您的验证码是:" . $telcode;
+			$res2 = $this->NDFsendSms ( $post ['tel'], $content );
+			// var_dump($res2);
+			if($res2===false)
+			{
+				$res ['returnCode']=999999;
+			}
+			else 
+				$res = json_decode ( $res2, TRUE );
+			// var_dump($res);
+			$b = ob_clean ();
+			// $b=ob_get_clean();
+			// $b=ob_get_clean();
+			
+			switch ($res ['returnCode']) {
+				case 0 :
+					$result = '验证码已发送！';
+					break;
+				case 130001 :
+					$result = '参数为空';
+					break;
+				case 130002 :
+					$result = '手机号码格式错误';
+					break;
+				case 130003 :
+					$result = '签名错误';
+					break;
+				case 130004 :
+					$result = '短信服务器内部错误';
+					break;
+				case 130005 :
+					$result = '找不到业务的信息';
+					break;
+				case 130006 :
+					$result = '业务下找不到模块的信息';
+					break;
+				case 130011 :
+					$result = '验证码验证失败';
+					break;
+				case 130012 :
+					$result = '验证码已过期';
+					break;
+				case 130013 :
+					$result = '错误次数超过3次';
+					break;
+				case 130021 :
+					$result = '实际号码个数超过100';
+					break;
+				case 130022 :
+					$result = '短信发送失败';
+					break;
+				case 130023 :
+					$result = '请设置短信模板或消息模板';
+					break;
+				case 130031 :
+					$result = '推送消息失败';
+					break;
+				case 999999 :  //网络连接不上自定义代码,前端显示给用户或运维同事
+					$result = '网络超时或短信系统没反应';
+					break;
+				default :
+					$result = '';
+					break;
+			}
+			echo $result;
+		}
+	}
+		// 发短信
+	private function NDFsendSms($mobile, $content = '') {
+		// $this->check_login();
+		if (empty ( $mobile )) {
+			return false;
+		}
+		// $this =& get_instance();
+		$ISTESTING = false;
+		if ($ISTESTING) {
+			$sms_url = $this->config->item ( 'test_sms_url' );
+			$sms_signature_key = $this->config->item ( 'test_sms_signature_key' );
+			$partnerId = $this->config->item ( 'test_partnerId' );
+			$moduleId = $this->config->item ( 'test_moduleId' );
+		} else {
+			$sms_url = $this->config->item ( 'sms_url' );
+			$sms_signature_key = $this->config->item ( 'sms_signature_key' );
+			$partnerId = $this->config->item ( 'partnerId' );
+			$moduleId = $this->config->item ( 'moduleId' );
+		}
+		$signTextTemp = "mobile=$mobile&moduleId=$moduleId&partnerId=$partnerId&value=$content" . $sms_signature_key;
+		$signature = sha1 ( $signTextTemp );
+		$post_data = "partnerId=$partnerId&mobile=$mobile&signature=$signature&value=$content&moduleId=SENDSMS";
+		$ret = $this->curl_post_string ( $sms_url, $post_data );
+		return $ret;
+	}
 	
 //----------------  辅助函数  -----------------------------------------------------	
 	//发送短信验证码
