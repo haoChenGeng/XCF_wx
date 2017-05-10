@@ -533,3 +533,13 @@ $config['fundUrl'] = /* '10.10.78.107' */'http://10.17.2.101';                  
 
 date_default_timezone_set('Asia/ShangHai');
 $config['time_zone'] = date_default_timezone_get();
+
+//短信接口
+$config['test_partnerId'] = 21001;
+$config['test_moduleId'] = 'SENDSMS';
+$config['test_sms_url'] = 'http://218.17.71.27:8811/sms-web/sms/send';
+$config['test_sms_signature_key'] = 'k4JdkGvVfdRCz7Ju5yNdQXWH9Jkz4YX7';
+$config['partnerId'] = 21001;
+$config['moduleId'] = 'SENDSMS';
+$config['sms_url'] = 'http://218.17.71.27:8811/sms-web/sms/send';
+$config['sms_signature_key'] = 'k4JdkGvVfdRCz7Ju5yNdQXWH9Jkz4YX7';
