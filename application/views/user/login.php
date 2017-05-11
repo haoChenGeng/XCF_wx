@@ -34,7 +34,6 @@
              <a href="/user/findPass/1" class="en_name">忘记密码 ?</a>
     </section>
 </body>
-
 <script src="/data/js/zepto.min.js"></script>
 <script src="/data/js/m.min.js"></script>
 <script src="/data/js/RSA.min.js"></script>
