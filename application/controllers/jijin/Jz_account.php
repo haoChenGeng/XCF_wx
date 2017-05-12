@@ -31,7 +31,13 @@ class Jz_account extends MY_Controller
 		if ($res['code'] == '0000'){
 			$this->load->config('jz_dict');
 			$data['certificatetype'] = $this->config->item('certificatetype');
+			$needPCBank = $this->config->item('needProvCity')[$this->config->item('selectChannel')];
 			$data['payment_channel'] = $res['data'];
+			foreach ($data['payment_channel'] as $key => $val){
+				if (in_array($val['channelname'],$needPCBank)){
+					$data['payment_channel'][$key]['needProvCity'] = 1;
+				}
+			}
 			$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
 			$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
 			$_SESSION['rand_code'] = $data['rand_code'];
@@ -452,6 +458,11 @@ $openPhoneTrans['custno'] =	'37';
     function entrance()
     {
     	$this->logincontroller->entrance();
+    }
+    
+    function channel(){
+    	$channel = $this->fund_interface();
+var_dump($channel);
     }
 
 }

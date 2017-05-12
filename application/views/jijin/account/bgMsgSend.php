@@ -84,7 +84,7 @@
 				<?php
 					foreach ($payment_channel as $key => $val)
 					{
-						echo '<li value='.$val['channelid'].' data-cname='.$val['channelname']. '>'.$val['channelname'].'</li>';
+						echo '<li value='.$val['channelid'].' data-cname='.$val['channelname'].' '. (isset($val['needProvCity']) ? 'data-needProvCity="1"':'').'>'.$val['channelname'].'</li>';
 					}
 				?>
 			</ul>

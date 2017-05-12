@@ -85,19 +85,6 @@ class Fund_interface
 		}
 	}
 
-	function Trans_applied($startDate, $endDate){
-// var_dump($_SESSION['customer_name']);
-		if (isset($_SESSION['customer_name'])){
-			$submitData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'transQuery','startDate'=>$startDate,'endDate'=>$endDate));
-			$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
-			$returnData = $this->getReturnData($returnData);
-			if ($returnData['code'] == '0001'){
-				$returnData['msg'] = '您尚未开通基金账户,不能进行相关查询';
-			}
-			return ($returnData);
-		}
-	}
-	
 	function fund_list(){
 		$startTime = strtotime(date('Y-m-d',time()).' 09:00:00');						//从9:00到10:00每隔5分钟自动更新基金列表
 		$endTime = strtotime(date('Y-m-d',time()).' 10:00:00');
@@ -114,6 +101,70 @@ class Fund_interface
 					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'fundlist'))->update('dealitems');
 				}
 			}
+		}
+	}
+	
+	function channel(){
+		$submitData = $this->getSubmitData(array("code"=>'channel'));
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function provCity(){
+		$currentTime = time();
+		$this->CI->load->model("Model_db");
+		$updatetime = $this->CI->db->where(array('dealitem' => 'provCity'))->get('dealitems')->row_array()['updatetime'];
+		if ($updatetime === null){
+			$updatetime = 0;
+			$this->CI->db->set(array('dealitem' => 'provCity','updatetime' => time()))->insert('dealitems');
+		}
+		$logfile_suffix = '('.date('Y-m',time()).').txt';
+		if ($currentTime - $updatetime > 86400){
+			$provCity['code'] = 'provCity';
+			$provCity['customerNo'] = $_SESSION['customer_name'];
+			$submitData = $this->getSubmitData($provCity);
+			$province = $this->getReturnData(comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData));
+			if ($province['code'] == '0000'){
+				foreach ($province['data'] as $key => $val){
+					$provCity['province'] = $val;
+					$submitData = $this->getSubmitData($provCity);
+					$city = $this->getReturnData(comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData));
+					if ($city['code'] = '0000'){
+						foreach ($city['data'] as $v){
+							$updateData[] = array('province'=>$val,'city'=>$v);
+						}
+					}else{
+						file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity(参数".$val.")接口失败返回数据为".serialize($city)."\r\n\r\n",FILE_APPEND);
+					}
+				}
+			}else{
+				file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity接口失败返回数据为".serialize($province)."\r\n\r\n",FILE_APPEND);
+			}
+			if (!empty($updateData)){
+				$this->CI->load->model("Model_db");
+				$flag = $this->CI->Model_db->incremenUpdate('p2_prov_city', $updateData, array('province','city'));
+				if ($flag){
+					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'provCity'))->update('dealitems');
+				}
+			}
+		}
+		$citys = $this->CI->db->get('p2_prov_city')->result_array();
+		foreach ($citys as $val){
+			$returnData[$val['province']][] = $val['city'];
+		}
+		return ($returnData);
+	}
+	
+	function Trans_applied($startDate, $endDate){
+		// var_dump($_SESSION['customer_name']);
+		if (isset($_SESSION['customer_name'])){
+			$submitData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'transQuery','startDate'=>$startDate,'endDate'=>$endDate));
+			$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
+			$returnData = $this->getReturnData($returnData);
+			if ($returnData['code'] == '0001'){
+				$returnData['msg'] = '您尚未开通基金账户,不能进行相关查询';
+			}
+			return ($returnData);
 		}
 	}
 	
@@ -234,48 +285,4 @@ class Fund_interface
 		return ($this->getReturnData($returnData));
 	}
 	
-	function provCity(){
-		$currentTime = time();
-		$this->CI->load->model("Model_db");
-		$updatetime = $this->CI->db->where(array('dealitem' => 'provCity'))->get('dealitems')->row_array()['updatetime'];
-		if ($updatetime === null){
-			$updatetime = 0;
-			$this->CI->db->set(array('dealitem' => 'provCity','updatetime' => time()))->insert('dealitems');
-		}
-		$logfile_suffix = '('.date('Y-m',time()).').txt';
-		if ($currentTime - $updatetime > 86400){
-			$provCity['code'] = 'provCity';
-			$provCity['customerNo'] = $_SESSION['customer_name'];
-			$submitData = $this->getSubmitData($provCity);
-			$province = $this->getReturnData(comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData));
-			if ($province['code'] == '0000'){
-				foreach ($province['data'] as $key => $val){
-					$provCity['province'] = $val;
-					$submitData = $this->getSubmitData($provCity);
-					$city = $this->getReturnData(comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData));
-					if ($city['code'] = '0000'){
-						foreach ($city['data'] as $v){
-							$updateData[] = array('province'=>$val,'city'=>$v);
-						}
-					}else{
-						file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity(参数".$val.")接口失败返回数据为".serialize($city)."\r\n\r\n",FILE_APPEND);
-					}
-				}
-			}else{
-				file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity接口失败返回数据为".serialize($province)."\r\n\r\n",FILE_APPEND);
-			}
-			if (!empty($updateData)){
-				$this->CI->load->model("Model_db");
-				$flag = $this->CI->Model_db->incremenUpdate('p2_prov_city', $updateData, array('province','city'));
-				if ($flag){
-					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'provCity'))->update('dealitems');
-				}
-			}
-		}
-		$citys = $this->CI->db->get('p2_prov_city')->result_array();
-		foreach ($citys as $val){
-			$returnData[$val['province']][] = $val['city'];
-		}
-		return ($returnData);
-	}
 }
