@@ -36,7 +36,7 @@
 					echo '<div class="m-item"> 
 							  <i class="icon icon-phone"></i> 
 								  <label class="select-label" style="width:80%;">请选择支付渠道
-									  <select id="pay_way" name="channelid" class="select-certificate">
+									  <select id="pay_way" name="channelid" class="select-certificate" >
 										  <option value='.$payment_channel[0]['channelid']." data-cname=".$payment_channel[0]['channelname'].">".$payment_channel[0]['channelname'].'</option>
 									  </select>
 								  </label>
@@ -44,11 +44,17 @@
 		  		else
 		  			echo '<input name="channelid" type="hidden" value='.$payment_channel[0]['channelid'].'></input>';
 		  ?>
-		  <div class="m-item">
+		  <div class="m-item" id="chooseCity" style="display: none;">
 		  	<i class="icon icon-phone"></i>
 		  	<label class="select-label" style="width: 80%;">请选择支付行
-		  		<select name="channelBank" id="pay_bank">
-		  			
+		  		<select id="payProv" class="select-certificate" onchange="show(this.options[this.options.selectedIndex])">
+		  			<option value="1">请选择省份</option>
+		  		</select>
+		  		<select id="payCity" class="select-certificate" onchange="getBankAdd(this.options[this.options.selectedIndex])">
+		  			<option value="1">请选择城市</option>
+		  		</select>
+		  		<select id="payBankAdd" class="select-certificate">
+		  			<option value="1">请选择银行地址</option>
 		  		</select>
 		  	</label>
 		  </div>
@@ -125,12 +131,72 @@
         });
 	});
 
+
+
 	var provCity = <?php echo $provCity?>;
 console.log(provCity);
+	var listOp = document.createDocumentFragment();
+	for (var i in provCity) {
+		var options = document.createElement('option');
+		options.innerHTML = i;
+		options.setAttribute('value', i);
+		options.setAttribute('data-city', provCity[i]);
+		listOp.appendChild(options);
+	}
+	document.getElementById('payProv').appendChild(listOp);
+
+	function show(s) {
+		var arr = s.dataset.city.split(',');
+		var childOp = document.getElementById('payCity');
+		childOp.innerHTML = '<option>请选择城市</option>';
+		var opList = document.createDocumentFragment();
+		for (var i = 0; i < arr.length; i++) {
+			var op = document.createElement('option');
+			op.innerHTML = arr[i];
+			op.setAttribute('value', arr[i]);
+			opList.appendChild(op);
+		}
+		childOp.appendChild(opList);
+	}
+
+	function getBankAdd(s) {
+		var bankName = document.getElementById('pay_way');		
+		$.ajax({
+			type: 'post',
+			url: "<?php echo $this->base.'/jijin/Jz_account/openBank'?>",
+			data: { 
+				channelname: bankName.childNodes[1].innerHTML,
+				paracity: s.value
+			},
+			dataType: 'json',
+			success: function(res) {
+				if (res.code === '0000') {
+console.log(res);
+				var childOp = document.getElementById('payBankAdd');
+				childOp.innerHTML = '<option>请选择银行地址</option>';
+				var opList = document.createDocumentFragment();
+				for (var i = 0; i < res.data.length; i++) {
+					var op = document.createElement('option');
+					op.innerHTML = res.data[i].paravalue;
+					op.setAttribute('value', res.data[i].paravalue);
+					opList.appendChild(op);
+				}
+				childOp.appendChild(opList);
+				}else {
+					alert(res.msg);
+				}
+			},
+			error: function(res) {
+				console.log(res);
+				alert('请求错误');
+			}
+		});
+	}
+
 	var cer_select = document.getElementById('ID');
 	var cer_div = document.getElementById('certificateno'),
-		pay = document.getElementById('pay_way'),
-		payList = document.getElementById('pay-list');
+	pay = document.getElementById('pay_way'),
+	payList = document.getElementById('pay-list');
 
 	selectLightbox(cer_select,cer_div);
 	selectLightbox(pay,payList);
@@ -150,24 +216,15 @@ console.log(provCity);
 				bb.style.display = 'none';
 				M.hideLightBox();
 				aa.disabled = false;
+				if (this.innerHTML == '平安银行' || this.innerHTML == '华夏银行') {
+					document.getElementById('chooseCity').style.display = 'block';
+				}else {
+					document.getElementById('chooseCity').style.display = 'none';					
+				}
 			});		
 		});
 	}
 
-	$.ajax({
-		type: 'post',
-		url: '<?php echo $this->base./jijin/Jz_account/openBank?>',
-		data: JSON.stringify({ 
-			channelname: '平安银行',
-			paracity: '深圳'
-		}),
-		dataType: 'json',
-		success: function(res) {
-			console.log(res);
-		},
-		error: function(res) {
-			console.log(res);
-		}
-	});
+	
 </script>
 </html>
