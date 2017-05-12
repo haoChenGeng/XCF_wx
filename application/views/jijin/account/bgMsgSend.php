@@ -116,7 +116,8 @@
             });
         });
 	});
-	
+
+	var provCity = <?php echo $provCity?>;
 	var cer_select = document.getElementById('ID');
 	var cer_div = document.getElementById('certificateno'),
 		pay = document.getElementById('pay_way'),
