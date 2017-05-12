@@ -460,9 +460,26 @@ $openPhoneTrans['custno'] =	'37';
     	$this->logincontroller->entrance();
     }
     
-    function channel(){
-    	$channel = $this->fund_interface();
-var_dump($channel);
+    function openBank(){
+    	$post = $post = $this->input->post();
+    	$openBankData = json_encode($post[''],true);
+    	$channel = $this->fund_interface->channel();
+    	$channel = setkey($channel, 'channelname');
+$post['channelname'] = '招商银行';
+$post['paracity'] = '深圳';
+    	if (isset($channel[$post['channelname']])){
+    		$channelid = $channel[$post['channelname']]['channelid'];
+    		$PARM['paracity'] = $post['paracity'];
+var_dump($channelid,$PARM);
+    		$res = $this->fund_interface->openBank($channelid,$PARM);
+    		if ($res['code'] == '0000'){
+    			$openBank = &$res;
+    		}
+    	}else{
+    		$openBank = array('code'=>'FALSE','msg'=>'查询开户行信息失败');
+    	}
+var_dump($openBank);
+    	echo json_encode($openBank);
     }
 
 }

@@ -105,9 +105,32 @@ class Fund_interface
 	}
 	
 	function channel(){
-		$submitData = $this->getSubmitData(array("code"=>'channel'));
-		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
-		return ($this->getReturnData($returnData));
+		$currentTime = time();
+		$this->CI->load->model("Model_db");
+		$updatetime = $this->CI->db->where(array('dealitem' => 'channelInfo'))->get('dealitems')->row_array()['updatetime'];
+		if ($updatetime === null){
+			$updatetime = 0;
+			$this->CI->db->set(array('dealitem' => 'channelInfo','updatetime' => time()))->insert('dealitems');
+		}
+		if ($currentTime - $updatetime > 86400){
+			$logfile_suffix = '('.date('Y-m',time()).').txt';
+			$submitData = $this->getSubmitData(array('code'=>'channel'));
+			$channel = $this->getReturnData(comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData));
+			if ($channel['code'] == '0000'){
+				$updateData = &$channel['data'];
+			}else{
+				file_put_contents('log/trade/channel'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用channel接口失败,返回数据为".serialize($channel)."\r\n\r\n",FILE_APPEND);
+			}
+			if (!empty($updateData)){
+				$this->CI->load->model("Model_db");
+				$flag = $this->CI->Model_db->incremenUpdate('p2_channelinfo', $updateData, 'channelid');
+				if ($flag){
+					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'channelInfo'))->update('dealitems');
+				}
+			}
+		}
+		$channelInfo = $this->CI->db->get('p2_channelinfo')->result_array();
+		return $channelInfo;
 	}
 	
 	function provCity(){
@@ -118,8 +141,8 @@ class Fund_interface
 			$updatetime = 0;
 			$this->CI->db->set(array('dealitem' => 'provCity','updatetime' => time()))->insert('dealitems');
 		}
-		$logfile_suffix = '('.date('Y-m',time()).').txt';
 		if ($currentTime - $updatetime > 86400){
+			$logfile_suffix = '('.date('Y-m',time()).').txt';
 			$provCity['code'] = 'provCity';
 			$provCity['customerNo'] = $_SESSION['customer_name'];
 			$submitData = $this->getSubmitData($provCity);
@@ -134,11 +157,11 @@ class Fund_interface
 							$updateData[] = array('province'=>$val,'city'=>$v);
 						}
 					}else{
-						file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity(参数".$val.")接口失败返回数据为".serialize($city)."\r\n\r\n",FILE_APPEND);
+						file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity(参数".$val.")接口失败,返回数据为".serialize($city)."\r\n\r\n",FILE_APPEND);
 					}
 				}
 			}else{
-				file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity接口失败返回数据为".serialize($province)."\r\n\r\n",FILE_APPEND);
+				file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity接口失败,返回数据为".serialize($province)."\r\n\r\n",FILE_APPEND);
 			}
 			if (!empty($updateData)){
 				$this->CI->load->model("Model_db");
@@ -280,7 +303,15 @@ class Fund_interface
 		$openPhoneTrans['code'] = 'openPhoneTrans';
 		$openPhoneTrans['customerNo'] = $_SESSION['customer_name'];
 		$submitData = $this->getSubmitData($openPhoneTrans);
-// return $submitData;
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function openBank($channelid,$PARM){
+		$openBank['code'] = 'openBank';
+		$openBank['channelid'] = $channelid;
+		$openBank['PARM'] = $PARM;
+		$submitData = $this->getSubmitData($openBank);
 		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
