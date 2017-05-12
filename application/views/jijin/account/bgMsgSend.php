@@ -44,7 +44,15 @@
 		  		else
 		  			echo '<input name="channelid" type="hidden" value='.$payment_channel[0]['channelid'].'></input>';
 		  ?>
-		  <input type="hidden" id="channelname" name="channelname"></input>
+		  <div class="m-item">
+		  	<i class="icon icon-phone"></i>
+		  	<label class="select-label" style="width: 80%;">请选择支付行
+		  		<select name="channelBank" id="pay_bank">
+		  			
+		  		</select>
+		  	</label>
+		  </div>
+		  <input type="hidden" id="channelname" name="channelname">
 				<div class="m-item">
 					<i class="icon icon-phone"></i>
 					<label>
@@ -79,7 +87,7 @@
 				?>
 			</ul>
 		</div>
-		<div class="light-content" id="pay-list" style="display:none;">
+		<div class="light-content" id="pay-list" style="display: none;">
 			<ul>
 				<?php
 					foreach ($payment_channel as $key => $val)
@@ -118,6 +126,7 @@
 	});
 
 	var provCity = <?php echo $provCity?>;
+console.log(provCity);
 	var cer_select = document.getElementById('ID');
 	var cer_div = document.getElementById('certificateno'),
 		pay = document.getElementById('pay_way'),
@@ -125,10 +134,10 @@
 
 	selectLightbox(cer_select,cer_div);
 	selectLightbox(pay,payList);
-	function selectLightbox (aa,bb) {		
+	function selectLightbox (aa,bb) {
 	    $(aa).on('click',function () {
 			this.disabled = "true";
-			M.createLightBox();			
+			M.createLightBox();
 			var list = bb.getElementsByTagName('li');
 			bb.style.display = 'block';
 			$(bb).on('click','li',function () {
@@ -144,6 +153,21 @@
 			});		
 		});
 	}
-</script>
 
+	$.ajax({
+		type: 'post',
+		url: '<?php echo $this->base./jijin/Jz_account/openBank?>',
+		data: JSON.stringify({ 
+			channelname: '平安银行',
+			paracity: '深圳'
+		}),
+		dataType: 'json',
+		success: function(res) {
+			console.log(res);
+		},
+		error: function(res) {
+			console.log(res);
+		}
+	});
+</script>
 </html>
