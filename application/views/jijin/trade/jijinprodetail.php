@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <meta name="format-detection" content="telephone=no"/>
-    <link href="<?php echo $base ?>/data/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="<?php echo $base ?>/data/jijin/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
     <title>基金产品</title>
 </head>
 <body>
