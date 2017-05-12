@@ -1,8 +1,24 @@
 <?php
 	function setkey($data,$key){
 		$arr = array();
-		foreach ($data as $val){
+		if (!empty($data)){
+			foreach ($data as $val){
 				$arr[$val[$key]] = $val;
+			}
+		}
+		return $arr;
+	}
+	
+	function setMutliKey($data,$multiKey){
+		$arr = array();
+		if (!empty($data)){
+			foreach ($data as $val){
+				$key = '';
+				foreach ($multiKey as $v){
+					$key .= $val[$v];
+				}
+				$arr[$key] = $val;
+			}
 		}
 		return $arr;
 	}
@@ -30,20 +46,33 @@
 		return FALSE;
 	}
 	
-	function comm_curl($url, $arr)
+
+	function comm_curl($url, $arr=array() , $header=array())
 	{
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,30);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		if (!empty($arr)){
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $arr);
+		}
 		curl_setopt($ch, CURLOPT_HEADER, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $arr);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 		$result = curl_exec($ch);
 		curl_close($ch);
 		return $result;
+	}
+	
+	function is_required($input,$neededFields){
+	     
+    	
+	}
+	
+	function my_md5($key,$data){
+		return(md5(substr(md5($key),6,12).'#@AFG'.md5($data)));
 	}
 	
 ?>

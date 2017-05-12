@@ -169,7 +169,7 @@ class Crypt_AES extends Crypt_Rijndael {
 	 * @return Crypt_AES
 	 * @access public
 	 */
-	function Crypt_AES($mode = CRYPT_AES_MODE_CBC) {
+	function __construct($mode = CRYPT_AES_MODE_CBC) {
 		if (!defined('CRYPT_AES_MODE')) {
 			switch (true) {
 				case extension_loaded('mcrypt') && in_array('rijndael-128', mcrypt_list_algorithms()):
@@ -520,7 +520,4 @@ class Crypt_AES extends Crypt_Rijndael {
 	}
 
 }
-
-// vim: ts=4:sw=4:et:
-// vim6: fdl=1:
 ?>

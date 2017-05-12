@@ -102,7 +102,7 @@ class Crypt_TripleDES extends Crypt_DES {
 	 * @return Crypt_TripleDES
 	 * @access public
 	 */
-	function Crypt_TripleDES($mode = CRYPT_DES_MODE_CBC) {
+	function __construct($mode = CRYPT_DES_MODE_CBC) {
 		if (!defined('CRYPT_DES_MODE')) {
 			switch (true) {
 				case extension_loaded('mcrypt') && in_array('tripledes', mcrypt_list_algorithms()):

@@ -27,7 +27,7 @@ class Jz_account extends MY_Controller
 			}
 		}
 		$res = $this->fund_interface->paymentChannel();
-		file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询支付渠道返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
+// 		file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询支付渠道返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
 		if ($res['code'] == '0000'){
 			$this->load->config('jz_dict');
 			$data['certificatetype'] = $this->config->item('certificatetype');
@@ -35,6 +35,7 @@ class Jz_account extends MY_Controller
 			$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
 			$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
 			$_SESSION['rand_code'] = $data['rand_code'];
+			$data['provCity'] = json_encode($this->fund_interface->provCity());
 			$this->load->view('jijin/account/bgMsgSend',$data);
 		}
 		else {
@@ -52,7 +53,7 @@ class Jz_account extends MY_Controller
 	{
 		$post = $this->input->post();
 		//log注册提交的信息
-		file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."注册post数据为:".serialize($post)."\r\n\r\n",FILE_APPEND);
+// 		file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."注册post数据为:".serialize($post)."\r\n\r\n",FILE_APPEND);
 		//-----------RSA解密----------------------------
 		$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
 		$decryptData ='';
@@ -68,8 +69,6 @@ class Jz_account extends MY_Controller
 			$post['mobiletelno'] = trim($post['mobiletelno']);
 			$_POST['certificateno'] = $post['certificateno'];
 			$_POST['depositacct'] = $post['depositacct'];
-			//log解密后的post数据
-			file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."解密后的post数据为:".serialize($post)."\r\n\r\n",FILE_APPEND);
 				
 			//--------以下设置客户输入错误提示--------------------------
 			$this->load->library('form_validation');
@@ -96,8 +95,12 @@ class Jz_account extends MY_Controller
 					if ($seekAccount['code'] == '0000'){
 						//调用银行鉴权接口及log
 						$res_bMS = $this->fund_interface->bgMsgSend($post);
-var_dump($res_bMS);
-						file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend数据为:".$str."\r\n调用bgMsgSend返回信息".serialize($post)."\r\n\r\n",FILE_APPEND);
+var_dump($res_bMS,$post);
+						$logData = $post;
+						$logData['certificateno'] = substr($post['certificateno'],0,6).'***'.substr($post['certificateno'],-3);
+						$logData['depositacct'] = substr($post['depositacct'],0,3).'***'.substr($post['depositacct'],-3);
+						$logData['depositacctname'] = substr($post['depositacctname'],0,3).'***';
+						file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend数据为:".serialize($logData)."\r\n调用bgMsgSend返回信息".serialize($post)."\r\n\r\n",FILE_APPEND);
 						if ( !isset($res_bMS['code']) || $res_bMS['code'] != '0000' )        //鉴权失败  $res_bMS['data'][0]['comtype']表示该卡已经鉴权过
 						{
 							$err_msg = '银行鉴权失败';
@@ -122,9 +125,6 @@ var_dump($res_bMS);
 							'depositacct' => $post['depositacct'],                               //银行卡号
 							'mobileno' => $post['mobiletelno'],                                  //银行预留电话
 					);
-					if ($res_bMS['data'][0]['comtype'] == 'socket'){
-						$_SESSION['register_data']['verificationCode'] = '';
-					}
 					$this->load_bgMsgCheck();
 				}
 			}
@@ -189,11 +189,10 @@ var_dump($res_bMS);
 			$this->form_validation->set_message('numeric', '%s必须为数字.');
 			$this->form_validation->set_message('valid_email', '%s无效.');
 			//--------以下设置判断客户输入信息检测规则--------------------------
-			if (!isset($_SESSION['register_data']['verificationCode'])){
-				$this->form_validation->set_rules('verificationCode','短信验证码','required|numeric');
-			}
-			$this->form_validation->set_rules('lpasswd','登录密码','required|max_length[20]');
+			$this->form_validation->set_rules('verificationCode','短信验证码','required|numeric');
+			$this->form_validation->set_rules('lpasswd','交易密码','required|max_length[20]');
 			$this->form_validation->set_rules('tpasswd','交易密码','required|max_length[20]');
+			$this->form_validation->set_rules('tpasswd','两次输入的交易密码不一致','matches[lpasswd]');
 // 			$this->form_validation->set_rules('vailddate','证件有效期','required');
 			$this->form_validation->set_rules('email','电子邮箱地址','valid_email');
 			$this->form_validation->set_rules('postcode','邮编','numeric');
@@ -215,11 +214,11 @@ var_dump($res_bMS);
 				};
 // 				$post['tano'] = $this->config->item('ta')[0]['no'];
 				//查询基金公司信息
-				$ta = $this->fund_interface->fund('', '');
-				if (isset($ta['code']) && isset($ta['code'])== '0000' && isset($ta['data'][0]['tano'])){
-					$post['tano'] = $ta['data'][0]['tano'];
-				}
+				$post['tano'] = $this->db->select("tano")->get('p2_fundlist')->row_array()['tano'];
 				$post['custname'] = $post['depositacctname'];
+				$post['bankname'] = '招商银行';
+				$post['depositprov'] = '广东';
+				$post['depositcity'] = '深圳';
 				//调用金证开户接口,并记录调用金证接口数据及返回结果(去除密码部分)
 				file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用金证bgMsgCheck数据为:".serialize($post),FILE_APPEND);
 				$res_bMC = $this->fund_interface->bgMsgCheck($post);

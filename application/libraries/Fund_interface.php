@@ -111,7 +111,7 @@ class Fund_interface
 			if (is_array($funddata) && !empty($funddata)){
 				$flag = $this->CI->Model_db->incremenUpdate('fundlist', $funddata, 'fundcode');
 				if ($flag){
-					$this->CI->db->set(array('updateTime' => time()))->where(array('dealitem' => 'fundlist'))->update('dealitems');
+					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'fundlist'))->update('dealitems');
 				}
 			}
 		}
@@ -217,6 +217,14 @@ class Fund_interface
 		return ($this->getReturnData($returnData));
 	}
 	
+	function bgMsgCheck(&$bgMsgCheck){
+		$bgMsgCheck['code'] = 'bgMsgCheck';
+		$bgMsgCheck['customerNo'] = $_SESSION['customer_name'];
+		$submitData = $this->getSubmitData($bgMsgCheck);
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
 	function openPhoneTrans(&$openPhoneTrans){
 		$openPhoneTrans['code'] = 'openPhoneTrans';
 		$openPhoneTrans['customerNo'] = $_SESSION['customer_name'];
@@ -224,5 +232,50 @@ class Fund_interface
 // return $submitData;
 		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
+	}
+	
+	function provCity(){
+		$currentTime = time();
+		$this->CI->load->model("Model_db");
+		$updatetime = $this->CI->db->where(array('dealitem' => 'provCity'))->get('dealitems')->row_array()['updatetime'];
+		if ($updatetime === null){
+			$updatetime = 0;
+			$this->CI->db->set(array('dealitem' => 'provCity','updatetime' => time()))->insert('dealitems');
+		}
+		$logfile_suffix = '('.date('Y-m',time()).').txt';
+		if ($currentTime - $updatetime > 86400){
+			$provCity['code'] = 'provCity';
+			$provCity['customerNo'] = $_SESSION['customer_name'];
+			$submitData = $this->getSubmitData($provCity);
+			$province = $this->getReturnData(comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData));
+			if ($province['code'] == '0000'){
+				foreach ($province['data'] as $key => $val){
+					$provCity['province'] = $val;
+					$submitData = $this->getSubmitData($provCity);
+					$city = $this->getReturnData(comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData));
+					if ($city['code'] = '0000'){
+						foreach ($city['data'] as $v){
+							$updateData[] = array('province'=>$val,'city'=>$v);
+						}
+					}else{
+						file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity(参数".$val.")接口失败返回数据为".serialize($city)."\r\n\r\n",FILE_APPEND);
+					}
+				}
+			}else{
+				file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity接口失败返回数据为".serialize($province)."\r\n\r\n",FILE_APPEND);
+			}
+			if (!empty($updateData)){
+				$this->CI->load->model("Model_db");
+				$flag = $this->CI->Model_db->incremenUpdate('p2_prov_city', $updateData, array('province','city'));
+				if ($flag){
+					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'provCity'))->update('dealitems');
+				}
+			}
+		}
+		$citys = $this->CI->db->get('p2_prov_city')->result_array();
+		foreach ($citys as $val){
+			$returnData[$val['province']][] = $val['city'];
+		}
+		return ($returnData);
 	}
 }

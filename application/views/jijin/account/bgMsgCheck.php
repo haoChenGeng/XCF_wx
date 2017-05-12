@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<meta name="format-detection" content="telephone=no" />
-	<link href="/data/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
+	<link href="/data/jijin/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
 	<title>注册</title>
 </head>
 
@@ -31,13 +31,13 @@
 				<div class="m-item">
 					<i class="icon icon-phone"></i>
             		<label>
-                		<input type="password" id="pass1" class="w80-p"  name="lpasswd"   data-reg=".+"  data-error="登录密码不能为空" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请设置登录密码(必填)" />
+                		<input type="password" id="pass1" class="w80-p"  name="lpasswd"   data-reg=".+"  data-error="登录密码不能为空" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请设置交易密码(必填)" />
             		</label>
         		</div>
 				<div class="m-item">
 					<i class="icon icon-phone"></i>
             		<label>
-                		<input type="password" id="pass2" class="w80-p"  name="tpasswd"   data-reg=".+"  data-error="交易密码不能为空" placeholder="请设置交易密码(必填)" />
+                		<input type="password" id="pass2" class="w80-p"  name="tpasswd"   data-reg=".+"  data-error="交易密码不能为空" placeholder="请重输交易密码(必填)" />
             		</label>
             	</div>
 				<div class="m-item">
@@ -74,7 +74,7 @@
 <script src="http://apps.bdimg.com/libs/zepto/1.1.4/zepto.min.js"></script>
 <script>window.Zepto || document.write('<script src="/data/lib/zepto.min.js"><\/script>')</script>
 <script src="/data/js/m.min.js"></script>
-<script src="/data/js/RSA.js"></script>
+<script src="/data/js/RSA.min.js"></script>
 <script>
 	Zepto(function($) {
 		M.checkBoxInit();
