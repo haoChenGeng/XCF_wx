@@ -52,8 +52,11 @@
 									  echo '</select>
 								  </label>
 						  </div>';
-		  		}else
+		  		}
+		  		else
+		  		{
 		  			echo '<input name="channelid" type="hidden" value='.$payment_channel[0]['channelid'].'></input>';
+		  		}
 		  ?>
 		  <div class="m-item" id="chooseCity" style="display: none;">
 		  	<i class="icon icon-phone"></i>
@@ -98,7 +101,7 @@
 				<input class="btn" type="button" value="下一步"/>
 			</section>
 		</form>
-		<!-- <div class="light-content" id="certificateno" style="display:none;">
+		<div class="light-content" id="certificateno" style="display:none;">
 			<ul>
 				<?php
 					foreach ($certificatetype as $key => $val)
@@ -117,7 +120,7 @@
 					}
 				?>
 			</ul>
-		</div> -->
+		</div>
 		<section class="copy-right">
 			<p>小牛新财富版权所有 © 如有任何问题请联系客服4006695666</p>
 		</section>
@@ -149,6 +152,7 @@
 
 
 	var provCity = <?php echo isset($provCity) ? $provCity : ''?>;
+	// var chosenBank = '';
 console.log(provCity);
 	var listOp = document.createDocumentFragment();
 	for (var i in provCity) {
