@@ -46,14 +46,14 @@
 		  ?>
 		  <div class="m-item" id="chooseCity" style="display: none;">
 		  	<i class="icon icon-phone"></i>
-		  	<label class="select-label" style="width: 80%;">请选择支付行
-		  		<select id="payProv" class="select-certificate" onchange="show(this.options[this.options.selectedIndex])">
+		  	<label class="select-label" style="width: 80%;">请选择支付行<br>
+		  		<select id="payProv" class="select-certificate" style="margin-top: 10px;" onchange="show(this.options[this.options.selectedIndex])">
 		  			<option value="1">请选择省份</option>
-		  		</select>
-		  		<select id="payCity" class="select-certificate" onchange="getBankAdd(this.options[this.options.selectedIndex])">
+		  		</select><br>
+		  		<select id="payCity" class="select-certificate" style="margin: 10px 0 10px 40px;" onchange="getBankAdd(this.options[this.options.selectedIndex])">
 		  			<option value="1">请选择城市</option>
-		  		</select>
-		  		<select id="payBankAdd" class="select-certificate">
+		  		</select><br>
+		  		<select id="payBankAdd" class="select-certificate" style="margin-left: 40px;">
 		  			<option value="1">请选择银行地址</option>
 		  		</select>
 		  	</label>
