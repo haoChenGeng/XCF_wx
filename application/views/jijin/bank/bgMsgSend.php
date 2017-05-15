@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<meta name="format-detection" content="telephone=no" />
-	<link href="/data/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
+	<link href="/data/jijin/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
 	<title><?php echo $pag_title?></title>	
 </head>
 
@@ -19,7 +19,7 @@
 		<form  name="form" method="post" action="/jijin/Fund_bank/bgMsgSend" id="login_form">
 			<section class="m-item-wrap">
 		  		<?php 
-		  			if (count($payment_channel)>1 && $operation =='bankcard_add')
+		  			if ($operation =='bankcard_add' && !empty($payment_channel))
 		  			{	
 		  				$index = key($payment_channel);
 		  				echo '<div class="m-item"> 
@@ -31,10 +31,10 @@
 								  </label>
 						  	  </div>';
 		  			}
-		  			else
-		  			{
-		  				echo '<input name="channelid" type="hidden" value='.$payment_channel[0]['channelid'].'></input>';
-		  			}
+// 		  			else
+// 		  			{
+// 		  				echo '<input name="channelid" type="hidden" value='.$payment_channel[0]['channelid'].'></input>';
+// 		  			}
 		  		?>
 		  		<input type="hidden" id="channelname" name="channelname"></input>
 		  		<input type="hidden" name="operation"  value=<?php echo $operation?>></input>
@@ -83,10 +83,10 @@
 </body>
 
 <script src="/data/lib/zepto.min.js"></script>
-<script src="/data/js/m.min.js"></script>
+<script src="/data/jijin/js/m.min.js"></script>
 <!-- <script src="/data/js/md5.js"></script> -->
 <!-- <script src="/data/js/common.js"></script> -->
-<script src="/data/js/RSA.js"></script>
+<script src="/data/js/RSA.min.js"></script>
 
 <script>
 	Zepto(function($) {
@@ -111,7 +111,8 @@
             });
         });
 	});
-	
+
+	var provCity = <?php echo $provCity?>;
 	var cer_select = document.getElementById('ID');
 	var cer_div = document.getElementById('certificateno'),
 		pay = document.getElementById('pay_way'),

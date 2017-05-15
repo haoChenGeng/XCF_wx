@@ -22,8 +22,15 @@
         <div class="m2-item dash-border bank-info">     
             <div class="bank-info-item1">
                 <div class="color-blue">银行卡号：<?php echo substr($value['depositacct'],0,4).'***'.substr($value['depositacct'],-6);?></div>
+                <div class="color-blue">所属银行：<?php echo $value['channelname'];?></div>
                 <div class="color-black">状态：<?php echo $value['status'];?></div>
-            </div>      
+            </div>
+            <?php
+            	if (!isset($value['noOper'])){
+            		echo '<a class="m-item-a bank-info-del" href="/jijin/Fund_bank/bankcard_delete/'.$value['depositacct'].'/'.$value['channelid'].'">删除</a>';
+            		echo '<a class="m-item-a bank-info-del" href="/jijin/Fund_bank/operation/bankcard_change/'.$value['depositacct'].'/'.$value['channelid'].'/'.$value['moneyaccount'].'">更换</a>';
+            	}
+            ?>      
 <!--
             <a class="m-item-a bank-info-del" href="/jijin/Fund_bank/bankcard_delete/<?php echo $value['depositacct'].'/'.$value['channelid'];?>">删除</a>
             <a class="m-item-a bank-info-del" href="/jijin/Fund_bank/operation/bankcard_change/<?php echo $value['depositacct'].'/'.$value['channelid'].'/'.$value['moneyaccount'];?>">更换</a>

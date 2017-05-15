@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<meta name="format-detection" content="telephone=no" />
-	<link href="/data/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
+	<link href="/data/jijin/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
 	<title><?php echo $pag_title?></title>
 </head>
 
@@ -48,8 +48,8 @@
 
 <script src="http://apps.bdimg.com/libs/zepto/1.1.4/zepto.min.js"></script>
 <script>window.Zepto || document.write('<script src="/data/lib/zepto.min.js"><\/script>')</script>
-<script src="/data/js/m.min.js"></script>
-<script src="/data/js/RSA.js"></script>
+<script src="/data/jijin/js/m.min.js"></script>
+<script src="/data/js/RSA.min.js"></script>
 <script>
 	Zepto(function($) {
 		M.checkBoxInit();

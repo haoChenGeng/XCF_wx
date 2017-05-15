@@ -26,32 +26,32 @@ class Jz_account extends MY_Controller
 				redirect($this->base . "/jijin/Jz_fund");
 			}
 		}
-		$res = $this->fund_interface->paymentChannel();
-// 		file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询支付渠道返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
-		if ($res['code'] == '0000'){
-			$this->load->config('jz_dict');
-			$data['certificatetype'] = $this->config->item('certificatetype');
-			$needPCBank = $this->config->item('needProvCity')[$this->config->item('selectChannel')];
-			$data['payment_channel'] = $res['data'];
-			foreach ($data['payment_channel'] as $key => $val){
-				if (in_array($val['channelname'],$needPCBank)){
-					$data['payment_channel'][$key]['needProvCity'] = 1;
-				}
+		$data['payment_channel'] = $this->fund_interface->paymentChannel();
+		$this->load->config('jz_dict');
+		$data['certificatetype'] = $this->config->item('certificatetype');
+		$needPCBank = $this->config->item('needProvCity')[$this->config->item('selectChannel')];
+		foreach ($data['payment_channel'] as $key => $val){
+			if (in_array($val['channelname'],$needPCBank)){
+				$data['payment_channel'][$key]['needProvCity'] = 1;
 			}
-			$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
-			$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
-			$_SESSION['rand_code'] = $data['rand_code'];
-			$data['provCity'] = json_encode($this->fund_interface->provCity());
-			$this->load->view('jijin/account/bgMsgSend',$data);
 		}
-		else {
-			Message(Array(
-					'msgTy' => 'fail',
-					'msgContent' => '<br/>注册失败，系统正在返回...',
-					'msgUrl' => $this->base . '/jijin/Jz_my',
-					'base' => $this->base
-					));
-		}
+		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
+		$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
+		$_SESSION['rand_code'] = $data['rand_code'];
+		$data['provCity'] = json_encode($this->fund_interface->provCity());
+		$this->load->view('jijin/account/bgMsgSend',$data);
+// 		file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询支付渠道返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
+// 		if ($res['code'] == '0000'){
+
+// 		}
+// 		else {
+// 			Message(Array(
+// 					'msgTy' => 'fail',
+// 					'msgContent' => '<br/>注册失败，系统正在返回...',
+// 					'msgUrl' => $this->base . '/jijin/Jz_my',
+// 					'base' => $this->base
+// 					));
+// 		}
 	}
     
 	//基金开户银行卡鉴权
@@ -101,7 +101,7 @@ class Jz_account extends MY_Controller
 					if ($seekAccount['code'] == '0000'){
 						//调用银行鉴权接口及log
 						$res_bMS = $this->fund_interface->bgMsgSend($post);
-var_dump($res_bMS,$post);
+// var_dump($res_bMS,$post);
 						$logData = $post;
 						$logData['certificateno'] = substr($post['certificateno'],0,6).'***'.substr($post['certificateno'],-3);
 						$logData['depositacct'] = substr($post['depositacct'],0,3).'***'.substr($post['depositacct'],-3);

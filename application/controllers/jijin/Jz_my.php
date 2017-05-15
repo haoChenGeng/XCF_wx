@@ -176,8 +176,12 @@ class Jz_my extends MY_Controller
 		$this->load->config('jz_dict');
 		if (!empty($res['data'])) {
 			$tmp = null;
-			$tmp = $this->config->item('custrisk')[(int)$res['data']['custrisk']];
-			$res['data']['custriskname'] = is_null($tmp)?'-':$tmp;
+			$custrisk = $this->config->item('custrisk');
+			if (isset($custrisk[(int)$res['data']['custrisk']])){
+				$res['data']['custriskname'] = $custrisk[(int)$res['data']['custrisk']];
+			}else{
+				$res['data']['custrisk'] = $res['data']['custriskname'] = '-';
+			}
 		}
 		return $res;
 	}

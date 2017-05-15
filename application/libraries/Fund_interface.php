@@ -132,6 +132,38 @@ class Fund_interface
 		$channelInfo = $this->CI->db->get('p2_channelinfo')->result_array();
 		return $channelInfo;
 	}
+
+	function paymentChannel(){
+		$currentTime = time();
+		$this->CI->load->model("Model_db");
+		$updatetime = $this->CI->db->where(array('dealitem' => 'paymentChannel'))->get('dealitems')->row_array()['updatetime'];
+		if ($updatetime === null){
+			$updatetime = 0;
+			$this->CI->db->set(array('dealitem' => 'paymentChannel','updatetime' => time()))->insert('dealitems');
+		}
+		if ($currentTime - $updatetime > 86400){
+			$logfile_suffix = '('.date('Y-m',time()).').txt';
+			$submitData = $this->getSubmitData(array('code'=>'paymentChannel'));
+			$paymentChannel = $this->getReturnData(comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData));
+			if ($paymentChannel['code'] == '0000'){
+				$updateData = &$paymentChannel['data'];
+			}else{
+				file_put_contents('log/trade/paymentChannel'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用paymentChannel接口失败,返回数据为".serialize($paymentChannel)."\r\n\r\n",FILE_APPEND);
+			}
+			if (!empty($updateData)){
+				$this->CI->load->model("Model_db");
+				$flag = $this->CI->Model_db->incremenUpdate('p2_paymentchannel', $updateData, 'channelid');
+				if ($flag){
+					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'paymentChannel'))->update('dealitems');
+				}
+			}
+		}
+		$paymentChannel = $this->CI->db->get('p2_paymentchannel')->result_array();
+		return $paymentChannel;
+// 		$submitData = $this->getSubmitData(array("code"=>'paymentChannel'));
+// 		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
+// 		return ($this->getReturnData($returnData));
+	}
 	
 	function provCity(){
 		$currentTime = time();
@@ -265,12 +297,6 @@ class Fund_interface
 		return ($this->getReturnData($returnData));
 	}
 	
-	function paymentChannel(){
-		$submitData = $this->getSubmitData(array("code"=>'paymentChannel'));
-		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
-		return ($this->getReturnData($returnData));
-	}
-	
 	function revisePassward($oldpwd, $newpwd, $pwdtype){
 		$submitData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'RevisePassward','oldpwd'=>$oldpwd,'newpwd'=>$newpwd,'pwdtype'=>$pwdtype));
 		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
@@ -316,4 +342,28 @@ class Fund_interface
 		return ($this->getReturnData($returnData));
 	}
 	
+	function bgAddCard($bgCardAdd){
+		$bgCardAdd['code'] = 'bgAddCard';
+		$bgCardAdd['customerNo'] = $_SESSION['customer_name'];
+		$submitData = $this->getSubmitData($bgCardAdd);
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function bankcardDelete($bankcardDelete){
+		$bankcardDelete['code'] = 'bankcardDelete';
+		$bankcardDelete['customerNo'] = $_SESSION['customer_name'];
+		$submitData = $this->getSubmitData($bankcardDelete);
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function bankcardChange($bankcardChange){
+		$bankcardChange['code'] = 'bankcardChange';
+		$bankcardChange['customerNo'] = $_SESSION['customer_name'];
+		$submitData = $this->getSubmitData($bankcardChange);
+return $submitData;
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
 }
