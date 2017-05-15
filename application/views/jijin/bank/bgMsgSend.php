@@ -26,7 +26,7 @@
 							  	  <i class="icon icon-phone"></i> 
 								  <label class="select-label" style="width:80%;">请选择支付渠道
 									  <select id="pay_way" name="channelid" class="select-certificate">
-										  <option value='.$payment_channel[$index]['channelid']." data-cname=".$payment_channel[$index]['channelname'].">".$payment_channel[$index]['channelname'].'</option>
+										  <option value='.$payment_channel[$index]['channelid']." data-cname=".$payment_channel[$index]['channelname'].' '. (isset($val['needProvCity']) ? 'data-needProvCity="1"':'').">".$payment_channel[$index]['channelname'].'</option>
 									  </select>
 								  </label>
 						  	  </div>';
@@ -44,6 +44,24 @@
 						<input type="text" id="bankcard_no" name="depositacct"  class="w80-p" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请输入银行卡号"/>
 					</label>
 				</div>
+				<div class="m-item" id="chooseCity" style="display: none;">
+		  			<i class="icon icon-phone"></i>
+		  			<label class="select-label" style="width: 80%;">请选择支付行<br>
+		  				<select id="payProv" name="depositprov" class="select-certificate" style="margin-top: 10px;" onchange="show(this.options[this.options.selectedIndex])">
+		  					<option value="1">请选择省份</option>
+		  				</select>
+	  				</label><br>
+	  				<label>
+		  				<select id="payCity" name="depositcity" class="select-certificate" style="margin: 10px 0 10px 40px;" onchange="getBankAdd(this.options[this.options.selectedIndex])">
+		  					<option value="1">请选择城市</option>
+		  				</select>
+	  				</label><br>
+	  				<label>
+		  				<select id="payBankAdd" name="bankname" class="select-certificate" style="margin-left: 40px;">
+		  					<option value="1">请选择银行地址</option>
+		  				</select>
+		  			</label>
+		  		</div>
 				<div class="m-item">
 					<i class="icon icon-phone"></i>
 					<label>
@@ -112,7 +130,10 @@
         });
 	});
 
-	var provCity = <?php echo $provCity?>;
+	<?php if(isset($provCity)){
+		echo 'var provCity = '.$provCity;
+	}
+	?>;
 	var cer_select = document.getElementById('ID');
 	var cer_div = document.getElementById('certificateno'),
 		pay = document.getElementById('pay_way'),
