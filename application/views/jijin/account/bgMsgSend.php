@@ -52,8 +52,7 @@
 									  echo '</select>
 								  </label>
 						  </div>';
-		  		}else
-		  			echo '<input name="channelid" type="hidden" value='.$payment_channel[0]['channelid'].'></input>';
+		  		}
 		  ?>
 		  <div class="m-item" id="chooseCity" style="display: none;">
 		  	<i class="icon icon-phone"></i>
