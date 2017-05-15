@@ -64,6 +64,7 @@ var_dump($bankcard_info);
     		if (in_array($paymentChannel['channelname'],$needPCBank)){
     			$data['provCity'] = json_encode($this->fund_interface->provCity());
     		}
+    		$data['channelid'] = $channelid;
     		$_SESSION['operation_data']['depositacct_old'] = $depositacct;
     		$_SESSION['operation_data']['channelid'] = $channelid;
     		$_SESSION['operation_data']['moneyaccount'] = $moneyaccount;
