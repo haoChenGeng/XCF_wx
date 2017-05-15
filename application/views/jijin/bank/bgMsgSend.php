@@ -35,7 +35,10 @@
 // 		  			{
 // 		  				echo '<input name="channelid" type="hidden" value='.$payment_channel[0]['channelid'].'></input>';
 // 		  			}
-		  		?>
+		  		if (isset($channelid)){
+		  			echo '<input type="hidden" id="channelid" name="channelid" value="'.$channelid.'"></input>';
+		  		}
+				?>
 		  		<input type="hidden" id="channelname" name="channelname"></input>
 		  		<input type="hidden" name="operation"  value=<?php echo $operation?>></input>
 				<div class="m-item" style="margin-top:-1px;">
