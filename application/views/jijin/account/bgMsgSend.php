@@ -98,7 +98,7 @@
 				<input class="btn" type="button" value="下一步"/>
 			</section>
 		</form>
-		<div class="light-content" id="certificateno" style="display:none;">
+		<!-- <div class="light-content" id="certificateno" style="display:none;">
 			<ul>
 				<?php
 					foreach ($certificatetype as $key => $val)
@@ -117,7 +117,7 @@
 					}
 				?>
 			</ul>
-		</div>
+		</div> -->
 		<section class="copy-right">
 			<p>小牛新财富版权所有 © 如有任何问题请联系客服4006695666</p>
 		</section>
@@ -149,7 +149,6 @@
 
 
 	var provCity = <?php echo isset($provCity) ? $provCity : ''?>;
-	// var chosenBank = '';
 console.log(provCity);
 	var listOp = document.createDocumentFragment();
 	for (var i in provCity) {
