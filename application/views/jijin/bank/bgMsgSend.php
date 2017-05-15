@@ -40,7 +40,7 @@
 		  		}
 				?>
 		  		<input type="hidden" id="channelname" name="channelname"></input>
-		  		<input type="hidden" name="operation"  value=<?php echo $operation?>></input>
+		  		<input type="hidden" id="bankChange" name="operation"  value=<?php echo $operation?>></input>
 				<div class="m-item" style="margin-top:-1px;">
 					<i class="icon icon-phone"></i>
 					<label>
@@ -116,18 +116,9 @@
             M.checkForm(function () {
             	var encrypt = new JSEncrypt();
 				encrypt.setPublicKey($('#bankcard_no').attr('data-key'));
-//                 var encrypted = encrypt.encrypt($('#ID_no').val()+$('#ID_no').attr('data-code')+$('#bankcard_no').val());
                 var encrypted = encrypt.encrypt($('#bankcard_no').val()+$('#bankcard_no').attr('data-code'));
-// 				$('#ID_no').val(encrypted);
 				$('#bankcard_no').val(encrypted);
-// alert(encrypted);
-// 				var channelName = document.getElementById('pay_way').querySelector('option').innerHTML;
 				$('#channelname').val($('#pay_way').find('option').attr('data-cname'));
-// alert($('#channelname').val());
-// console.log($('#pay_way').find('option').attr('data-cname'));
-// 				var inHidden = document.getElementById('channelname');
-// alert(inHidden);
-// 				inHidden.value = channelName;
                 $('#login_form').submit();
             });
         });
@@ -137,6 +128,73 @@
 		echo 'var provCity = '.$provCity;
 	}
 	?>;
+
+  var bankChange = document.getElementById('bankChange').getAttribute('value');
+  if (bankChange === 'bankcard_change' && typeof provCity !== "undefined" ) {
+    document.getElementById('chooseCity').style.display = 'block';
+    createBank('payProv');
+  }
+
+  function createBank(id) {
+    var listOp = document.createDocumentFragment();
+    for (var i in provCity) {
+      var options = document.createElement('option');
+      options.innerHTML = i;
+      options.setAttribute('value', i);
+      options.setAttribute('data-city', provCity[i]);
+      listOp.appendChild(options);
+    }
+    document.getElementById(id).appendChild(listOp);
+  };
+
+  function getBankAdd(s) {
+    var bankNameSel = document.getElementById('pay_way');
+    var bankName = bankNameSel.options[bankNameSel.options.selectedIndex];
+    $.ajax({
+      type: 'post',
+      url: "<?php echo $this->base.'/jijin/Jz_account/openBank'?>",
+      data: { 
+        channelname: bankName.innerHTML,
+        paracity: s.value
+      },
+      dataType: 'json',
+      success: function(res) {
+        if (res.code === '0000') {
+console.log(res);
+        var childOp = document.getElementById('payBankAdd');
+        childOp.innerHTML = '<option>请选择银行地址</option>';
+        var opList = document.createDocumentFragment();
+        for (var i = 0; i < res.data.length; i++) {
+          var op = document.createElement('option');
+          op.innerHTML = res.data[i].paravalue;
+          op.setAttribute('value', res.data[i].paravalue);
+          opList.appendChild(op);
+        }
+        childOp.appendChild(opList);
+        }else {
+          alert(res.msg);
+        }
+      },
+      error: function(res) {
+        alert('请求错误');
+      }
+    });
+  }
+
+  function show(s) {
+    var arr = s.dataset.city.split(',');
+    var childOp = document.getElementById('payCity');
+    childOp.innerHTML = '<option>请选择城市</option>';
+    var opList = document.createDocumentFragment();
+    for (var i = 0; i < arr.length; i++) {
+      var op = document.createElement('option');
+      op.innerHTML = arr[i];
+      op.setAttribute('value', arr[i]);
+      opList.appendChild(op);
+    }
+    childOp.appendChild(opList);
+  }
+
 	var cer_select = document.getElementById('ID');
 	var cer_div = document.getElementById('certificateno'),
 		pay = document.getElementById('pay_way'),
