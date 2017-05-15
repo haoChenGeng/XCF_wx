@@ -148,7 +148,7 @@
 
 
 
-	var provCity = <?php echo $provCity?>;
+	var provCity = <?php echo isset($provCity) ? $provCity : ''?>;
 	// var chosenBank = '';
 console.log(provCity);
 	var listOp = document.createDocumentFragment();

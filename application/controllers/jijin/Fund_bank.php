@@ -47,10 +47,23 @@ var_dump($bankcard_info);
     			$log_msg = '查询用户银行卡信息(bank_account<520012>)失败';
     		}
     	} */
+    	$this->load->config('jz_dict');
+    	$needPCBank = $this->config->item('needProvCity')[$this->config->item('selectChannel')];
     	if ($operation == 'bankcard_add'){
     		$data['payment_channel'] = $this->void_paymentchannel();
-    		$data['provCity'] = json_encode($this->fund_interface->provCity());
+    		foreach ($data['payment_channel'] as $key => $val){
+    			if (in_array($val['channelname'],$needPCBank)){
+    				$data['payment_channel'][$key]['needProvCity'] = 1;
+    				if (!isset($data['provCity'])){
+    					$data['provCity'] = json_encode($this->fund_interface->provCity());
+    				}
+    			}
+    		}
     	}elseif ($operation == 'bankcard_change'){
+    		$paymentChannel = $this->db->where(array('channelid'=>$channelid))->get('p2_paymentchannel')->row_array();
+    		if (in_array($paymentChannel['channelname'],$needPCBank)){
+    			$data['provCity'] = json_encode($this->fund_interface->provCity());
+    		}
     		$_SESSION['operation_data']['depositacct_old'] = $depositacct;
     		$_SESSION['operation_data']['channelid'] = $channelid;
     		$_SESSION['operation_data']['moneyaccount'] = $moneyaccount;
