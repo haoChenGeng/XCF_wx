@@ -22,7 +22,14 @@
 					<i class="icon icon-phone"></i>
 					<label class="select-label" style="width:90%;">请选择证件类型
 						<select id="ID" name="certificatetype" class="select-certificate" >
-							<option value="0"><?php echo $certificatetype[0];?></option>							
+							<!-- <option value="0"><?php echo $certificatetype[0];?></option> -->
+							<option value="1">请选择证件类型</option>
+							<?php
+								foreach ($certificatetype as $key => $val)
+								{
+									echo '<option value='.$key.'>'.$val.'</option>';
+								}
+							?>
 						</select>
 					</label>
 				</div>
@@ -32,28 +39,36 @@
 						<input type="text" id="ID_no" name="certificateno"  class="w80-p" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请输入证件号码"/>
 					</label>
 				</div>
-		  <?php if (count($payment_channel)>1)
+		  <?php if (count($payment_channel)>1){
 					echo '<div class="m-item"> 
 							  <i class="icon icon-phone"></i> 
 								  <label class="select-label" style="width:80%;">请选择支付渠道
-									  <select id="pay_way" name="channelid" class="select-certificate" >
-										  <option value='.$payment_channel[0]['channelid']." data-cname=".$payment_channel[0]['channelname'].">".$payment_channel[0]['channelname'].'</option>
-									  </select>
+									  <select id="pay_way" name="channelid" class="select-certificate" onchange="chooseChannel(this.options[this.options.selectedIndex])">
+									  	<option>请选择支付渠道</option>';
+										  foreach ($payment_channel as $key => $val)
+					  					{
+					  						echo '<option value='.$val['channelid'].' data-cname='.$val['channelname'].' '. (isset($val['needProvCity']) ? 'data-needProvCity="1"':'').'>'.$val['channelname'].'</option>';
+					  					}
+									  echo '</select>
 								  </label>
 						  </div>';
-		  		else
+		  		}else
 		  			echo '<input name="channelid" type="hidden" value='.$payment_channel[0]['channelid'].'></input>';
 		  ?>
 		  <div class="m-item" id="chooseCity" style="display: none;">
 		  	<i class="icon icon-phone"></i>
 		  	<label class="select-label" style="width: 80%;">请选择支付行<br>
-		  		<select id="payProv" class="select-certificate" style="margin-top: 10px;" onchange="show(this.options[this.options.selectedIndex])">
+		  		<select id="payProv" name="depositprov" class="select-certificate" style="margin-top: 10px;" onchange="show(this.options[this.options.selectedIndex])">
 		  			<option value="1">请选择省份</option>
-		  		</select><br>
-		  		<select id="payCity" class="select-certificate" style="margin: 10px 0 10px 40px;" onchange="getBankAdd(this.options[this.options.selectedIndex])">
+		  		</select>
+	  		</label><br>
+	  		<label>
+		  		<select id="payCity" name="depositcity" class="select-certificate" style="margin: 10px 0 10px 40px;" onchange="getBankAdd(this.options[this.options.selectedIndex])">
 		  			<option value="1">请选择城市</option>
-		  		</select><br>
-		  		<select id="payBankAdd" class="select-certificate" style="margin-left: 40px;">
+		  		</select>
+	  		</label><br>
+	  		<label>
+		  		<select id="payBankAdd" name="bankname" class="select-certificate" style="margin-left: 40px;">
 		  			<option value="1">请选择银行地址</option>
 		  		</select>
 		  	</label>
@@ -134,6 +149,7 @@
 
 
 	var provCity = <?php echo $provCity?>;
+	// var chosenBank = '';
 console.log(provCity);
 	var listOp = document.createDocumentFragment();
 	for (var i in provCity) {
@@ -159,13 +175,24 @@ console.log(provCity);
 		childOp.appendChild(opList);
 	}
 
+	var chooseChannel = function(s) {
+		console.log(s);
+		if (s.innerHTML === '平安银行' || s.innerHTML === '华夏银行') {
+			document.getElementById('chooseCity').style.display = 'block';
+		}else {
+			document.getElementById('chooseCity').style.display = 'none';
+		}
+		chosenBank = s.innerHTML;
+	};
+
 	function getBankAdd(s) {
-		var bankName = document.getElementById('pay_way');		
+		var bankNameSel = document.getElementById('pay_way');
+		var bankName = bankNameSel.options[bankNameSel.options.selectedIndex];
 		$.ajax({
 			type: 'post',
 			url: "<?php echo $this->base.'/jijin/Jz_account/openBank'?>",
 			data: { 
-				channelname: bankName.childNodes[1].innerHTML,
+				channelname: bankName.innerHTML,
 				paracity: s.value
 			},
 			dataType: 'json',
@@ -187,13 +214,12 @@ console.log(res);
 				}
 			},
 			error: function(res) {
-				console.log(res);
 				alert('请求错误');
 			}
 		});
 	}
 
-	var cer_select = document.getElementById('ID');
+	/*var cer_select = document.getElementById('ID');
 	var cer_div = document.getElementById('certificateno'),
 	pay = document.getElementById('pay_way'),
 	payList = document.getElementById('pay-list');
@@ -223,7 +249,7 @@ console.log(res);
 				}
 			});		
 		});
-	}
+	}*/
 
 	
 </script>
