@@ -102,6 +102,7 @@ window.onload = function () {
 						 	},
 						 	error:function () {
 						 		alert('查询失败，请稍后重试！');
+						 		document.getElementById('scroll2').querySelector('.mui-loading').style.display = 'none';
 						 	}
 						});
 					}
@@ -126,7 +127,7 @@ window.onload = function () {
 					 				}else{
 					 					listWrap.innerHTML = '<p class="fund-list-error"><span>'+data.today.msg+'</span></p>';	
 					 				}
-						 		} else {							 			
+						 		}else {
 						 			for (var i = data.today.data.length - 1; i >= 0; i--) {
 							 			var oLi = document.createElement('li');							 			
 						 				oLi.setAttribute('class','mui-table-view-cell query-padding');
@@ -151,6 +152,7 @@ window.onload = function () {
 						 	},
 						 	error:function () {
 						 		alert('查询失败，请稍后重试！');
+						 		document.getElementById('scroll3').querySelector('.mui-loading').style.display = 'none';
 						 	}
 						});
 					}
