@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head lang="en">
@@ -156,7 +156,9 @@
         var bankName = bankNameSel.getAttribute('value');        
       }
       var bankNameSelAdd = document.getElementById('pay_way');
-      var bankNameAdd = bankNameSelAdd.options[bankNameSelAdd.options.selectedIndex];
+      if (bankNameSelAdd) {
+        var bankNameAdd = bankNameSelAdd.options[bankNameSelAdd.options.selectedIndex];        
+      }
       $.ajax({
         type: 'post',
         url: "<?php echo $this->base.'/jijin/Jz_account/openBank'?>",
