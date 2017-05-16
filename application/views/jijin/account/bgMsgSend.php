@@ -180,7 +180,8 @@ console.log(provCity);
 
 	var chooseChannel = function(s) {
 		console.log(s);
-		if (s.innerHTML === '平安银行' || s.innerHTML === '华夏银行') {
+		/* if (s.innerHTML === '平安银行' || s.innerHTML === '华夏银行') */
+		if (s.getAttribute("data-needProvCity")) {
 			document.getElementById('chooseCity').style.display = 'block';
 		}else {
 			document.getElementById('chooseCity').style.display = 'none';
@@ -201,7 +202,7 @@ console.log(provCity);
 			dataType: 'json',
 			success: function(res) {
 				if (res.code === '0000') {
-console.log(res);
+// console.log(res);
 				var childOp = document.getElementById('payBankAdd');
 				childOp.innerHTML = '<option>请选择银行地址</option>';
 				var opList = document.createDocumentFragment();

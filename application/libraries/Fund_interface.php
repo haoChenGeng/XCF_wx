@@ -362,7 +362,7 @@ class Fund_interface
 		$bankcardChange['code'] = 'bankcardChange';
 		$bankcardChange['customerNo'] = $_SESSION['customer_name'];
 		$submitData = $this->getSubmitData($bankcardChange);
-return $submitData;
+// return $submitData;
 		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
