@@ -152,7 +152,6 @@
       var bankNameSel = document.getElementById('channelname');
       // var bankName;
       if (bankNameSel) {
-console.log(bankNameSel)
         var bankName = bankNameSel.getAttribute('value');        
       }
       var bankNameSelAdd = document.getElementById('pay_way');
