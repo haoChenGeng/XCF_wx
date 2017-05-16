@@ -102,7 +102,7 @@ var_dump($bankcard_info);
     		exit;
     	}
     	$post = $this->input->post();
-// var_dump($post);    	
+// var_dump($post);    	exit;
     	//-----------RSA解密----------------------------
     	$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
     	$decryptData ='';
@@ -149,6 +149,11 @@ var_dump($bankcard_info);
     				}
     				$_SESSION['operation_data']['depositacct'] = $post['depositacct'];         //银行卡号
     				$_SESSION['operation_data']['mobileno'] = $post['mobiletelno'];            //银行预留电话
+    				if (isset($post['depositprov'])){
+    					$_SESSION['operation_data']['depositprov'] = $post['depositprov'];
+    					$_SESSION['operation_data']['depositcity'] = $post['depositcity'];
+    					$_SESSION['operation_data']['banknamebankname'] = $post['bankname'];
+    				}
     				$this->load_bgMsgCheckOnly($post['operation']);
     			}
     		}else{
