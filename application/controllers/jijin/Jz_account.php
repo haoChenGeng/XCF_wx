@@ -58,6 +58,7 @@ class Jz_account extends MY_Controller
 	function bgMsgSend()
 	{
 		$post = $this->input->post();
+// var_dump($post);
 		//log注册提交的信息
 // 		file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."注册post数据为:".serialize($post)."\r\n\r\n",FILE_APPEND);
 		//-----------RSA解密----------------------------
@@ -130,6 +131,9 @@ class Jz_account extends MY_Controller
 							'depositacctname' => $post['depositacctname'],                       //银行帐户名
 							'depositacct' => $post['depositacct'],                               //银行卡号
 							'mobileno' => $post['mobiletelno'],                                  //银行预留电话
+							'bankname' => $post['bankname'],
+							'depositprov' => $post['depositprov'],
+							'depositcity' => $post['depositcity'],
 					);
 					$this->load_bgMsgCheck();
 				}
@@ -145,7 +149,7 @@ class Jz_account extends MY_Controller
 		if (isset($err_msg))
 		{
 			$str = isset($log_msg)?$log_msg:$err_msg;
-			file_put_contents('log/user/register'.$this->logfile_suffix, date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."身份证为:".$post['certificateno']."开户失败原因为：".$str."\r\n\r\n",FILE_APPEND);
+			file_put_contents('log/user/register'.$this->logfile_suffix, date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开户失败,原因为：".$str."\r\n\r\n",FILE_APPEND);
 			Message(Array(
 					'msgTy' => 'fail',
 					'msgContent' => $err_msg.'<br/>注册失败，系统正在返回...',
@@ -155,7 +159,7 @@ class Jz_account extends MY_Controller
 		}
 		if (isset($info_msg)){
 			$str = isset($log_msg)?$log_msg:$info_msg;
-			file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."身份证为:".$post['certificateno']."开户失败原因为：".$str."\r\n\r\n",FILE_APPEND);
+			file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开户失败,原因为：".$str."\r\n\r\n",FILE_APPEND);
 			$arr = Array(
 					'msgTy' => 'fail',
 					'msgContent' => $info_msg,
@@ -163,8 +167,7 @@ class Jz_account extends MY_Controller
 					'returnUrl' => $this->base . '/jijin/Jz_my',
 					'base' => $this->base
 			);
-			$data_OPT = array('certificateno' => $post['certificateno'],'certificatetype' => $post['certificatetype'],'custno' => $seekAccount['custno']);
-			$_SESSION['data_OPT'] = $data_OPT;								//通过session记录证件类型、证件号、基金帐号等信息
+			$_SESSION['data_OPT'] = array('certificateno' => $post['certificateno'],'certificatetype' => $post['certificatetype'],'custno' => $seekAccount['custno']); //通过session记录证件类型、证件号、基金帐号等信息
 			Message_select('/jijin/account/info_OpenPhoneTtrans',$arr);
 		}
 	}
@@ -208,38 +211,45 @@ class Jz_account extends MY_Controller
 				$this->load->config('jz_dict');
 // 				$this->load->library('fund_interface');
 				//准备开户数据，并清除相关SESSION
-				foreach ($_SESSION['register_data'] as $key=>$val)	{
-					$post[$key] = $val;
-				};
+// var_dump($post);
+				$registerData = array_merge($_SESSION['register_data'],$post);
+/* 				if (empty($registerData['email'])){
+					unset($registerData['email'],$registerData['postcode'],$registerData['address']);
+				} */
 				unset($_SESSION['register_data']);
-				if (empty($post['email'])) { unset($post['email']);};
-				if (empty($post['postcode'])) { unset($post['postcode']);};
-				if (empty($post['address'])) { unset($post['address']);};
-				if (!isset($post['subbankno'])) {
-					$post['subbankno'] = $post['channelid'];
-				};
 // 				$post['tano'] = $this->config->item('ta')[0]['no'];
 				//查询基金公司信息
-				$post['tano'] = $this->db->select("tano")->get('p2_fundlist')->row_array()['tano'];
-				$post['custname'] = $post['depositacctname'];
-				$post['bankname'] = '招商银行';
-				$post['depositprov'] = '广东';
-				$post['depositcity'] = '深圳';
+				$registerData['tano'] = $this->db->select("tano")->get('p2_fundlist')->row_array()['tano'];
+				$registerData['custname'] = $registerData['depositacctname'];
+				$logData = $registerData;
+				$logData['tpasswd'] = $logData['lpasswd'] = '***';
+				$logData['certificateno'] = substr($logData['certificateno'],0,6).'***'.substr($logData['certificateno'],-3);
+				$logData['depositacct'] = substr($logData['depositacct'],0,3).'***'.substr($logData['depositacct'],-3);
+				$logData['depositacctname'] = substr($logData['depositacctname'],0,3).'***';
+// var_dump($post);
 				//调用金证开户接口,并记录调用金证接口数据及返回结果(去除密码部分)
-				file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用金证bgMsgCheck数据为:".serialize($post),FILE_APPEND);
-				$res_bMC = $this->fund_interface->bgMsgCheck($post);
-				$post['tpasswd'] = $post['lpasswd'] = '***';
+				file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用金证bgMsgCheck数据为:".serialize($logData),FILE_APPEND);
+				$res_bMC = $this->fund_interface->bgMsgCheck($registerData);
 				file_put_contents('log/user/register'.$this->logfile_suffix,"\r\n调用bgMsgCheck接口返回数据为：".serialize($res_bMC)."\r\n\r\n",FILE_APPEND);
 				if (isset($res_bMC['code']) && isset($res_bMC['code'])== '0000' && isset($res_bMC['data'][0][0]['custno']))        //判断调用金证接口开户是否成功    isset($res_bMC['code']) && $res_bMC['code'] == '0000'
 				{
-					//准备数据，并写入数据库
+					$_SESSION['JZ_user_id'] = 1;
+					file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."用户基金开户成功\r\n\r\n",FILE_APPEND);
+					Message(Array(
+							'msgTy' => 'sucess',
+							'msgContent' => '注册成功',
+							'msgUrl' => $this->base . '/jijin/Jz_my', //调用我的基金界面
+							'base' => $this->base
+							));
+					exit;
+/* 					//准备数据，并写入数据库
 					$insert_data = array(
 							'JZ_account' => $res_bMC['data'][0][0]['custno'],
 							'XN_account' => $_SESSION ['customer_name'],
-							'certificateno' => $post['certificateno'],
-							'depositacctname' => $post['depositacctname'],
-							'depositacct' => $post['depositacct'],
-							'mobileno' => $post['mobileno'],
+							'certificateno' => $registerData['certificateno'],
+							'depositacctname' => $registerData['depositacctname'],
+							'depositacct' => $registerData['depositacct'],
+							'mobileno' => $registerData['mobileno'],
 							'authority' => 1,
 							'moneyaccount' => $res_bMC['data'][0][0]['moneyaccount'],
 							'transactionaccountid' => $res_bMC['data'][1][0]['transactionaccountid'],
@@ -248,22 +258,13 @@ class Jz_account extends MY_Controller
 					);
 					$insert_res = $this->db->insert('jz_account',$insert_data);   //写入数据库
 					//依据数据库写入操作成功与否给予用户成功的提示，并log记录
-					if ($insert_res){
+					if ($insert_res){ */
 						//设置SESSION用于标识已登录
-						$_SESSION['JZ_user_id'] = $this->db->insert_id();
-						$_SESSION['JZ_account'] = $res_bMC['data'][0][0]['custno'];
-						file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."用户基金开户成功，数据库写入成功".serialize($insert_data)."\r\n\r\n",FILE_APPEND);
-						Message(Array(
-								'msgTy' => 'sucess',
-								'msgContent' => '注册成功',
-								'msgUrl' => $this->base . '/jijin/Jz_my', //调用我的基金界面
-								'base' => $this->base
-								));
-						exit;
-					}else{
-						$err_msg = '系统故障';
-						$log_msg = "用户开户成功,写入数据".serialize($insert_data)."失败,失败原因：".serialize($this->db->error());
-					}
+
+// 					}else{
+// 						$err_msg = '系统故障';
+// 						$log_msg = "用户开户成功,写入数据".serialize($insert_data)."失败,失败原因：".serialize($this->db->error());
+// 					}
 				}
 				else{                                      //调用金证接口开户失败
 						$err_msg = '系统故障';

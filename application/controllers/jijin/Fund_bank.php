@@ -67,6 +67,7 @@ var_dump($bankcard_info);
     		$data['channelname'] = $paymentChannel['channelname'];
     		$_SESSION['operation_data']['depositacct_old'] = $depositacct;
     		$_SESSION['operation_data']['channelid'] = $channelid;
+    		$_SESSION['operation_data']['channelname'] = $paymentChannel['channelname'];
     		$_SESSION['operation_data']['moneyaccount'] = $moneyaccount;
     	}
     	if (isset($log_msg)){
@@ -102,7 +103,7 @@ var_dump($bankcard_info);
     		exit;
     	}
     	$post = $this->input->post();
-// var_dump($post);    	exit;
+// var_dump($post);
     	//-----------RSA解密----------------------------
     	$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
     	$decryptData ='';
@@ -145,15 +146,17 @@ var_dump($bankcard_info);
     			}else{
     				if ($post['operation'] == 'bankcard_add'){
     					$_SESSION['operation_data']['channelid'] = $post['channelid'];         //网点号(支付渠道)
-    					$_SESSION['operation_data']['channelname'] = $post['channelname'];     //网点名
+    					$paymentChannel = $this->db->where(array('channelid'=>$post['channelid']))->get('p2_paymentchannel')->row_array();
+    					$_SESSION['operation_data']['channelname'] = $paymentChannel['channelname'];     //网点名
     				}
     				$_SESSION['operation_data']['depositacct'] = $post['depositacct'];         //银行卡号
     				$_SESSION['operation_data']['mobileno'] = $post['mobiletelno'];            //银行预留电话
     				if (isset($post['depositprov'])){
     					$_SESSION['operation_data']['depositprov'] = $post['depositprov'];
     					$_SESSION['operation_data']['depositcity'] = $post['depositcity'];
-    					$_SESSION['operation_data']['banknamebankname'] = $post['bankname'];
+    					$_SESSION['operation_data']['bankname'] = $post['bankname'];
     				}
+var_dump($_SESSION['operation_data']);
     				$this->load_bgMsgCheckOnly($post['operation']);
     			}
     		}else{
@@ -238,6 +241,7 @@ var_dump($bankcard_info);
     		unset($_SESSION['operation_data']);
     		$oper_data['tpasswd'] = $post['tpasswd'];
     		$oper_data['verificationCode'] = $post['verificationCode'];
+// var_dump($oper_data);
     		//根据不同银行账户操作，调用金证接口,并记录调用金证接口数据及返回结果
     		switch ($post['operation']){
     			case 'bankcard_add':
@@ -250,13 +254,12 @@ var_dump($bankcard_info);
     				$oper_des = '增加银行卡';
     				break;
     			case 'bankcard_change':
-var_dump($oper_data);
     				$oper_res = $this->fund_interface->bankcardChange($oper_data);
-$data['data'] = $oper_res['data'];
-var_dump($oper_res);
-$data['url'] = $this->config->item('fundUrl').'/jijin/XCFinterface';
-$this->load->view('UrlTest',$data);
-return;
+// $data['data'] = $oper_res['data'];
+// var_dump($oper_res);
+// $data['url'] = $this->config->item('fundUrl').'/jijin/XCFinterface';
+// $this->load->view('UrlTest',$data);
+// return;
     				$oper_des = '更换银行卡';
     				break;
     		}
@@ -337,6 +340,7 @@ return;
 			$data['num_channel'] = count($channel_info)-count($bank_info['data']);
 		}else{
 			$data['fail_message'] = '银行卡查询失败,请稍候再试!';
+			$data['num_channel'] = 0;
 		}
 // 		$data[num_channel] = 0;
 // var_dump($channel_info); var_dump($data);exit;
