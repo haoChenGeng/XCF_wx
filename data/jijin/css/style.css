@@ -18,6 +18,10 @@
 	color: #000;
 }
 
+.dpn {
+	display: none;
+}
+
 .mb10 {
 	margin-bottom: 10px;
 }

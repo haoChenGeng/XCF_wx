@@ -21,10 +21,10 @@
 	 			var fundList = document.getElementById('scroll1');
 	 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register" id="errorMsg">'+data.errorMsg+'</a>';	 			
 	 		}else {
-	 			document.getElementById('totalBalance').innerHTML = data.totalfundvolbalance;
+	 			document.getElementById('totalBalance').innerHTML = data.totalfundvolbalance || 0;
 	 			var listWrap = document.getElementById('buyFundList');
 	 			var fragment = document.createDocumentFragment();
-	 			if (!data.fund_list) {
+	 			if (!data.fund_list.data.length) {
 	 				var oLi = document.createElement('li');	 			
 	 				oLi.setAttribute('class','mui-table-view-cell');
 	 				oLi.innerHTML = '<p class="fund-list-error"><span>未购买任何基金</span></p>';								 	
@@ -82,7 +82,7 @@
 						 		}else {
 							 		var listWrap = document.getElementById('bonus-mod');
 			 				 		var fragment = document.createDocumentFragment();
-			 				 		if (0 == data.bonus_change.length) {
+			 				 		if (0 == data.bonus_change.data.length) {
 							 			var oLi = document.createElement('li');
 							 			oLi.setAttribute('class','mui-table-view-cell');
 							 			oLi.innerHTML = '<p class="fund-list-error"><span>未购买任何基金</span></p>';														 	
