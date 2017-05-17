@@ -56,8 +56,7 @@
             	<a href="/FindPaper" id="sign_in" class="span01">发现</a>
             </li>
             <li class="li01 li04">
-<!--             	<a href="/application/views/commingsoon.php" id="member" class="span01">会员专区</a> -->
-            	<a href="#" id="member_apply" class="span01">会员专区</a>
+            	<a href="https://neoclub.xiaoniuxcf.com/wap.php" class="span01">会员专区</a>
             </li>
         </ul>
         <div class="text_list pos-re mt60">

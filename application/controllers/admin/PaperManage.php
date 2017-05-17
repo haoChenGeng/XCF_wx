@@ -107,7 +107,6 @@ class PaperManage extends MY_Controller {
 	}
 	
 	private function operadd(&$input,&$data){
-echo (PHP_OS);
 		$data['cancel'] = $this->base.$data['accessUrl'];
 		$data['form_action'] = $this->base.$data['accessUrl'];      //form提交地址
 		$data['heading_title'] = $data['text_form'] ='增加'.$data['operContent'];
@@ -217,6 +216,16 @@ echo (PHP_OS);
 			}
 			if (isset($deleterecord)){
 				$flag = $this->db->where_in($data['selcet_key'],$deleterecord)->delete($data['tableName']);
+				foreach ($deleterecord as $val){
+					$papaerPath = FCPATH."application\\views\\find\\".$val;
+					if (strtoupper(substr(PHP_OS,0,3))==='WIN'){
+						$papaerPath = str_replace('/','\\',$papaerPath);
+						exec("rd /s/q ".$papaerPath);
+					}else{
+						$papaerPath = str_replace('\\','/',$papaerPath);
+						exec("rm -rf ".$papaerPath);
+					}
+				}
 				file_put_contents('log/userOperation'.$this->logfile_suffix, date('Y-m-d H:i:s',time())."\r\n 用户".$_SESSION['admin_id']."(".$_SESSION['fullname'].")删除了".$data['operContent']."数据：".serialize($deleterecord)."\r\n\r\n",FILE_APPEND);
 				if ($flag){
 					$data['success'] = $data['operContent'].'删除成功';                //设置操作成功提示
