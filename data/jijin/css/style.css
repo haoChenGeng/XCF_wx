@@ -332,21 +332,6 @@ body {
     src: url('../iconfont/mui.ttf') format('truetype'); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
 }
 
-/* .history:after,.history:before {
-	border: 10px solid transparent;
-	border-left: 10px solid #fff;
-	width: 0;
-	height: 0;
-	position: absolute;
-	top: 1px;
-	right: 0;
-	content: '';
-}
-
-.history:before {
-	border-left-color: #666;
-	right: -2px;
-}  */
 
 .cancel-order {
 	color: red;
