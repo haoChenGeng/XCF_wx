@@ -246,5 +246,9 @@ class Jz_my extends MY_Controller
 		// return $res;
 		echo json_encode($res);
 	}
+	
+	function nextURL(){
+		
+	}
 
 }

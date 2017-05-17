@@ -124,8 +124,9 @@ class Jz_account extends MY_Controller
 				}
 				if ( !isset($err_msg) && !isset($info_msg))                                                             //判断是否鉴权成功
 				{
+					$paymentChannel = $this->db->where(array('channelid'=>$post['channelid']))->get('p2_paymentchannel')->row_array();
 					$_SESSION['register_data'] = array('channelid' => $post['channelid'],        //网点号(支付渠道)
-							'channelname' => $post['channelname'],                               //网点名称
+							'channelname' => $paymentChannel['channelname'],                     //网点名称
 							'certificatetype' => $post['certificatetype'],                       //证件类型
 							'certificateno' => $post['certificateno'],                           //身份证号
 							'depositacctname' => $post['depositacctname'],                       //银行帐户名
@@ -231,7 +232,7 @@ class Jz_account extends MY_Controller
 				file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用金证bgMsgCheck数据为:".serialize($logData),FILE_APPEND);
 				$res_bMC = $this->fund_interface->bgMsgCheck($registerData);
 				file_put_contents('log/user/register'.$this->logfile_suffix,"\r\n调用bgMsgCheck接口返回数据为：".serialize($res_bMC)."\r\n\r\n",FILE_APPEND);
-				if (isset($res_bMC['code']) && isset($res_bMC['code'])== '0000' && isset($res_bMC['data'][0][0]['custno']))        //判断调用金证接口开户是否成功    isset($res_bMC['code']) && $res_bMC['code'] == '0000'
+				if (isset($res_bMC['code']) && isset($res_bMC['code'])== '0000')        //判断调用金证接口开户是否成功    isset($res_bMC['code']) && $res_bMC['code'] == '0000'
 				{
 					$_SESSION['JZ_user_id'] = 1;
 					file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."用户基金开户成功\r\n\r\n",FILE_APPEND);
@@ -242,29 +243,6 @@ class Jz_account extends MY_Controller
 							'base' => $this->base
 							));
 					exit;
-/* 					//准备数据，并写入数据库
-					$insert_data = array(
-							'JZ_account' => $res_bMC['data'][0][0]['custno'],
-							'XN_account' => $_SESSION ['customer_name'],
-							'certificateno' => $registerData['certificateno'],
-							'depositacctname' => $registerData['depositacctname'],
-							'depositacct' => $registerData['depositacct'],
-							'mobileno' => $registerData['mobileno'],
-							'authority' => 1,
-							'moneyaccount' => $res_bMC['data'][0][0]['moneyaccount'],
-							'transactionaccountid' => $res_bMC['data'][1][0]['transactionaccountid'],
-							'tpasswd' => my_md5($_SESSION ['customer_name'], $_POST['tpasswd']),
-							'platform'=>'XCF',
-					);
-					$insert_res = $this->db->insert('jz_account',$insert_data);   //写入数据库
-					//依据数据库写入操作成功与否给予用户成功的提示，并log记录
-					if ($insert_res){ */
-						//设置SESSION用于标识已登录
-
-// 					}else{
-// 						$err_msg = '系统故障';
-// 						$log_msg = "用户开户成功,写入数据".serialize($insert_data)."失败,失败原因：".serialize($this->db->error());
-// 					}
 				}
 				else{                                      //调用金证接口开户失败
 						$err_msg = '系统故障';
