@@ -378,7 +378,6 @@ class User extends MY_Controller {
 			else{
 				$res = json_decode ( $res2, TRUE );
 			}
-			$b = ob_clean ();
 			switch ($res ['returnCode']) {
 				case 0 :
 					$result = '验证码已发送！';
