@@ -3,37 +3,74 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-class model_excelOper extends CI_Model {
+class Model_excelOper extends CI_Model {
 	private $logfile_suffix;
 	public function __construct()
 	{
 		parent::__construct();
 		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
-		set_time_limit( 1800 );
-		ini_set('memory_limit', '512M');
+		set_time_limit(1800);
+		ini_set('memory_limit', '1024M');
 		require_once( FCPATH.'data/PHPExcel/Classes/PHPExcel.php' );
 	}
 	
 	//获取excel表的内容
 	public function getExcelContent($filename,$dataDes){
 		$reader = $this->initRead($filename);
-		foreach ($dataDes as $key => $val){
-			$sheet = $reader->getSheet($val['sheet']);                    //获取excel中的某个表
-			$limit = isset($val['limit']) ? $val['limit'] : 0;
-			if ($limit >0){
-				$rows = $val['row'];                                      //$limit>0 表示获取行号$row之后$limit行的数据($row=1 时仅获取当前行数据)
-			}else{
-				$rows = $sheet->getHighestRow()+1;                        //$limit<=0  表示获取表$row行到最大行数之前$limit行的数据
+		$sheetCount = $reader->getSheetCount();
+		$data = array();
+		if(isset($dataDes['autoSelectSheet'])){
+			for ($sheetNum = 0; $sheetNum < $sheetCount; $sheetNum++){
+				$sheet = $reader->getSheet($sheetNum);							//获取excel中的表
+				$sheetTitle = $sheet->getTitle('Simple');
+				if (isset($dataDes[$sheetTitle])){
+					$this->getSheetData($data, $sheet, $dataDes[$sheetTitle], $sheetTitle);
+				}
 			}
-			$rows += $limit;
-			$j = 0;
-			for ($i=$val['row']; $i<$rows; $i++ , $j++) {
-				foreach ($val['fieldKey'] as $k=>$v){
-					$data[$key][$j][$v] = trim($this->getCell($sheet,$i,$k));
+		}else{
+			foreach ($dataDes as $key => $val){
+				if ($val['sheet'] < $sheetCount){
+					$sheet = $reader->getSheet($val['sheet']);                    //获取excel中的某个表
+					$this->getSheetData($data, $sheet, $val, $key);
+					if (isset($val['sheetTitle'])){
+						$data[$key]['sheetTitle'] = $sheet->getTitle('Simple');
+					}
 				}
 			}
 		}
 		return $data;
+	}
+	
+	private function getSheetData(&$data, &$sheet, $sheetDes, $key){
+		$limit = isset($sheetDes['limit']) ? $sheetDes['limit'] : 0;
+		if ($limit >0){
+			$rows = $sheetDes['row'];                                      //$limit>0 表示获取行号$row之后$limit行的数据($row=1 时仅获取当前行数据)
+		}else{
+			$rows = $sheet->getHighestRow()+1;                        //$limit<=0  表示获取表$row行到最大行数之前|$limit行|的数据
+		}
+		if (!isset($sheetDes['fieldKey'])){									//自动获取fieldKey
+			$keyRow = $sheetDes['KeyPosition']['row'];
+			$startColumn = isset($sheetDes['KeyPosition']['startColumn']) ? $sheetDes['KeyPosition']['startColumn'] : 1;
+			if (isset($sheetDes['KeyPosition']['endColumn'])){
+				$endColumn = $sheetDes['KeyPosition']['endColumn'];
+			}else{
+				$endColumn = $sheet->getHighestColumn();
+				$endColumn = $this->getColumnNum($endColumn);
+			}
+			for($i = $startColumn; $i<=$endColumn; $i++){
+				$filedKey = trim($this->getCell($sheet,$keyRow,$i));
+				if (!empty($filedKey)){
+					$sheetDes['fieldKey'][$i] = $filedKey;
+				}
+			}
+		}
+		$rows += $limit;
+		$j = 0;
+		for ($i=$sheetDes['row']; $i<$rows; $i++ , $j++) {
+			foreach ($sheetDes['fieldKey'] as $k=>$v){
+				$data[$key][$j][$v] = trim($this->getCell($sheet,$i,$k));
+			}
+		}
 	}
 	
 	//将数据写入excel文件
@@ -117,9 +154,29 @@ class model_excelOper extends CI_Model {
 		$i=$exportDataDes['row'];
 		foreach ($dbData as $key => $val){
 			foreach ( $exportDataDes['fieldKey'] as $k => $v ) {
-				$this->setCell($worksheet, $i, $k, $val[$v]);
+				if (isset($val[$v])){
+					$this->setCell($worksheet, $i, $k, $val[$v]);
+				}
 			}
 			$i++;
+		}
+		if (isset($exportDataDes['groupRow'])){
+			foreach ($exportDataDes['groupRow'] as $key =>$val){
+				foreach ($val as $k=>$v){
+					for($ii = $v[0]; $ii <= $v[1]; $ii++){
+						$worksheet->getRowDimension($ii)->setOutlineLevel($k);
+					}
+				}
+			}
+		}
+		if (isset($exportDataDes['groupColumn'])){
+			foreach ($exportDataDes['groupColumn'] as $key =>$val){
+				foreach ($val as $k=>$v){
+					for($ii = $v[0]; $ii <= $v[1]; $ii++){
+						$worksheet->getColumnDimension($this->getColumnAlph($ii))->setOutlineLevel($k);
+					}
+				}
+			}
 		}
 	}
 	
@@ -131,6 +188,45 @@ class model_excelOper extends CI_Model {
 		$objWriter = PHPExcel_IOFactory::createWriter($workbook, 'Excel5');
 		$objWriter->save('php://output');
 		$this->clearSpreadsheetCache();
+	}
+	
+	private function getColumnNum($column){
+		if (is_numeric($column)){
+			return $column;
+		}
+		$len = strlen($column);
+		$num = 0;
+		$multiplicator = 1;
+		for ($i=$len-1;$i>=0;$i--){
+			$num +=  (ord($column[$i])-64)*$multiplicator;
+			$multiplicator = $multiplicator*26; 
+		}
+		return $num;
+	}
+	
+    private function getColumnAlph($column){
+    	if (!is_numeric($column)){
+    		return $column;
+    	}
+    	$Alph = '';
+    	$multiplicator = 1;
+    	while ($column > 0){
+    		$i = ($column-1) % 26;
+    		$column = $column -($i+1);
+    		$Alph = chr($i+65).$Alph;
+    		$column = intval($column/26);
+    	}
+    	return $Alph;
+    }
+	
+	public function excelTime($inputTime,$style){
+		if (is_numeric($inputTime)){
+			$secondNum = intval(($inputTime - 25569) * 3600 * 24)-28800;   //转换成1970年以来的秒数
+			$returnTime = date($style, $secondNum);
+		}else{
+			$returnTime = date($style,strtotime($inputTime));
+		}
+		return $returnTime;
 	}
 	
 }

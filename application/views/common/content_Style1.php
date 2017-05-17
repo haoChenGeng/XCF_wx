@@ -98,8 +98,8 @@
 				}
 				?>
 				<input type="hidden" id="selectoper" name="selectoper" value="<?php echo $selectoper;?>"> </input>
-				<input type="hidden" id="sortField" name="sortField" value="<?php echo $sortField;?>"> </input>
-				<input type="hidden" id = "order" name="order" value="<?php echo $order;?>"> </input>
+				<input type="hidden" id="sortField" name="sortField" value="<?php echo isset($sortField) ? $sortField : '';?>"> </input>
+				<input type="hidden" id = "order" name="order" value="<?php echo isset($order) ? $order : '';?>"> </input>
 				<input type="hidden" id = "editItem" name="editItem" value=""> </input>
 				<?php 
 				if (isset($rand_code)){
@@ -116,8 +116,9 @@
      				<table class="table table-bordered table-hover">
 						<thead>
 							<tr>
-								<td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
-								<?php 
+								<?php if(isset($selcet_key)){
+									echo '<td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('."'input[name*=\'selected\']').prop('checked', this.checked);".'"/></td>';
+								}
 								foreach ($table_field as $key => $val){
 									$padding = isset($val['padding']) ? ' style="padding:0 '.$val['padding'].'px;"' : '';
 									if (isset($val['sort'])){
@@ -135,20 +136,20 @@
 						</thead>
 						<tbody>
 							<?php
-							if (isset($table_content) ){
+							if (!empty($table_content) ){
 								foreach ($table_content as $key =>$val){
-									echo '<tr> 
-											<td class="text-center">';
-									if (in_array($val[$selcet_key], $selected)){
-										echo '<input type="checkbox" name="selected[]" value="'.$val[$selcet_key].'" checked="checked" />';
-									}else{
-										echo '<input type="checkbox" name="selected[]" value="'.$val[$selcet_key].'" />' ;
+									echo '<tr>';
+									if (isset($selcet_key)){
+										echo '<td class="text-center">';
+										if (in_array($val[$selcet_key], $selected)){
+											echo '<input type="checkbox" name="selected[]" value="'.$val[$selcet_key].'" checked="checked" />';
+										}else{
+											echo '<input type="checkbox" name="selected[]" value="'.$val[$selcet_key].'" />' ;
+										}
 									}
 									echo '</td>';
 									foreach ($table_field as $k => $v){
 										$align = isset($v['align']) ? $v['align'] : "text-center";
-// 										echo '<tr>
-// 											<td class="'.$align.'">';
 										if ($k === 'operButton'){
 											echo '<td class="'.$align.'">';
 											foreach ($val['operButton'] as $k3 =>$v3){
@@ -160,7 +161,7 @@
 												echo '<td class="'.$align.'">';
 												switch ($v['type']){
 													case 'select':
-														echo '<select name="table-'.$k.'" style="border:0" id="">';
+														echo '<select class="table_select" name="'.$k.'" style="border:0" id="">';
 														$selectContnet = isset($val[$k.'SelIndex']) ? $v['items'][$val[$k.'SelIndex']] : $v['items'];
 														foreach ($selectContnet as $item){
 															echo '<option value="'.$item['val'].'"';
@@ -171,13 +172,46 @@
 														}
 														break;
 													case 'input':
-														echo '<input name="table-'.$k.'" style="border:0" value = "'.$val[$k].'"></input>';
+														echo '<input class="table_input" name="'.$k.'" style="border:0" value = "'.(isset($val[$k]) ? $val[$k] : '').'"></input>';
+														break;
+													case 'cascade':
+														$cascadeVar = &$cascadeDatas[$v['name']];
+														echo '<select class="table_cascade" name="'.$v['name'].'" style="border:0">';
+														if (isset($val[$k]['parentId']) && isset($cascadeVar[$val[$k]['parentId']])){
+															foreach ($cascadeVar[$val[$k]['parentId']] as $k1=>$v1){
+																echo '<option value="'.$k1.'"';
+																if (isset($val[$k]['default']) && $k1== $val[$k]['default']){
+																	echo ' selected="selected"';
+																}
+																echo '>'.$v1."</option>\r\n";
+															}
+														}
+														echo '</select>';
 														break;
 												}
 												echo '</td>';
 											}else{
-												
-												echo '<td class="'.$align.'">'.(isset($val[$k])?$val[$k]:'').'</td>';
+												if (isset($val[$k])){
+													if (is_array($val[$k])){
+														if (!key_exists('del', $val[$k])){
+															echo '<td class="'.$align;
+															if (isset($val[$k]['row'])){
+																echo '" rowspan="'.$val[$k]['row'];
+															}
+															if (isset($val[$k]['col'])){
+																echo '" colspan="'.$val[$k]['col'];
+															}
+															echo '">'.(isset($val[$k]['val'])?$val[$k]['val']:'').'</td>';
+															if (key_exists('break', $val[$k])){
+																break;
+															}
+														}
+													}else{
+														echo '<td class="'.$align.'">'.$val[$k].'</td>';
+													}
+												}else{
+													echo '<td> </td>';
+												}
 											}
 										}
 									}
@@ -194,26 +228,75 @@
 				</div>
         		<div class="row pagSetJump">
 					<div class="col-sm-6 text-left"><?php if(isset($pagination[1])){echo $pagination[1];}?></div>
-					<div class="col-sm-6 text-right"><?php if(isset($pagination[1])){echo $pagination[2];} ?></div>
+					<div class="col-sm-6 text-right"><?php if(isset($pagination[2])){echo $pagination[2];} ?></div>
 				</div>
 			</form>
 		</div>
     </div>
 </div>
 
-<?php 
+<?php if (isset($cascadeDatas)){ 		//获取级联选择的选择数据 
+echo "<script type='text/javascript'>
+var cascadeDatas = {};\r\n";
+foreach ($cascadeDatas as $key => $val){
+	echo "cascadeDatas['".$key."'] = $.parseJSON('".json_encode($val)."');\r\n";
+}
+echo "function renewCascadeSelect(currentSelect,cascadeName,depth){
+	var nextSub = currentSelect;
+	for (i = 0; i < depth; i ++){
+		nextSub = nextSub.parent();
+	}
+	nextSub = nextSub.next();
+	var compareSub = nextSub;
+	for (i = 0; i < depth; i ++){
+		compareSub = compareSub.children();
+	}
+	var renewSub = compareSub;
+	while (compareSub.attr('class') == currentSelect.attr('class')){
+		compareSub.html('');
+		nextSub = compareSub = nextSub.next();
+		for (i = 0; i < depth; i ++){
+			compareSub = compareSub.children();
+		}
+	}
+	var allSubItems = cascadeDatas[cascadeName];
+	var selectHtml = $('option[value='+currentSelect.val()+']',currentSelect).html();
+	if (allSubItems[currentSelect.val()] && selectHtml !=''){
+		parentItem = allSubItems[currentSelect.val()];
+		for(var key in parentItem){
+			var selected = (parentItem[key] == '') ? 'selected=\"selected\"' :\"\";
+			renewSub.append('<option value =\"' + key +'\"'  + selected +'>'+parentItem[key]+'</option>');
+		}
+	}
+}";
+}
+echo "\r\n</script>";
+?>
+
+<?php
 if (isset($tableEdit)){
 	echo '<script type="text/javascript">'."\r\n";
 	echo "\r\nvar hash = {};\r\n";
-	foreach ($tableEdit as $val){
-		echo "\r\n".'$("'.$val["type"].'[name=table-'.$val["key"].']").change(function() {';
-		echo '
-	var hashVal = $(this).'.($val["type"]== 'select' ? 'find("option:selected").val()' : 'val()').';
-	var hashKey = $(this).parent().parent().children().eq(0).children().val();
-	if (!hash.hasOwnProperty(hashKey)){
-		hash[hashKey] = {};
-	}
-	hash[hashKey]["'.$val["key"].'"] = hashVal;'."\r\n})\r\n";
+	$editTypes = array_column($tableEdit, 'type','type');
+	foreach ($editTypes as $val){
+		echo "$('.table_".$val."').change(function(){";
+		switch($val){
+			case 'input':
+				echo 'var hashVal = $(this).val();';
+			break;
+			case 'select':
+				echo 'var hashVal = $(this).find("option:selected").val();';
+    		break;
+    		case 'cascade':
+    			echo "var hashVal = $(this).find('option:selected').val();";
+    			echo "renewCascadeSelect($(this),$(this).attr('name'),1);";
+    		break;
+		}
+		echo 'var hashKey = $(this).parent().parent().children().eq(0).children().val();
+				if (!hash.hasOwnProperty(hashKey)){
+					hash[hashKey] = {};
+				}
+				hash[hashKey][$(this).attr("name")] = hashVal;'."\r\n})\r\n";
 	}
 	echo "\r\n".'</script>';
 }
@@ -246,7 +329,11 @@ $('button').on('click',function(){
 	if ($btn.attr('data-oper')){
 		$("#selectoper").val($btn.attr('data-oper'));
 		if ($btn.attr('data-oper') == 'oper_save'){
-			$("#tableEditContent").val(JSON.stringify(hash));
+			if (confirm('保存修改的数据')){
+				$("#tableEditContent").val(JSON.stringify(hash));
+			}else{
+				return;
+			}
 		}
 	}else{
 		$("#selectoper").val("<?php echo $selectoper;?>");
@@ -259,7 +346,7 @@ $('li').on('click',function(){
 	var $idOfLi = $li.attr('id');
 	if ($idOfLi && $idOfLi.indexOf("jumpPage") != -1){
 		$("#page").val($li.attr('value'));
-		$("#selectoper").val("");
+// 		$("#selectoper").val("");
 		$("#form-submit").submit();
 	}
 });
@@ -334,7 +421,7 @@ function CheckBrowserIsIE(){
 
 <?php 
 if (isset($cascade_select)){
-	echo '<script src="'.FCPATH.'/data/javascript/jquery/jquery.cxselect.js"></script>';
+	echo '<script src="data/javascript/jquery/jquery.cxselect.js"></script>';
 	echo '<script type="text/javascript">';
 	echo '
 		var deptsData = $.parseJSON($("#cascade_select").val()).menu;
