@@ -147,11 +147,11 @@
         </li>
         <li>
         	<span class="names">新密码</span>
-            <input type="password"  class="input" name="pwd" id="pwdHide"  data-reg="^.{6,20}$" data-error="密码不符合要求" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请输入新密码"/>
+            <input type="password"  class="input" name="pwd" id="pwdHide"  data-reg="^.{6,20}$" data-error="密码不符合要求" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请输入6~20位新密码"/>
         </li>
         <li>
         	<span class="names">确认密码</span>
-            <input type="password"  class="input" name="pwdtxt" id="pwdShow"  data-reg="^.{6,20}$" data-error="密码不符合要求" placeholder="请确认新密码"/>
+            <input type="password"  class="input" name="pwdtxt" id="pwdShow"  data-reg="^.{6,20}$" data-error="密码不符合要求" placeholder="请再次输入新密码"/>
         </li>
         <input type="hidden" name="openid" id="openid" value="<?php if(isset($openid)){ echo $openid; }?>" />
     </ul>
@@ -170,14 +170,21 @@
         $('#submit_button').on('click',function(){
             //验证输入框中带有data-reg的元素中的正则
             M.checkForm(function(){
-                //全部验证通过后执行这里
-                var encrypt = new JSEncrypt();
-				encrypt.setPublicKey($('#pwdHide').attr('data-key'));
-                var encrypted = encrypt.encrypt($('#tel').val()+$('#pwdHide').attr('data-code')+$('#pwdHide').val());
-                $('#tel').val('');
-				$('#pwdHide').val(encrypted);
-				$('#pwdShow').val('');
-                $('#info_form').attr('onsubmit','return true');
+                if ($('#pwdHide').val() != $('#pwdShow').val()){
+                    M.alert({
+                        title:'提示',
+                        message:'两次输入的密码不一致'
+                    });
+                }else{
+                    //全部验证通过后执行这里
+                    var encrypt = new JSEncrypt();
+    				encrypt.setPublicKey($('#pwdHide').attr('data-key'));
+                    var encrypted = encrypt.encrypt($('#tel').val()+$('#pwdHide').attr('data-code')+$('#pwdHide').val());
+                    $('#tel').val('');
+    				$('#pwdHide').val(encrypted);
+    				$('#pwdShow').val('');
+                    $('#info_form').attr('onsubmit','return true');
+                }
             });
         });
         

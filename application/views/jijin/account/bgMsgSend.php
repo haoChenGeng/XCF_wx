@@ -23,7 +23,7 @@
 					<label class="select-label" style="width:90%;">请选择证件类型
 						<select id="ID" name="certificatetype" class="select-certificate" >
 							<!-- <option value="0"><?php echo $certificatetype[0];?></option> -->
-							<option value="1">请选择证件类型</option>
+							<option value="">请选择证件类型</option>
 							<?php
 								foreach ($certificatetype as $key => $val)
 								{
@@ -42,9 +42,9 @@
 		  <?php if (count($payment_channel)>1){
 					echo '<div class="m-item"> 
 							  <i class="icon icon-phone"></i> 
-								  <label class="select-label" style="width:80%;">请选择支付渠道
+								  <label class="select-label" style="width:80%;">请选择银行
 									  <select id="pay_way" name="channelid" class="select-certificate" onchange="chooseChannel(this.options[this.options.selectedIndex])">
-									  	<option>请选择支付渠道</option>';
+									  	<option value="">请选择银行</option>';
 										  foreach ($payment_channel as $key => $val)
 					  					{
 					  						echo '<option value='.$val['channelid'].' data-cname='.$val['channelname'].' '. (isset($val['needProvCity']) ? 'data-needProvCity="1"':'').'>'.$val['channelname'].'</option>';

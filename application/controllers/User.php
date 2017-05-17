@@ -136,13 +136,16 @@ class User extends MY_Controller {
 					if (empty($T_name) || !preg_match('/1[34578]{1}\d{9}$/',$T_name))
 					{
 						$fail_message = '手机号格式不正确，系统正在返回...';
-					}elseif (empty($post['login_pwd'])){
+					}elseif($T_name != $_SESSION['T_name']){
+						$fail_message = '输入的手机号码和短信验证的手机号码不一致，系统正在返回...';
+					}elseif(empty($post['login_pwd'])){
 						$fail_message = '请输入登录密码，系统正在返回...';
 					}
 				}
 				else {
 					$fail_message = '随机校验码错误，系统正在返回...';
 				}
+				unset($_SESSION['T_name']);
 			}
 			if (!isset($fail_message)) {
 				$user_data = $this->db->where(Array ('Customername' => $T_name))->get('customer')->row_array();
@@ -193,14 +196,15 @@ class User extends MY_Controller {
 						) );
 			}
 		}else{
-			if (ISTESTING) {
+// 			if (ISTESTING) {
 				$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
 				$_SESSION['rand_code'] = $data['rand_code'] = "\t".mt_rand(100000,999999);                                     //随机生成验证码
 				$this->load->view ( 'user/register' , $data);
-			} else {
+// 			}
+/* 			else {
 				redirect ( '/weixin/oauth/register/');
 			}
-		}
+ */		}
 	}
 
 	function logout() {
@@ -337,40 +341,44 @@ class User extends MY_Controller {
 			$_SESSION['rand_code'] = $data['rand_code'];
 			$this->load->view('user/xglogin_password', $data);
 	}
-	public function ndf_sendsms() { //牛鼎丰的短信发送渠道 
+	public function send_sms() { //牛鼎丰的短信发送渠道 
 		$post = $this->input->post ();
-		if (empty ( $post ['userCode'] )) {
-			echo "请输入图形验证码!";
-			return;
-		}
-		if ($post ['userCode'] != $_SESSION ['rand_code']) {
-			echo "图形验证码不对!";
-			return;
-		}
-		
 		if (empty ( $post ['tel'] )) {
-			echo '手机号不能为空';
-		} else if (strlen ( $post ['tel'] ) > 11) {
-			echo '手机号错误';
-		} else if (ISTESTING) {
+			echo '手机号不能为空'; exit;
+		}
+		if (strlen ( $post ['tel'] ) > 11) {
+			echo '手机号错误'; exit;
+		}
+		$curtomerInfo = $this->db->where('Customername',$post ['tel'])->get('p2_customer')->row_array();
+		if (!empty($curtomerInfo)){
+			echo '该手机号已注册'; exit;
+		}
+		if (isset($_SESSION['send_sms'])){
+			$timediff = time() - $_SESSION['send_sms'];
+			if ($timediff < 60){
+				echo '短信验证码已经发送,如未收到请在'.(60 - $timediff).'秒后重试';
+				exit;
+			}else{
+				$_SESSION['send_sms'] = time();
+			}
+		}else{
+			$_SESSION['send_sms'] = time();
+		}
+		if (ISTESTING) {
 			$_SESSION ['telcode'] = $telcode = '1234';
 			echo '您的验证码为:1234';
-		} else {
-			$_SESSION ['telcode'] = $telcode = TelCode ();
+		}else{
+			$_SESSION ['telcode'] = $telcode = $this->TelCode();
+			$_SESSION ['T_name'] = $post ['tel'];
 			$content = "您的验证码是:" . $telcode;
 			$res2 = $this->NDFsendSms ( $post ['tel'], $content );
-			// var_dump($res2);
-			if($res2===false)
-			{
+			if($res2===false){
 				$res ['returnCode']=999999;
 			}
-			else 
+			else{
 				$res = json_decode ( $res2, TRUE );
-			// var_dump($res);
+			}
 			$b = ob_clean ();
-			// $b=ob_get_clean();
-			// $b=ob_get_clean();
-			
 			switch ($res ['returnCode']) {
 				case 0 :
 					$result = '验证码已发送！';
@@ -446,13 +454,14 @@ class User extends MY_Controller {
 		$signTextTemp = "mobile=$mobile&moduleId=$moduleId&partnerId=$partnerId&value=$content" . $sms_signature_key;
 		$signature = sha1 ( $signTextTemp );
 		$post_data = "partnerId=$partnerId&mobile=$mobile&signature=$signature&value=$content&moduleId=SENDSMS";
-		$ret = $this->curl_post_string ( $sms_url, $post_data );
+		$this->load->helper('comfunction');
+		$ret = comm_curl($sms_url,$post_data );
 		return $ret;
 	}
 	
 //----------------  辅助函数  -----------------------------------------------------	
 	//发送短信验证码
-	function send_sms() {
+/* 	function send_sms() {
 		$post = $this->input->post ();
 		if (empty ( $post ['tel'] )) {
 			echo '手机号不能为空';
@@ -464,7 +473,7 @@ class User extends MY_Controller {
 		} else {
 			$_SESSION ['telcode'] = $telcode = $this->TelCode ();
 			$content = "您的验证码是:" . $telcode;
-			$res = $this->sendSms ( $post ['tel'], $content );
+			$res = $this->ndf_sendsms ( $post ['tel'], $content );
 			$res = $this->xml_to_array ( $res ) ['string'];
 			if (strlen ( $res ) >= 9 && strlen ( $res ) <= 25) {
 				$result = 1;
@@ -489,7 +498,7 @@ class User extends MY_Controller {
 			}
 			echo $result;
 		}
-	}
+	} */
 	
 //获取最新的基金列表
 	private function getRecommendFunds(&$data){
@@ -544,6 +553,25 @@ class User extends MY_Controller {
 	function commingsoon()
 	{
 		$this->load->view('commingsoon');
+	}
+	
+	function TelCode() {
+		$arr = Array(
+				0,
+				1,
+				2,
+				3,
+				5,
+				6,
+				8,
+				9
+				);
+		$randNum = "";
+		for ($i = 0; $i < 4; $i++) {
+			$randKey = mt_rand(0, 7);
+			$randNum .= $arr[$randKey];
+		}
+		return $randNum;
 	}
 	
 }

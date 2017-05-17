@@ -24,9 +24,9 @@
 		  				$index = key($payment_channel);
 		  				echo '<div class="m-item"> 
 							  	  <i class="icon icon-phone"></i> 
-								  <label class="select-label" style="width:80%;">请选择支付渠道
+								  <label class="select-label" style="width:80%;">请选择银行
 									  <select id="pay_way" name="channelid" class="select-certificate" onchange="chooseChannel(this.options[this.options.selectedIndex])">
-                      <option>请选择支付渠道</option>';
+                      <option value="">请选择银行</option>';
                       foreach ($payment_channel as $key => $val)
                       {
                         echo '<option value='.$val['channelid'].' data-cname='.$val['channelname'].' '. (isset($val['needProvCity']) ? 'data-needProvCity="1"':'').'>'.$val['channelname'].'</option>';
@@ -152,10 +152,6 @@
       var bankNameSel = document.getElementById('channelname');
       // var bankName;
       if (bankNameSel) {
-<<<<<<< HEAD
-=======
-// console.log(bankNameSel)
->>>>>>> 8656ceb754b029a2171d7f337cfe2c9104d448b1
         var bankName = bankNameSel.getAttribute('value');        
       }
       var bankNameSelAdd = document.getElementById('pay_way');

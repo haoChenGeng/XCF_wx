@@ -31,7 +31,10 @@ function sendSms(inputTel,sendSmsBtn)
                     }
                 },1000);
             }else{
-                alert(res==null||res==''||res==undefined?'发送失败':res);
+                M.alert({
+                    title:'提示',
+                    message:res==null||res==''||res==undefined?'发送失败':res
+                });
             }
         })
     }
