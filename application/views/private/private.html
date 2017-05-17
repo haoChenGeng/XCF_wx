@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="format-detection" content="telephone=no" />	
+	<title>私募基金</title>
+	<link rel="stylesheet" href="../../../data/jijin/css/mui.min.css">
+	<link rel="stylesheet" href="../data/jijin/css/private.css">
+</head>
+<body>
+	<div class="mui-content">
+		<!-- <div id="slider" class="mui-slider">
+			<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-negative">
+				<a class="mui-control-item" href="#item1mobile">
+					待办公文
+				</a>
+				<a class="mui-control-item" href="#item2mobile">
+					已办公文
+				</a>
+				<a class="mui-control-item" href="#item3mobile">
+					全部公文
+				</a>
+			</div>
+			<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-4"></div>
+			<div class="mui-slider-group">
+				<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+					<div id="scroll1" class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view">
+								
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div id="item2mobile" class="mui-slider-item mui-control-content">
+					<div id="scroll2" class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<div class="mui-loading">
+								<div class="mui-spinner">
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div id="item3mobile" class="mui-slider-item mui-control-content">
+					<div id="scroll3" class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<div class="mui-loading">
+								<div class="mui-spinner">
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div> -->
+				<div id="slider" class="mui-slider">
+					<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+						<a class="mui-control-item" href="#item1mobile">
+							<!-- <i class="bought-fund Cicon"></i> -->
+							<p>我的资产</p>
+						</a>
+		  
+						<a class="mui-control-item" href="#item2mobile">
+							<!-- <i class="iconfont Cicon bonus-change">&#xe607;</i> -->
+							<p>修改分红</p>
+						</a>
+					
+						<a class="mui-control-item" href="#item3mobile">
+							<!-- <i class="risk-test Cicon"></i> -->
+							<p>账户管理</p>
+						</a>
+					</div>
+					<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-4"></div>
+
+					<div class="mui-slider-group" id="mWrap">
+						<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+							<div id="scroll1" class="mui-scroll-wrapper">
+								<div class="mui-scroll">							
+									<ul class="mui-table-view" id="buyFundList">
+										<div class="mui-loading">
+											<div class="mui-spinner">
+											</div>
+										</div>														
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div id="item2mobile" class="mui-slider-item mui-control-content" style="border-bottom:none;">
+							<div id="scroll2" class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<ul class="mui-table-view" id="bonus-mod">			
+										<div class="mui-loading">
+											<div class="mui-spinner">
+											</div>
+										</div>											
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div id="item3mobile" class="mui-slider-item mui-control-content" style="border-bottom:none;">
+							<div id="scroll3" class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<div class="mui-loading">
+										<div class="mui-spinner">
+										</div>
+									</div>
+									<ul class="mui-table-view account-management" id="account">	
+										<li class="my-bank-card"><a href="/jijin/Fund_bank/bank_info" class="dpb">银行卡维护</a></li>
+										<li class="my-logpwd-mod"><a href="<?php echo '/jijin/Jz_account/revise_passward/0';?>" class="dpb">交易密码修改</a></li>
+										<li class="my-risk-test"><a id="risk_result" href="<?php echo '/jijin/Risk_assessment';?>" class="dpb">风险测试[你还未进行测试]</a></li>			
+									</ul>
+								</div>
+							</div>
+						</div>		
+					</div>
+				</div>
+	</div>
+
+<script src="../../../data/jijin/js/mui.min.js"></script>
+</body>
+</html>

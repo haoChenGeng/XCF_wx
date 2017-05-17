@@ -152,7 +152,10 @@
       var bankNameSel = document.getElementById('channelname');
       // var bankName;
       if (bankNameSel) {
+<<<<<<< HEAD
+=======
 // console.log(bankNameSel)
+>>>>>>> 8656ceb754b029a2171d7f337cfe2c9104d448b1
         var bankName = bankNameSel.getAttribute('value');        
       }
       var bankNameSelAdd = document.getElementById('pay_way');
