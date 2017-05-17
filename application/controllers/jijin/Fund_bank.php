@@ -103,7 +103,6 @@ var_dump($bankcard_info);
     		exit;
     	}
     	$post = $this->input->post();
-// var_dump($post);
     	//-----------RSA解密----------------------------
     	$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
     	$decryptData ='';
@@ -126,6 +125,7 @@ var_dump($bankcard_info);
     		//--------以下设置判断客户输入信息检测规则--------------------------
     		$this->form_validation->set_rules('depositacct','银行卡号','required|max_length[30]|numeric');
     		$this->form_validation->set_rules('mobiletelno','银行预留电话','required|max_length[20]|numeric');
+    		$this->form_validation->set_rules('channelid','银行','required');
     		if ($this->form_validation->run() == TRUE)
     		{
     			$submitData = $_SESSION['operation_data'];
@@ -156,7 +156,7 @@ var_dump($bankcard_info);
     					$_SESSION['operation_data']['depositcity'] = $post['depositcity'];
     					$_SESSION['operation_data']['bankname'] = $post['bankname'];
     				}
-var_dump($_SESSION['operation_data']);
+// var_dump($_SESSION['operation_data']);
     				$this->load_bgMsgCheckOnly($post['operation']);
     			}
     		}else{
@@ -317,7 +317,9 @@ var_dump($_SESSION['operation_data']);
 		$channel_info = setkey($channel_info,'channelid');
 // var_dump($channel_info);
 // var_dump($bank_info);
-		file_put_contents('log/user/bank_info'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."银行卡返回数据:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
+		if ($bank_info['code'] != '0000'){
+			file_put_contents('log/user/bank_info'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."调用查询银行卡失败，返回数据为:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
+		}
 		if (isset($bank_info['code']) && $bank_info['code'] == '0000')
 		{
 			if (!empty($bank_info['data'][0]))

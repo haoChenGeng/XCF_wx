@@ -58,7 +58,6 @@ class Jz_account extends MY_Controller
 	function bgMsgSend()
 	{
 		$post = $this->input->post();
-// var_dump($post);
 		//log注册提交的信息
 // 		file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."注册post数据为:".serialize($post)."\r\n\r\n",FILE_APPEND);
 		//-----------RSA解密----------------------------
@@ -83,7 +82,6 @@ class Jz_account extends MY_Controller
 			$this->form_validation->set_message('max_length', '%s长度超出限制.');
 			$this->form_validation->set_message('exact_length', '%s长度不符合要求.');
 			$this->form_validation->set_message('numeric', '%s必须为数字.');
-			
 			//--------以下设置判断客户输入信息检测规则--------------------------
 			if ($post['certificatetype'] == 0){
 				$this->form_validation->set_rules('certificateno','身份证号码','required|exact_length[18]');
@@ -91,6 +89,8 @@ class Jz_account extends MY_Controller
 			$this->form_validation->set_rules('depositacctname','银行帐户名','required|max_length[30]');
 			$this->form_validation->set_rules('depositacct','银行卡号','required|max_length[30]|numeric');
 			$this->form_validation->set_rules('mobiletelno','银行预留电话','required|max_length[20]|numeric');
+			$this->form_validation->set_rules('channelid','银行','required');
+			$this->form_validation->set_rules('certificatetype','证件类型','required');
 			
 			if ($this->form_validation->run() == TRUE)
 			{
@@ -198,15 +198,17 @@ class Jz_account extends MY_Controller
 			$this->form_validation->set_message('max_length', '%s长度超出限制.');
 			$this->form_validation->set_message('numeric', '%s必须为数字.');
 			$this->form_validation->set_message('valid_email', '%s无效.');
+			$this->form_validation->set_message('matches', '两次输入的交易密码不一致');
 			//--------以下设置判断客户输入信息检测规则--------------------------
 			$this->form_validation->set_rules('verificationCode','短信验证码','required|numeric');
 			$this->form_validation->set_rules('lpasswd','交易密码','required|max_length[20]');
-			$this->form_validation->set_rules('tpasswd','交易密码','required|max_length[20]');
-			$this->form_validation->set_rules('tpasswd','两次输入的交易密码不一致','matches[lpasswd]');
+			$this->form_validation->set_rules('tpasswd','交易密码','required|max_length[20]|matches[lpasswd]');
+
 // 			$this->form_validation->set_rules('vailddate','证件有效期','required');
 			$this->form_validation->set_rules('email','电子邮箱地址','valid_email');
 			$this->form_validation->set_rules('postcode','邮编','numeric');
 			$this->form_validation->set_rules('address','地址','max_length[100]');
+			
 			if ($this->form_validation->run() == TRUE)								//post数据合法性检查
 			{
 				$this->load->config('jz_dict');
