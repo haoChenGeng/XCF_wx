@@ -36,7 +36,6 @@
 	color: #fff;
 	border-radius: 5px;
 	text-align: center;
-	line-height: 35px;
 	margin: 20px 15px;
 }
 
@@ -68,4 +67,22 @@
 	vertical-align: -2px;
 	color: #7292bf;
 	margin-right: 10px;
+}
+
+.order-box {
+	position: absolute;
+	    z-index: 10000;
+	    top: 50%;
+	    left: 50%;
+	    display: none;
+	    overflow: hidden;
+	    width: 270px;
+	    -webkit-transition-property: -webkit-transform,opacity;
+	    transition-property: transform,opacity;
+	    -webkit-transform: translate3d(-50%,-50%,0) scale(1.185);
+	    transform: translate3d(-50%,-50%,0) scale(1.185);
+	    text-align: center;
+	    /* opacity: 0; */
+	    color: #000;
+	    border-radius: 13px;
 }

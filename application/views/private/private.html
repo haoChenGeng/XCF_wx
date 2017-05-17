@@ -32,7 +32,7 @@
 				</a>
 			</div>
 			<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-2"></div>
-			<div class="mui-slider-group" style="height: 800px;">
+			<div class="mui-slider-group" id="info" style="height: 800px;">
 				<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
 					<div id="scroll1" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
@@ -41,9 +41,9 @@
 									<div class="mui-media-body info-list">
 										<div class="info-list-left">
 											<h4 class="info-left-title">小于4%</h4>
-											<div class="info-order">
+											<button class="info-order">
 												预约咨询
-											</div>
+											</button>
 										</div>
 										<div class="info-list-right">
 											<h5 class="info-right-title">中金睿投丰融4号</h5>
@@ -56,9 +56,9 @@
 									<div class="mui-media-body info-list">
 										<div class="info-list-left">
 											<h4 class="info-left-title">小于4%</h4>
-											<div class="info-order">
+											<button class="info-order">
 												预约咨询
-											</div>
+											</button>
 										</div>
 										<div class="info-list-right">
 											<h5 class="info-right-title">中金睿投丰融4号</h5>
@@ -71,9 +71,9 @@
 									<div class="mui-media-body info-list">
 										<div class="info-list-left">
 											<h4 class="info-left-title">小于4%</h4>
-											<div class="info-order">
+											<button class="info-order">
 												预约咨询
-											</div>
+											</button>
 										</div>
 										<div class="info-list-right">
 											<h5 class="info-right-title">中金睿投丰融4号</h5>
@@ -144,7 +144,40 @@
 			</div>
 		</div>
 	</div>
-
+	<div class="order-box" id="order" style="display: none;">
+		<div class="mui-popup-inner">
+			<div class="mui-popup-title">预约咨询</div>
+			<!-- <div class="mui-popup-text">请输入你对MUI的评语：</div> -->
+			<div class="mui-popup-input">
+				<input type="text" autofocus="" placeholder="姓名">
+				<input type="text" autofocus="" placeholder="电话">
+			</div>
+		</div>
+		<div class="mui-popup-buttons">
+			<span class="mui-popup-button" id="cancel">取消</span>
+			<span class="mui-popup-button mui-popup-button-bold" id="confirm">确定</span>
+		</div>
+	</div>
 <script src="../../../data/jijin/js/mui.min.js"></script>
+<script>
+	window.onload = function() {
+		document.getElementById('info').addEventListener('tap',function(e) {
+			if (e.target.innerHTML.trim() == '预约咨询') {
+				document.getElementById('order').style.display = 'block';
+			}else {
+				document.getElementById('order').style.display = 'none';
+			}
+			console.log(e.target.innerHTML);
+			console.log(this);
+		});		
+		document.getElementById('cancel').addEventListener('click', function(e) {
+			document.getElementById('order').style.display = 'none';
+		});
+		document.getElementById('confirm').addEventListener('click', function(e) {
+			document.getElementById('order').style.display = 'none';			
+			mui.toast('提交成功');
+		});
+	};
+</script>
 </body>
 </html>
