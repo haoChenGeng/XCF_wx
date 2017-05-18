@@ -12,20 +12,17 @@ class User extends MY_Controller {
 		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
 	}
 
-	private function userinfo($type = 1){
+	private function userinfo(){
 		if (!isset($_SESSION['customer_id'])) {
-			redirect($this->base . "/user/login/".$type);
+			redirect($this->base . "/user/login/");
 		}
 	}
 	
-	function login($type = 1) {
+	function login() {
 		if (isset ( $_SESSION ['customer_id'] )) {
-			redirect ( $this->base . "/User/home/".$type);
+			redirect ( $this->base . "/User/home/");
 		}
 		$post = $this->input->post ();
-		if (isset($post['type'])){
-			$type = $post['type'];
-		}
 		if (! empty ( $post )){
 			if (empty ( $post ['T_pwd'] )){
 				$fail_message = '密码不能为空，系统正在返回...';
@@ -60,7 +57,7 @@ class User extends MY_Controller {
 				Message ( Array (
 						'msgTy' => 'fail',
 						'msgContent' => $fail_message,
-						'msgUrl' => $this->base . "/user/login/".$type,
+						'msgUrl' => $this->base . "/user/login/",
 						'base' => $this->base
 						) );
 			}
@@ -76,7 +73,7 @@ class User extends MY_Controller {
 						Message ( Array (
 								'msgTy' => 'fail',
 								'msgContent' => '该用户已被屏蔽，系统正在返回...',
-								'msgUrl' => $this->base . "/user/login/".$type,
+								'msgUrl' => $this->base . "/user/login/",
 								'base' => $this->base
 								) );
 					}
@@ -86,7 +83,7 @@ class User extends MY_Controller {
 						redirect ($_SESSION['next_url']);
 						unset($_SESSION['next_url']);
 					}else{
-						redirect ($this->base . "/User/home/".$type);
+						redirect ($this->base . "/User/home/");
 					}
 					exit ();
 				}
@@ -94,26 +91,24 @@ class User extends MY_Controller {
 			Message ( Array (
 					'msgTy' => 'fail',
 					'msgContent' => '账户名或密码不正确，系统正在返回...',
-					'msgUrl' => $this->base . "/user/login/".$type,
+					'msgUrl' => $this->base . "/user/login/",
 					'base' => $this->base
 					) );
 		}else {
 			$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
 			$_SESSION['rand_code'] = $data['rand_code'] = "\t".mt_rand(100000,999999);                                     //随机生成验证码
-			$data['type'] = $type;
 			$this->load->view ( 'user/login', $data);
 		}
 	}
 	
-	function home($type = 1){
+	function home(){
 		$this->getRecommendFunds($data);
-		$data['type'] = $type;
 		$this->load->view('index',$data);
 	}
 	
-	function register($type = 1) {
+	function register() {
 		if (isset ( $_SESSION ['customer_id'] )) {
-			redirect ( $this->base . "/User/home".$type);
+			redirect ( $this->base . "/User/home");
 			exit ();
 		}
 		$post = $this->input->post();
@@ -180,7 +175,7 @@ class User extends MY_Controller {
 					Message ( Array (
 							'msgTy' => 'success',
 							'msgContent' => '注册成功，系统正在返回...',
-							'msgUrl' => $this->base . '/user/login/'.$type,
+							'msgUrl' => $this->base . '/user/login/',
 							'base' => $this->base
 							) );
 				}else {
@@ -191,7 +186,7 @@ class User extends MY_Controller {
 				Message ( Array (
 						'msgTy' => 'fail',
 						'msgContent' => $fail_message,
-						'msgUrl' => $this->base . '/user/register/'.$type,
+						'msgUrl' => $this->base . '/user/register/',
 						'base' => $this->base
 						) );
 			}
@@ -457,47 +452,6 @@ class User extends MY_Controller {
 		$ret = comm_curl($sms_url,$post_data );
 		return $ret;
 	}
-	
-//----------------  辅助函数  -----------------------------------------------------	
-	//发送短信验证码
-/* 	function send_sms() {
-		$post = $this->input->post ();
-		if (empty ( $post ['tel'] )) {
-			echo '手机号不能为空';
-		} else if (! preg_match ( '/^[1][34578][0-9]{9}$/', $post ['tel'] )) {
-			echo '手机号错误';
-		} else if (ISTESTING) {
-			$_SESSION ['telcode'] = $telcode = '1234';
-			echo '您的验证码为:1234';
-		} else {
-			$_SESSION ['telcode'] = $telcode = $this->TelCode ();
-			$content = "您的验证码是:" . $telcode;
-			$res = $this->ndf_sendsms ( $post ['tel'], $content );
-			$res = $this->xml_to_array ( $res ) ['string'];
-			if (strlen ( $res ) >= 9 && strlen ( $res ) <= 25) {
-				$result = 1;
-			} else {
-				switch ($res) {
-					case - 12 :
-						$result = '手机号不对';
-						break;
-					case - 101 :
-						$result = '发送消息等待超时';
-						break;
-					case - 102 :
-						$result = '发送或接收消息失败';
-						break;
-					case - 103 :
-						$result = '接收消息超时';
-						break;
-					default :
-						$result = '';
-						break;
-				}
-			}
-			echo $result;
-		}
-	} */
 	
 //获取最新的基金列表
 	private function getRecommendFunds(&$data){
