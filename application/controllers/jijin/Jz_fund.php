@@ -27,6 +27,12 @@ class Jz_fund extends MY_Controller
 		}
 // 		$data = $this->getFundPageData($activePage);
 		$data['base'] = $this->base;
+		if (isset($_SESSION['fundPageOper'])){
+			$data['pageOper'] = $_SESSION['fundPageOper'];
+			unset($_SESSION['fundPageOper']);
+		}else{
+			$data['pageOper'] = 'apply';
+		}
 		$this->load->view('jijin/buy_fund.html', $data);
 	}
 	
@@ -36,9 +42,11 @@ class Jz_fund extends MY_Controller
 		switch ($activePage){
 			case 'buy':                                                   //认购
 				$data['buy'] = $this->getFundList('pre_purchase');
+				$_SESSION['fundPageOper'] = 'buy';
 				break;
 			case 'apply':                                                 //申购
 				$data['apply'] = $this->getFundList('purchase');
+				$_SESSION['fundPageOper'] = 'apply';
 				break;
 			case 'today':
 				if (isset($_SESSION['customer_id'])){
@@ -48,6 +56,7 @@ class Jz_fund extends MY_Controller
 				}else{
 					$data['msg'] = "您还未登录，不能进行相关查询";
 				}
+				$_SESSION['fundPageOper'] = 'today';
 				break;
 			case 'history':
 				if (isset($_SESSION['JZ_user_id'])){
@@ -58,6 +67,7 @@ class Jz_fund extends MY_Controller
 				}else{
 					$data['msg'] = "您还未登录，不能进行相关查询";
 				}
+				$_SESSION['fundPageOper'] = 'history';
 				break;
 		}
 		echo json_encode($data);

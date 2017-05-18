@@ -40,18 +40,6 @@ class Jz_account extends MY_Controller
 		$_SESSION['rand_code'] = $data['rand_code'];
 		$data['provCity'] = json_encode($this->fund_interface->provCity());
 		$this->load->view('jijin/account/bgMsgSend',$data);
-// 		file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询支付渠道返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
-// 		if ($res['code'] == '0000'){
-
-// 		}
-// 		else {
-// 			Message(Array(
-// 					'msgTy' => 'fail',
-// 					'msgContent' => '<br/>注册失败，系统正在返回...',
-// 					'msgUrl' => $this->base . '/jijin/Jz_my',
-// 					'base' => $this->base
-// 					));
-// 		}
 	}
     
 	//基金开户银行卡鉴权
@@ -320,8 +308,6 @@ class Jz_account extends MY_Controller
     		//判断一次性验证码是否存在
     		$div_bit = strpos($decryptData,(string)$_SESSION['rand_code']);
     		$openPhoneTrans = $_SESSION['data_OPT'];
-$openPhoneTrans['certificateno'] =	'430104197704182539';
-$openPhoneTrans['custno'] =	'37';
     		unset($_SESSION['data_OPT']);
     		unset($_SESSION['rand_code']);
     		if ($div_bit !== false){                      //找到一次性验证码
