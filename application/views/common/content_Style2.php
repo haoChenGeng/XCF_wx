@@ -119,7 +119,7 @@ if (isset($cascade_select)){
 };
 
 if (isset($public_key)){
-	echo '<script src="/data/javascript/RSA.js"></script>
+	echo '<script src="/data/javascript/RSA.min.js"></script>
         	<script type="text/javascript">';
 	echo '$(".btn").on("click", function () {
 			var encrypt = new JSEncrypt();
