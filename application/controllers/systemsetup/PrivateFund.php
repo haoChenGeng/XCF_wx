@@ -12,8 +12,8 @@ class PrivateFund extends MY_Controller {
 	
 	public function fund_list($type)
 	{
-	    $fund = $this->db->where(array('type'=>$input['type']))->get('privatefund')->row_array();
-		$this->load->view('/systemsetup/PrivateFund/fund_list',$fund);
+	    $fund = $this->db->where(array('type'=>$type))->get('privatefund')->row_array();
+		$this->load->view('/private/private',$fund);
 	}
 	
 

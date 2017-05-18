@@ -19,7 +19,7 @@ class OrderInfo extends MY_Controller {
 			Message ( Array (
 					'msgTy' => 'success',
 					'msgContent' => '预约成功，稍后工作人员会主动联系您，请保存手机畅通！',
-					'msgUrl' => $this->base . '/systemsetup/PrivateFund/fund_list/'.$type,
+					'msgUrl' => $this->base . '/systemsetup/OrderInfo/order_add/'.$type,
 					'base' => $this->base
 					) );
 		}else {
@@ -30,7 +30,7 @@ class OrderInfo extends MY_Controller {
 			Message ( Array (
 					'msgTy' => 'fail',
 					'msgContent' => $fail_message,
-					'msgUrl' => $this->base . '/systemsetup/PrivateFund/fund_list',
+					'msgUrl' => $this->base . '/systemsetup/OrderInfo/order_add/',
 					'base' => $this->base
 					) );
 		}
