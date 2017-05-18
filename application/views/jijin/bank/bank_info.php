@@ -27,14 +27,10 @@
             </div>
             <?php
             	if (!isset($value['noOper'])){
-            		echo '<a class="m-item-a bank-info-del" href="/jijin/Fund_bank/bankcard_delete/'.$value['depositacct'].'/'.$value['channelid'].'">删除</a>';
-            		echo '<a class="m-item-a bank-info-del" href="/jijin/Fund_bank/operation/bankcard_change/'.$value['depositacct'].'/'.$value['channelid'].'/'.$value['moneyaccount'].'">更换</a>';
+            		echo '<a class="m-item-a bank-info-del" href="/jijin/Fund_bank/bankcard_delete/'.$value['channelid'].'">删除</a>';
+            		echo '<a class="m-item-a bank-info-del" href="/jijin/Fund_bank/operation/bankcard_change/'.$value['channelid'].'/'.$value['moneyaccount'].'">更换</a>';
             	}
             ?>      
-<!--
-            <a class="m-item-a bank-info-del" href="/jijin/Fund_bank/bankcard_delete/<?php echo $value['depositacct'].'/'.$value['channelid'];?>">删除</a>
-            <a class="m-item-a bank-info-del" href="/jijin/Fund_bank/operation/bankcard_change/<?php echo $value['depositacct'].'/'.$value['channelid'].'/'.$value['moneyaccount'];?>">更换</a>
--->                   
         </div>
         <?php }}?>
     </section>

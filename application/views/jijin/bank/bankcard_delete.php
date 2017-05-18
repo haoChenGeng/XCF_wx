@@ -23,7 +23,6 @@
             		<label>
                 		<input type="password" id="tpasswd" class="w80-p"  name="tpasswd"   data-reg=".+"  data-error="交易密码不能为空" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请输入交易密码" />
                 		<input type="hidden" name="channelid"  value=<?php echo $channelid?>></input>
-                		<input type="hidden" name="depositacct"  value=<?php echo $depositacct?>></input>
             		</label>
         		</div>
 			</section>
