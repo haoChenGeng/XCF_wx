@@ -1,4 +1,6 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 class MenuSetting extends MY_Controller {
 
 	private $logfile_suffix;
@@ -87,7 +89,7 @@ class MenuSetting extends MY_Controller {
 		}
 		//对页面需要显示的内容进行处理
 	 	$i = 0;
-	 	$button_description = array('1'=>'菜单', '2' => '导航条按钮', '3' =>'操作栏按钮');
+	 	$button_description = array('0' => '隐藏菜单', '1'=>'菜单', '2' => '导航条按钮', '3' =>'操作栏按钮', '4'=>'其他');
 	 	foreach ($db_content as $val){
 	 		$data['table_content'][$i] = $val;
 	 		$data['table_content'][$i]['type'] = $button_description[$val['type']];
@@ -164,6 +166,7 @@ class MenuSetting extends MY_Controller {
 					$data['error_warning'] = $data['operContent'].'添加失败';          //设置操作失败提示
 				}
 			}
+			$data['selectoper'] = '';
 			return $this->operdefault($input, $data);
 		}else{
 			$data['Model'] = substr(strrchr($data['accessCommand'],'/'),1);
@@ -201,6 +204,7 @@ class MenuSetting extends MY_Controller {
 					}
 				}
 			}
+			$data['selectoper'] = '';
 			return $this->operdefault($input, $data);
 		}else{
 			$data['Model'] = substr(strrchr($data['accessCommand'],'/'),1);
@@ -217,15 +221,14 @@ class MenuSetting extends MY_Controller {
 		$data['forms'][] = array('type'=>'normal', 'description'=>'菜单描述', 'required'=>1, 'content'=> 'type="text" name="description" value="" placeholder="菜单描述"');
 		$data['forms'][] = array('type'=>'normal', 'description'=>'command', 'required'=>1, 'content'=> 'type="text" name="command" value=""');
 		$data['forms'][] = array('type'=>'select', 'description'=>'菜单类型', 'required'=>1, 'name'=>'type', 'val'=>'',
-				'items'=> array(array('val'=>1, 'name'=>'菜单'),array('val'=>2, 'name'=>'导航条按钮'),array('val'=>3, 'name'=>'操作栏按钮')));
+				'items'=> array(array('val'=>0, 'name'=>'隐藏菜单'),array('val'=>1, 'name'=>'菜单'),array('val'=>2, 'name'=>'导航条按钮'),array('val'=>3, 'name'=>'操作栏按钮'),array('val'=>4, 'name'=>'其他')));
 		$this->load->config('icon');
 		$data['forms'][] = array('type'=>'select', 'description'=>'图标', 'required'=>1, 'name'=>'iconType', 'val'=>'fa-pencil',
 				'items'=> $this->config->item('awesome'));
 		$data['forms'][] = array('type'=>'select', 'description'=>'权限控制', 'required'=>1, 'name'=>'authority', 'val'=>0,
 				'items'=> array(array('val'=>1, 'name'=>'是'),array('val'=>0, 'name'=>'否')));
-		$data['forms'][] = array('type'=>'cascade','description'=>'上级菜单', 'num'=>3, 'required'=>1);
-		$data['cascade_select'] = $this->Model_pageDeal->getMenuSelectList();
-		$data['cascade_num'] = 3;
+		$data['cascade_num'] = $this->Model_pageDeal->getMenuSelectList($data,0);
+		$data['forms'][] = array('type'=>'cascade','description'=>'上级菜单', 'num'=>$data['cascade_num'], 'required'=>1);
 		$_SESSION[$data['Model'].'_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);
 	}
 	
@@ -235,7 +238,7 @@ class MenuSetting extends MY_Controller {
 					'type' => $input['type'],
 					'iconType' => 'fa-'.$input['iconType'],
 		);
-		for ( $i=3; $i>0; $i--){
+		for ( $i=6; $i>0; $i--){
 			$key = 'cascade'.$i;
 			if (!empty($input[$key])){
 				$arr['preMenu'] = $input[$key];
@@ -255,7 +258,7 @@ class MenuSetting extends MY_Controller {
 	
 	//获得设置菜单名称
 	private function getMenuName(&$menu_data,$arr){
-		if (!isset($arr['preMenu'])){
+		if (!isset($arr['preMenu']) || $arr['preMenu'] == 0){
 			$arr['preMenu'] = 0;
 			$name = 'menu';
 		}else{
@@ -328,22 +331,21 @@ class MenuSetting extends MY_Controller {
 		$data['forms'][] = array('type'=>'normal', 'description'=>'菜单描述', 'required'=>1, 'content'=> 'type="text" name="description" value="'.$menu['description'].'" placeholder="菜单描述"');
 		$data['forms'][] = array('type'=>'normal', 'description'=>'command', 'required'=>1, 'content'=> 'type="text" name="command" value="'.$menu['command'].'" placeholder="command"');
 		$data['forms'][] = array('type'=>'select', 'description'=>'菜单类型', 'required'=>1, 'name'=>'type', 'val'=>$menu['type'],
-				'items'=> array(array('val'=>1, 'name'=>'菜单'),array('val'=>2, 'name'=>'导航条按钮'),array('val'=>3, 'name'=>'操作栏按钮')));
+				'items'=> array(array('val'=>0, 'name'=>'隐藏菜单'),array('val'=>1, 'name'=>'菜单'),array('val'=>2, 'name'=>'导航条按钮'),array('val'=>3, 'name'=>'操作栏按钮'),array('val'=>4, 'name'=>'其他')));
 		$this->load->config('icon');
-		$data['forms'][] = array('type'=>'select', 'description'=>'图标', 'required'=>1, 'name'=>'iconType', 'val'=>'fa-pencil',
+		$data['forms'][] = array('type'=>'select', 'description'=>'图标', 'required'=>1, 'name'=>'iconType', 'val'=>str_replace('fa-', '', $menu['iconType']),
 				'items'=> $this->config->item('awesome'));
 		$authority = $menu['authVal'] == 0 ? 0 : 1;
 		$data['forms'][] = array('type'=>'select', 'description'=>'权限控制', 'required'=>1, 'name'=>'authority', 'val'=>$authority,
 				'items'=> array(array('val'=>1, 'name'=>'是'),array('val'=>0, 'name'=>'否')));
-		$data['forms'][] = array('type'=>'cascade','description'=>'上级菜单', 'num'=>3, 'required'=>1);
-		$data['cascade_select'] = $this->Model_pageDeal->getMenuSelectList();
-		$data['cascade_num'] = 3;
+		$data['cascade_num'] = $this->Model_pageDeal->getMenuSelectList($data,0);
+		$data['forms'][] = array('type'=>'cascade','description'=>'上级菜单', 'num'=>$data['cascade_num'], 'required'=>1);
 		$_SESSION[$data['Model'].'_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);
 	}
 	
 	//检查修改后数据的合法性检查
 	private function editCheck(&$input){
-		for ( $i=3; $i>0; $i--){
+		for ( $i=6; $i>0; $i--){
 			$key = 'cascade'.$i;
 			if (!empty($input[$key])){
 				$arr['preMenu'] = $input[$key];
@@ -374,9 +376,9 @@ class MenuSetting extends MY_Controller {
 					'type' => $input['type'],
 					'iconType' => 'fa-'.$input['iconType'],
 		);
-		for ( $i=3; $i>0; $i--){
+		for ( $i=6; $i>0; $i--){
 			$key = 'cascade'.$i;
-			if (!empty($input[$key])){
+			if (isset($input[$key]) && $input[$key] !== ''){
 				$arr['preMenu'] = $input[$key];
 				break;
 			}
