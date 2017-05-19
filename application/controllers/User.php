@@ -474,7 +474,6 @@ class User extends MY_Controller {
 				$data['Recommend'][] = $candidateFunds[$val];
 			}
 		}
-var_dump($data['Recommend']);
 		foreach ($data['Recommend'] as $key => $val){
 			$data['Recommend'][$key]['fundtype'] = $this->config->item('fundtype')[$val['fundtype']];
 			if ($this->config->item('fund_status')[$val['status']]['pre_purchase'] == 'Y'){
