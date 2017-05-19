@@ -458,7 +458,7 @@ class User extends MY_Controller {
 		$this->load->library('Fund_interface');
 		$this->fund_interface->fund_list();
 		$this->load->config('jz_dict');
-		$select = array('fundcode','tano','fundname','fundtype','nav','growthrate','fundincomeunit');
+		$select = array('fundcode','tano','fundname','fundtype','nav','growthrate','fundincomeunit','status');
 		$candidateFunds = $this->db->select($select)->where(array('recommend' => 1))->get('fundlist')->result_array();
 		$candidateNum = count($candidateFunds);
 		$selectNum = 0;
@@ -474,8 +474,16 @@ class User extends MY_Controller {
 				$data['Recommend'][] = $candidateFunds[$val];
 			}
 		}
+var_dump($data['Recommend']);
 		foreach ($data['Recommend'] as $key => $val){
 			$data['Recommend'][$key]['fundtype'] = $this->config->item('fundtype')[$val['fundtype']];
+			if ($this->config->item('fund_status')[$val['status']]['pre_purchase'] == 'Y'){
+				$data['Recommend'][$key]['url'] = '/jijin/Jz_fund/showprodetail';
+				$data['Recommend'][$key]['purchasetype'] = '认购';
+			}elseif($this->config->item('fund_status')[$val['status']]['purchase'] == 'Y'){
+				$data['Recommend'][$key]['url'] = '/jijin/Jz_fund/showprodetail';
+				$data['Recommend'][$key]['purchasetype'] = '申购';
+			}
 		}
 	}
 	

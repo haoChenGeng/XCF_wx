@@ -62,10 +62,13 @@
         <div class="text_list pos-re mt60">
           <p class="pos-ab fund-list-title">推荐基金</p>
          	<ul class="text_ul">             	
-                <?php foreach ($Recommend as $val)
-                	echo '<li class="clearfix">
-							<a href="/jijin/Jz_fund/showprodetail?fundid="'.$val['aa'].'">
-							<p class="product-bottom">'.$val['fundname'].'</p>
+                <?php 
+                foreach ($Recommend as $val){
+                	echo '<li class="clearfix">';
+                	if(isset($val['url'])){
+                		echo '<a href="'.$val['url'].'?fundcode='.$val['fundcode'].'&purchasetype='.$val['purchasetype'].'">';
+                	}
+					echo   '<p class="product-bottom">'.$val['fundname'].'</p>
 							<div class="product-item1">
 								<p class="product-item-num">'.$val['growthrate'].'</p>
 								<p class="product-item-name">七日年化收益率</p>
@@ -74,7 +77,8 @@
 								<p class="product-item-num" style="font-size:28px;">'.$val['fundtype'].'</p>
 								<p class="product-item-name">基金类型</p>
 							</div>
-						 </li>'
+						 </li>';
+                }
                 ?>
          	</ul>
         </div>

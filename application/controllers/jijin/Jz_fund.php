@@ -84,35 +84,13 @@ $data['pageOper'] = 'buy';
 			foreach ($res as $key => $val)
 			{
 				if (!empty($val) && $this->config->item('fund_status')[$val['status']][$type] == 'Y'){
-					$json = array();
-					$json['fundcode'] = $val['fundcode'];
-					$json['fundname'] = $val['fundname'];
+					$fund_list['data'][$i]['fundcode'] = $val['fundcode'];
+					$fund_list['data'][$i]['fundname'] = $val['fundname'];
 					$tmp = $this->config->item('fundtype')[$val['fundtype']];
-					$json['fundtypename'] = is_null($tmp)?'-':$tmp;
-					$json['nav'] = $val['nav'];
-					$json['tano'] = $val['tano'];
-					$json['taname'] = $val['taname'];
-						
-					$fund_list['data'][$i] = $json;
-						
-					$json['shareclasses'] = $val['shareclasses'];
-					$tmp = isset($this->config->item('sharetype')[$val['shareclasses']])?$this->config->item('sharetype')[$val['shareclasses']]:null;
-					$json['sharetypename'] = is_null($tmp)?'-':$tmp;
-						
-					$json['fundtype'] = $val['fundtype'];
-					$json['risklevel'] = $val['risklevel'];
-					if ($type == 'pre_purchase'){
-						$json['first_per_min'] = $val['first_per_min_20'];
-						$json['first_per_max'] = $val['first_per_max_20'];
-						$json['con_per_min'] = $val['con_per_min_20'];
-						$json['con_per_max'] = $val['con_per_max_20'];
-					}else{
-						$json['first_per_min'] = $val['first_per_min_22'];
-						$json['first_per_max'] = $val['first_per_max_22'];
-						$json['con_per_min'] = $val['con_per_min_22'];
-						$json['con_per_max'] = $val['con_per_max_22'];
-					}
-					$fund_list['data'][$i]['json'] = base64_encode(json_encode($json));
+					$fund_list['data'][$i]['fundtypename'] = is_null($tmp)?'-':$tmp;
+					$fund_list['data'][$i]['nav'] = $val['nav'];
+					$fund_list['data'][$i]['tano'] = $val['tano'];
+					$fund_list['data'][$i]['taname'] = $val['taname'];
 					$i++;
 				}
 			}
@@ -125,6 +103,7 @@ $data['pageOper'] = 'buy';
 		//调用接口
 // $startDate = '20160103';
 		$fund_list = $this->fund_interface->Trans_applied($startDate, $endDate);
+// var_dump($fund_list);
 		if (isset($_SESSION['customer_name'])){
 			file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['customer_name'].'进行历史交易申请查询('.$startDate.'-'.$endDate.')'.serialize($fund_list)."\r\n\r\n",FILE_APPEND);
 		}
@@ -200,7 +179,7 @@ $data['pageOper'] = 'buy';
 	{
 		$get = $this->input->get();
 // 		$post = $this->input->post();
-		$fund_list = $this->db->where(array('fundcode' => $get['fundid']))->get('fundlist')->row_array();
+		$fund_list = $this->db->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
 		$this->load->config('jz_dict');
 // 		$fund_list = $fund_list['data'][0];
 		$tmp = isset($this->config->item('fundtype')[$fund_list['fundtype']])?$this->config->item('fundtype')[$fund_list['fundtype']]:null;
@@ -213,7 +192,7 @@ $data['pageOper'] = 'buy';
 		$fund_list['risklevel'] = $fund_list['risklevel'].'('.$tmp.')';
 		$data['fundlist'] = $fund_list;
 		$data['purchasetype'] = $get['purchasetype'];
-		$data['json'] = $get['json'];
+// 		$data['json'] = $get['json'];
 		$data['base'] = $this->base;
 		$data['base'] = $this->base;
 		$this->load->view('/jijin/trade/jijinprodetail', $data);

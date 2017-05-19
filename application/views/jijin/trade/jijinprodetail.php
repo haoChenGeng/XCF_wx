@@ -67,7 +67,7 @@
         window.location.href = '<?php echo $base?>/jijin/Jz_fund/index/fund'
     }
     function goto_buyfund() {
-        window.location.href = "<?php echo "/jijin/PurchaseController/Apply?json=".$json.'&purchasetype='.$purchasetype;?>"
+        window.location.href = "<?php echo "/jijin/PurchaseController/Apply?fundcode=".$fundlist['fundcode'].'&purchasetype='.$purchasetype;?>"
     }
 
 </script>

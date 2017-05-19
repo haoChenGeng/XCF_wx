@@ -22,8 +22,32 @@ class PurchaseController extends MY_Controller {
 			exit;
 		}
 		$get = $this->input->get();
-		$data = json_decode(base64_decode($get['json']),true);
+		$this->load->config('jz_dict');
+		$fundInfo = $this->db->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
+		$data['fundcode'] = $get['fundcode'];
+		$data['nav'] = $fundInfo['nav'];
+		$data['tano'] = $fundInfo['tano'];
+		$data['shareclasses'] = $fundInfo['shareclasses'];
+		$data['fundtype'] = $fundInfo['fundtype'];
+		$data['taname'] = $fundInfo['taname'];
+		$data['risklevel'] = $fundInfo['risklevel'];
 		$data['purchasetype'] = $get['purchasetype'];
+		$data['fundname'] = $fundInfo['fundname'];
+		$tmp = $this->config->item('fundtype')[$data['fundtype']];
+		$data['fundtypename'] = is_null($tmp)?'-':$tmp;
+		$tmp = isset($this->config->item('sharetype')[$data['shareclasses']])?$this->config->item('sharetype')[$data['shareclasses']]:null;
+		$data['sharetypename'] = is_null($tmp)?'-':$tmp;
+		if ($get['purchasetype'] == '认购'){
+			$data['first_per_min'] = $fundInfo['first_per_min_20'];
+			$data['first_per_max'] = $fundInfo['first_per_max_20'];
+			$data['con_per_min'] = $fundInfo['con_per_min_20'];
+			$data['con_per_max'] = $fundInfo['con_per_max_20'];
+		}elseif($get['purchasetype'] == '申购'){
+			$data['first_per_min'] = $fundInfo['first_per_min_22'];
+			$data['first_per_max'] = $fundInfo['first_per_max_22'];
+			$data['con_per_min'] = $fundInfo['con_per_min_22'];
+			$data['con_per_max'] = $fundInfo['con_per_max_22'];
+		}
 		$purchase_info =$this->fund_interface->beforePurchase($data);
 		if (!isset($purchase_info['code']) || $purchase_info['code'] != '0000'){
 			file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."调用beforePurchase接口失败，返回数据为:".serialize($purchase_info)."\r\n\r\n",FILE_APPEND);

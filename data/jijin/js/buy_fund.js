@@ -38,8 +38,8 @@ window.onload = function () {
 											'<p>代码：<span>'+data.buy.data[i].fundcode+'</span></p>'+
 											'<p>净值：<span>'+data.buy.data[i].nav+'</span></p>'+
 											'<p>类型：<span>'+data.buy.data[i].fundtypename+'</span></p>'+
-											'<a href="'+aa+'/jijin/Jz_fund/showprodetail?fundid='+data.buy.data[i].fundcode+'&tano='+data.buy.data[i].tano+'&json='+data.buy.data[i].json+'&purchasetype=认购'+' " type="button" class="mui-btn mui-btn-success fund-btn-bk bonus-pad">详情</a>'+
-											'<a href="'+aa+'/jijin/PurchaseController/Apply?json='+data.buy.data[i].json+'&purchasetype=认购'+' " type="button" class="mui-btn mui-btn-success fund-btn-bd">认购</a>'+
+											'<a href="'+aa+'/jijin/Jz_fund/showprodetail?fundcode='+data.buy.data[i].fundcode+'&tano='+data.buy.data[i].tano+'&fundcode='+data.buy.data[i].fundcode+'&purchasetype=认购'+' " type="button" class="mui-btn mui-btn-success fund-btn-bk bonus-pad">详情</a>'+
+											'<a href="'+aa+'/jijin/PurchaseController/Apply?fundcode='+data.buy.data[i].fundcode+'&purchasetype=认购'+' " type="button" class="mui-btn mui-btn-success fund-btn-bd">认购</a>'+
 								 		'</div>';								 	
 						fragment.appendChild(oLi);
 		 			}
@@ -91,8 +91,8 @@ window.onload = function () {
 																'<p>代码：<span>'+data.apply.data[i].fundcode+'</span></p>'+
 																'<p>净值：<span>'+data.apply.data[i].nav+'</span></p>'+
 																'<p>类型：<span>'+data.apply.data[i].fundtypename+'</span></p>'+
-																'<a href="'+aa+'/jijin/Jz_fund/showprodetail?fundid='+data.apply.data[i].fundcode+'&tano='+data.apply.data[i].tano+'&json='+data.apply.data[i].json+'&purchasetype=申购'+'" type="button" class="mui-btn mui-btn-success fund-btn-bk bonus-pad">详情</a>'+
-																'<a href="'+aa+'/jijin/PurchaseController/Apply?json='+data.apply.data[i].json+'&purchasetype=申购'+' " type="button" class="mui-btn mui-btn-success fund-btn-bd">申购</a>'+
+																'<a href="'+aa+'/jijin/Jz_fund/showprodetail?fundcode='+data.apply.data[i].fundcode+'&tano='+data.apply.data[i].tano+'&fundcode='+data.apply.data[i].fundcode+'&purchasetype=申购'+'" type="button" class="mui-btn mui-btn-success fund-btn-bk bonus-pad">详情</a>'+
+																'<a href="'+aa+'/jijin/PurchaseController/Apply?fundcode='+data.apply.data[i].fundcode+'&purchasetype=申购'+' " type="button" class="mui-btn mui-btn-success fund-btn-bd">申购</a>'+
 													 		'</div>';														 	
 											fragment.appendChild(oLi);
 							 			}
