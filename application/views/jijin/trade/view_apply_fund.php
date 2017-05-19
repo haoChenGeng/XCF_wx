@@ -55,7 +55,7 @@
                 <label style="float:none;margin:auto;display:block;width:90%;">
                     <span class="m2-item-t1">支付渠道：</span>
                     <select id="pay_way" name="pay_way" class="select-certificate">
-                        <option value="0"><?php echo $bank_msg[0]?></option>
+          				<option value=<?php echo key($bank_msg)?>><?php echo current($bank_msg)?></option>
                     </select>
                 </label>                       
             </div>

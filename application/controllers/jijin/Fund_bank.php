@@ -36,7 +36,7 @@ class Fund_bank extends MY_Controller
 // var_dump($user_info);
     	if (!isset($user_info['code']) || $user_info['code'] != '0000' || !isset($user_info['data']['certificateno'])){
     		$log_msg = '查询用户信息(account_info<520101>)失败';
-    		file_put_contents('log/user/'.$operation.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."信息(account_info<520101>)失败,返回数据:".serialize($user_info)."\r\n\r\n",FILE_APPEND);
+    		file_put_contents('log/user/'.$operation.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."信息失败,返回数据:".serialize($user_info)."\r\n\r\n",FILE_APPEND);
     	}
     	$this->load->config('jz_dict');
     	$needPCBank = $this->config->item('needProvCity')[$this->config->item('selectChannel')];
@@ -127,17 +127,19 @@ class Fund_bank extends MY_Controller
     		if ($this->form_validation->run() == TRUE)
     		{
     			$submitData = $_SESSION['operation_data'];
+    			unset($submitData['depositacct_old'],$submitData['channelname'],$submitData['moneyaccount']);
     			$submitData['depositacct'] = $post['depositacct'];
     			$submitData['mobiletelno'] = $post['mobiletelno'];
-    			$submitData['channelid'] = isset($_SESSION['operation_data']['channelid'])?$_SESSION['operation_data']['channelid']:$post['channelid'];
+    			if (!isset($submitData['channelid'])){
+    				$submitData['channelid'] = $post['channelid'];
+    			}
     			$submitData['addBankCard'] = 1;
     			$logData = $submitData;
-    			$logData['certificateno'] = substr($submitData['certificateno'],0,6).'***'.substr($submitData['certificateno'],-3);
-    			$logData['depositacct'] = substr($submitData['depositacct'],0,3).'***'.substr($submitData['depositacct'],-3);
-    			$logData['depositacctname'] = substr($submitData['depositacctname'],0,3).'***';
+    			$logData['certificateno'] = substr($logData['certificateno'],0,6).'***'.substr($logData['certificateno'],-3);
+    			$logData['depositacct'] = substr($logData['depositacct'],0,3).'***'.substr($logData['depositacct'],-3);
     			$res_bMS = $this->fund_interface->bgMsgSend($submitData);
 // var_dump($res_bMS);
-    			file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend数据为:".serialize($logData)."\r\n调用bgMsgSend返回信息".serialize($res_bMS)."\r\n\r\n",FILE_APPEND);
+    			file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend接口\r\n调用数据:".serialize($logData)."\r\n返回数据:".serialize($res_bMS)."\r\n\r\n",FILE_APPEND);
     			if ( !isset($res_bMS['code']) || $res_bMS['code'] != '0000' )                  //鉴权失败  $res_bMS['data'][0]['comtype']表示该卡已经鉴权过
     			{
     				$err_msg = '银行卡鉴权失败';
@@ -165,18 +167,12 @@ class Fund_bank extends MY_Controller
     		$log_msg = '一次性随机验证码错误';
     	}
     	if (isset($err_msg)){
-    		if (isset($_SESSION['url_afteroperation'])){
-    			$msgUrl = $_SESSION['url_afteroperation'];
-    			unset($_SESSION['url_afteroperation']);
-    		}else{
-    			$msgUrl = '/jijin/Jz_my';
-    		}
     		$str = isset($log_msg)?$log_msg:$err_msg;
-    		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix, date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."身份证为:".$_SESSION['operation_data']['certificateno']."鉴权失败，原因为：".$str."\r\n\r\n",FILE_APPEND);
+    		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix, date('Y-m-d H:i:s',time()).":\r\n用户(".$_SESSION ['customer_name'].")进行".$post['operation']."操作时，鉴权失败，原因为：".$str."\r\n\r\n",FILE_APPEND);
     		Message(Array(
     				'msgTy' => 'fail',
     				'msgContent' => $err_msg.'<br/>系统正在返回...',
-    				'msgUrl' => $this->base . $msgUrl,
+    				'msgUrl' => $this->base . '/jijin/Fund_bank/bank_info',
     				'base' => $this->base
     				));
     	}
@@ -206,11 +202,10 @@ class Fund_bank extends MY_Controller
     		exit;
     	}
     	$post = $this->input->post();
-var_dump($post);
     	//记录post提交数据，裁减密码敏感信息。
     	$tmp =$post;
     	$tmp['tpasswd'] = substr($tmp['tpasswd'], 6,6);
-    	file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."输入数据为:".serialize($tmp)."\r\n\r\n",FILE_APPEND);
+    	file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."进行".$post['operation']."操作,输入数据为:".serialize($tmp)."\r\n\r\n",FILE_APPEND);
     	//-----------RSA解密----------------------------
     	$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
     	$decryptData ='';
@@ -218,13 +213,6 @@ var_dump($post);
     	//判断一次性随机验证码是否存在
     	$div_bit = strpos($decryptData,(string)$_SESSION['rand_code']);
     	unset($_SESSION['rand_code']);
-    	if (isset($_SESSION['url_afteroperation'])){
-    		$msgUrl = $_SESSION['url_afteroperation'];
-    		unset($_SESSION['url_afteroperation']);
-    	}else{
-    		$msgUrl = '/jijin/Jz_my';
-    	}
-    	
     	if ($div_bit !== false){                           //找到一次性随机验证码
     		$post['tpasswd'] = substr($decryptData, 0, $div_bit);
 //     		$tpasswd =  my_md5($_SESSION ['customer_name'], $post['tpasswd']);
@@ -244,7 +232,7 @@ var_dump($post);
     		switch ($post['operation']){
     			case 'bankcard_add':
     				$oper_res = $this->fund_interface->bgAddCard($oper_data);
-var_dump($oper_res);
+// var_dump($oper_res);
 // $data['data'] = $oper_res['data'];
 // var_dump($oper_res);
 // $data['url'] = $this->config->item('fundUrl').'/jijin/XCFinterface';
@@ -255,22 +243,35 @@ var_dump($oper_res);
     			case 'bankcard_change':
     				$oper_res = $this->fund_interface->bankcardChange($oper_data);
 // $data['data'] = $oper_res['data'];
-var_dump($oper_res);
+// var_dump($oper_res);
 // $data['url'] = $this->config->item('fundUrl').'/jijin/XCFinterface';
 // $this->load->view('UrlTest',$data);
 // return;
     				$oper_des = '更换银行卡';
     				break;
     		}
-    		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name'].")调用金证接口进行".$oper_des.'操作，输入数据为:'.serialize($oper_data).'返回数据为:'.serialize($oper_res)."\r\n\r\n",FILE_APPEND);
+    		$logData = $oper_data;
+    		$logData['certificateno'] = substr($logData['certificateno'],0,6).'***'.substr($logData['certificateno'],-3);
+    		$logData['depositacct'] = substr($logData['depositacct'],0,3).'***'.substr($logData['depositacct'],-3);
+    		$logData['tpasswd'] = "***";
+    		if (isset($logData['depositacct_old'])){
+    			$logData['depositacct_old'] = substr($logData['depositacct_old'],0,3).'***'.substr($logData['depositacct_old'],-3);
+    		}
+    		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name'].")调用金证接口进行".$oper_des.'操作，输入数据为:'.serialize($logData).'返回数据为:'.serialize($oper_res)."\r\n\r\n",FILE_APPEND);
     		 
     		if (isset($oper_res['code']))
     		{
+    			if (isset($_SESSION['next_url'])){
+    				$msgUrl = $_SESSION['next_url'];
+    				unset($_SESSION['next_url']);
+    			}else{
+    				$msgUrl = '/jijin/Fund_bank/bank_info';
+    			}
     			if ($oper_res['code']== '0000'){
     				Message(Array(
     						'msgTy' => 'sucess',
     						'msgContent' => $oper_des.'成功',
-    						'msgUrl' => $this->base . $msgUrl, //调用我的基金界面
+    						'msgUrl' => $this->base.$msgUrl, //调用我的基金界面
     						'base' => $this->base
     						));
     				exit;
@@ -296,11 +297,11 @@ var_dump($oper_res);
     	if (!empty($err_msg))
     	{
     		$str = isset($log_msg)?$log_msg:$err_msg;
-    		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name'].$oper_des."操作失败，原因为：".$str."\r\n\r\n",FILE_APPEND);
+    		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name'].$oper_des."操作失败，原因为：".$str."\r\n\r\n",FILE_APPEND);
     		Message(Array(
     				'msgTy' => 'fail',
     				'msgContent' => $err_msg.', 正在返回...',
-    				'msgUrl' => $this->base .$msgUrl,
+    				'msgUrl' => $this->base .'/jijin/Fund_bank/bank_info',
     				'base' => $this->base
     				));
     	}
@@ -317,7 +318,7 @@ var_dump($oper_res);
 // var_dump($channel_info);
 // var_dump($bank_info);
 		if (!isset($bank_info['code']) || $bank_info['code'] != '0000'){
-			file_put_contents('log/user/bank_info'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."调用查询银行卡失败，返回数据为:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
+			file_put_contents('log/user/bank_info'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."查询银行卡失败，返回数据为:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
 		}
 		if (isset($bank_info['code']) && $bank_info['code'] == '0000')
 		{
@@ -378,7 +379,7 @@ var_dump($oper_res);
  			//记录时提交数据，裁减密码敏感信息。
  			$tmp =$post;
  			$tmp['tpasswd'] = substr($tmp['tpasswd'], 6,6);
- 			file_put_contents('log/user/bankcard_delete'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."post数据为:".serialize($tmp)."\r\n\r\n",FILE_APPEND);
+ 			file_put_contents('log/user/bankcard_delete'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行删除银行卡操作,调用数据为:".serialize($tmp)."\r\n\r\n",FILE_APPEND);
  			$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
  			$decryptData ='';
  			openssl_private_decrypt(base64_decode($post['tpasswd']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
@@ -405,7 +406,7 @@ var_dump($oper_res);
  							Message(Array(
  									'msgTy' => 'success',
  									'msgContent' => '银行卡注销成功!',
- 									'msgUrl' => $this->base . "/jijin/Jz_my",
+ 									'msgUrl' => $this->base . "/jijin/Fund_bank/bank_info",
  									'base' => $this->base
  									));
  						}else{
@@ -431,7 +432,7 @@ var_dump($oper_res);
  				Message(Array(
  						'msgTy' => 'fail',
  						'msgContent' => isset($err_msg) ? $err_msg : '系统故障, 银行卡注销失败!',
- 						'msgUrl' => $this->base . "/jijin/Jz_account/manage_account",
+ 						'msgUrl' => $this->base . "/jijin/Fund_bank/bank_info",
  						'base' => $this->base
  				));
  			}

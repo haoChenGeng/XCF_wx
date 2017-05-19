@@ -66,15 +66,20 @@ class ModifyBonusController extends MY_Controller {
 		$div_bit = strpos($decryptData,(string)$_SESSION['rand_code']);
 		unset($_SESSION['rand_code']);
 		if ($div_bit !== false){                           //找到一次性随机验证码
-			$tpasswd = substr($decryptData, 0, $div_bit);
 			unset($data['fundname'],$data['dividendmethodname'],$data['sharetypename'],$data['nav'],$data['dividendmethod']);
+			$tpasswd = substr($decryptData, 0, $div_bit);
 			$data['bonusType'] = $post['bonusType'];
 			$data['tpasswd'] = $tpasswd;
 			$res = $this->fund_interface->bonus_mode($data);
-			file_put_contents('log/trade/modifybonus'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行赎回，交易数据为:".serialize($data)."\r\n返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
+			$data['tpasswd'] = '***';
+			file_put_contents('log/trade/modifybonus'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行分红方式变更，交易数据为:".serialize($data)."\r\n返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
 			if (isset($res['code'])){
 				$data['ret_code'] = $res['code'];
-				$data['ret_msg'] = $res['msg'];
+				if ($res['code'] == '0000'){
+					$data['ret_msg'] = $res['msg'];
+				}elseif ($res['code'] == '-409999999'){
+					$data['ret_msg'] = '交易密码错误，分红方式变更失败';
+				}
 			}else{
 				$data['ret_code'] = 'AAAA';
 				$log_msg = '调用分红方式变更接口失败';

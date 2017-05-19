@@ -258,6 +258,7 @@ class Fund_interface
 		$purchaseData['customerNo'] = $_SESSION['customer_name'];
 		$purchaseData['code'] = 'purchase';
 		$submitData = $this->getSubmitData($purchaseData);
+// return $submitData;
 		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
@@ -366,4 +367,5 @@ class Fund_interface
 		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
+	
 }
