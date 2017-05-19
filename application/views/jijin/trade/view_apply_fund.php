@@ -112,7 +112,7 @@
                 div.innerHTML = '<div class="item-width-wrap">'+
                                     '<span class="m2-item-t1">交易密码：</span>'+
                                     '<label>'+
-                                        '<input type="password" id="passwd" name="tpasswd" placeholder="请输入交易密码" />'+
+                                        '<input type="password" id="passwd" name="tpasswd" data-reg=".+"  data-error="登录密码不能为空" placeholder="请输入交易密码" />'+
                                     '</label>'+
                                 '</div>'; 
                 document.getElementById('info_form').insertBefore(div, payDiv.nextSibling);
@@ -120,13 +120,15 @@
             });
         });
         $('#commit').on('click',function () {
-        	var encrypt = new JSEncrypt();
-        	//alert($('#pass').attr('data-key'));        
-        	encrypt.setPublicKey($('#fundcode').attr('data-key'));
-        	var encrypted = encrypt.encrypt($('#passwd').val()+$('#fundcode').attr('data-code'));
-        	$('#passwd').val(encrypted);
-        	document.getElementById('pay_way').disabled = false;
-            $('#info_form').submit();
+        	M.checkForm(function () {
+            	var encrypt = new JSEncrypt();
+            	//alert($('#pass').attr('data-key'));        
+            	encrypt.setPublicKey($('#fundcode').attr('data-key'));
+            	var encrypted = encrypt.encrypt($('#passwd').val()+$('#fundcode').attr('data-code'));
+            	$('#passwd').val(encrypted);
+            	document.getElementById('pay_way').disabled = false;
+                $('#info_form').submit();
+            });
         });
         
         $('#backBtn').on('click',function(){

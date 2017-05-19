@@ -468,7 +468,8 @@ class User extends MY_Controller {
 		$RecommendFunds = $this->db->where(array('recommend' => 1))->get('fundlist')->result_array();
 		$totalFunds = count($RecommendFunds);
 		if ($totalFunds <3){
-			$RecommendFunds = $this->db->get('fundlist')->result_array();
+			$Recommended = $RecommendFunds;
+			$RecommendFunds = $this->db->where(array('recommend !=' => 1))->get('fundlist')->result_array();
 			$totalFunds = count($RecommendFunds);
 		}
 		foreach ($RecommendFunds as $key => $val){
@@ -480,8 +481,8 @@ class User extends MY_Controller {
 					case 'fundtype':
 						$RecommendFunds[$key][$k] = $this->config->item('fundtype')[$v];
 						break;
-					case 'shareclasses':
-/* 						$RecommendFunds[$key][$k] = $this->config->item('sharetype')[$v];
+/*					case 'shareclasses':
+ 						$RecommendFunds[$key][$k] = $this->config->item('sharetype')[$v];
 						break;
 					case 'risklevel':
 						$RecommendFunds[$key][$k] = $this->config->item('custrisk')[intval($v)];

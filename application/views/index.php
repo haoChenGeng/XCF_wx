@@ -64,16 +64,17 @@
          	<ul class="text_ul">             	
                 <?php foreach ($Recommend as $val)
                 	echo '<li class="clearfix">
-													<p class="product-bottom">'.$val['fundname'].'</p>
-													<div class="product-item1">
-														<p class="product-item-num">'.$val['growthrate'].'</p>
-														<p class="product-item-name">七日年化收益率</p>
-													</div>
-													<div class="product-item2">
-														<p class="product-item-num" style="font-size:28px;">'.$val['fundtype'].'</p>
-														<p class="product-item-name">基金类型</p>
-													</div>
-												 </li>'
+							<a href="/jijin/Jz_fund/showprodetail?fundid="'.$val['aa'].'">
+							<p class="product-bottom">'.$val['fundname'].'</p>
+							<div class="product-item1">
+								<p class="product-item-num">'.$val['growthrate'].'</p>
+								<p class="product-item-name">七日年化收益率</p>
+							</div>
+							<div class="product-item2">
+								<p class="product-item-num" style="font-size:28px;">'.$val['fundtype'].'</p>
+								<p class="product-item-name">基金类型</p>
+							</div>
+						 </li>'
                 ?>
          	</ul>
         </div>
