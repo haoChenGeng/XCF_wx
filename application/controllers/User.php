@@ -457,50 +457,25 @@ class User extends MY_Controller {
 	private function getRecommendFunds(&$data){
 		$this->load->library('Fund_interface');
 		$this->fund_interface->fund_list();
- 		$select = '';
-		$arr = array('fundcode','tano','fundname','fundtype','nav','growthrate','fundincomeunit','shareclasses','risklevel','status');
-		foreach ($arr as $val){
-			$select .= $val.',';
-		}
-		$select = substr($select,0,-1);
-		$arr = array('select'=>$select);
 		$this->load->config('jz_dict');
-		$RecommendFunds = $this->db->where(array('recommend' => 1))->get('fundlist')->result_array();
-		$totalFunds = count($RecommendFunds);
-		if ($totalFunds <3){
-			$Recommended = $RecommendFunds;
-			$RecommendFunds = $this->db->where(array('recommend !=' => 1))->get('fundlist')->result_array();
-			$totalFunds = count($RecommendFunds);
+		$select = array('fundcode','tano','fundname','fundtype','nav','growthrate','fundincomeunit');
+		$candidateFunds = $this->db->select($select)->where(array('recommend' => 1))->get('fundlist')->result_array();
+		$candidateNum = count($candidateFunds);
+		$selectNum = 0;
+		if ($candidateNum <3){
+			$data['Recommend'] = $candidateFunds;
+			$selectNum = $candidateNum;
+			$candidateFunds = $this->db->select($select)->where(array('recommend !=' => 1))->get('fundlist')->result_array();
+			$candidateNum = count($candidateFunds);
 		}
-		foreach ($RecommendFunds as $key => $val){
-			foreach ($val as $k => $v){
-				switch ($k){
-/* 					case 'tano':
-						$RecommendFunds[$key]['tano'] = $v.'/'.$val['taname'];
-						break; */
-					case 'fundtype':
-						$RecommendFunds[$key][$k] = $this->config->item('fundtype')[$v];
-						break;
-/*					case 'shareclasses':
- 						$RecommendFunds[$key][$k] = $this->config->item('sharetype')[$v];
-						break;
-					case 'risklevel':
-						$RecommendFunds[$key][$k] = $this->config->item('custrisk')[intval($v)];
-						break;
-					case 'status':
-						$RecommendFunds[$key][$k] = $this->config->item('fund_status')[intval($v)]['status'];
-						break; */
-				}
+		if ($candidateNum > 0){
+			$randSeq = array_rand(range(0,$candidateNum-1),3-$selectNum);
+			foreach ($randSeq as $val){
+				$data['Recommend'][] = $candidateFunds[$val];
 			}
 		}
-		if ($totalFunds > 0){
-			$RecommendNum = $totalFunds >3 ? 3 : $totalFunds;
-			$randSeq = array_rand(range(0,$totalFunds-1),$RecommendNum);
-			for($i = 0; $i<$RecommendNum; $i++){
-				$data['Recommend'][$i]['fundname'] = $RecommendFunds[$randSeq[$i]]['fundname'];
-				$data['Recommend'][$i]['fundtype'] = $RecommendFunds[$randSeq[$i]]['fundtype'];
-				$data['Recommend'][$i]['growthrate'] = ($RecommendFunds[$randSeq[$i]]['growthrate']*100).'%';
-			}
+		foreach ($data['Recommend'] as $key => $val){
+			$data['Recommend'][$key]['fundtype'] = $this->config->item('fundtype')[$val['fundtype']];
 		}
 	}
 	
