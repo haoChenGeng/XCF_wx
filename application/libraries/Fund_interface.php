@@ -363,9 +363,16 @@ class Fund_interface
 		$bankcardChange['code'] = 'bankcardChange';
 		$bankcardChange['customerNo'] = $_SESSION['customer_name'];
 		$submitData = $this->getSubmitData($bankcardChange);
-// return $submitData;
 		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
 	
+	function revoke($revoke){
+		$revoke['code'] = 'revoke';
+		$revoke['customerNo'] = $_SESSION['customer_name'];
+		$submitData = $this->getSubmitData($revoke);
+// return $submitData;
+		$returnData = comm_curl($this->CI->config->item('fundUrl').'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
 }

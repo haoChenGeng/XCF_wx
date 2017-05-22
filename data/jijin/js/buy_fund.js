@@ -139,7 +139,7 @@ window.onload = function () {
 																'<div class="delegate-oprate">'+data.today.data[i].businesscode+'</div>'+
 																'<div class="delegate-amount">'+data.today.data[i].applicationamount+'/'+data.today.data[i].applicationvol+'</div>'+
 																'<div class="delegate-oprate">'+data.today.data[i].status+paystatus+'</div>'+
-																'<div class="delegate-more"><a type="button" class="cancel-order" href="'+aa+'/jijin/CancelApplyController/cancel?json='+data.today.data[i].json+'">撤销</a>'+									
+																'<div class="delegate-more"><a type="button" class="cancel-order" href="'+aa+'/jijin/CancelApplyController/cancel?appsheetserialno='+data.today.data[i].appsheetserialno+'">撤销</a>'+									
 													 		'</div>'+
 													 	'</div>';
 										if (data.today.data[i].cancelable === 0) {

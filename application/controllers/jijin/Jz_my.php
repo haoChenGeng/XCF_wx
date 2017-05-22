@@ -64,7 +64,6 @@ class Jz_my extends MY_Controller
 					//对res进行验证
 					$data['bank_info'] = $this->bank_info();
 					break;
-					
 				case 'risk_test':
 					//获取风险测试
 					$res = $this->getRiskLevel();

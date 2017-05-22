@@ -52,8 +52,9 @@ $data['pageOper'] = 'buy';
 			case 'today':
 				if (isset($_SESSION['customer_id'])){
 					$startdate = date('Ymd',time());
-					$enddate = date('Ymd',time()+86400);                  //因当天收市后下的单会归到下一天，因此结束时间加1天
+					$enddate = date('Ymd',time()+864000);                  //因当天收市后下的单会归到下一天，因此结束时间加1天
 					$data['today'] = $this->getHistoryApply($startdate, $enddate);
+					$_SESSION['todayTrade'] = $data['today']['data'];
 				}else{
 					$data['msg'] = "您还未登录，不能进行相关查询";
 				}

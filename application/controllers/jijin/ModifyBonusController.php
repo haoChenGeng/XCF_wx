@@ -77,11 +77,11 @@ class ModifyBonusController extends MY_Controller {
 			if (isset($log_msg)){
 				file_put_contents('log/trade/redeem'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行分红方式变更交易失败，原因为:".$log_msg."\r\n\r\n",FILE_APPEND);
 			}
+			$data['head_title'] = '分红方式变更结果';
+			$data['back_url'] = '/jijin/Jz_my';
+			$data['base'] = $this->base;
+			$this->load->view('ui/view_operate_result',$data);
 		}
-		$data['head_title'] = '分红方式变更结果';
-		$data['back_url'] = '/jijin/Jz_my';
-		$data['base'] = $this->base;
-		$this->load->view('ui/view_operate_result',$data);
 	}
 	
 }

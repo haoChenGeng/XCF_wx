@@ -157,7 +157,7 @@ class PurchaseController extends MY_Controller {
 		$post = $this->input->post();
 		if (empty($post)){
 // 			$this->load->helper(array("url"));
-			$_SESSION['jz_myPageOper'] = 'purchase';
+			$_SESSION['jz_fundPageOper'] = 'purchase';
 			redirect($this->base . "/jijin/Jz_fund");
 		}else{
 			$data = json_decode(base64_decode($post['data']),true);

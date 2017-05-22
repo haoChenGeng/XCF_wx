@@ -18,7 +18,7 @@ class Test extends MY_Controller
 //     	$data['formData'] = array('code'=>'功能号','customerNo'=>'客户号','certificatetype'=>'证件类型','certificateno'=>'证件号码','custno'=>'金证客户号','lpasswd'=>'密码');
 //     	$this->load->view('UrlTest',$data);
     	$this->load->library('Fund_interface');
-    	var_dump($this->fund_interface->getReturnData('fXrD8wPo3BjwPPQiJVF6MUQkecXM94dDV3XN/mFKhXfzH34SLGCUsGm5Ye3wmpVB1fEmb4cmru5RDpm66bJestluTeSOqWz1M99sB4haaSvGzjQhbFLby7q7tA4qV/JQtpCNveoemglQh36eIdUrXw=='));
+    	var_dump($this->fund_interface->getReturnData('K4D8YD4bSe4UB6fGkIAYKOUCiUhjSDtGXJNVHH83W3ursvByZBHfUukg/e1VWwhWcPZ/1YX9PlMhHFspABgGOQ=='));
 //     	var_dump($this->fund_interface->RenewFundAESKey('123456'));
 //     	$res = $this->fund_interface->Trans_applied('20170301', '20170501');
 //     	var_dump($res);
