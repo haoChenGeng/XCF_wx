@@ -459,9 +459,8 @@ class User extends MY_Controller {
 		$this->fund_interface->fund_list();
 		$this->load->config('jz_dict');
 		$select = array('fundcode','tano','fundname','fundtype','nav','growthrate','fundincomeunit','status');
-		$candidateFunds = $this->db->select($select)->where(array('recommend >',0))->get('fundlist')->result_array();
+		$candidateFunds = $this->db->select($select)->where(array('recommend >'=>0))->get('fundlist')->result_array();//->get_compiled_select('fundlist');
 		$candidateNum = count($candidateFunds);
-var_dump($candidateFunds);
 		$selectNum = 0;
 		if ($candidateNum <3){
 			$data['Recommend'] = $candidateFunds;
@@ -469,14 +468,12 @@ var_dump($candidateFunds);
 			$candidateFunds = $this->db->select($select)->where(array('recommend !=' => 1))->get('fundlist')->result_array();
 			$candidateNum = count($candidateFunds);
 		}
-var_dump($data['Recommend']);
 		if ($candidateNum > 0){
 			$randSeq = array_rand(range(0,$candidateNum-1),3-$selectNum);
 			foreach ($randSeq as $val){
 				$data['Recommend'][] = $candidateFunds[$val];
 			}
 		}
-var_dump($data['Recommend']);
 		foreach ($data['Recommend'] as $key => $val){
 			$data['Recommend'][$key]['fundtype'] = $this->config->item('fundtype')[$val['fundtype']];
 			if ($this->config->item('fund_status')[$val['status']]['pre_purchase'] == 'Y'){
