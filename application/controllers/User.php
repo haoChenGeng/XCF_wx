@@ -226,10 +226,16 @@ class User extends MY_Controller {
 				if (empty($post['tel'])){
 					$failmessage = '用户名不能为空，系统正在返回...';
 				}else{
-					$user = $this->db->where(array('Customername' => $post['tel']))->from('customer')->count_all_results();
-					if ($user == 0) {
-						$failmessage = '不存在此用户，系统正在返回...';
+					if($post['tel'] != $_SESSION['T_name']){
+						$failmessage = '输入的手机号码和短信验证的手机号码不一致，系统正在返回...';
+						$redirect_url = "/User/updatePass/";
+					}else{
+						$user = $this->db->where(array('Customername' => $post['tel']))->from('customer')->count_all_results();
+						if ($user == 0) {
+							$failmessage = '不存在此用户，系统正在返回...';
+						}
 					}
+					unset($_SESSION['T_name']);
 				}
 			}
 			if (!isset($failmessage)){
@@ -291,36 +297,34 @@ class User extends MY_Controller {
 				$user_data = $this->db->where(array("id" => $_SESSION ['customer_id']))->get('customer')->row_array();
 				$passkey = $this->config->item("passkey");
 				$T_pwd = MD5(MD5($passkey) . substr($T_pwd, 5, 20));
-				if ($user_data['Password'] != $T_pwd) {
-					$fail_message = '账户旧密码不正确，系统正在返回...';
-					$redirect_url = "/User/updatePass/";
-				}
-				else
-				{
-					$new_login_pwd = MD5(MD5($passkey) . substr($new_login_pwd, 5, 20));
-					$arr = array(
-							'updatetime' => time(),
-							'Password' => $new_login_pwd,
-					);
-					$res = $this->db->set($arr)->where(Array('id' => $_SESSION ['customer_id']))->update('customer');
-					if ($res) {
-						Message(Array(
-								'msgTy' => 'success',
-								'msgContent' => '账户密码修改成功，系统正在返回...',
-								'msgUrl' => $this->base . "/user/logout",
-								'base' => $this->base
-								));
-						exit;
+					if ($user_data['Password'] != $T_pwd) {
+						$fail_message = '账户旧密码不正确，系统正在返回...';
+						$redirect_url = "/User/updatePass/";
 					}
 					else
 					{
-						$fail_message = '账户密码修改失败，系统正在返回...';
-						$redirect_url = "/User/home";
+						$new_login_pwd = MD5(MD5($passkey) . substr($new_login_pwd, 5, 20));
+						$arr = array(
+								'updatetime' => time(),
+								'Password' => $new_login_pwd,
+						);
+						$res = $this->db->set($arr)->where(Array('id' => $_SESSION ['customer_id']))->update('customer');
+						if ($res) {
+							Message(Array(
+									'msgTy' => 'success',
+									'msgContent' => '账户密码修改成功，系统正在返回...',
+									'msgUrl' => $this->base . "/user/logout",
+									'base' => $this->base
+									));
+							exit;
+						}
+						else
+						{
+							$fail_message = '账户密码修改失败，系统正在返回...';
+							$redirect_url = "/User/home";
+						}
 					}
-				}
-			}
-			else
-			{
+			}else{
 				$fail_message = '随机验证码错误，请重试！';
 				$redirect_url = "/member/updatePass";
 			}
@@ -336,6 +340,7 @@ class User extends MY_Controller {
 			$_SESSION['rand_code'] = $data['rand_code'];
 			$this->load->view('user/xglogin_password', $data);
 	}
+	
 	public function send_sms() { //牛鼎丰的短信发送渠道 
 		$post = $this->input->post ();
 		if (empty ( $post ['tel'] )) {
@@ -456,9 +461,9 @@ class User extends MY_Controller {
 //获取最新的基金列表
 	private function getRecommendFunds(&$data){
 		$this->load->library('Fund_interface');
-		$this->fund_interface->fund_list();
+		$res = $this->fund_interface->fund_list();
 		$this->load->config('jz_dict');
-		$select = array('fundcode','tano','fundname','fundtype','nav','growthrate','fundincomeunit','status');
+		$select = array('fundcode','tano','fundname','fundtype','nav','growthrate',/* 'fundincomeunit', */'status','growth_year');
 		$candidateFunds = $this->db->select($select)->where(array('recommend >'=>0))->get('fundlist')->result_array();//->get_compiled_select('fundlist');
 		$candidateNum = count($candidateFunds);
 		$selectNum = 0;
@@ -487,6 +492,13 @@ class User extends MY_Controller {
 			}elseif($this->config->item('fund_status')[$val['status']]['purchase'] == 'Y'){
 				$data['Recommend'][$key]['url'] = '/jijin/Jz_fund/showprodetail';
 				$data['Recommend'][$key]['purchasetype'] = '申购';
+			}
+			if ($val['fundtype'] == 2){
+				$data['Recommend'][$key]['growthrate'] = ($val['growthrate']*100).'%';
+				$data['Recommend'][$key]['growthDes'] = '七日年化收益率';
+			}else{
+				$data['Recommend'][$key]['growthDes'] = '近一年收益率';
+				$data['Recommend'][$key]['growthrate'] = $val['growth_year'].'%';
 			}
 		}
 	}

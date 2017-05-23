@@ -71,7 +71,7 @@
 					echo   '<p class="product-bottom">'.$val['fundname'].'</p>
 							<div class="product-item1">
 								<p class="product-item-num">'.$val['growthrate'].'</p>
-								<p class="product-item-name">七日年化收益率</p>
+								<p class="product-item-name">'.$val['growthDes'].'</p>
 							</div>
 							<div class="product-item2">
 								<p class="product-item-num" style="font-size:28px;">'.$val['fundtype'].'</p>
