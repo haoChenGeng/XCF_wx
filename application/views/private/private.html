@@ -33,7 +33,7 @@
 			</div>
 			<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-2"></div>
 			<div class="mui-slider-group" id="info" style="height: 800px;">
-				<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+				<div id="item1mobile" data-type="1" class="mui-slider-item mui-control-content mui-active">
 					<div id="scroll1" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<ul class="mui-table-view">
@@ -86,7 +86,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="item2mobile" class="mui-slider-item mui-control-content">
+				<div id="item2mobile" data-type="2" class="mui-slider-item mui-control-content">
 					<div id="scroll2" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<div class="mui-loading">
@@ -104,7 +104,7 @@
 								<div class="mui-spinner">
 								</div>
 							</div>
-
+								
 						</div>
 					</div>
 				</div>
@@ -115,7 +115,7 @@
 								<div class="mui-spinner">
 								</div>
 							</div>
-
+								
 						</div>
 					</div>
 				</div>
@@ -126,7 +126,7 @@
 								<div class="mui-spinner">
 								</div>
 							</div>
-
+								
 						</div>
 					</div>
 				</div>
@@ -167,8 +167,6 @@
 			}else {
 				document.getElementById('order').style.display = 'none';
 			}
-			console.log(e.target.innerHTML);
-			console.log(this);
 		});		
 		document.getElementById('cancel').addEventListener('click', function(e) {
 			document.getElementById('order').style.display = 'none';
@@ -178,6 +176,7 @@
 			mui.toast('提交成功');
 		});
 	};
+	mui.init();
 </script>
 </body>
 </html>

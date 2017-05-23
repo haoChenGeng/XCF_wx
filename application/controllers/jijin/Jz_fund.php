@@ -33,7 +33,7 @@ class Jz_fund extends MY_Controller
 		}else{
 			$data['pageOper'] = 'buy';
 		}
-$data['pageOper'] = 'buy';
+// $data['pageOper'] = 'buy';
 		$this->load->view('jijin/buy_fund.html', $data);
 	}
 	

@@ -202,7 +202,6 @@ console.log(provCity);
 			dataType: 'json',
 			success: function(res) {
 				if (res.code === '0000') {
-// console.log(res);
 				var childOp = document.getElementById('payBankAdd');
 				childOp.innerHTML = '<option>请选择银行地址</option>';
 				var opList = document.createDocumentFragment();
@@ -222,38 +221,6 @@ console.log(provCity);
 			}
 		});
 	}
-
-	/*var cer_select = document.getElementById('ID');
-	var cer_div = document.getElementById('certificateno'),
-	pay = document.getElementById('pay_way'),
-	payList = document.getElementById('pay-list');
-
-	selectLightbox(cer_select,cer_div);
-	selectLightbox(pay,payList);
-	function selectLightbox (aa,bb) {
-	    $(aa).on('click',function () {
-			this.disabled = "true";
-			M.createLightBox();
-			var list = bb.getElementsByTagName('li');
-			bb.style.display = 'block';
-			$(bb).on('click','li',function () {
-				var cer_op = document.createElement('option');
-				var op_value = this.attributes[0].value;
-				cer_op.innerHTML =this.innerHTML;
-				cer_op.setAttribute('value',op_value);
-				cer_op.setAttribute('data-cname',this.dataset.cname);
-				aa.replaceChild(cer_op,aa.childNodes[1]);
-				bb.style.display = 'none';
-				M.hideLightBox();
-				aa.disabled = false;
-				if (this.innerHTML == '平安银行' || this.innerHTML == '华夏银行') {
-					document.getElementById('chooseCity').style.display = 'block';
-				}else {
-					document.getElementById('chooseCity').style.display = 'none';					
-				}
-			});		
-		});
-	}*/
 
 	
 </script>

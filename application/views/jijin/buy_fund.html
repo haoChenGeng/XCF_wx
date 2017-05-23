@@ -36,19 +36,19 @@
 -->
 		<div id="slider" class="mui-slider">
 			<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
-				<a class="mui-control-item" href="#item1mobile">
+				<a class="mui-control-item <?php echo ($pageOper == 'buy')? 'mui-active' : '';?>" href="#item1mobile">
 					<i class="subscribe Cicon"></i>
 					<p>认购</p>
 				</a>
-				<a class="mui-control-item" href="#item2mobile">
+				<a class="mui-control-item <?php echo ($pageOper == 'apply')? 'mui-active' : '';?>" href="#item2mobile">
 					<i class="apply Cicon"></i>
 					<p>申购</p>
 				</a>
-				<a class="mui-control-item" href="#item3mobile">
+				<a class="mui-control-item <?php echo ($pageOper == 'today')? 'mui-active' : '';?>" href="#item3mobile">
 					<i class="day-delegate Cicon"></i>
 					<p>当日委托</p>
 				</a>
-				<a class="mui-control-item" href="#item4mobile" >
+				<a class="mui-control-item <?php echo ($pageOper == 'history')? 'mui-active' : '';?>" href="#item4mobile" >
 					<i class="history-delegate Cicon"></i>
 					<p>历史委托</p>
 				</a>
