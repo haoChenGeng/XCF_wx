@@ -465,14 +465,19 @@ class User extends MY_Controller {
 		if ($candidateNum <3){
 			$data['Recommend'] = $candidateFunds;
 			$selectNum = $candidateNum;
-			$candidateFunds = $this->db->select($select)->where(array('recommend !=' => 1))->get('fundlist')->result_array();
+			$candidateFunds = $this->db->select($select)->where(array('recommend =' => 0))->get('fundlist')->result_array();
 			$candidateNum = count($candidateFunds);
 		}
 		if ($candidateNum > 0){
 			$randSeq = array_rand(range(0,$candidateNum-1),3-$selectNum);
-			foreach ($randSeq as $val){
-				$data['Recommend'][] = $candidateFunds[$val];
+			if (is_array($randSeq)){
+				foreach ($randSeq as $val){
+					$data['Recommend'][] = $candidateFunds[$val];
+				}
+			}else{
+				$data['Recommend'][] = $candidateFunds[$randSeq];
 			}
+
 		}
 		foreach ($data['Recommend'] as $key => $val){
 			$data['Recommend'][$key]['fundtype'] = $this->config->item('fundtype')[$val['fundtype']];
