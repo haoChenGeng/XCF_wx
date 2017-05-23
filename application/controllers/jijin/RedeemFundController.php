@@ -61,7 +61,7 @@ class RedeemFundController extends MY_Controller {
 					if (isset($res['code'])){
 						$data['ret_code'] = $res['code'];
 						if ($res['code'] == '0000'){
-							$data['ret_msg'] = '基金赎回成功';
+							$data['ret_msg'] = '基金赎回申请已受理';
 						}elseif (in_array($res['code'], array('0016','0020','0021'))){
 							$data['ret_msg'] = $res['msg'];
 						}

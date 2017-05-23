@@ -73,7 +73,7 @@
                 div.innerHTML = '<div class="item-width-wrap">'+
                                     '<span class="m2-item-t1">交易密码：</span>'+
                                     '<label>'+
-                                        '<input type="password" id="passwd" name="tpasswd" data-reg=".+"  data-error="登录密码不能为空" placeholder="请输入交易密码" />'+
+                                        '<input type="password" id="passwd" name="tpasswd" data-reg=".+"  data-error="交易密码不能为空" placeholder="请输入交易密码" />'+
                                     '</label>'+
                                 '</div>'; 
                 document.getElementById('info_form').insertBefore(div, payDiv.nextSibling);

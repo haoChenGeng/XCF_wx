@@ -59,7 +59,7 @@ class ModifyBonusController extends MY_Controller {
 				if (isset($res['code'])){
 					$data['ret_code'] = $res['code'];
 					if ($res['code'] == '0000'){
-						$data['ret_msg'] = $res['msg'];
+						$data['ret_msg'] = '分红方式变更申请已受理';
 					}elseif ($res['code'] == '-409999999'){
 						$data['ret_msg'] = '交易密码错误，分红方式变更失败';
 					}

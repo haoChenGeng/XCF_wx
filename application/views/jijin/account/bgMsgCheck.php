@@ -31,7 +31,7 @@
 				<div class="m-item">
 					<i class="icon icon-phone"></i>
             		<label>
-                		<input type="password" id="pass1" class="w80-p"  name="lpasswd"   data-reg=".+"  data-error="登录密码不能为空" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请设置交易密码(必填)" />
+                		<input type="password" id="pass1" class="w80-p"  name="lpasswd"   data-reg=".+"  data-error="交易密码不能为空" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请设置交易密码(必填)" />
             		</label>
         		</div>
 				<div class="m-item">
