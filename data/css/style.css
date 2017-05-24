@@ -2540,6 +2540,10 @@ header.fing_header {
     color: #F5BE21;
 }
 
+.con_password li .input_btn.disabled {
+    color: #ccc;
+}
+
 .ret_paw_btn {
     width: 600px;
     height: 80px;

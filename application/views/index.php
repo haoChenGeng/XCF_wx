@@ -50,7 +50,7 @@
             	<a href="/jijin/Jz_account/entrance" id="fund_access" class="span01">公募</a>
             </li>
             <li class="li01 li02">
-            	<a href="/application/views/commingsoon.php" id="" class="span01">私募</a>
+            	<a href="/application/views/private/private.html" id="" class="span01">私募</a>
             </li>
             <li class="li01 li03">
             	<a href="/FindPaper" id="sign_in" class="span01">发现</a>

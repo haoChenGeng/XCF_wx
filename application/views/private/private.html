@@ -12,7 +12,7 @@
 	<div class="mui-content">
 		<div id="slider" class="mui-slider" style="margin: 10px 0;">
 			<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-negative" style="background-color: #fff;">
-				<a class="mui-control-item" href="#item1mobile">
+				<a class="mui-control-item mui-active" href="#item1mobile">
 					股权型
 				</a>
 				<a class="mui-control-item" href="#item2mobile">
@@ -27,11 +27,8 @@
 				<a class="mui-control-item" href="#item5mobile">
 					债券型
 				</a>
-				<a class="mui-control-item" href="#item6mobile">
-					混合型
-				</a>
 			</div>
-			<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-2"></div>
+			<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-pri-5"></div>
 			<div class="mui-slider-group" id="info" style="height: 800px;">
 				<div id="item1mobile" data-type="1" class="mui-slider-item mui-control-content mui-active">
 					<div id="scroll1" class="mui-scroll-wrapper">
@@ -97,7 +94,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="item3mobile" class="mui-slider-item mui-control-content">
+				<div id="item3mobile" data-type="3" class="mui-slider-item mui-control-content">
 					<div id="scroll3" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<div class="mui-loading">
@@ -108,7 +105,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="item4mobile" class="mui-slider-item mui-control-content">
+				<div id="item4mobile" data-type="4" class="mui-slider-item mui-control-content">
 					<div id="scroll4" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<div class="mui-loading">
@@ -119,7 +116,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="item5mobile" class="mui-slider-item mui-control-content">
+				<div id="item5mobile" data-type="5" class="mui-slider-item mui-control-content">
 					<div id="scroll5" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<div class="mui-loading">
@@ -129,18 +126,7 @@
 								
 						</div>
 					</div>
-				</div>
-				<div id="item6mobile" class="mui-slider-item mui-control-content">
-					<div id="scroll6" class="mui-scroll-wrapper">
-						<div class="mui-scroll">
-							<div class="mui-loading">
-								<div class="mui-spinner">
-								</div>
-							</div>
-
-						</div>
-					</div>
-				</div>
+				</div>				
 			</div>
 		</div>
 	</div>
@@ -160,7 +146,64 @@
 	</div>
 <script src="../../../data/jijin/js/mui.min.js"></script>
 <script>
+	mui.init();
 	window.onload = function() {
+		var type = document.getElementById('info').querySelector('.mui-active').dataset.type;
+console.log(type);
+		
+		function getFundList(type) {
+			mui.ajax('http://localhost:8009/systemsetup/PrivateFund/fund_list',{
+				data: {
+					type: 1
+				},
+				dataType: 'json',
+				type: 'get',
+				beforeSend: function() {
+					
+				},
+				success: function(res) {
+console.log(res);
+
+				},
+				error: function(res) {
+					console.log(res);
+				}
+			});
+		}
+		getFundList();
+
+		(function($) {
+				$('.mui-scroll-wrapper').scroll({
+					indicators: true //是否显示滚动条
+				});
+				
+				var item2 = document.getElementById('item2mobile');
+				var item3 = document.getElementById('item3mobile');
+				document.getElementById('slider').addEventListener('slide', function(e) {
+					if (e.detail.slideNumber === 1) {
+						if (item2.querySelector('.mui-loading')) {
+							setTimeout(function() {
+								item2.querySelector('.mui-scroll').innerHTML = html2;
+							}, 500);
+						}
+					} else if (e.detail.slideNumber === 2) {
+						if (item3.querySelector('.mui-loading')) {
+							setTimeout(function() {
+								item3.querySelector('.mui-scroll').innerHTML = html3;
+							}, 500);
+						}
+					}
+				});
+				var sliderSegmentedControl = document.getElementById('sliderSegmentedControl');
+				$('.mui-input-group').on('change', 'input', function() {
+					if (this.checked) {
+						sliderSegmentedControl.className = 'mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-' + this.value;
+						//force repaint
+						sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
+					}
+				});
+			})(mui);
+
 		document.getElementById('info').addEventListener('tap',function(e) {
 			if (e.target.innerHTML.trim() == '预约咨询') {
 				document.getElementById('order').style.display = 'block';
@@ -176,7 +219,8 @@
 			mui.toast('提交成功');
 		});
 	};
-	mui.init();
+
+
 </script>
 </body>
 </html>

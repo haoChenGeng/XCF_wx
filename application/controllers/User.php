@@ -380,7 +380,7 @@ class User extends MY_Controller {
 			}
 			switch ($res ['returnCode']) {
 				case 0 :
-					$result = '验证码已发送！';
+					$result = '1';
 					break;
 				case 130001 :
 					$result = '参数为空';
