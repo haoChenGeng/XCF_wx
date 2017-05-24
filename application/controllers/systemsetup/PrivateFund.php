@@ -13,7 +13,7 @@ class PrivateFund extends MY_Controller {
 	public function fund_list($type)
 	{
 	    $fund = $this->db->where(array('type'=>$type))->get('privatefund')->row_array();
-		$this->load->view('/private/private',$fund);
+		echo json_encode($fund);
 	}
 	
 
