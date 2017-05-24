@@ -17,6 +17,12 @@ class PurchaseController extends MY_Controller {
 	
 	//申购 认购前准备
 	function Apply() {
+		if ($get['purchasetype'] == '认购'){
+			$_SESSION['fundPageOper'] = 'buy';
+		}elseif($get['purchasetype'] == '申购'){
+			$_SESSION['fundPageOper'] = 'apply';
+		}
+		$_SESSION['next_url'] = $this->base . "/jijin/Jz_fund";
 		if (!$this->logincontroller->isLogin()) {
 			redirect($this->base . "/jijin/Jz_account/register");
 			exit;

@@ -13,7 +13,7 @@
 	<section class="wrap">
 		<section class="m-item-wrap m-item-5-wrap">
 		    <div class="m-item-5">
-		        <h3 class="text-center" >开户</h3>
+		        <h3 class="text-center" >基金开户</h3>
 		    </div>
 		</section>
 		<form  name="form" method="post" action="/jijin/Jz_account/bgMsgCheck" id="login_form">      

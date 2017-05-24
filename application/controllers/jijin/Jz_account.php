@@ -20,7 +20,16 @@ class Jz_account extends MY_Controller
 		if (!empty($_SESSION['JZ_user_id'])) {
 			if ($_SESSION ['JZ_user_id'] < 0)
 			{
-				$_SESSION['next_url'] = $this->base . "/jijin/Jz_my";
+				$get = $this->input->get();
+				if (isset($get['nextUrl'])){
+					$_SESSION['next_url'] = $this->base . "/jijin/".$get['nextUrl'];
+					unset($get['nextUrl']);
+					if(!empty($get)){
+						foreach ($get as $key=>$val){
+							$_SESSION[$key] = $val;
+						}
+					}
+				}
 				redirect($this->base."/user/login");
 			}else{
 				redirect($this->base . "/jijin/Jz_fund");

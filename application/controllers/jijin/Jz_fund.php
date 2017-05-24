@@ -31,9 +31,8 @@ class Jz_fund extends MY_Controller
 			$data['pageOper'] = $_SESSION['fundPageOper'];
 			unset($_SESSION['fundPageOper']);
 		}else{
-			$data['pageOper'] = 'buy';
+			$data['pageOper'] = 'apply';
 		}
-// $data['pageOper'] = 'buy';
 		$this->load->view('jijin/buy_fund.html', $data);
 	}
 	
@@ -43,22 +42,21 @@ class Jz_fund extends MY_Controller
 		switch ($activePage){
 			case 'buy':                                                   //认购
 				$data['buy'] = $this->getFundList('pre_purchase');
-				$_SESSION['fundPageOper'] = 'buy';
 				break;
 			case 'apply':                                                 //申购
 				$data['apply'] = $this->getFundList('purchase');
-				$_SESSION['fundPageOper'] = 'apply';
 				break;
 			case 'today':
 				if (isset($_SESSION['customer_id'])){
 					$startdate = date('Ymd',time());
 					$enddate = date('Ymd',time()+864000);                  //因当天收市后下的单会归到下一天，因此结束时间加1天
 					$data['today'] = $this->getHistoryApply($startdate, $enddate);
-					$_SESSION['todayTrade'] = $data['today']['data'];
+					if(!empty($data['today']['data'])){
+						$_SESSION['todayTrade'] = $data['today']['data'];
+					}
 				}else{
 					$data['msg'] = "您还未登录，不能进行相关查询";
 				}
-				$_SESSION['fundPageOper'] = 'today';
 				break;
 			case 'history':
 				if (isset($_SESSION['JZ_user_id'])){
@@ -69,7 +67,6 @@ class Jz_fund extends MY_Controller
 				}else{
 					$data['msg'] = "您还未登录，不能进行相关查询";
 				}
-				$_SESSION['fundPageOper'] = 'history';
 				break;
 		}
 		echo json_encode($data);
@@ -193,7 +190,11 @@ class Jz_fund extends MY_Controller
 		$fund_list['risklevel'] = $fund_list['risklevel'].'('.$tmp.')';
 		$data['fundlist'] = $fund_list;
 		$data['purchasetype'] = $get['purchasetype'];
-// 		$data['json'] = $get['json'];
+		if ($get['purchasetype'] == '申购'){
+			$_SESSION['fundPageOper'] = 'apply';
+		}elseif($get['purchasetype'] == '认购'){
+			$_SESSION['fundPageOper'] = 'buy';
+		}
 		$data['base'] = $this->base;
 		$data['base'] = $this->base;
 		$this->load->view('/jijin/trade/jijinprodetail', $data);
