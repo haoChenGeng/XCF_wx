@@ -1,88 +1,90 @@
 .info-list {
-	display: flex;
+  display: flex;
 }
 
 .info-list-left {
-	width: 115px;
-	height: 130px;
-	margin: 5px 0;
-	background-color: #fbf7f4;
+  width: 115px;
+  height: 130px;
+  margin: 5px 0;
+  background-color: #fbf7f4;
 }
 
 .info-list-right {
-	flex: 1;
-	margin-left: 15px;
-	padding: 10px 0;
+  margin-left: 15px;
+  padding: 10px 0;
+  flex: 1;
 }
 
 .mui-table-view-cell {
-	// border: 1px solid #ccc;
-	border-left: 0;
-	border-right: 0;
-	margin: 10px 0;
+  margin: 10px 0;
+  border-right: 0;
+  border-left: 0;
 }
 
 .info-left-title {
-	margin: 10px 0;
-	margin-top: 30px;
-	color: #c34f4d;
-	text-align: center;
+  margin: 10px 0;
+  margin-top: 30px;
+  text-align: center;
+  color: #c34f4d;
 }
 
 .info-order {
-	width: 85px;
-	height: 35px;
-	background-color: #f14a51;
-	color: #fff;
-	border-radius: 5px;
-	text-align: center;
-	margin: 20px 15px;
+  width: 85px;
+  height: 35px;
+  margin: 20px 15px;
+  text-align: center;
+  color: #fff;
+  border-radius: 5px;
+  background-color: #f14a51;
 }
 
 .info-right-title {
-	color: #333;
-	font-size: 20px;
-
+  font-size: 20px;
+  color: #333;
 }
 
 .info-tag {
-	margin-top: 10px;
+  margin-top: 10px;
 }
 
 .info-tag > span {
-	margin: 10px 0;
-	margin-right: 4px;
-	border: 1px solid #7292bf;
-	border-radius: 5px;
-	color: #7292bf;
-	padding: 2px;
+  margin: 10px 0;
+  margin-right: 4px;
+  padding: 2px;
+  color: #7292bf;
+  border: 1px solid #7292bf;
+  border-radius: 5px;
 }
 
 .info-desc {
-	margin-top: 15px;
+  margin-top: 15px;
 }
 
 .info-desc > span {
-	font-size: 20px;
-	vertical-align: -2px;
-	color: #7292bf;
-	margin-right: 10px;
+  font-size: 20px;
+  margin-right: 10px;
+  vertical-align: -2px;
+  color: #7292bf;
 }
 
 .order-box {
-	position: absolute;
-	    z-index: 10000;
-	    top: 50%;
-	    left: 50%;
-	    display: none;
-	    overflow: hidden;
-	    width: 270px;
-	    -webkit-transition-property: -webkit-transform,opacity;
-	    transition-property: transform,opacity;
-	    -webkit-transform: translate3d(-50%,-50%,0) scale(1.185);
-	    transform: translate3d(-50%,-50%,0) scale(1.185);
-	    text-align: center;
-	    /* opacity: 0; */
-	    color: #000;
-	    border-radius: 13px;
+  position: absolute;
+  z-index: 10000;
+  top: 50%;
+  left: 50%;
+  width: 270px;
+  display: none;
+  overflow: hidden;
+  -webkit-transition-property: -webkit-transform, opacity;
+  transition-property: transform, opacity;
+  -webkit-transform: translate3d(-50%, -50%, 0) scale(1.185);
+  transform: translate3d(-50%, -50%, 0) scale(1.185);
+  text-align: center;
+  /* opacity: 0; */
+  color: #000;
+  border-radius: 13px;
+}
+
+.mui-col-pri-5 {
+	width: 20%;
 }
