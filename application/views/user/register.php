@@ -189,7 +189,7 @@
         });
         
         $('#sendSms').on('click',function(){
-            sendSms($("#tel"),$(this));
+            sendSms($("#tel"),$('#sendSms'));
         });
     });
 </script>        

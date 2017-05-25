@@ -26,7 +26,7 @@
 							  	  <i class="icon icon-phone"></i> 
 								  <label class="select-label" style="width:80%;">请选择银行
 									  <select id="pay_way" name="channelid" class="select-certificate" onchange="chooseChannel(this.options[this.options.selectedIndex])">
-                      <option value="">请选择银行</option>';
+									  		<option disabled selected style="display: none;">请选择银行</option>';
                       foreach ($payment_channel as $key => $val)
                       {
                         echo '<option value='.$val['channelid'].' data-cname='.$val['channelname'].' '. (isset($val['needProvCity']) ? 'data-needProvCity="1"':'').'>'.$val['channelname'].'</option>';
@@ -50,17 +50,17 @@
 		  			<i class="icon icon-phone"></i>
 		  			<label class="select-label" style="width: 80%;">请选择支付行<br>
 		  				<select id="payProv" name="depositprov" class="select-certificate" style="margin-top: 10px;" onchange="show(this.options[this.options.selectedIndex])">
-		  					<option value="1">请选择省份</option>
+		  					<option value="" disabled selected style="display: none;">请选择省份</option>
 		  				</select>
 	  				</label><br>
 	  				<label>
 		  				<select id="payCity" name="depositcity" class="select-certificate" style="margin: 10px 0 10px 40px;" onchange="getBankAdd(this.options[this.options.selectedIndex])">
-		  					<option value="1">请选择城市</option>
+		  					<option value="" disabled selected style="display: none;">请选择城市</option>
 		  				</select>
 	  				</label><br>
 	  				<label>
 		  				<select id="payBankAdd" name="bankname" class="select-certificate" style="margin-left: 40px;">
-		  					<option value="1">请选择银行地址</option>
+		  					<option value="" disabled selected style="display: none;">请选择银行地址</option>
 		  				</select>
 		  			</label>
 		  		</div>
@@ -170,7 +170,7 @@
           if (res.code === '0000') {
 //   console.log(res);
           var childOp = document.getElementById('payBankAdd');
-          childOp.innerHTML = '<option>请选择银行地址</option>';
+          childOp.innerHTML = '<option disabled selected style="display: none;">请选择银行地址</option>';
           var opList = document.createDocumentFragment();
           for (var i = 0; i < res.data.length; i++) {
             var op = document.createElement('option');
@@ -192,7 +192,7 @@
     function show(s) {
       var arr = s.dataset.city.split(',');
       var childOp = document.getElementById('payCity');
-      childOp.innerHTML = '<option>请选择城市</option>';
+      childOp.innerHTML = '<option disabled selected style="display: none;">请选择城市</option>';
       var opList = document.createDocumentFragment();
       for (var i = 0; i < arr.length; i++) {
         var op = document.createElement('option');

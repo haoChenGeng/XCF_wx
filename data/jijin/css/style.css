@@ -368,9 +368,9 @@ input.delegate-search {
 
 .person-info-img {
 	float: left;
-	width: 90px;
-	height: 90px;
-	margin: 5px;
+	width: 75px;
+	height: 75px;
+	margin: 10px;
 }
 
 .person-info-item {
