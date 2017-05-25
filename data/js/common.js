@@ -1,7 +1,7 @@
 /**
  * Created by Jensen on 2015/10/22.
  */
-function sendSms(inputTel,sendSmsBtn)
+function sendSms(inputTel,sendSmsBtn,type)
 {
     var str=inputTel.val();
     var regstr = inputTel.attr('data-reg');
@@ -12,7 +12,7 @@ function sendSms(inputTel,sendSmsBtn)
             message:inputTel.attr('data-error')
         });
     }else{
-        $.post("/user/send_sms", {tel:str},function(res){
+        $.post("/user/send_sms", {tel:str,type:type},function(res){
             if(res==1){
                 alert("发送成功");
                 var timer = null;
