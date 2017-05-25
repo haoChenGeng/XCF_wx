@@ -37,7 +37,8 @@
 								<li class="mui-table-view-cell">
 									<div class="mui-media-body info-list">
 										<div class="info-list-left">
-											<h4 class="info-left-title">小于4%</h4>
+											<p class="info-left-adv">业绩稳定</p>
+											<p class="info-left-title">小于4%</p>
 											<button class="info-order">
 												预约咨询
 											</button>
@@ -133,7 +134,6 @@
 	<div class="order-box" id="order" style="display: none;">
 		<div class="mui-popup-inner">
 			<div class="mui-popup-title">预约咨询</div>
-			<!-- <div class="mui-popup-text">请输入你对MUI的评语：</div> -->
 			<div class="mui-popup-input">
 				<input type="text" autofocus="" placeholder="姓名">
 				<input type="text" autofocus="" placeholder="电话">
@@ -152,25 +152,58 @@
 console.log(type);
 		
 		function getFundList(type) {
-			mui.ajax('http://localhost:8009/systemsetup/PrivateFund/fund_list',{
-				data: {
-					type: 1
-				},
+			var fund;
+			mui.ajax('http://localhost:8009/systemsetup/PrivateFund/fund_list/'+type,{
+				data: {},
 				dataType: 'json',
 				type: 'get',
 				beforeSend: function() {
 					
 				},
 				success: function(res) {
-console.log(res);
-
+console.log(res);					
+					renderList(res);
 				},
 				error: function(res) {
-					console.log(res);
+					alert('查询基金失败！');
 				}
 			});
 		}
-		getFundList();
+		getFundList(type);
+
+		function consultFund() {
+			mui.ajax('http://localhost:8009//systemsetup/OrderInfo/order_add',{
+				data: {
+					fundid: 1,
+					fundname: '新方程价值投资海外私募基金',
+					custname: '张三',
+					custphone: '13211111111'
+				},
+				dataType: 'json',
+				type: 'post',
+				success: function(res) {
+					console.log(res);
+				},
+				error: function() {
+					alert('error');
+				}
+			});
+		}
+		consultFund();
+
+
+		function renderList(res) {
+			if (!res) {
+				alert('暂无基金!');
+				var content = document.getElementById('info').querySelector('.mui-active');
+				content.querySelector('.mui-scroll').innerHTML = '暂无基金';
+			}else {
+				var oL = document.createElement('ul');
+				for (var i = 0; i < res.length; i++) {
+					res[i]
+				}
+			}
+		}
 
 		(function($) {
 				$('.mui-scroll-wrapper').scroll({
@@ -182,15 +215,12 @@ console.log(res);
 				document.getElementById('slider').addEventListener('slide', function(e) {
 					if (e.detail.slideNumber === 1) {
 						if (item2.querySelector('.mui-loading')) {
-							setTimeout(function() {
-								item2.querySelector('.mui-scroll').innerHTML = html2;
-							}, 500);
+							var fund = getFundList();
+console.log(fund);
 						}
 					} else if (e.detail.slideNumber === 2) {
 						if (item3.querySelector('.mui-loading')) {
-							setTimeout(function() {
-								item3.querySelector('.mui-scroll').innerHTML = html3;
-							}, 500);
+
 						}
 					}
 				});
