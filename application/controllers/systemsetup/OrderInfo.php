@@ -21,9 +21,9 @@ class OrderInfo extends MY_Controller {
 		);
 		$insert_res = $this->db->insert('orderinfo',$insert_data);   //写入数据库
 		if ($insert_res){
-			return array('code'=>'0000','msg'=>'私募基金预约成功');
+			return json_encode(array('code'=>'0000','msg'=>'私募基金预约成功'));
 		}else{
-			return array('code'=>'9999','msg'=>'私募基金预约失败');
+			return json_encode(array('code'=>'9999','msg'=>'私募基金预约失败'));
 		}
 	}
 	
