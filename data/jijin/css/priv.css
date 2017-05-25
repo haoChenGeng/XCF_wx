@@ -22,16 +22,22 @@
 }
 
 .info-left-title {
-  margin: 10px 0;
-  margin-top: 30px;
+  margin-top: 5px;
   text-align: center;
   color: #c34f4d;
+  font-size: 22px;
+}
+
+.info-left-adv {
+	text-align: center;
+	margin-top: 10px;
+	color: #333;
 }
 
 .info-order {
   width: 85px;
   height: 35px;
-  margin: 20px 15px;
+  margin: 15px 15px;
   text-align: center;
   color: #fff;
   border-radius: 5px;
@@ -87,4 +93,11 @@
 
 .mui-col-pri-5 {
 	width: 20%;
+}
+
+.fund-list-error {
+	text-align: center;
+	line-height: 80px;
+	color: #007aff;
+	display: block;
 }
