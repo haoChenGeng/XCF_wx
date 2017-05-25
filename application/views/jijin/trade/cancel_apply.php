@@ -122,7 +122,7 @@ Zepto(function(){
     });
     
     $('#backBtn').on('click',function(){
-        window.location.href='/jijin/Jz_my';
+        window.location.href='/jijin/Jz_fund';
     });
 });
 </script>

@@ -30,6 +30,12 @@ class Jz_my extends MY_Controller
 			$_SESSION['my_active_page'] = $activePage;
 		}
 		
+		if (isset($_SESSION['myPageOper'])){
+			$data['pageOper'] = $_SESSION['myPageOper'];
+			unset($_SESSION['myPageOper']);
+		}else{
+			$data['pageOper'] = 'fund';
+		}
 		$data['base'] = $this->base;
 		$this->load->view('jijin/my.html', $data);
 	}
