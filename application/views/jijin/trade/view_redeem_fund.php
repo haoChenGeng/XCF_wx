@@ -57,7 +57,7 @@
             <div class="item-width-wrap">
                 <span class="m2-item-t1">可用份额：</span>
                 <label>
-                    <input type="text" style="color:#333;" id="availablevol" value="<?php echo $availablevol?>"  readonly="true"/>
+                    <input type="text" style="color:#333;" id="availablevol" value="<?php echo floatval($availablevol)?>"  readonly="true"/>
                 </label>
             </div>
         </div>
@@ -100,10 +100,13 @@
             	applicationval = document.getElementById('applicationval').value,
             	availablevol = document.getElementById('availablevol').value,
                 div = document.createElement('div');
-                if (!applicationval || parseInt(applicationval, 10) > parseInt(availablevol, 10)) {
-                 alert('份额输入错误');
-                 return false;
-             	}
+                if (isNaN(availablevol)) {
+                    alert('请输入正确份额!');
+                    return false;
+                }else if (applicationval <= 0 || availablevol < applicationval) {
+                    alert('份额输入错误');
+                    return false;
+                }
                //验证全部通过回调               
                 document.title = '赎回确认';
                 document.getElementById('redeemChange').innerHTML = '赎回确认';
