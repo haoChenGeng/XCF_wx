@@ -19,7 +19,7 @@
 	 	success:function (data) {
 	 		if (data.error) {
 	 			var fundList = document.getElementById('scroll1');
-	 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register" id="errorMsg">'+data.errorMsg+'</a>';	 			
+	 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register?next_url=jz_my&myPageOper=asset" id="errorMsg">'+data.errorMsg+'</a>';	 			
 	 		}else {
 	 			document.getElementById('totalBalance').innerHTML = data.totalfundvolbalance || 0;
 	 			var listWrap = document.getElementById('buyFundList');
@@ -78,7 +78,7 @@
 						 	success:function (data) {
 						 		if (data.error) {
 						 			var fundList = document.getElementById('scroll2');
-						 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register" id="errorMsg">'+data.errorMsg+'</a>';						 			
+						 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register?next_url=jz_my&myPageOper=bonus" id="errorMsg">'+data.errorMsg+'</a>';						 			
 						 		}else {
 							 		var listWrap = document.getElementById('bonus-mod');
 			 				 		var fragment = document.createDocumentFragment();
@@ -124,7 +124,7 @@
 					 			nodeWrap.removeChild(nodeChlid[1]);
 						 		if (data.error) {
 						 			var fundList = document.getElementById('scroll3');
-						 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register" id="errorMsg">'+data.errorMsg+'</a>';						 			
+						 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register?next_url=jz_my&myPageOper=account" id="errorMsg">'+data.errorMsg+'</a>';						 			
 						 		} else {
 						 			var risk = document.getElementById('risk_result');
 						 			risk.innerHTML = '风险测试['+data.custrisk+':'+data.custriskname+']';						 			

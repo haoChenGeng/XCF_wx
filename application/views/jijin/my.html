@@ -40,17 +40,17 @@
 		</header>
 		<div id="slider" class="mui-slider">
 			<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
-				<a class="mui-control-item" href="#item1mobile">
-					<i class="bought-fund Cicon"></i>
+				<a class="mui-control-item <?php echo ($pageOper == 'asset')? 'mui-active' : '';?>" href="#item1mobile">
+					<i class="bought-fund Cicon "></i>
 					<p>我的资产</p>
 				</a>
   
-				<a class="mui-control-item" href="#item2mobile">
+				<a class="mui-control-item <?php echo ($pageOper == 'bonus')? 'mui-active' : '';?>" href="#item2mobile">
 					<i class="iconfont Cicon bonus-change">&#xe607;</i>
 					<p>修改分红</p>
 				</a>
 			
-				<a class="mui-control-item" href="#item3mobile">
+				<a class="mui-control-item <?php echo ($pageOper == 'account')? 'mui-active' : '';?>" href="#item3mobile">
 					<i class="risk-test Cicon"></i>
 					<p>账户管理</p>
 				</a>
@@ -58,7 +58,7 @@
 			<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-4"></div>
 
 			<div class="mui-slider-group" id="mWrap">
-				<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+				<div id="item1mobile" class="mui-slider-item mui-control-content <?php echo ($pageOper == 'asset')? 'mui-active' : '';?>">
 					<div id="scroll1" class="mui-scroll-wrapper">
 						<div class="mui-scroll">							
 							<ul class="mui-table-view" id="buyFundList">
@@ -70,7 +70,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="item2mobile" class="mui-slider-item mui-control-content" style="border-bottom:none;">
+				<div id="item2mobile" class="mui-slider-item mui-control-content <?php echo ($pageOper == 'bonus')? 'mui-active' : '';?>" style="border-bottom:none;">
 					<div id="scroll2" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<ul class="mui-table-view" id="bonus-mod">			
@@ -82,7 +82,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="item3mobile" class="mui-slider-item mui-control-content" style="border-bottom:none;">
+				<div id="item3mobile" class="mui-slider-item mui-control-content <?php echo ($pageOper == 'account')? 'mui-active' : '';?>" style="border-bottom:none;">
 					<div id="scroll3" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<div class="mui-loading">
