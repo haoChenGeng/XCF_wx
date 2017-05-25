@@ -22,6 +22,7 @@ class CancelApplyController extends MY_Controller {
 		if (!$this->logincontroller->isLogin()) {
 			exit;
 		}
+		$_SESSION['fundPageOper'] = 'today';
 		$get = $this->input->get();
 		if(isset($_SESSION['todayTrade'])){
 			foreach ($_SESSION['todayTrade'] as $val){
@@ -57,7 +58,6 @@ class CancelApplyController extends MY_Controller {
 		$post = $this->input->post();
 		if (!isset($_SESSION['cancel_rand_code'])){
 			$this->load->helper(array("url"));
-			$_SESSION['jz_fundPageOper'] = 'today';
 			redirect($this->base . "/jijin/Jz_fund");
 		}else{
 			$post = $this->input->post();
@@ -81,7 +81,7 @@ class CancelApplyController extends MY_Controller {
 					$data['ret_code'] = '0000';
 					if ($res['code'] == '0000'){
 						$data['ret_msg'] = '撤单成功';
-					}elseif ($res['code'] == '0023'){
+					}elseif ($res['code'] == '-409999999'){
 						$data['ret_msg'] = '交易密码错误，撤单失败';
 					}
 				}else{

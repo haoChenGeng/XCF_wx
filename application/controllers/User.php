@@ -349,9 +349,11 @@ class User extends MY_Controller {
 		if (strlen ( $post ['tel'] ) > 11) {
 			echo '手机号错误'; exit;
 		}
-		$curtomerInfo = $this->db->where('Customername',$post ['tel'])->get('p2_customer')->row_array();
-		if (!empty($curtomerInfo)){
-			echo '该手机号已注册'; exit;
+		if ($post['type'] != 1){
+			$curtomerInfo = $this->db->where('Customername',$post ['tel'])->get('p2_customer')->row_array();
+			if (!empty($curtomerInfo)){
+				echo '该手机号已注册'; exit;
+			}
 		}
 		if (isset($_SESSION['send_sms'])){
 			$timediff = time() - $_SESSION['send_sms'];
