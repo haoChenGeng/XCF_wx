@@ -29,7 +29,7 @@
 		</a>
 		<a class="mui-tab-item" href="#tabbar-with-contact" id="exit">
 			<span class="mui-icon icon-exit iconfont"></span>
-			<span class="mui-tab-label">退出基金</span>
+			<span class="mui-tab-label">返回首页</span>
 		</a>
 	</nav>
 	<div class="mui-content">
@@ -100,35 +100,6 @@
 						</div>
 					</div>
 				</div>
-<!--  				
-				<div id="item4mobile" class="mui-slider-item mui-control-content">
-					<div id="scroll4" class="mui-scroll-wrapper">
-						<div class="mui-scroll">
-							<div class="mui-loading" style="display:none;">
-								<div class="mui-spinner">
-								</div>
-							</div>
-							<div class="mui-table-view-cell">				
-								<label for="begin"><button id='begin' data-options='{"type":"date","beginYear":2014,"endYear":2016}' class="btn mui-btn">开始日期</button></label>
-								<label for="end"><button id='end' data-options='{"type":"date","beginYear":2014,"endYear":2016}' class="btn mui-btn">结束日期</button></label>
-								<button type="button" id="search" class="mui-btn mui-btn-primary" style="width:29%;">搜索</button>
-							</div>
-							<div class="mui-table-view-cell query-padding">				
-								<div class="mui-media-body clear delegate">
-									<div class="delegate-date">日期</div>
-									<div class="delegate-name">基金名称/代码</div>
-									<div class="delegate-amount">金额/份额</div>
-									<div class="delegate-oprate">操作</div>
-									<div class="delegate-more-title"></div>
-								</div>									
-							</div>	
-							<ul class="mui-table-view" id="historyTran">
-															
-							</ul>
-						</div>
-					</div>
-				</div>
--->  
 			</div>
 		</div>	
 	</div>
@@ -137,13 +108,6 @@
 <script src="<?php echo $base.'/data/jijin/js/mui.picker.min.js';?>"></script>
 <script src="<?php echo $base.'/data/jijin/js/my.js';?>"></script>
 <script type="text/javascript">
-//	document.getElementById('home').addEventListener('tap', function() {
-//		//打开首页
-//		mui.openWindow({
-//			url: '<?php echo $base;?>'+'/jijin/Jz_home', 
-//		    id:'home'
-//		});		  
-//	});
 	document.getElementById('buy_fund').addEventListener('tap', function() {
 	  	//打开基金购买页		
 	  	mui.openWindow({

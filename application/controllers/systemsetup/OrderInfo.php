@@ -1,4 +1,3 @@
-
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -13,31 +12,21 @@ class OrderInfo extends MY_Controller {
 	public function order_add()
 	{
 		$post = $this->input->post();
-		
-		$res = $this->db->set($post)->insert('orderinfo');
-		if ($res) {
-			Message ( Array (
-					'msgTy' => 'success',
-					'msgContent' => '预约成功，稍后工作人员会主动联系您，请保存手机畅通！',
-					'msgUrl' => $this->base . '/systemsetup/OrderInfo/order_add/'.$type,
-					'base' => $this->base
-					) );
-		}else {
-			$fail_message = '预约失败，系统正在返回...';
+		$insert_data = array(
+				'custname' => $post['custname'],
+				'custphone' => $post['custphone'],
+				'fundid' =>  $post['fundid'],
+				'fundname'=>  $post['fundname'],
+				'orderdate' => date("Y-m-d")
+		);
+		$insert_res = $this->db->insert('orderinfo',$insert_data);   //写入数据库
+		if ($insert_res){
+			echo json_encode(array('code'=>'0000','msg'=>'私募基金预约成功'));
+		}else{
+			echo json_encode(array('code'=>'9999','msg'=>'私募基金预约失败'));
 		}
-		
-		if (isset($fail_message)){
-			Message ( Array (
-					'msgTy' => 'fail',
-					'msgContent' => $fail_message,
-					'msgUrl' => $this->base . '/systemsetup/OrderInfo/order_add/',
-					'base' => $this->base
-					) );
-		}
-		
 	}
 	
-
 	public function index($accessCode) {
 		$data['accessCommand'] = current($_SESSION['accessList'][$accessCode]);
 		$this->Model_pageDeal->isLogin();                                                //判断是否登录

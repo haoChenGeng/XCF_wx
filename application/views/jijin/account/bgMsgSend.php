@@ -23,7 +23,7 @@
 					<label class="select-label" style="width:90%;">请选择证件类型
 						<select id="ID" name="certificatetype" class="select-certificate" >
 							<!-- <option value="0"><?php echo $certificatetype[0];?></option> -->
-							<option value="">请选择证件类型</option>
+							<option value="" disabled selected style="display: none;">请选择证件类型</option>
 							<?php
 								foreach ($certificatetype as $key => $val)
 								{
@@ -44,7 +44,7 @@
 							  <i class="icon icon-phone"></i> 
 								  <label class="select-label" style="width:80%;">请选择银行
 									  <select id="pay_way" name="channelid" class="select-certificate" onchange="chooseChannel(this.options[this.options.selectedIndex])">
-									  	<option value="">请选择银行</option>';
+									  	<option value="" disabled selected style="display: none;">请选择银行</option>';
 										  foreach ($payment_channel as $key => $val)
 					  					{
 					  						echo '<option value='.$val['channelid'].' data-cname='.$val['channelname'].' '. (isset($val['needProvCity']) ? 'data-needProvCity="1"':'').'>'.$val['channelname'].'</option>';
@@ -62,17 +62,17 @@
 		  	<i class="icon icon-phone"></i>
 		  	<label class="select-label" style="width: 80%;">请选择支付行<br>
 		  		<select id="payProv" name="depositprov" class="select-certificate" style="margin-top: 10px;" onchange="show(this.options[this.options.selectedIndex])">
-		  			<option value="1">请选择省份</option>
+		  			<option value="" disabled selected style="display: none;">请选择省份</option>
 		  		</select>
 	  		</label><br>
 	  		<label>
 		  		<select id="payCity" name="depositcity" class="select-certificate" style="margin: 10px 0 10px 40px;" onchange="getBankAdd(this.options[this.options.selectedIndex])">
-		  			<option value="1">请选择城市</option>
+		  			<option value="" disabled selected style="display: none;">请选择城市</option>
 		  		</select>
 	  		</label><br>
 	  		<label>
 		  		<select id="payBankAdd" name="bankname" class="select-certificate" style="margin-left: 40px;">
-		  			<option value="1">请选择银行地址</option>
+		  			<option value="" disabled selected style="display: none;">请选择银行地址</option>
 		  		</select>
 		  	</label>
 		  </div>
@@ -152,8 +152,6 @@
 
 
 	var provCity = <?php echo isset($provCity) ? $provCity : ''?>;
-	// var chosenBank = '';
-console.log(provCity);
 	var listOp = document.createDocumentFragment();
 	for (var i in provCity) {
 		var options = document.createElement('option');
@@ -167,7 +165,7 @@ console.log(provCity);
 	function show(s) {
 		var arr = s.dataset.city.split(',');
 		var childOp = document.getElementById('payCity');
-		childOp.innerHTML = '<option>请选择城市</option>';
+		childOp.innerHTML = '<option disabled selected style="display: none;">请选择城市</option>';
 		var opList = document.createDocumentFragment();
 		for (var i = 0; i < arr.length; i++) {
 			var op = document.createElement('option');
@@ -180,7 +178,6 @@ console.log(provCity);
 
 	var chooseChannel = function(s) {
 		console.log(s);
-		/* if (s.innerHTML === '平安银行' || s.innerHTML === '华夏银行') */
 		if (s.getAttribute("data-needProvCity")) {
 			document.getElementById('chooseCity').style.display = 'block';
 		}else {
@@ -202,9 +199,8 @@ console.log(provCity);
 			dataType: 'json',
 			success: function(res) {
 				if (res.code === '0000') {
-// console.log(res);
 				var childOp = document.getElementById('payBankAdd');
-				childOp.innerHTML = '<option>请选择银行地址</option>';
+				childOp.innerHTML = '<option disabled selected style="display: none;">请选择银行地址</option>';
 				var opList = document.createDocumentFragment();
 				for (var i = 0; i < res.data.length; i++) {
 					var op = document.createElement('option');
@@ -222,38 +218,6 @@ console.log(provCity);
 			}
 		});
 	}
-
-	/*var cer_select = document.getElementById('ID');
-	var cer_div = document.getElementById('certificateno'),
-	pay = document.getElementById('pay_way'),
-	payList = document.getElementById('pay-list');
-
-	selectLightbox(cer_select,cer_div);
-	selectLightbox(pay,payList);
-	function selectLightbox (aa,bb) {
-	    $(aa).on('click',function () {
-			this.disabled = "true";
-			M.createLightBox();
-			var list = bb.getElementsByTagName('li');
-			bb.style.display = 'block';
-			$(bb).on('click','li',function () {
-				var cer_op = document.createElement('option');
-				var op_value = this.attributes[0].value;
-				cer_op.innerHTML =this.innerHTML;
-				cer_op.setAttribute('value',op_value);
-				cer_op.setAttribute('data-cname',this.dataset.cname);
-				aa.replaceChild(cer_op,aa.childNodes[1]);
-				bb.style.display = 'none';
-				M.hideLightBox();
-				aa.disabled = false;
-				if (this.innerHTML == '平安银行' || this.innerHTML == '华夏银行') {
-					document.getElementById('chooseCity').style.display = 'block';
-				}else {
-					document.getElementById('chooseCity').style.display = 'none';					
-				}
-			});		
-		});
-	}*/
 
 	
 </script>

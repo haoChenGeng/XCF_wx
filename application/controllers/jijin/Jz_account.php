@@ -20,7 +20,16 @@ class Jz_account extends MY_Controller
 		if (!empty($_SESSION['JZ_user_id'])) {
 			if ($_SESSION ['JZ_user_id'] < 0)
 			{
-				$_SESSION['next_url'] = $this->base . "/jijin/Jz_my";
+				$get = $this->input->get();
+				if (isset($get['nextUrl'])){
+					$_SESSION['next_url'] = $this->base . "/jijin/".$get['nextUrl'];
+					unset($get['nextUrl']);
+					if(!empty($get)){
+						foreach ($get as $key=>$val){
+							$_SESSION[$key] = $val;
+						}
+					}
+				}
 				redirect($this->base."/user/login");
 			}else{
 				redirect($this->base . "/jijin/Jz_fund");
@@ -94,8 +103,7 @@ class Jz_account extends MY_Controller
 						$logData = $post;
 						$logData['certificateno'] = substr($post['certificateno'],0,6).'***'.substr($post['certificateno'],-3);
 						$logData['depositacct'] = substr($post['depositacct'],0,3).'***'.substr($post['depositacct'],-3);
-						$logData['depositacctname'] = substr($post['depositacctname'],0,3).'***';
-						file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend数据为:".serialize($logData)."\r\n调用bgMsgSend返回信息".serialize($post)."\r\n\r\n",FILE_APPEND);
+						file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend数据为:".serialize($logData)."\r\n调用bgMsgSend返回信息".serialize($res_bMS)."\r\n\r\n",FILE_APPEND);
 						if ( !isset($res_bMS['code']) || $res_bMS['code'] != '0000' )        //鉴权失败  $res_bMS['data'][0]['comtype']表示该卡已经鉴权过
 						{
 							$err_msg = '银行鉴权失败';
@@ -216,7 +224,6 @@ class Jz_account extends MY_Controller
 				$logData['tpasswd'] = $logData['lpasswd'] = '***';
 				$logData['certificateno'] = substr($logData['certificateno'],0,6).'***'.substr($logData['certificateno'],-3);
 				$logData['depositacct'] = substr($logData['depositacct'],0,3).'***'.substr($logData['depositacct'],-3);
-				$logData['depositacctname'] = substr($logData['depositacctname'],0,3).'***';
 // var_dump($post);
 				//调用金证开户接口,并记录调用金证接口数据及返回结果(去除密码部分)
 				file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用金证bgMsgCheck数据为:".serialize($logData),FILE_APPEND);

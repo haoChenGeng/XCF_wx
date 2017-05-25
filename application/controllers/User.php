@@ -226,10 +226,16 @@ class User extends MY_Controller {
 				if (empty($post['tel'])){
 					$failmessage = '用户名不能为空，系统正在返回...';
 				}else{
-					$user = $this->db->where(array('Customername' => $post['tel']))->from('customer')->count_all_results();
-					if ($user == 0) {
-						$failmessage = '不存在此用户，系统正在返回...';
+					if($post['tel'] != $_SESSION['T_name']){
+						$failmessage = '输入的手机号码和短信验证的手机号码不一致，系统正在返回...';
+						$redirect_url = "/User/updatePass/";
+					}else{
+						$user = $this->db->where(array('Customername' => $post['tel']))->from('customer')->count_all_results();
+						if ($user == 0) {
+							$failmessage = '不存在此用户，系统正在返回...';
+						}
 					}
+					unset($_SESSION['T_name']);
 				}
 			}
 			if (!isset($failmessage)){
@@ -291,36 +297,34 @@ class User extends MY_Controller {
 				$user_data = $this->db->where(array("id" => $_SESSION ['customer_id']))->get('customer')->row_array();
 				$passkey = $this->config->item("passkey");
 				$T_pwd = MD5(MD5($passkey) . substr($T_pwd, 5, 20));
-				if ($user_data['Password'] != $T_pwd) {
-					$fail_message = '账户旧密码不正确，系统正在返回...';
-					$redirect_url = "/User/updatePass/";
-				}
-				else
-				{
-					$new_login_pwd = MD5(MD5($passkey) . substr($new_login_pwd, 5, 20));
-					$arr = array(
-							'updatetime' => time(),
-							'Password' => $new_login_pwd,
-					);
-					$res = $this->db->set($arr)->where(Array('id' => $_SESSION ['customer_id']))->update('customer');
-					if ($res) {
-						Message(Array(
-								'msgTy' => 'success',
-								'msgContent' => '账户密码修改成功，系统正在返回...',
-								'msgUrl' => $this->base . "/user/logout",
-								'base' => $this->base
-								));
-						exit;
+					if ($user_data['Password'] != $T_pwd) {
+						$fail_message = '账户旧密码不正确，系统正在返回...';
+						$redirect_url = "/User/updatePass/";
 					}
 					else
 					{
-						$fail_message = '账户密码修改失败，系统正在返回...';
-						$redirect_url = "/User/home";
+						$new_login_pwd = MD5(MD5($passkey) . substr($new_login_pwd, 5, 20));
+						$arr = array(
+								'updatetime' => time(),
+								'Password' => $new_login_pwd,
+						);
+						$res = $this->db->set($arr)->where(Array('id' => $_SESSION ['customer_id']))->update('customer');
+						if ($res) {
+							Message(Array(
+									'msgTy' => 'success',
+									'msgContent' => '账户密码修改成功，系统正在返回...',
+									'msgUrl' => $this->base . "/user/logout",
+									'base' => $this->base
+									));
+							exit;
+						}
+						else
+						{
+							$fail_message = '账户密码修改失败，系统正在返回...';
+							$redirect_url = "/User/home";
+						}
 					}
-				}
-			}
-			else
-			{
+			}else{
 				$fail_message = '随机验证码错误，请重试！';
 				$redirect_url = "/member/updatePass";
 			}
@@ -336,6 +340,7 @@ class User extends MY_Controller {
 			$_SESSION['rand_code'] = $data['rand_code'];
 			$this->load->view('user/xglogin_password', $data);
 	}
+	
 	public function send_sms() { //牛鼎丰的短信发送渠道 
 		$post = $this->input->post ();
 		if (empty ( $post ['tel'] )) {
@@ -344,9 +349,11 @@ class User extends MY_Controller {
 		if (strlen ( $post ['tel'] ) > 11) {
 			echo '手机号错误'; exit;
 		}
-		$curtomerInfo = $this->db->where('Customername',$post ['tel'])->get('p2_customer')->row_array();
-		if (!empty($curtomerInfo)){
-			echo '该手机号已注册'; exit;
+		if ($post['type'] != 1){
+			$curtomerInfo = $this->db->where('Customername',$post ['tel'])->get('p2_customer')->row_array();
+			if (!empty($curtomerInfo)){
+				echo '该手机号已注册'; exit;
+			}
 		}
 		if (isset($_SESSION['send_sms'])){
 			$timediff = time() - $_SESSION['send_sms'];
@@ -456,49 +463,44 @@ class User extends MY_Controller {
 //获取最新的基金列表
 	private function getRecommendFunds(&$data){
 		$this->load->library('Fund_interface');
-		$this->fund_interface->fund_list();
- 		$select = '';
-		$arr = array('fundcode','tano','fundname','fundtype','nav','growthrate','fundincomeunit','shareclasses','risklevel','status');
-		foreach ($arr as $val){
-			$select .= $val.',';
-		}
-		$select = substr($select,0,-1);
-		$arr = array('select'=>$select);
+		$res = $this->fund_interface->fund_list();
 		$this->load->config('jz_dict');
-		$RecommendFunds = $this->db->where(array('recommend' => 1))->get('fundlist')->result_array();
-		$totalFunds = count($RecommendFunds);
-		if ($totalFunds <3){
-			$RecommendFunds = $this->db->get('fundlist')->result_array();
-			$totalFunds = count($RecommendFunds);
+		$select = array('fundcode','tano','fundname','fundtype','nav','growthrate',/* 'fundincomeunit', */'status','growth_year');
+		$candidateFunds = $this->db->select($select)->where(array('recommend >'=>0))->get('fundlist')->result_array();//->get_compiled_select('fundlist');
+		$candidateNum = count($candidateFunds);
+		$selectNum = 0;
+		if ($candidateNum <3){
+			$data['Recommend'] = $candidateFunds;
+			$selectNum = $candidateNum;
+			$candidateFunds = $this->db->select($select)->where(array('recommend =' => 0))->get('fundlist')->result_array();
+			$candidateNum = count($candidateFunds);
 		}
-		foreach ($RecommendFunds as $key => $val){
-			foreach ($val as $k => $v){
-				switch ($k){
-/* 					case 'tano':
-						$RecommendFunds[$key]['tano'] = $v.'/'.$val['taname'];
-						break; */
-					case 'fundtype':
-						$RecommendFunds[$key][$k] = $this->config->item('fundtype')[$v];
-						break;
-					case 'shareclasses':
-/* 						$RecommendFunds[$key][$k] = $this->config->item('sharetype')[$v];
-						break;
-					case 'risklevel':
-						$RecommendFunds[$key][$k] = $this->config->item('custrisk')[intval($v)];
-						break;
-					case 'status':
-						$RecommendFunds[$key][$k] = $this->config->item('fund_status')[intval($v)]['status'];
-						break; */
+		if ($candidateNum > 0){
+			$randSeq = array_rand(range(0,$candidateNum-1),3-$selectNum);
+			if (is_array($randSeq)){
+				foreach ($randSeq as $val){
+					$data['Recommend'][] = $candidateFunds[$val];
 				}
+			}else{
+				$data['Recommend'][] = $candidateFunds[$randSeq];
 			}
+
 		}
-		if ($totalFunds > 0){
-			$RecommendNum = $totalFunds >3 ? 3 : $totalFunds;
-			$randSeq = array_rand(range(0,$totalFunds-1),$RecommendNum);
-			for($i = 0; $i<$RecommendNum; $i++){
-				$data['Recommend'][$i]['fundname'] = $RecommendFunds[$randSeq[$i]]['fundname'];
-				$data['Recommend'][$i]['fundtype'] = $RecommendFunds[$randSeq[$i]]['fundtype'];
-				$data['Recommend'][$i]['growthrate'] = ($RecommendFunds[$randSeq[$i]]['growthrate']*100).'%';
+		foreach ($data['Recommend'] as $key => $val){
+			$data['Recommend'][$key]['fundtype'] = $this->config->item('fundtype')[$val['fundtype']];
+			if ($this->config->item('fund_status')[$val['status']]['pre_purchase'] == 'Y'){
+				$data['Recommend'][$key]['url'] = '/jijin/Jz_fund/showprodetail';
+				$data['Recommend'][$key]['purchasetype'] = '认购';
+			}elseif($this->config->item('fund_status')[$val['status']]['purchase'] == 'Y'){
+				$data['Recommend'][$key]['url'] = '/jijin/Jz_fund/showprodetail';
+				$data['Recommend'][$key]['purchasetype'] = '申购';
+			}
+			if ($val['fundtype'] == 2){
+				$data['Recommend'][$key]['growthrate'] = ($val['growthrate']*100).'%';
+				$data['Recommend'][$key]['growthDes'] = '七日年化收益率';
+			}else{
+				$data['Recommend'][$key]['growthDes'] = '近一年收益率';
+				$data['Recommend'][$key]['growthrate'] = $val['growth_year'].'%';
 			}
 		}
 	}

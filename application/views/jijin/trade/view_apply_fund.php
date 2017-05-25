@@ -55,7 +55,7 @@
                 <label style="float:none;margin:auto;display:block;width:90%;">
                     <span class="m2-item-t1">支付渠道：</span>
                     <select id="pay_way" name="pay_way" class="select-certificate">
-                        <option value="0"><?php echo $bank_msg[0]?></option>
+          				<option value=<?php echo key($bank_msg)?>><?php echo current($bank_msg)?></option>
                     </select>
                 </label>                       
             </div>
@@ -112,7 +112,7 @@
                 div.innerHTML = '<div class="item-width-wrap">'+
                                     '<span class="m2-item-t1">交易密码：</span>'+
                                     '<label>'+
-                                        '<input type="password" id="passwd" name="tpasswd" placeholder="请输入交易密码" />'+
+                                        '<input type="password" id="passwd" name="tpasswd" data-reg=".+"  data-error="交易密码不能为空" placeholder="请输入交易密码" />'+
                                     '</label>'+
                                 '</div>'; 
                 document.getElementById('info_form').insertBefore(div, payDiv.nextSibling);
@@ -120,13 +120,15 @@
             });
         });
         $('#commit').on('click',function () {
-        	var encrypt = new JSEncrypt();
-        	//alert($('#pass').attr('data-key'));        
-        	encrypt.setPublicKey($('#fundcode').attr('data-key'));
-        	var encrypted = encrypt.encrypt($('#passwd').val()+$('#fundcode').attr('data-code'));
-        	$('#passwd').val(encrypted);
-        	document.getElementById('pay_way').disabled = false;
-            $('#info_form').submit();
+        	M.checkForm(function () {
+            	var encrypt = new JSEncrypt();
+            	//alert($('#pass').attr('data-key'));        
+            	encrypt.setPublicKey($('#fundcode').attr('data-key'));
+            	var encrypted = encrypt.encrypt($('#passwd').val()+$('#fundcode').attr('data-code'));
+            	$('#passwd').val(encrypted);
+            	document.getElementById('pay_way').disabled = false;
+                $('#info_form').submit();
+            });
         });
         
         $('#backBtn').on('click',function(){

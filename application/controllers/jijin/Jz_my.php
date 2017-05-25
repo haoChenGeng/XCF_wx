@@ -30,6 +30,12 @@ class Jz_my extends MY_Controller
 			$_SESSION['my_active_page'] = $activePage;
 		}
 		
+		if (isset($_SESSION['myPageOper'])){
+			$data['pageOper'] = $_SESSION['myPageOper'];
+			unset($_SESSION['myPageOper']);
+		}else{
+			$data['pageOper'] = 'fund';
+		}
 		$data['base'] = $this->base;
 		$this->load->view('jijin/my.html', $data);
 	}
@@ -64,7 +70,6 @@ class Jz_my extends MY_Controller
 					//对res进行验证
 					$data['bank_info'] = $this->bank_info();
 					break;
-					
 				case 'risk_test':
 					//获取风险测试
 					$res = $this->getRiskLevel();
@@ -234,7 +239,6 @@ class Jz_my extends MY_Controller
 	
 		//调用接口
 		$res = $this->fund_interface->Trans_confirmed($_SESSION['JZ_account'], $startDate, $endDate, 25 ,700001, 1000);
-	
 		
 		$this->load->config('jz_dict');
 		for ($i=0;$i<count($res['data']);$i++) {
@@ -247,8 +251,4 @@ class Jz_my extends MY_Controller
 		echo json_encode($res);
 	}
 	
-	function nextURL(){
-		
-	}
-
 }

@@ -57,7 +57,7 @@
             <div class="item-width-wrap">
                 <span class="m2-item-t1">可用份额：</span>
                 <label>
-                    <input type="text" style="color:#333;" id="availablevol" value="<?php echo $availablevol?>"  readonly="true"/>
+                    <input type="text" style="color:#333;" id="availablevol" value="<?php echo floatval($availablevol)?>"  readonly="true"/>
                 </label>
             </div>
         </div>
@@ -95,16 +95,19 @@
     Zepto(function(){
         M.checkBoxInit();
         $('#nextBtn').on('click',function(){
-
             M.checkForm(function () {
             	var payDiv = document.getElementById('payDiv'),
-            	applicationval = document.getElementById('applicationval').value,
-            	availablevol = document.getElementById('availablevol').value,
+            	applicationval = parseFloat(document.getElementById('applicationval').value),
+            	availablevol = parseFloat(document.getElementById('availablevol').value),
                 div = document.createElement('div');
-                if (!applicationval || parseInt(applicationval, 10) > parseInt(availablevol, 10)) {
-                 alert('份额输入错误');
-                 return false;
-             	}
+                if ((applicationval-parseInt(applicationval*100)/100) > 0.0000000001) {
+                    alert('份额最小单位为0.01');
+                    return false;
+                }else if (applicationval <= 0 ||  applicationval > availablevol) {
+                    alert('输入份额错误或无效');
+                    return false;
+                }
+                document.getElementById('applicationval').value = applicationval;
                //验证全部通过回调               
                 document.title = '赎回确认';
                 document.getElementById('redeemChange').innerHTML = '赎回确认';
@@ -115,7 +118,7 @@
                 div.innerHTML = '<div class="item-width-wrap">'+
                                     '<span class="m2-item-t1">交易密码：</span>'+
                                     '<label>'+
-                                        '<input type="password" id="passwd" name="tpasswd" placeholder="请输入交易密码" />'+
+                                        '<input type="password" id="passwd" name="tpasswd" data-reg=".+"  data-error="交易密码不能为空" placeholder="请输入交易密码" />'+
                                     '</label>'+
                                 '</div>'; 
                 document.getElementById('info_form').insertBefore(div, payDiv.nextSibling);
@@ -123,12 +126,13 @@
             });
         });
         $('#commit').on('click',function () {
-        	var encrypt = new JSEncrypt();
-        	//alert($('#pass').attr('data-key'));        
-        	encrypt.setPublicKey($('#fundcode').attr('data-key'));
-        	var encrypted = encrypt.encrypt($('#passwd').val()+$('#fundcode').attr('data-code'));
-        	$('#passwd').val(encrypted);
-            $('#info_form').submit();
+        	M.checkForm(function () {
+            	var encrypt = new JSEncrypt();
+            	encrypt.setPublicKey($('#fundcode').attr('data-key'));
+            	var encrypted = encrypt.encrypt($('#passwd').val()+$('#fundcode').attr('data-code'));
+            	$('#passwd').val(encrypted);
+                $('#info_form').submit();
+        	});
         });
         
         $('#backBtn').on('click',function(){

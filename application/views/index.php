@@ -50,7 +50,7 @@
             	<a href="/jijin/Jz_account/entrance" id="fund_access" class="span01">公募</a>
             </li>
             <li class="li01 li02">
-            	<a href="/application/views/commingsoon.php" id="" class="span01">私募</a>
+            	<a href="/application/views/private/private.html" id="" class="span01">私募</a>
             </li>
             <li class="li01 li03">
             	<a href="/FindPaper" id="sign_in" class="span01">发现</a>
@@ -62,18 +62,23 @@
         <div class="text_list pos-re mt60">
           <p class="pos-ab fund-list-title">推荐基金</p>
          	<ul class="text_ul">             	
-                <?php foreach ($Recommend as $val)
-                	echo '<li class="clearfix">
-													<p class="product-bottom">'.$val['fundname'].'</p>
-													<div class="product-item1">
-														<p class="product-item-num">'.$val['growthrate'].'</p>
-														<p class="product-item-name">七日年化收益率</p>
-													</div>
-													<div class="product-item2">
-														<p class="product-item-num" style="font-size:28px;">'.$val['fundtype'].'</p>
-														<p class="product-item-name">基金类型</p>
-													</div>
-												 </li>'
+                <?php 
+                foreach ($Recommend as $val){
+                	echo '<li class="clearfix">';
+                	if(isset($val['url'])){
+                		echo '<a href="'.$val['url'].'?fundcode='.$val['fundcode'].'&purchasetype='.$val['purchasetype'].'">';
+                	}
+					echo   '<p class="product-bottom">'.$val['fundname'].'</p>
+							<div class="product-item1">
+								<p class="product-item-num">'.$val['growthrate'].'</p>
+								<p class="product-item-name">'.$val['growthDes'].'</p>
+							</div>
+							<div class="product-item2">
+								<p class="product-item-num" style="font-size:28px;">'.$val['fundtype'].'</p>
+								<p class="product-item-name">基金类型</p>
+							</div>
+						 </li>';
+                }
                 ?>
          	</ul>
         </div>
