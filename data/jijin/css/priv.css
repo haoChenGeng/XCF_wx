@@ -50,16 +50,17 @@
 }
 
 .info-tag {
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .info-tag > span {
-  margin: 10px 0;
-  margin-right: 4px;
+  margin: 3px 4px 0 0;
   padding: 2px;
   color: #7292bf;
   border: 1px solid #7292bf;
   border-radius: 5px;
+  display: inline-block;
+  line-height: 16px;
 }
 
 .info-desc {
