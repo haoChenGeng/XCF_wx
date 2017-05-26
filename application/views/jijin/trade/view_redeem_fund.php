@@ -108,7 +108,7 @@
                     return false;
                 }
                 document.getElementById('applicationval').value = applicationval;
-               //验证全部通过回调               
+               //验证全部通过回调        
                 document.title = '赎回确认';
                 document.getElementById('redeemChange').innerHTML = '赎回确认';
                 document.getElementById('nextBtn').style.display = 'none';

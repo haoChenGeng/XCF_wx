@@ -35,13 +35,13 @@ window.onload = function () {
 			 				var oLi =document.createElement('li');
 			 				oLi.setAttribute('class','mui-table-view-cell');
 			 				oLi.innerHTML = '<div class="mui-media-body clear">'+
-												'<p>名称：<span>'+data.buy.data[i].fundname+'</span></p>'+
-												'<p>代码：<span>'+data.buy.data[i].fundcode+'</span></p>'+
-												'<p>净值：<span>'+data.buy.data[i].nav+'</span></p>'+
-												'<p>类型：<span>'+data.buy.data[i].fundtypename+'</span></p>'+
-												'<a href="'+aa+'/jijin/Jz_fund/showprodetail?fundcode='+data.buy.data[i].fundcode+'&tano='+data.buy.data[i].tano+'&fundcode='+data.buy.data[i].fundcode+'&purchasetype=认购'+' " type="button" class="mui-btn mui-btn-success fund-btn-bk bonus-pad">详情</a>'+
-												'<a href="'+aa+'/jijin/PurchaseController/Apply?fundcode='+data.buy.data[i].fundcode+'&purchasetype=认购'+' " type="button" class="mui-btn mui-btn-success fund-btn-bd">认购</a>'+
-									 		'</div>';								 	
+																'<p>名称：<span>'+data.buy.data[i].fundname+'</span></p>'+
+																'<p>代码：<span>'+data.buy.data[i].fundcode+'</span></p>'+
+																'<p>净值：<span>'+data.buy.data[i].nav+'</span></p>'+
+																'<p>类型：<span>'+data.buy.data[i].fundtypename+'</span></p>'+
+																'<a href="'+aa+'/jijin/Jz_fund/showprodetail?fundcode='+data.buy.data[i].fundcode+'&tano='+data.buy.data[i].tano+'&fundcode='+data.buy.data[i].fundcode+'&purchasetype=认购'+' " type="button" class="mui-btn mui-btn-success fund-btn-bk bonus-pad">详情</a>'+
+																'<a href="'+aa+'/jijin/PurchaseController/Apply?fundcode='+data.buy.data[i].fundcode+'&purchasetype=认购'+' " type="button" class="mui-btn mui-btn-success fund-btn-bd">认购</a>'+
+													 		'</div>';								 	
 							fragment.appendChild(oLi);
 			 			}
 			 		}
@@ -82,13 +82,13 @@ window.onload = function () {
 				 				var oLi = document.createElement('li');
 				 				oLi.setAttribute('class','mui-table-view-cell');
 				 				oLi.innerHTML = '<div class="mui-media-body clear">'+
-													'<p>名称：<span>'+data.apply.data[i].fundname+'</span></p>'+
-													'<p>代码：<span>'+data.apply.data[i].fundcode+'</span></p>'+
-													'<p>净值：<span>'+data.apply.data[i].nav+'</span></p>'+
-													'<p>类型：<span>'+data.apply.data[i].fundtypename+'</span></p>'+
-													'<a href="'+aa+'/jijin/Jz_fund/showprodetail?fundcode='+data.apply.data[i].fundcode+'&tano='+data.apply.data[i].tano+'&fundcode='+data.apply.data[i].fundcode+'&purchasetype=申购'+'" type="button" class="mui-btn mui-btn-success fund-btn-bk bonus-pad">详情</a>'+
-													'<a href="'+aa+'/jijin/PurchaseController/Apply?fundcode='+data.apply.data[i].fundcode+'&purchasetype=申购'+' " type="button" class="mui-btn mui-btn-success fund-btn-bd">申购</a>'+
-										 		'</div>';
+																	'<p>名称：<span>'+data.apply.data[i].fundname+'</span></p>'+
+																	'<p>代码：<span>'+data.apply.data[i].fundcode+'</span></p>'+
+																	'<p>净值：<span>'+data.apply.data[i].nav+'</span></p>'+
+																	'<p>类型：<span>'+data.apply.data[i].fundtypename+'</span></p>'+
+																	'<a href="'+aa+'/jijin/Jz_fund/showprodetail?fundcode='+data.apply.data[i].fundcode+'&tano='+data.apply.data[i].tano+'&fundcode='+data.apply.data[i].fundcode+'&purchasetype=申购'+'" type="button" class="mui-btn mui-btn-success fund-btn-bk bonus-pad">详情</a>'+
+																	'<a href="'+aa+'/jijin/PurchaseController/Apply?fundcode='+data.apply.data[i].fundcode+'&purchasetype=申购'+' " type="button" class="mui-btn mui-btn-success fund-btn-bd">申购</a>'+
+														 		'</div>';
 								fragment.appendChild(oLi);
 				 			}
 				 		}
@@ -126,14 +126,14 @@ window.onload = function () {
 			 				oLi.setAttribute('class','mui-table-view-cell query-padding');
 			 				var paystatus = data.today.data[i].paystatus ? '/'+data.today.data[i].paystatus : '';
 			 				oLi.innerHTML = '<div class="query-link">'+
-			 									'<div class="mui-media-body clear delegate">'+
-													'<div class="delegate-name">'+data.today.data[i].fundname+'/'+data.today.data[i].fundcode+'</div>'+
-													'<div class="delegate-oprate">'+data.today.data[i].businesscode+'</div>'+
-													'<div class="delegate-amount">'+data.today.data[i].applicationamount+'/'+data.today.data[i].applicationvol+'</div>'+
-													'<div class="delegate-oprate">'+data.today.data[i].status+paystatus+'</div>'+
-													'<div class="delegate-more"><a type="button" class="cancel-order" href="'+aa+'/jijin/CancelApplyController/cancel?appsheetserialno='+data.today.data[i].appsheetserialno+'">撤销</a>'+									
-										 		'</div>'+
-										 	'</div>';
+							 									'<div class="mui-media-body clear delegate">'+
+																	'<div class="delegate-name">'+data.today.data[i].fundname+'/'+data.today.data[i].fundcode+'</div>'+
+																	'<div class="delegate-oprate">'+data.today.data[i].businesscode+'</div>'+
+																	'<div class="delegate-amount">'+data.today.data[i].applicationamount+'/'+data.today.data[i].applicationvol+'</div>'+
+																	'<div class="delegate-oprate">'+data.today.data[i].status+paystatus+'</div>'+
+																	'<div class="delegate-more"><a type="button" class="cancel-order" href="'+aa+'/jijin/CancelApplyController/cancel?appsheetserialno='+data.today.data[i].appsheetserialno+'">撤销</a>'+									
+														 		'</div>'+
+														 	'</div>';
 							if (data.today.data[i].cancelable === 0) {
 								oLi.querySelector('.delegate-more').innerHTML = "";
 							}
@@ -173,21 +173,21 @@ window.onload = function () {
 			 				var oLi = document.createElement('li');
 			 				oLi.setAttribute('class','mui-table-view-cell query-padding');
 			 				oLi.innerHTML = '<li class="mui-table-view-cell mui-collapse">'+
-				 								'<a href="###" class="query-link mui-navigate-right" style="white-space:normal;">'+
-				 									'<div class="mui-media-body clear delegate">'+
-														'<div class="delegate-date">'+data.history.data[i].operdate+'</div>'+
-														'<div class="delegate-name">'+data.history.data[i].fundname+'/'+data.history.data[i].fundcode+'</div>'+
-														'<div class="delegate-oprate">'+data.history.data[i].businesscode+'</div>'+
-														'<div class="delegate-amount">'+data.history.data[i].applicationamount+'/'+data.history.data[i].applicationvol+'</div>'+
-														'<div class="delegate-more history"></div>'+								
-											 		'</div>'+
-											 	'</a>'+
-											 	'<div class="mui-collapse-content">'+
-											 		'<p class="trade-num">申请单号：'+data.history.data[i].appsheetserialno+'</p>'+
-											 		'<p class="trade-date">交易日期/状态：'+data.history.data[i].transactiondate+'/'+data.history.data[i].status+'</p>'+
-											 		'<p class="trade-other">基金代码：</p>'+													 		
-											 	'</div>'+
-											 '</li>';
+								 								'<a href="###" class="query-link mui-navigate-right" style="white-space:normal;">'+
+								 									'<div class="mui-media-body clear delegate">'+
+																		'<div class="delegate-date">'+data.history.data[i].operdate+'</div>'+
+																		'<div class="delegate-name">'+data.history.data[i].fundname+'/'+data.history.data[i].fundcode+'</div>'+
+																		'<div class="delegate-oprate">'+data.history.data[i].businesscode+'</div>'+
+																		'<div class="delegate-amount">'+data.history.data[i].applicationamount+'/'+data.history.data[i].applicationvol+'</div>'+
+																		'<div class="delegate-more history"></div>'+								
+															 		'</div>'+
+															 	'</a>'+
+															 	'<div class="mui-collapse-content">'+
+															 		'<p class="trade-num">申请单号：'+data.history.data[i].appsheetserialno+'</p>'+
+															 		'<p class="trade-date">交易日期/状态：'+data.history.data[i].transactiondate+'/'+data.history.data[i].status+'</p>'+
+															 		'<p class="trade-other">基金代码：</p>'+													 		
+															 	'</div>'+
+															'</li>';
 							var tradeOther = oLi.querySelector('.trade-other');
 							if (data.history.data[i].paystatus) {
 								tradeOther.innerHTML = '支付状态：'+data.history.data[i].paystatus;
