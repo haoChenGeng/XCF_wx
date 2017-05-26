@@ -66,7 +66,7 @@
                 foreach ($Recommend as $val){
                 	echo '<li class="clearfix">';
                 	if(isset($val['url'])){
-                		echo '<a href="'.$val['url'].'?fundcode='.$val['fundcode'].'&purchasetype='.$val['purchasetype'].'">';
+                		echo '<a href="'.$val['url'].'?fundcode='.$val['fundcode'].'&purchasetype='.$val['purchasetype'].'&next_url=">';
                 	}
 					echo   '<p class="product-bottom">'.$val['fundname'].'</p>
 							<div class="product-item1">

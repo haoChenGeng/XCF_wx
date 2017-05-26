@@ -21,9 +21,9 @@ class Jz_account extends MY_Controller
 			if ($_SESSION ['JZ_user_id'] < 0)
 			{
 				$get = $this->input->get();
-				if (isset($get['nextUrl'])){
-					$_SESSION['next_url'] = $this->base . "/jijin/".$get['nextUrl'];
-					unset($get['nextUrl']);
+				if (isset($get['next_url'])){
+					$_SESSION['next_url'] = $this->base . "/jijin/".$get['next_url'];
+					unset($get['next_url']);
 					if(!empty($get)){
 						foreach ($get as $key=>$val){
 							$_SESSION[$key] = $val;

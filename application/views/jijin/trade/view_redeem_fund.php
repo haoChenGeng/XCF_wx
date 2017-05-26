@@ -57,7 +57,7 @@
             <div class="item-width-wrap">
                 <span class="m2-item-t1">可用份额：</span>
                 <label>
-                    <input type="text" style="color:#333;" id="availablevol" value="<?php echo $availablevol?>"  readonly="true"/>
+                    <input type="text" style="color:#333;" id="availablevol" value="<?php echo floatval($availablevol)?>"  readonly="true"/>
                 </label>
             </div>
         </div>
@@ -97,13 +97,17 @@
         $('#nextBtn').on('click',function(){
             M.checkForm(function () {
             	var payDiv = document.getElementById('payDiv'),
-            	applicationval = document.getElementById('applicationval').value,
-            	availablevol = document.getElementById('availablevol').value,
+            	applicationval = parseFloat(document.getElementById('applicationval').value),
+            	availablevol = parseFloat(document.getElementById('availablevol').value),
                 div = document.createElement('div');
-                if (!applicationval || parseInt(applicationval, 10) > parseInt(availablevol, 10)) {
-                 alert('份额输入错误');
-                 return false;
-             	}
+                if ((applicationval-parseInt(applicationval*100)/100) > 0.0000000001) {
+                    alert('份额最小单位为0.01');
+                    return false;
+                }else if (applicationval <= 0 ||  applicationval > availablevol) {
+                    alert('输入份额错误或无效');
+                    return false;
+                }
+                document.getElementById('applicationval').value = applicationval;
                //验证全部通过回调               
                 document.title = '赎回确认';
                 document.getElementById('redeemChange').innerHTML = '赎回确认';

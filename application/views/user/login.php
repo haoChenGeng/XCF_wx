@@ -14,7 +14,7 @@
 <body>
     <section class="engin wrap">
         <form  name="form" method="post" action="/user/login/<?php echo isset($type)?$type:1;?>" id="login_form" onsubmit="return false">
-            <img src="/data/img/logo-new.png" alt="小牛新财富logo" class="logo dib">
+            <a href="<?php echo $this->base;?>"><img src="/data/img/logo-new.png" alt="小牛新财富logo" class="logo dib"></a>
         	<article class="content01">
             	<label class="engin_label">
                 	<input type="text" id="account" name="T_name" class="name_input" placeholder="手机号码"/>

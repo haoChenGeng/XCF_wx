@@ -187,7 +187,7 @@
         });
         
         $('#sendSms').on('click',function(){
-            sendSms($("#tel"),$(this));
+            sendSms($("#tel"),$(this),1);
         });
     });
 </script>        

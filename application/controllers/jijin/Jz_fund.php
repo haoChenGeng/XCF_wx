@@ -196,7 +196,7 @@ class Jz_fund extends MY_Controller
 			$_SESSION['fundPageOper'] = 'buy';
 		}
 		$data['base'] = $this->base;
-		$data['base'] = $this->base;
+		$data['next_url'] = isset($get['next_url']) ? $get['next_url'] : '/jijin/Jz_fund/index/fund';
 		$this->load->view('/jijin/trade/jijinprodetail', $data);
 		
 // 		if (!is_null($get['tano']) && !is_null($get['fundid'])) {

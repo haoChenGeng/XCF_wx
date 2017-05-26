@@ -21,15 +21,14 @@ class Jz_my extends MY_Controller
 		if (!$this->logincontroller->isLogin()) {
 			$_SESSION['next_url'] = $this->base.'/jijin/Jz_my';
 		}
-		
 		$data = array();
-		
-		if ($activePage != 'fund' && $activePage != 'bank_card' && $activePage != 'risk_test' && $activePage != 'history') {
-			$activePage = isset($_SESSION['my_active_page'])? $_SESSION['my_active_page'] : 'fund';
-		} else {
-			$_SESSION['my_active_page'] = $activePage;
+		if (isset($_SESSION['myPageOper'])){
+			$data['pageOper'] = $_SESSION['myPageOper'];
+			unset($_SESSION['myPageOper']);
+		}else{
+			$data['pageOper'] = 'asset';
 		}
-		
+		unset($_SESSION['myPageOper']);
 		$data['base'] = $this->base;
 		$this->load->view('jijin/my.html', $data);
 	}
@@ -47,17 +46,14 @@ class Jz_my extends MY_Controller
 		}
 		
 		if (isset($_SESSION['JZ_user_id'])) {
-			$_SESSION['my_active_page'] =  $activePage;
 			switch ($activePage) {
 				case 'fund' :
 					$data = $this->getMyFundList();
 					break;
-					
 				case 'bonus_change':
 					$res = $this->bonusChangeAbleList();
 					$data['bonus_change'] = $res;
 					break;
-					
 				case 'bank_card':
 					//获取银行卡
 					$res = $this->bank_info();
@@ -74,7 +70,6 @@ class Jz_my extends MY_Controller
 						$data['custrisk'] = '查询失败';
 					}
 					break;
-					
 				case 'history':
 					//获取历史记录
 					$res = $this->getTodayTran();

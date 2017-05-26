@@ -116,7 +116,7 @@ window.onload = function () {
 		 			var fragment = document.createDocumentFragment();
 		 			if ( data.msg || !data.today.data) {
 		 				if (data.msg){
-		 					listWrap.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register?next_url=buy_fund&fundPageOper=today" id="errorMsg">'+data.msg+'</a>';
+		 					listWrap.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register?next_url=jz_fund&fundPageOper=today" id="errorMsg">'+data.msg+'</a>';
 		 				}else{
 		 					listWrap.innerHTML = '<p class="fund-list-error"><span>'+data.today.msg+'</span></p>';	
 		 				}
