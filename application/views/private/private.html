@@ -29,58 +29,15 @@
 				</a>
 			</div>
 			<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-pri-5"></div>
-			<div class="mui-slider-group" id="info" style="height: 800px;">
+			<div class="mui-slider-group" id="info" style="height: 600px;">
 				<div id="item1mobile" data-type="1" class="mui-slider-item mui-control-content mui-active">
 					<div id="scroll1" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
-							<!-- <ul class="mui-table-view">
-								<li class="mui-table-view-cell">
-									<div class="mui-media-body info-list">
-										<div class="info-list-left">
-											<p class="info-left-adv">业绩稳定</p>
-											<p class="info-left-title">小于4%</p>
-											<button class="info-order">
-												预约咨询
-											</button>
-										</div>
-										<div class="info-list-right">
-											<h5 class="info-right-title">中金睿投丰融4号</h5>
-											<p class="info-tag"><span>多品种</span><span>多周期</span><span>灵活策略</span><span>业绩优异</span></p>
-											<p class="info-desc"><span class="mui-icon mui-icon-chatboxes-filled"></span>业绩稳定回撤小、多品种多周期、投资策略灵活</p>
-										</div>
-									</div>
-								</li>
-								<li class="mui-table-view-cell">
-									<div class="mui-media-body info-list">
-										<div class="info-list-left">
-											<h4 class="info-left-title">小于4%</h4>
-											<button class="info-order">
-												预约咨询
-											</button>
-										</div>
-										<div class="info-list-right">
-											<h5 class="info-right-title">中金睿投丰融4号</h5>
-											<p class="info-tag"><span>多品种</span><span>多周期</span><span>灵活策略</span><span>业绩优异</span></p>
-											<p class="info-desc"><span class="mui-icon mui-icon-chatboxes-filled"></span>业绩稳定回撤小、多品种多周期、投资策略灵活</p>
-										</div>
-									</div>
-								</li>
-								<li class="mui-table-view-cell">
-									<div class="mui-media-body info-list">
-										<div class="info-list-left">
-											<h4 class="info-left-title">小于4%</h4>
-											<button class="info-order">
-												预约咨询
-											</button>
-										</div>
-										<div class="info-list-right">
-											<h5 class="info-right-title">中金睿投丰融4号</h5>
-											<p class="info-tag"><span>多品种</span><span>多周期</span><span>灵活策略</span><span>业绩优异</span></p>
-											<p class="info-desc"><span class="mui-icon mui-icon-chatboxes-filled"></span>业绩稳定回撤小、多品种多周期、投资策略灵活</p>
-										</div>
-									</div>
-								</li>
-							</ul> -->
+							<div class="mui-loading">
+								<div class="mui-spinner">
+								</div>
+							</div>
+
 						</div>
 					</div>
 				</div>
@@ -161,7 +118,7 @@
 					
 				},
 				success: function(res) {
-console.log(res);
+// console.log(res);
 					renderList(res);					
 				},
 				error: function(res) {
@@ -195,7 +152,7 @@ console.log(res);
 		}
 
 		function renderList(data) {
-console.log(data);
+// console.log(data);
 			var content = document.getElementById('info').querySelector('.mui-active');
 			if (!data) {
 				content.querySelector('.mui-scroll').innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';
@@ -205,7 +162,7 @@ console.log(data);
 				for (var i = 0; i < data.length; i++) {
 					var labelArr = data[i].label.split('、');
 					data[i].label = '<span>' + labelArr.join('</span><span>') + '</span>';
-console.log(data[i].label);
+// console.log(data[i].label);
 					var oLi = document.createElement('li');
 					oLi.classList.add('mui-table-view-cell');
 					oLi.innerHTML = '<div class="mui-media-body info-list">'+
@@ -239,7 +196,7 @@ console.log(data[i].label);
 				var item4 = document.getElementById('item4mobile');
 				var item5 = document.getElementById('item5mobile');
 				document.getElementById('slider').addEventListener('slide', function(e) {
-console.log(e.detail.slideNumber);
+// console.log(e.detail.slideNumber);
 					switch (e.detail.slideNumber + 1) {
 						case 1:
 							getFundList(1);
@@ -282,24 +239,29 @@ console.log(e.detail.slideNumber);
 	(function() {
 		var name;
 		var id;
+		var mask = mui.createMask();
 		document.getElementById('info').addEventListener('tap',function(e) {
 			if (e.target.innerHTML.trim() == '预约咨询') {
 				var a = e.target.parentNode.nextSibling.firstElementChild;
 				name = a.innerHTML;
 				id = a.dataset.id;
+				mask.show();
 				document.getElementById('order').style.display = 'block';
 			}else {
 				document.getElementById('order').style.display = 'none';
+				mask.close();
 			}
-		});		
+		});
 		document.getElementById('cancel').addEventListener('click', function(e) {
 			document.getElementById('order').style.display = 'none';
+			mask.close();
 		});
 		document.getElementById('confirm').addEventListener('tap', function(e) {
+			mask.close();
 			document.getElementById('order').style.display = 'none';
 			var custName = document.getElementById('custName').value;
 			var custPhone = document.getElementById('custPhone').value;
-console.log(id,name,custName,custPhone);
+// console.log(id,name,custName,custPhone);
 			consultFund(id,name,custName,custPhone);
 		});		
 	})();

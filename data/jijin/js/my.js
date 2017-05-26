@@ -57,12 +57,12 @@
 		 	error:function () {
 		 		alert('查询失败，请稍后重试！');
 		 	}
-		});			
+		});
 	}
 
 	var item2 = document.getElementById('item2mobile');
 	var	item3 = document.getElementById('item3mobile');
-		
+
 	function page2() {
 		mui.ajax(aa+'/jijin/Jz_my/getMyPageData/bonus_change',{
 		 	data:{},

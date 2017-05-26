@@ -9,6 +9,10 @@
   background-color: #fbf7f4;
 }
 
+#info {
+  min-height: 600px;
+}
+
 .info-list-right {
   margin-left: 15px;
   padding: 10px 0;
@@ -101,4 +105,22 @@
 	line-height: 80px;
 	color: #007aff;
 	display: block;
+}
+
+@media screen and (max-width: 320px) {
+  .info-list-left {
+    width: 105px;
+  }
+
+  .info-order {
+    margin: 15px 10px;
+  }
+
+  .info-list-right {
+    padding: 5px 0;
+  }
+
+  .info-desc {
+    margin-top: 5px;
+  }
 }
