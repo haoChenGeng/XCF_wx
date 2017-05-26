@@ -27,7 +27,7 @@
 		 			document.getElementById('totalBalance').innerHTML = data.totalfundvolbalance || 0;
 		 			var listWrap = document.getElementById('buyFundList');
 		 			var fragment = document.createDocumentFragment();
-		 				var oLi = document.createElement('li');	 			
+		 				var oLi = document.createElement('li');
 		 			if (!data.fund_list.data.length) {
 		 				oLi.setAttribute('class','mui-table-view-cell');
 		 				oLi.innerHTML = '<p class="fund-list-error"><span>未购买任何基金</span></p>';								 	
