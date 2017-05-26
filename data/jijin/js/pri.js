@@ -152,12 +152,15 @@ mui.init();
 			mask.close();
 		});
 		document.getElementById('confirm').addEventListener('tap', function(e) {
-			mask.close();
-			document.getElementById('order').style.display = 'none';
 			var custName = document.getElementById('custName').value;
 			var custPhone = document.getElementById('custPhone').value;
-// console.log(id,name,custName,custPhone);
-			consultFund(id,name,custName,custPhone);
+			if (custName === '' || custPhone === '') {
+				alert('请填写姓名和电话，谢谢！');
+			}else {
+				mask.close();
+				document.getElementById('order').style.display = 'none';
+				consultFund(id,name,custName,custPhone);				
+			}
 		});		
 	})();
 
