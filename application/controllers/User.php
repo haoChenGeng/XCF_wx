@@ -23,35 +23,52 @@ class User extends MY_Controller {
 			redirect ( $this->base . "/User/home/");
 		}
 		$post = $this->input->post ();
-		if (! empty ( $post )){
-			if (empty ( $post ['T_pwd'] )){
-				$fail_message = '密码不能为空，系统正在返回...';
-			}
-			else{
-				$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
-				$decryptData ='';
-				openssl_private_decrypt(base64_decode($post['T_pwd']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
-				$div_bit = strpos($decryptData,(string)$_SESSION['rand_code']);
-				unset($_SESSION['rand_code']);
-				if ($div_bit)	{
-					$post ['T_name'] = substr($decryptData, 0, $div_bit);
-					if (!preg_match ('/^[1][34578][0-9]{9}$/', $post ['T_name'])) {
-						$fail_message = '输入用户名不正确，系统正在返回...';
-					}
-					else {
-						$T_pwd = substr($decryptData, $div_bit+7);
-						if(empty($T_pwd))
-						{
-							$fail_message = '密码不能为空，系统正在返回...';
+		if (!empty ($post['T_pwd'])){
+			$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
+			$decryptData ='';
+			openssl_private_decrypt(base64_decode($post['T_pwd']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
+			$div_bit = strpos($decryptData,(string)$_SESSION['loginRandCode']);
+			unset($_SESSION['loginRandCode']);
+			if ($div_bit){
+				$T_name = trim(substr($decryptData, 0, $div_bit));
+				$T_pwd = substr($decryptData, $div_bit+7);
+				$user_info = $this->db->where(array('Customername'=>$T_name))->get('customer')->row_array();
+				if (!empty($user_info)){
+					if ($user_info['status'] != 0){
+						$T_pwd = MD5($T_pwd);
+						$passkey = $this->config->item ( 'passkey' );
+						$T_pwd = MD5 ( MD5 ( $passkey ) . substr ( $T_pwd, 5, 20 ) );
+						$trytimes = (time()-$user_info['logintime']>3600) ? 0 : $user_info['trytimes'];
+						if ($trytimes < 3){
+							if ($user_info ['Customername'] == $T_name && $user_info ['Password'] == $T_pwd) {
+								$_SESSION ['customer_id'] = $user_info ['id'];
+								$_SESSION ['customer_name'] = $user_info ['Customername'];
+								$this->db->set(array('trytimes'=>0,'logintime'=>time()))->where(array('id'=>$user_info['id']))->update('customer');
+								if (isset($_SESSION['next_url'])){
+									$next_url = $_SESSION['next_url'];
+									unset($_SESSION['next_url']);
+									redirect ($next_url);
+								}else{
+									redirect ($this->base . "/User/home/");
+								}
+								exit ();
+							}else{
+								$trytimes ++;
+								$this->db->set(array('trytimes'=>$trytimes,'logintime'=>time()))->where(array('id'=>$user_info['id']))->update('customer');
+								$fail_message = (3-$trytimes) > 0 ? '密码错误，还可重试'.(3-$trytimes).'次' : '密码错误，请于1小时后重试';
+							}
+						}else{
+							$fail_message = '密码错误次数超过3次，请'.intval((3600+$user_info['logintime']-time())/60).'分钟后重试';
 						}
-						else
-						{
-							$post['T_pwd'] = MD5($T_pwd);
-						}
+				
+					}else{
+						$fail_message = '该用户已被屏蔽，系统正在返回...';
 					}
 				}else{
-					$fail_message = '随机校验码错误，系统正在返回...';
+					$fail_message = '用户不存在，系统正在返回...';
 				}
+			}else{
+				$fail_message = '系统错误，正在返回...';
 			}
 			if (isset($fail_message))	{
 				Message ( Array (
@@ -61,42 +78,9 @@ class User extends MY_Controller {
 						'base' => $this->base
 						) );
 			}
-			if (! empty ( $post ) && preg_match ( '/^[1][34578][0-9]{9}$/', $post ['T_name'] )) {
-				$T_name = trim($post["T_name"]);
-				$T_pwd = $post ["T_pwd"];
-				$passkey = $this->config->item ( 'passkey' );
-				$T_pwd = MD5 ( MD5 ( $passkey ) . substr ( $T_pwd, 5, 20 ) );
-				$info = $this->db->where(array('Customername'=>$T_name))->get('customer')->row_array();	
-				if ($info ['Customername'] == $T_name && $info ['Password'] == $T_pwd) {
-					// $info = $this->model_common->db_one_str('customer', "((Username = '" . $T_name . "') or (tel = '" . $T_name . "') or (email = '" . $T_name . "')) and Password = '" . $T_pwd . "'");
-					if ($info ['status'] == 0) {
-						Message ( Array (
-								'msgTy' => 'fail',
-								'msgContent' => '该用户已被屏蔽，系统正在返回...',
-								'msgUrl' => $this->base . "/user/login/",
-								'base' => $this->base
-								) );
-					}
-					$_SESSION ['customer_id'] = $info ['id'];
-					$_SESSION ['customer_name'] = $info ['Customername'];
-					if (isset($_SESSION['next_url'])){
-						redirect ($_SESSION['next_url']);
-						unset($_SESSION['next_url']);
-					}else{
-						redirect ($this->base . "/User/home/");
-					}
-					exit ();
-				}
-			}
-			Message ( Array (
-					'msgTy' => 'fail',
-					'msgContent' => '账户名或密码不正确，系统正在返回...',
-					'msgUrl' => $this->base . "/user/login/",
-					'base' => $this->base
-					) );
 		}else {
 			$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
-			$_SESSION['rand_code'] = $data['rand_code'] = "\t".mt_rand(100000,999999);                                     //随机生成验证码
+			$_SESSION['loginRandCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);                                     //随机生成验证码
 			$this->load->view ( 'user/login', $data);
 		}
 	}
