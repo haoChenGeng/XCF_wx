@@ -91,7 +91,6 @@ mui.init();
 				var item4 = document.getElementById('item4mobile');
 				var item5 = document.getElementById('item5mobile');
 				document.getElementById('slider').addEventListener('slide', function(e) {
-// console.log(e.detail.slideNumber);
 					switch (e.detail.slideNumber + 1) {
 						case 1:
 							getFundList(1);
