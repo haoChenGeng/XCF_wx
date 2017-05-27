@@ -5,7 +5,7 @@ mui.init();
 		getFundList(type);
 
 		function getFundList(type) {
-			mui.ajax('http://localhost:8009/systemsetup/PrivateFund/fund_list/'+type,{
+			mui.ajax('/systemsetup/PrivateFund/fund_list/'+type,{
 				data: {},
 				dataType: 'json',
 				type: 'get',
@@ -23,7 +23,7 @@ mui.init();
 		}
 
 		function consultFund(id,name,cust,phone) {
-			mui.ajax('http://localhost:8009//systemsetup/OrderInfo/order_add',{
+			mui.ajax('/systemsetup/OrderInfo/order_add',{
 				data: {
 					fundid: id,
 					fundname: name,
