@@ -41,7 +41,8 @@
 				</div>
 			</section>
 			<section class="m-btn-wrap">
-				<input class="btn" type="button" id ="submit_button" value="提交"/>
+				<input class="btn  btn-fix-left" type="button" id ="submit_button" value="提交"/>
+				<input class="btn  btn-fix-right" onclick="window.location.href='/jijin/Jz_my'" type="button" value="返回"/>
 			</section>
 		</form>
 	</section>

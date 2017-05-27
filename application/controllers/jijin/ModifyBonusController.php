@@ -29,6 +29,7 @@ class ModifyBonusController extends MY_Controller {
 		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
 		$data['rand_code'] = "\t".mt_rand(100000,999999);
 		$_SESSION['bonus_rand_code'] = $data['rand_code'];
+		$_SESSION['myPageOper'] = 'bonus';
 		$data['base'] = $this->base;
 		$this->load->view('jijin/trade/view_modify_bonus',$data);
 	}
