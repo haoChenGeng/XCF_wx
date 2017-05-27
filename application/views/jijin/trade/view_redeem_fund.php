@@ -65,7 +65,7 @@
             <div class="item-width-wrap">
                 <span class="m2-item-t1">赎回份额：</span>
                 <label>
-                    <input type="number" style="color:#333;" id="applicationval" name="applicationval" data-error="赎回份额错误"  placeholder="请输入赎回份额" />
+                    <input type="number" style="color:#333;" id="applicationval" name="applicationval" data-error="赎回份额错误"  placeholder="请输入赎回份额" oninput="complete(this);" />
                 </label>
             </div>
         </div>
@@ -92,6 +92,15 @@
 <script src="/data/jijin/js/common.js"></script>
 <script src="/data/js/RSA.min.js"></script>
 <script>
+function complete(obj) {
+    var a = obj.value.toString();
+    var b = /^\./;
+    var c = b.test(a);
+    if (c) {
+        obj.value = '0' + a;
+    }
+}
+
     Zepto(function(){
         M.checkBoxInit();
         $('#nextBtn').on('click',function(){
@@ -108,7 +117,7 @@
                     return false;
                 }
                 document.getElementById('applicationval').value = applicationval;
-               //验证全部通过回调               
+               //验证全部通过回调        
                 document.title = '赎回确认';
                 document.getElementById('redeemChange').innerHTML = '赎回确认';
                 document.getElementById('nextBtn').style.display = 'none';
