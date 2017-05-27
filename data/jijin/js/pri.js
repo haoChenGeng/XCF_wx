@@ -47,7 +47,6 @@ mui.init();
 		}
 
 		function renderList(data) {
-// console.log(data);
 			var content = document.getElementById('info').querySelector('.mui-active');
 			if (!data) {
 				content.querySelector('.mui-scroll').innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';
@@ -57,7 +56,6 @@ mui.init();
 				for (var i = 0; i < data.length; i++) {
 					var labelArr = data[i].label.split('、');
 					data[i].label = '<span>' + labelArr.join('</span><span>') + '</span>';
-// console.log(data[i].label);
 					var oLi = document.createElement('li');
 					oLi.classList.add('mui-table-view-cell');
 					oLi.innerHTML = '<div class="mui-media-body info-list">'+
@@ -74,7 +72,7 @@ mui.init();
 															'<p class="info-desc"><span class="mui-icon mui-icon-chatboxes-filled"></span>'+data[i].evaluate+'</p>'+
 														'</div>'+
 													'</div>';
-					oL.appendChild(oLi);					
+					oL.appendChild(oLi);
 				}
 				content.querySelector('.mui-scroll').innerHTML = '';
 				content.querySelector('.mui-scroll').appendChild(oL);
@@ -153,8 +151,11 @@ mui.init();
 		document.getElementById('confirm').addEventListener('tap', function(e) {
 			var custName = document.getElementById('custName').value;
 			var custPhone = document.getElementById('custPhone').value;
+			var validate = /^[1][34578][0-9]{9}$/;
 			if (custName === '' || custPhone === '') {
 				alert('请填写姓名和电话，谢谢！');
+			}else if (!validate.test(custPhone)) {
+				alert('请正确填写电话!');
 			}else {
 				mask.close();
 				document.getElementById('order').style.display = 'none';
