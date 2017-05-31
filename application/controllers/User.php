@@ -99,6 +99,8 @@ class User extends MY_Controller {
 		if (! empty ( $post )) {
 			if (empty ( $post['sms_code'] ) || strtolower ( $_SESSION ['telcode'] ) != strtolower ( $post['sms_code'] )) {
 				$fail_message = '验证码不正确，系统正在返回...';
+			}else{
+				$this->db->set(array('times'=>'times-1'))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
 			}
 			if (!isset($fail_message) && empty ( $post ['pwd'] )){
 				$fail_message = '密码不能为空，系统正在返回...';
@@ -207,6 +209,7 @@ class User extends MY_Controller {
 			if (empty ( $post['sms_code'] ) || strtolower ( $_SESSION ['telcode'] ) != strtolower ( $post['sms_code'] )) {
 				$failmessage = '验证码不正确，系统正在返回...';
 			}else{
+				$this->db->set(array('times'=>'times-1'))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
 				if (empty($post['tel'])){
 					$failmessage = '用户名不能为空，系统正在返回...';
 				}else{
@@ -333,10 +336,14 @@ class User extends MY_Controller {
 		if (strlen ( $post ['tel'] ) > 11) {
 			echo '手机号错误'; exit;
 		}
+		$curtomerInfo = $this->db->where('Customername',$post ['tel'])->get('p2_customer')->row_array();
 		if ($post['type'] != 1){
-			$curtomerInfo = $this->db->where('Customername',$post ['tel'])->get('p2_customer')->row_array();
 			if (!empty($curtomerInfo)){
 				echo '该手机号已注册'; exit;
+			}
+		}else{
+			if (empty($curtomerInfo)){
+				echo '该用户不存在'; exit;
 			}
 		}
 		if (isset($_SESSION['send_sms'])){
@@ -344,11 +351,23 @@ class User extends MY_Controller {
 			if ($timediff < 60){
 				echo '短信验证码已经发送,如未收到请在'.(60 - $timediff).'秒后重试';
 				exit;
-			}else{
-				$_SESSION['send_sms'] = time();
 			}
+		}
+		$_SESSION['send_sms'] = time();
+		$sendSms = $this->db->where(array('dealitem'=>'sendSms'))->get('p2_dealitems')->row_array();
+		if (empty($sendSms)){
+			$this->db->set(array('dealitem'=>'sendSms','updatetime'=>time(),'times'=>1))->insert('p2_dealitems');
 		}else{
-			$_SESSION['send_sms'] = time();
+			if ((time()-$sendSms['updatetime'])> 3600){
+				$this->db->set(array('updatetime'=>time(),'times'=>1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
+			}else{
+				if ($sendSms['times'] > 300){
+					echo '短信验证码发送失败，请稍后重试';
+					exit;
+				}else{
+					$this->db->set(array('times'=>$sendSms['times']+1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
+				}
+			}
 		}
 		if (ISTESTING) {
 			$_SESSION ['telcode'] = $telcode = '1234';
