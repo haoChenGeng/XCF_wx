@@ -128,9 +128,9 @@ class Jz_account extends MY_Controller
 							'depositacctname' => $post['depositacctname'],                       //银行帐户名
 							'depositacct' => $post['depositacct'],                               //银行卡号
 							'mobileno' => $post['mobiletelno'],                                  //银行预留电话
-							'bankname' => $post['bankname'],
-							'depositprov' => $post['depositprov'],
-							'depositcity' => $post['depositcity'],
+							'bankname' => isset($post['bankname']) ? $post['bankname'] :'--',
+							'depositprov' => isset($post['depositprov']) ? $post['depositprov'] :'--',
+							'depositcity' => isset($post['depositcity']) ? $post['depositcity'] :'--',
 					);
 					$this->load_bgMsgCheck();
 				}
@@ -229,7 +229,7 @@ class Jz_account extends MY_Controller
 				file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用金证bgMsgCheck数据为:".serialize($logData),FILE_APPEND);
 				$res_bMC = $this->fund_interface->bgMsgCheck($registerData);
 				file_put_contents('log/user/register'.$this->logfile_suffix,"\r\n调用bgMsgCheck接口返回数据为：".serialize($res_bMC)."\r\n\r\n",FILE_APPEND);
-				if (isset($res_bMC['code']) && isset($res_bMC['code'])== '0000')        //判断调用金证接口开户是否成功    isset($res_bMC['code']) && $res_bMC['code'] == '0000'
+				if (isset($res_bMC['code']) && $res_bMC['code'] == '0000')        //判断调用金证接口开户是否成功    isset($res_bMC['code']) && $res_bMC['code'] == '0000'
 				{
 					$_SESSION['JZ_user_id'] = 1;
 					file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."用户基金开户成功\r\n\r\n",FILE_APPEND);
