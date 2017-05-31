@@ -227,24 +227,21 @@ class MenuSetting extends MY_Controller {
 				'items'=> $this->config->item('awesome'));
 		$data['forms'][] = array('type'=>'select', 'description'=>'权限控制', 'required'=>1, 'name'=>'authority', 'val'=>0,
 				'items'=> array(array('val'=>1, 'name'=>'是'),array('val'=>0, 'name'=>'否')));
-		$data['cascade_num'] = $this->Model_pageDeal->getMenuSelectList($data,0);
-		$data['forms'][] = array('type'=>'cascade','description'=>'上级菜单', 'num'=>$data['cascade_num'], 'required'=>1);
+		
+		$menuDatas = $this->db->where(array('type'=>1))->get($data['tableName'])->result_array();
+		$maxDepth = $this->Model_pageDeal->getSubData($menuDatas, array('relateKey'=>'id','parentKey'=>'preMenu','desciptKey'=>'description'),$data['cascade_preMenu']);
+		$data['cascade']['preMenu'] = json_encode($data['cascade_preMenu']);
+		$data['forms'][] = array('type'=>'cascade','description'=>'上级菜单', 'name'=>'preMenu', 'num'=>$maxDepth,'cascadeItems'=>array(0),'default'=>array(0),'required'=>1);
 		$_SESSION[$data['Model'].'_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);
 	}
 	
 	private function getOperAddData(&$input,&$data){                              //通过函数获取增加记录时需要输入的字段
 		$arr =array('description' => $input['description'],
-					'command' => $input['command'],
-					'type' => $input['type'],
-					'iconType' => 'fa-'.$input['iconType'],
+				'command' => $input['command'],
+				'type' => $input['type'],
+				'iconType' => 'fa-'.$input['iconType'],
+				'preMenu' =>$input['preMenu'],
 		);
-		for ( $i=6; $i>0; $i--){
-			$key = 'cascade'.$i;
-			if (!empty($input[$key])){
-				$arr['preMenu'] = $input[$key];
-				break;
-			}
-		}
 		$menu_data = $this->db->get('menu')->result_array();
 		$menu_data = setkey($menu_data, 'id');
 		$arr['name'] = $this->getMenuName($menu_data,$arr);       //设置菜单名称
@@ -325,6 +322,7 @@ class MenuSetting extends MY_Controller {
 	//获取oper_edit的页面数据
 	private function getOperEditPage(&$input,&$data){
 		$data['heading_title'] = $data['text_form'] ='修改菜单';
+
 		$menu = $this->db->where(array('id'=>$input['editItem']))->get('menu')->row_array();
 		$data['forms'][] = array('type'=>'normal', 'description'=>'ID', 'content'=> 'type="text" name="id" value="'.$menu['id'].'" readonly=true');
 		$data['forms'][] = array('type'=>'normal', 'description'=>'菜单名称', 'required'=>1, 'content'=> 'type="text" name="name" value="'.$menu['name'].'" readonly=true');
@@ -336,10 +334,25 @@ class MenuSetting extends MY_Controller {
 		$data['forms'][] = array('type'=>'select', 'description'=>'图标', 'required'=>1, 'name'=>'iconType', 'val'=>str_replace('fa-', '', $menu['iconType']),
 				'items'=> $this->config->item('awesome'));
 		$authority = $menu['authVal'] == 0 ? 0 : 1;
+		
 		$data['forms'][] = array('type'=>'select', 'description'=>'权限控制', 'required'=>1, 'name'=>'authority', 'val'=>$authority,
 				'items'=> array(array('val'=>1, 'name'=>'是'),array('val'=>0, 'name'=>'否')));
-		$data['cascade_num'] = $this->Model_pageDeal->getMenuSelectList($data,0);
-		$data['forms'][] = array('type'=>'cascade','description'=>'上级菜单', 'num'=>$data['cascade_num'], 'required'=>1);
+		$menuDatas = $this->db->where(array('type'=>1))->get($data['tableName'])->result_array();
+		$menuDatas = setkey($menuDatas, 'id');
+		$maxDepth = $this->Model_pageDeal->getSubData($menuDatas, array('relateKey'=>'id','parentKey'=>'preMenu','desciptKey'=>'description'),$data['cascade_preMenu']);
+		if (isset($menuDatas[$input['editItem']])){
+			$cascadeItems = $default = array($menu['preMenu']);
+		}else{
+			$cascadeItems = $default = array();
+		}
+		$tmpMenu = &$menu;
+		while (isset($menuDatas[$tmpMenu['preMenu']])){
+			array_unshift($cascadeItems,$menuDatas[$tmpMenu['preMenu']]['preMenu']);
+			array_unshift($default,$tmpMenu['preMenu']);
+			$tmpMenu = &$menuDatas[$tmpMenu['preMenu']];
+		};
+		$data['cascade']['preMenu'] = json_encode($data['cascade_preMenu']);
+		$data['forms'][] = array('type'=>'cascade','description'=>'上级菜单', 'name'=>'preMenu', 'num'=>$maxDepth,'cascadeItems'=>$cascadeItems,'default'=>$default,'required'=>1);
 		$_SESSION[$data['Model'].'_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);
 	}
 	
@@ -375,14 +388,8 @@ class MenuSetting extends MY_Controller {
 					'command' => $input['command'],
 					'type' => $input['type'],
 					'iconType' => 'fa-'.$input['iconType'],
+					'preMenu' =>$input['preMenu'],
 		);
-		for ( $i=6; $i>0; $i--){
-			$key = 'cascade'.$i;
-			if (isset($input[$key]) && $input[$key] !== ''){
-				$arr['preMenu'] = $input[$key];
-				break;
-			}
-		}
 		$menu_data = $this->db->get('menu')->result_array();
 		$menu_data = setkey($menu_data, 'id');
 		if (isset($arr['preMenu']) && $arr['preMenu']!=$menu_data[$input['id']]['preMenu']){          //如果preMenu发生改变，修改菜单名称
