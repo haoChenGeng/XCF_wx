@@ -353,7 +353,6 @@ class User extends MY_Controller {
 				exit;
 			}
 		}
-		$_SESSION['send_sms'] = time();
 		$sendSms = $this->db->where(array('dealitem'=>'sendSms'))->get('p2_dealitems')->row_array();
 		if (empty($sendSms)){
 			$this->db->set(array('dealitem'=>'sendSms','updatetime'=>time(),'times'=>1))->insert('p2_dealitems');
@@ -377,61 +376,13 @@ class User extends MY_Controller {
 			$_SESSION ['T_name'] = $post ['tel'];
 			$content = "您的验证码是:" . $telcode;
 			$res2 = $this->NDFsendSms ( $post ['tel'], $content );
-			if($res2===false){
-				$res ['returnCode']=999999;
-			}
-			else{
-				$res = json_decode ( $res2, TRUE );
-			}
-			switch ($res ['returnCode']) {
-				case 0 :
-					$result = '验证码已发送！';
-					break;
-				case 130001 :
-					$result = '参数为空';
-					break;
-				case 130002 :
-					$result = '手机号码格式错误';
-					break;
-				case 130003 :
-					$result = '签名错误';
-					break;
-				case 130004 :
-					$result = '短信服务器内部错误';
-					break;
-				case 130005 :
-					$result = '找不到业务的信息';
-					break;
-				case 130006 :
-					$result = '业务下找不到模块的信息';
-					break;
-				case 130011 :
-					$result = '验证码验证失败';
-					break;
-				case 130012 :
-					$result = '验证码已过期';
-					break;
-				case 130013 :
-					$result = '错误次数超过3次';
-					break;
-				case 130021 :
-					$result = '实际号码个数超过100';
-					break;
-				case 130022 :
-					$result = '短信发送失败';
-					break;
-				case 130023 :
-					$result = '请设置短信模板或消息模板';
-					break;
-				case 130031 :
-					$result = '推送消息失败';
-					break;
-				case 999999 :  //网络连接不上自定义代码,前端显示给用户或运维同事
-					$result = '网络超时或短信系统没反应';
-					break;
-				default :
-					$result = '';
-					break;
+			$res = json_decode ( $res2, TRUE );
+			file_put_contents('log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证码,返回数据:".serialize($res2)."\r\n\r\n",FILE_APPEND);
+			if (isset($res['returnCode']) && $res['returnCode'] == 0){
+				$result = '验证码已发送！';
+				$_SESSION['send_sms'] = time();
+			}else{
+				$result = '验证码发送失败';
 			}
 			echo $result;
 		}

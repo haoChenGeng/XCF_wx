@@ -13,28 +13,27 @@ function sendSms(inputTel,sendSmsBtn,type)
         });
     }else{
         $.post("/user/send_sms", {tel:str,type:type},function(res){
-            if(res==1){
-                alert("发送成功");
+            M.alert({
+                title:'提示',
+                message:res==null||res==''||res==undefined?'发送失败':res
+            });
+            if( res == '验证码已发送！'){
+//                alert("发送成功");
                 var timer = null;
                 var times = 60;
-                var oldStr = sendSmsBtn.val();
-                sendSmsBtn.val('倒计时 '+times+' 秒');
+                var oldStr = sendSmsBtn.html();
+                sendSmsBtn.html('倒计时 '+times+' 秒');
                 sendSmsBtn.attr('disabled','disabled').addClass('disabled');
                 timer = setInterval(function(){
                     if(times==0){
                         clearInterval(timer);
-                        sendSmsBtn.val(oldStr);
+                        sendSmsBtn.html(oldStr);
                         sendSmsBtn.removeAttr('disabled').removeClass('disabled');
                     }else{
                         times--;
-                        sendSmsBtn.val('倒计时 '+times+' 秒');
+                        sendSmsBtn.html('倒计时 '+times+' 秒');
                     }
                 },1000);
-            }else{
-                M.alert({
-                    title:'提示',
-                    message:res==null||res==''||res==undefined?'发送失败':res
-                });
             }
         })
     }
