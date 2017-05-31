@@ -100,12 +100,14 @@ class Jz_fund extends MY_Controller
 	private function getHistoryApply($startDate = '',$endDate = '', $type = 0) {
 		//调用接口
 		$fund_list = $this->fund_interface->Trans_applied($startDate, $endDate);
-		foreach ($fund_list['data'] as $key=>$val){
-			if (floatval($val['applicationamount']) == 0){
-				$fund_list['data'][$key]['applicationamount'] = '--';
-			}
-			if (floatval($val['applicationvol']) == 0){
-				$fund_list['data'][$key]['applicationvol'] = '--';
+		if(isset($fund_list['data'])){
+			foreach ($fund_list['data'] as $key=>$val){
+				if (floatval($val['applicationamount']) == 0){
+					$fund_list['data'][$key]['applicationamount'] = '--';
+				}
+				if (floatval($val['applicationvol']) == 0){
+					$fund_list['data'][$key]['applicationvol'] = '--';
+				}
 			}
 		}
 		if (isset($_SESSION['customer_name'])){

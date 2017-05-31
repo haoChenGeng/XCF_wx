@@ -49,6 +49,7 @@
 
 	function comm_curl($url, $arr=array() , $header=array())
 	{
+		set_time_limit(60);
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,30);
