@@ -29,14 +29,37 @@
 							switch ($val['type']) {
 								case 'cascade':
 									$width = ((79-$val['num'])/$val['num']).'%';
-									echo '<div class="form-group required">
-        									<div class="row" id="selectCx">
-        										<label class="col-sm-2 control-label" style="margin-left:10px;">'.$val['description'].'</label>
-													<div><select class="cascade1 col-sm-2" name="cascade1" value="1" style="height:35px;width:'.$width.';margin-left:15px;border-radius:3px;"></select>';
-									for ( $i=2; $i<=$val['num']; $i++){
-										echo '<select class="cascade'.$i.' col-sm-2" name="cascade'.$i.'" style="height:35px;width:'.$width.';margin-left:1%;border-radius:3px;"></select>';
+									for ($i = 0; $i<$val['num']; $i++){
+										if (!isset($val['default'][$i+1])){
+											$defaultVal = $val['default'][$i];
+											break;
+										}
 									}
-									echo '</div></div></div>';
+// 									echo '<input type="hidden" id="'.$val['name'].'" name="'.$val['name'].'" value="'.$defaultVal.'"  />';
+									echo '<div class="form-group">
+      										<input type="hidden" id="'.$val['name'].'" name="'.$val['name'].'" value="'.$defaultVal.'"  />
+        									<div class="row">
+        										<label class="col-sm-2 control-label" style="margin-left:10px;">'.$val['description'].'</label>
+												<div'.' name="'.$val['name'].'">';
+									$cascadeVar = 'cascade_'.$val['name'];
+									$cascadeVar = &$$cascadeVar;
+									for ($i = 0; $i<$val['num']; $i++){
+										$marginLeft = ($i == 0) ? ';margin-left:0.75%' : ';margin-left:1.6%';
+										echo '<select class="cascadeClass col-sm-2" style="height:35px;width:'.$width.$marginLeft.';border-radius:3px;">';
+										if (isset($val['cascadeItems'][$i])){
+											if (isset($cascadeVar[$val['cascadeItems'][$i]])){
+												foreach ($cascadeVar[$val['cascadeItems'][$i]] as $k=>$v){
+													echo '<option value="'.$k.'"';
+													if (isset($val['default'][$i]) && $k == $val['default'][$i]){
+														echo ' selected="selected"';
+													}
+													echo '>'.$v."</option>\r\n";
+												}
+											}
+										}
+										echo '</select>';
+									}
+									echo "</div></div></div>\r\n";
 									break;
 								case 'select' :
 									echo '<div class="form-group';
@@ -53,7 +76,7 @@
 										}
 										echo '>'.$item['name'].'</option>';
 									}
-									echo '</select></div></div>';
+									echo "</select></div></div>\r\n";
 									break;
 								case 'tree' :
 									echo '<div class="form-group';
@@ -65,7 +88,7 @@
 									$this->load->helper( array("webpagtools"));
 									echo '<ul id="tree" style="margin-left:-25px;margin-top:7px;margin-bottom:-28px;border-radius:3px;">';
 									echo getTreeHtml($val['content'],$selected);
-									echo '</ul></div></div>';
+									echo "</ul></div></div>\r\n";
 									break;
 								default :
 									echo '<div class="form-group';
@@ -78,7 +101,7 @@
 									if (isset($val['error'])){
 										echo '<div class="text-danger">'.$val['error'].'</div>';
 									}
-									echo '</div></div>';
+									echo "</div></div>\r\n";
 									break;
 							}
 						}
@@ -98,25 +121,35 @@
 </div>
 
 <?php 
-if (isset($cascade_select)){
-	echo '<script src="/data/javascript/jquery/jquery.cxselect.js"></script>';
-	echo '<script type="text/javascript">';
-	echo '
-		var deptsData = $.parseJSON($("#cascade_select").val()).menu;
-		$("#selectCx").cxSelect({
-			selects: ["cascade1"';
-	for ($i=2; $i<=$cascade_num; $i++){
-		echo ',"cascade'.$i.'"';
+
+
+if (isset($cascade)){
+	echo "<script type='text/javascript'>\r\nvar subDatas = {};\r\n";
+	foreach ($cascade as $key => $val){
+		echo "subDatas['".$key."'] = $.parseJSON('".$val."');\r\n";
 	}
-	echo	'],
-    		jsonName: "name",
-		  	jsonValue: "val",
-		 	jsonSub: "menu",
-		 	data: deptsData,
-			// emptyStyle: "hidden"
- 		 });';
+	echo "$('.cascadeClass').change(function(){
+			cascadeName = $(this).parent().attr('name');
+			var itemKey = '#'+cascadeName;
+			$(itemKey).attr('value',$(this).val());
+			var nextSub = $(this).next();
+			while (nextSub.attr('class') == $(this).attr('class')){
+				nextSub.html('');
+				nextSub = nextSub.next();
+			}
+			nextSub = $(this).next();
+			var allSubItems = subDatas[cascadeName];
+      		var selectHtml = $('option[value='+$(this).val()+']',this).html();
+			if (allSubItems[$(this).val()] && selectHtml !=''){
+				parentItem = allSubItems[$(this).val()];
+				for(var key in parentItem){
+					var selected = (parentItem[key] == '') ? 'selected=\"selected\"' :\"\";
+					nextSub.append('<option value =\"' + key +'\"'  + selected +'>'+parentItem[key]+'</option>');
+				}
+			}
+	});";
 	echo '</script>';
-};
+}
 
 if (isset($public_key)){
 	echo '<script src="/data/javascript/RSA.min.js"></script>

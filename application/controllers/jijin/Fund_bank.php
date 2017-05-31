@@ -13,6 +13,7 @@ class Fund_bank extends MY_Controller
         $this->load->helper(array("output","comfunction"));       //"page"  "log"   "func",
         $this->load->library(array('Fund_interface','Logincontroller'));
         $this->logfile_suffix = '('.date('Y-m',time()).').txt';
+        $_SESSION['myPageOper'] = 'account';
     }
 
     //赠加银行卡

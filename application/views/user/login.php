@@ -17,7 +17,7 @@
             <a href="<?php echo $this->base;?>"><img src="/data/img/logo-new.png" alt="小牛新财富logo" class="logo dib"></a>
         	<article class="content01">
             	<label class="engin_label">
-                	<input type="text" id="account" name="T_name" class="name_input" placeholder="手机号码"/>
+                	<input type="text" id="account" name="T_name" class="name_input" data-reg="^[1][34578][0-9]{9}$" data-error="手机号错误" placeholder="手机号码"/>
                 </label>
                 <label class="engin_label engin_label2">
                 	<input type="password" id="pass" class="name_input" name="T_pwd"  data-reg=".+"  data-error="密码不能为空" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="密码"/>

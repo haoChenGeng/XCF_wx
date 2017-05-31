@@ -15,6 +15,7 @@ class RedeemFundController extends MY_Controller {
 		$this->load->library(array('Fund_interface','Logincontroller'));
 		$this->load->model(array("Model_db"));
 		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
+		$_SESSION['myPageOper'] = 'asset';
 	}
 	
 	//赎回

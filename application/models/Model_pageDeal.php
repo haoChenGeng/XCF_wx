@@ -322,4 +322,23 @@ class Model_pageDeal extends CI_Model {
 		$this->load->view($operdefaultpage,$data);
 		$this->load->view('common/footer');
 	}
+	
+	public function getSubData($orginaldata,$keyDes,&$subDatas){
+		$orginaldata = setkey($orginaldata, $keyDes['relateKey']);
+		$parentKey = $keyDes['parentKey'];
+		$desciptKey = $keyDes['desciptKey'];
+		$subDatas = array();
+		foreach ($orginaldata as $key=>$val){
+			$subDatas[$val[$parentKey]][$key] =  $val[$desciptKey];
+		}
+		$maxDepth = 1;
+		foreach ($subDatas as $key=>$val){
+			$subDatas[$key][$key] = '';
+			for ($i=1;isset($orginaldata[$key]);$i++, $key = $orginaldata[$key][$parentKey]);
+			if ($i>$maxDepth){
+				$maxDepth = $i;
+			}
+		}
+		return $maxDepth;
+	}
 }

@@ -11,6 +11,7 @@ class Risk_assessment extends MY_Controller {
 	{
 		parent::__construct();
         $this->load->library('Fund_interface');
+        $_SESSION['myPageOper'] = 'account';
 	}
 	
 	//测试题目

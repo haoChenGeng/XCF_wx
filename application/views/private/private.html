@@ -29,62 +29,19 @@
 				</a>
 			</div>
 			<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-pri-5"></div>
-			<div class="mui-slider-group" id="info" style="height: 800px;">
-				<div id="item1mobile" data-type="1" class="mui-slider-item mui-control-content mui-active">
+			<div class="mui-slider-group" id="info" style="height: 600px;">
+				<div id="item1mobile" data-type="1" style="border-bottom: 0;" class="mui-slider-item mui-control-content mui-active">
 					<div id="scroll1" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
-							<!-- <ul class="mui-table-view">
-								<li class="mui-table-view-cell">
-									<div class="mui-media-body info-list">
-										<div class="info-list-left">
-											<p class="info-left-adv">业绩稳定</p>
-											<p class="info-left-title">小于4%</p>
-											<button class="info-order">
-												预约咨询
-											</button>
-										</div>
-										<div class="info-list-right">
-											<h5 class="info-right-title">中金睿投丰融4号</h5>
-											<p class="info-tag"><span>多品种</span><span>多周期</span><span>灵活策略</span><span>业绩优异</span></p>
-											<p class="info-desc"><span class="mui-icon mui-icon-chatboxes-filled"></span>业绩稳定回撤小、多品种多周期、投资策略灵活</p>
-										</div>
-									</div>
-								</li>
-								<li class="mui-table-view-cell">
-									<div class="mui-media-body info-list">
-										<div class="info-list-left">
-											<h4 class="info-left-title">小于4%</h4>
-											<button class="info-order">
-												预约咨询
-											</button>
-										</div>
-										<div class="info-list-right">
-											<h5 class="info-right-title">中金睿投丰融4号</h5>
-											<p class="info-tag"><span>多品种</span><span>多周期</span><span>灵活策略</span><span>业绩优异</span></p>
-											<p class="info-desc"><span class="mui-icon mui-icon-chatboxes-filled"></span>业绩稳定回撤小、多品种多周期、投资策略灵活</p>
-										</div>
-									</div>
-								</li>
-								<li class="mui-table-view-cell">
-									<div class="mui-media-body info-list">
-										<div class="info-list-left">
-											<h4 class="info-left-title">小于4%</h4>
-											<button class="info-order">
-												预约咨询
-											</button>
-										</div>
-										<div class="info-list-right">
-											<h5 class="info-right-title">中金睿投丰融4号</h5>
-											<p class="info-tag"><span>多品种</span><span>多周期</span><span>灵活策略</span><span>业绩优异</span></p>
-											<p class="info-desc"><span class="mui-icon mui-icon-chatboxes-filled"></span>业绩稳定回撤小、多品种多周期、投资策略灵活</p>
-										</div>
-									</div>
-								</li>
-							</ul> -->
+							<div class="mui-loading">
+								<div class="mui-spinner">
+								</div>
+							</div>
+								
 						</div>
 					</div>
 				</div>
-				<div id="item2mobile" data-type="2" class="mui-slider-item mui-control-content">
+				<div id="item2mobile" data-type="2" style="border-bottom: 0;" class="mui-slider-item mui-control-content">
 					<div id="scroll2" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<div class="mui-loading">
@@ -95,7 +52,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="item3mobile" data-type="3" class="mui-slider-item mui-control-content">
+				<div id="item3mobile" data-type="3" style="border-bottom: 0;" class="mui-slider-item mui-control-content">
 					<div id="scroll3" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<div class="mui-loading">
@@ -106,7 +63,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="item4mobile" data-type="4" class="mui-slider-item mui-control-content">
+				<div id="item4mobile" data-type="4" style="border-bottom: 0;" class="mui-slider-item mui-control-content">
 					<div id="scroll4" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<div class="mui-loading">
@@ -117,7 +74,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="item5mobile" data-type="5" class="mui-slider-item mui-control-content">
+				<div id="item5mobile" data-type="5" style="border-bottom: 0;" class="mui-slider-item mui-control-content">
 					<div id="scroll5" class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 							<div class="mui-loading">
@@ -145,166 +102,6 @@
 		</div>
 	</div>
 <script src="../../../data/jijin/js/mui.min.js"></script>
-<script>
-	mui.init();
-	window.onload = function() {
-		var type = document.getElementById('info').querySelector('.mui-active').dataset.type;
-		
-		getFundList(type);
-
-		function getFundList(type) {
-			mui.ajax('http://localhost:8009/systemsetup/PrivateFund/fund_list/'+type,{
-				data: {},
-				dataType: 'json',
-				type: 'get',
-				beforeSend: function() {
-					
-				},
-				success: function(res) {
-console.log(res);
-					renderList(res);					
-				},
-				error: function(res) {
-					alert('查询基金失败！');
-				}
-			});
-		}
-
-		function consultFund(id,name,cust,phone) {
-			mui.ajax('http://localhost:8009//systemsetup/OrderInfo/order_add',{
-				data: {
-					fundid: id,
-					fundname: name,
-					custname: cust,
-					custphone: phone
-				},
-				dataType: 'json',
-				type: 'post',
-				success: function(res) {
-					console.log(res);
-					if (res.code === '0000') {
-						mui.alert(res.msg);
-					}else {
-						mui.alert(res.msg);
-					}
-				},
-				error: function() {
-					alert('预约失败，请联系客服!');
-				}
-			});
-		}
-
-		function renderList(data) {
-console.log(data);
-			var content = document.getElementById('info').querySelector('.mui-active');
-			if (!data) {
-				content.querySelector('.mui-scroll').innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';
-			}else {
-				var oL = document.createElement('ul');
-				oL.classList.add('mui-table-view');
-				for (var i = 0; i < data.length; i++) {
-					var labelArr = data[i].label.split('、');
-					data[i].label = '<span>' + labelArr.join('</span><span>') + '</span>';
-console.log(data[i].label);
-					var oLi = document.createElement('li');
-					oLi.classList.add('mui-table-view-cell');
-					oLi.innerHTML = '<div class="mui-media-body info-list">'+
-														'<div class="info-list-left">'+
-															'<p class="info-left-adv">'+data[i].strategy+'</p>'+
-															'<p class="info-left-title">'+data[i].advantage+'</p>'+
-															'<button class="info-order">'+
-																'预约咨询'+
-															'</button>'+
-														'</div>'+
-														'<div class="info-list-right">'+
-															'<p class="info-right-title" data-id="'+data[i].id+'">'+data[i].name+'</p>'+
-															'<p class="info-tag">'+data[i].label+'</p>'+
-															'<p class="info-desc"><span class="mui-icon mui-icon-chatboxes-filled"></span>'+data[i].evaluate+'</p>'+
-														'</div>'+
-													'</div>';
-					oL.appendChild(oLi);					
-				}
-				content.querySelector('.mui-scroll').innerHTML = '';
-				content.querySelector('.mui-scroll').appendChild(oL);
-			}
-		}
-
-		(function($) {
-				$('.mui-scroll-wrapper').scroll({
-					indicators: true //是否显示滚动条
-				});
-				
-				var item2 = document.getElementById('item2mobile');
-				var item3 = document.getElementById('item3mobile');
-				var item4 = document.getElementById('item4mobile');
-				var item5 = document.getElementById('item5mobile');
-				document.getElementById('slider').addEventListener('slide', function(e) {
-console.log(e.detail.slideNumber);
-					switch (e.detail.slideNumber + 1) {
-						case 1:
-							getFundList(1);
-							break;
-						case 2: 
-							if (item2.querySelector('.mui-loading')) {
-								getFundList(2);
-							}
-							break;
-						case 3:
-							if (item3.querySelector('.mui-loading')) {
-								getFundList(3);
-							}
-							break;
-						case 4: 
-							if (item4.querySelector('.mui-loading')) {
-								getFundList(4);
-							}
-							break;
-						case 5: 
-							if (item5.querySelector('.mui-loading')) {
-								getFundList(5);
-							}
-						break;
-						default:
-							// statements_def
-							break;
-					}
-				});
-				var sliderSegmentedControl = document.getElementById('sliderSegmentedControl');
-				$('.mui-input-group').on('change', 'input', function() {
-					if (this.checked) {
-						sliderSegmentedControl.className = 'mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-' + this.value;
-						//force repaint
-						sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
-					}
-				});
-			})(mui);
-
-	(function() {
-		var name;
-		var id;
-		document.getElementById('info').addEventListener('tap',function(e) {
-			if (e.target.innerHTML.trim() == '预约咨询') {
-				var a = e.target.parentNode.nextSibling.firstElementChild;
-				name = a.innerHTML;
-				id = a.dataset.id;
-				document.getElementById('order').style.display = 'block';
-			}else {
-				document.getElementById('order').style.display = 'none';
-			}
-		});		
-		document.getElementById('cancel').addEventListener('click', function(e) {
-			document.getElementById('order').style.display = 'none';
-		});
-		document.getElementById('confirm').addEventListener('tap', function(e) {
-			document.getElementById('order').style.display = 'none';
-			var custName = document.getElementById('custName').value;
-			var custPhone = document.getElementById('custPhone').value;
-console.log(id,name,custName,custPhone);
-			consultFund(id,name,custName,custPhone);
-		});		
-	})();
-
-};
-</script>
+<script src="../../../data/jijin/js/pri.js"></script>
 </body>
 </html>
