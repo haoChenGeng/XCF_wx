@@ -13,7 +13,6 @@ mui.init();
 					
 				},
 				success: function(res) {
-// console.log(res);
 					renderList(res);					
 				},
 				error: function(res) {
@@ -33,7 +32,6 @@ mui.init();
 				dataType: 'json',
 				type: 'post',
 				success: function(res) {
-					console.log(res);
 					if (res.code === '0000') {
 						mui.alert(res.msg);
 					}else {
@@ -159,7 +157,9 @@ mui.init();
 			}else {
 				mask.close();
 				document.getElementById('order').style.display = 'none';
-				consultFund(id,name,custName,custPhone);				
+				consultFund(id,name,custName,custPhone);
+				document.getElementById('custName').value = '';
+				document.getElementById('custPhone').value = '';
 			}
 		});		
 	})();

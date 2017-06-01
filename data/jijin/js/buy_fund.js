@@ -227,7 +227,6 @@ window.onload = function () {
 		}
 
   var active = document.getElementById('slider').querySelector('.mui-active');
-console.dir(active.hash);
   switch (active.hash) {
     case '#item1mobile':
       firstPage();
@@ -250,7 +249,6 @@ console.dir(active.hash);
 			indicators: true //是否显示滚动条
 		});		
 		document.getElementById('slider').addEventListener('slide', function(e) {
-console.log(e);
 			switch (e.detail.slideNumber) {
 				case 0:
 					firstPage();
@@ -277,7 +275,6 @@ console.log(e);
 						}else if (parseInt(endDate.replace(/\-/g,""),10)-parseInt(startDate.replace(/\-/g,""),10) < 0) {
 							alert('日期选择错误，请重新选择');
 						}else {
-console.log(startDate);
 							page4(startDate,endDate);
 						}
 					});
