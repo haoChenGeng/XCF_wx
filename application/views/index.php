@@ -68,14 +68,14 @@
                 	if(isset($val['url'])){
                 		echo '<a href="'.$val['url'].'?fundcode='.$val['fundcode'].'&purchasetype='.$val['purchasetype'].'&next_url=">';
                 	}
-					echo   '<p class="product-bottom">'.$val['fundname'].'</p>
+					echo   '<p class="product-bottom">'.$val['fundname'].'('.$val['fundtype'].')</p>
 							<div class="product-item1">
 								<p class="product-item-num">'.$val['growthrate'].'</p>
 								<p class="product-item-name">'.$val['growthDes'].'</p>
 							</div>
 							<div class="product-item2">
-								<p class="product-item-num" style="font-size:28px;">'.$val['fundtype'].'</p>
-								<p class="product-item-name">基金类型</p>
+								<p class="product-item-num" style="font-size:28px;">'.$val['nav'].'</p>
+								<p class="product-item-name">基金净值</p>
 							</div>
 						 </li>';
                 }

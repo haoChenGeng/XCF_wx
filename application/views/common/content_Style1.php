@@ -44,14 +44,28 @@
     	    		  		<div class="well clearfix" style="margin-bottom:5px;padding:10px;">';           			  			;
 					foreach ($filters as $key =>$val){
 						switch ($key){
-							case 'cascade_select':
-								echo   '<div class="row" id="selectCx" style="margin-left:0px">
-											<div style="height:25px;margin-left:15px;font-weight:bold">'.$val['description'].'</div>';
-								$width = intval(95/$val['num']).'%';
-								echo '<div><select class="cascade1 col-sm-2" name="cascade1" style="height:35px;width:'.$width.';margin-left:15px;border-radius:3px;"></select>';
-								for ($i=2; $i<=$val['num']; $i++)
-									echo '<select class="cascade'.$i.'"col-sm-2" name="cascade'.$i.'" style="height:35px;width:'.$width.';border-radius:3px;"></select>';
-								echo '</div></div>';
+// 							case 'cascade_select':
+// 								echo   '<div class="row" id="selectCx" style="margin-left:0px">
+// 											<div style="height:25px;margin-left:15px;font-weight:bold">'.$val['description'].'</div>';
+// 								$width = intval(95/$val['num']).'%';
+// 								echo '<div><select class="cascade1 col-sm-2" name="cascade1" style="height:35px;width:'.$width.';margin-left:15px;border-radius:3px;"></select>';
+// 								for ($i=2; $i<=$val['num']; $i++)
+// 									echo '<select class="cascade'.$i.'"col-sm-2" name="cascade'.$i.'" style="height:35px;width:'.$width.';border-radius:3px;"></select>';
+// 								echo '</div></div>';
+// 								break;
+							case 'cascade':
+								$cascadeVar = &$cascadeDatas[$v['name']];
+								echo '<select class="table_cascade" name="'.$v['name'].'" style="border:0">';
+								if (isset($val[$k]['parentId']) && isset($cascadeVar[$val[$k]['parentId']])){
+									foreach ($cascadeVar[$val[$k]['parentId']] as $k1=>$v1){
+										echo '<option value="'.$k1.'"';
+										if (isset($val[$k]['default']) && $k1== $val[$k]['default']){
+											echo ' selected="selected"';
+										}
+										echo '>'.$v1."</option>\r\n";
+									}
+								}
+								echo '</select>';
 								break;
 							case 'fields':
 								foreach ($val as $k => $v){

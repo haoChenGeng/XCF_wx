@@ -99,77 +99,20 @@ class Jz_fund extends MY_Controller
 	//获取历史申请（委托）
 	private function getHistoryApply($startDate = '',$endDate = '', $type = 0) {
 		//调用接口
-// $startDate = '20160103';
 		$fund_list = $this->fund_interface->Trans_applied($startDate, $endDate);
-// var_dump($fund_list);
+		if(isset($fund_list['data'])){
+			foreach ($fund_list['data'] as $key=>$val){
+				if (floatval($val['applicationamount']) == 0){
+					$fund_list['data'][$key]['applicationamount'] = '--';
+				}
+				if (floatval($val['applicationvol']) == 0){
+					$fund_list['data'][$key]['applicationvol'] = '--';
+				}
+			}
+		}
 		if (isset($_SESSION['customer_name'])){
 			file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['customer_name'].'进行历史交易申请查询('.$startDate.'-'.$endDate.')'.serialize($fund_list)."\r\n\r\n",FILE_APPEND);
 		}
-/* 		if ($type == 1){
-			$transConfirmed = $this->fund_interface->Trans_confirmed($_SESSION['JZ_account'], $startDate, $endDate);
-			file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['JZ_account'].'进行历史交易确认查询('. $startDate.' - '.$endDate.')，返回信息：'.serialize($ConfirmedTrans)."\r\n\r\n",FILE_APPEND);
-			if (isset($transConfirmed['code']) && $transConfirmed['code'] == '0000' && is_array($transConfirmed['data'])){
-				$ConfirmedTrans = array();
-				foreach ($transConfirmed['data'] as $val){
-					if (!isset($ConfirmedTrans[$val['appsheetserialno']])){
-						$ConfirmedTrans[$val['appsheetserialno']]['transactioncfmdate'] = $val['transactioncfmdate'];
-						$ConfirmedTrans[$val['appsheetserialno']]['confirmedvol'] = $val['confirmedvol'];
-						$ConfirmedTrans[$val['appsheetserialno']]['confirmedamount'] = $val['confirmedamount'];
-						$ConfirmedTrans[$val['appsheetserialno']]['charge'] = $val['charge'];
-					}
-				}
-			}
-		} 
-		if (isset($res['code']) && $res['code'] == '0000'){
-			$this->load->config('jz_dict');
-			$fund_list['code'] = '0000';
-			$fund_list['msg'] = "无相关交易记录";
-			$i = 0;
-			$cancelableList = $this->getCancelableList();
-			foreach ($res['data'] as $key => $val)
-			{
-				if (!empty($val)){
-					$fund_list['data'][$i]['operdate'] = $val['operdate'];
-					$fund_list['data'][$i]['fundname'] = $val['fundname'];
-					$fund_list['data'][$i]['fundcode'] = $val['fundcode'];
-					$fund_list['data'][$i]['applicationamount'] = $val['applicationamount'];
-					$fund_list['data'][$i]['applicationvol'] = $val['applicationvol'];
-					$fund_list['data'][$i]['appsheetserialno'] = $val['appsheetserialno'];
-					$this->load->config('jz_dict');
-					$tmp = isset($this->config->item('businesscode')[$val['businesscode']])?$this->config->item('businesscode')[$val['businesscode']]:$val['businesscode'];
-					$fund_list['data'][$i]['businesscode'] = $tmp;
-					$fund_list['data'][$i]['json'] = base64_encode(json_encode($fund_list['data'][$i]));
-					if (isset($cancelableList[$val['appsheetserialno']])){
-						$fund_list['data'][$i]['cancelable'] = 1;
-					}else{
-						$fund_list['data'][$i]['cancelable'] = 0;
-					}
-					$fund_list['data'][$i]['transactiondate'] = $val['transactiondate'];
-					$tmp = isset($this->config->item('applaystatus')[$val['status']])?$this->config->item('applaystatus')[$val['status']]:$val['status'];
-					$fund_list['data'][$i]['status'] = $tmp;
-					$tmp = isset($this->config->item('paystatus')[$val['paystatus']])?$this->config->item('paystatus')[$val['paystatus']]:NULL;
-					if ($tmp != NULL){
-						$fund_list['data'][$i]['paystatus'] = $tmp;
-					}
-					if ($val['businesscode'] == '36'){
-						$fund_list['data'][$i]['targetfundcode'] = $val['targetfundcode'];
-					}
-					if ($val['businesscode'] == '29'){
-						$tmp = isset($this->config->item('dividendmethod')[$val['defdividendmethod']])?$this->config->item('dividendmethod')[$val['defdividendmethod']]:$val['defdividendmethod'];
-						$fund_list['data'][$i]['defdividendmethod'] = $tmp;
-					}
-					if (isset($ConfirmedTrans[$val['appsheetserialno']])){
-						$fund_list['data'][$i]['transactioncfmdate'] = $ConfirmedTrans[$val['appsheetserialno']]['transactioncfmdate'];
-						$fund_list['data'][$i]['confirmedvol'] = $ConfirmedTrans[$val['appsheetserialno']]['confirmedvol'];
-						$fund_list['data'][$i]['confirmedamount'] = $ConfirmedTrans[$val['appsheetserialno']]['confirmedamount'];
-						$fund_list['data'][$i]['charge'] = $ConfirmedTrans[$val['appsheetserialno']]['charge'];
-					}
-					$i++;
-				}
-			}
-		}else{
-			file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['JZ_account'].'进行历史交易申请查询('. $startDate.' - '.$endDate.')失败'."\r\n\r\n",FILE_APPEND);
-		}*/
 		return $fund_list;
 	}
 	
@@ -198,43 +141,6 @@ class Jz_fund extends MY_Controller
 		$data['base'] = $this->base;
 		$data['next_url'] = isset($get['next_url']) ? $get['next_url'] : '/jijin/Jz_fund/index/fund';
 		$this->load->view('/jijin/trade/jijinprodetail', $data);
-		
-// 		if (!is_null($get['tano']) && !is_null($get['fundid'])) {
-// 			$this->load->config('jz_dict');
-// 			$fund_list = $this->fund_interface->fund($get['tano'], $get['fundid']);
-// 			if (isset($fund_list['code']) && $fund_list['code'] = '0000' && $fund_list['data'][0]['fundcode'] == $get['fundid']) {
-// 				$val = $fund_list['data'][0];
-// 				$tmp = isset($this->config->item('fundtype')[$val['fundtype']])?$this->config->item('fundtype')[$val['fundtype']]:null;
-// 				$val['fundtype'] = is_null($tmp)?'-':$tmp;
-// 				$tmp = isset($this->config->item('sharetype')[$val['sharetype']])?$this->config->item('sharetype')[$val['sharetype']]:null;
-// 				$val['sharetype'] = is_null($tmp)?'-':$tmp;
-// 				$tmp = isset($this->config->item('fund_status')[$val['status']])?$this->config->item('fund_status')[$val['status']]['status']:null;
-// 				$val['status'] = is_null($tmp)?'-':$tmp;
-// 				$tmp = isset($this->config->item('custrisk')[intval($val['risklevel'])])?$this->config->item('custrisk')[intval($val['risklevel'])]:null;
-// 				$val['risklevel'] = $val['risklevel'].'('.$tmp.')';
-// 				$data['fundlist'] = $val;
-// 				$data['purchasetype'] = $get['purchasetype'];
-// 				$data['json'] = $get['json'];
-// 				$data['base'] = $this->base;
-// 				//$fundlist详细基金列表,用于手机传送,信息是否比较多,将来考虑较少详细信息,提高浏览速度
-				
-// 				$data['base'] = $this->base;
-// 				$this->load->view('/jijin/trade/jijinprodetail', $data);
-// 			}else{
-// 				$log_msg = '接口返回信息：'.serialize($fund_list)."\r\n\r\n";
-// 			}
-// 		}else{
-// 			$log_msg = "失败原因：输入参数不正确\r\n\r\n";
-// 		}
-// 		if (isset($log_msg)){
-// 			$arr['head_title'] = '基金查询结果';
-// 			$arr['ret_msg'] = '基金查询失败';
-// 			$arr['back_url'] = '/jijin/Jz_fund';
-// 			$arr['ret_code'] = 'CCCC';
-// 			$arr['base'] = $this->base;
-// 			$this->load->view('ui/view_operate_result',$arr);
-// 			file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'查询基金'.$get['fundid'].'详细信息失败'.$log_msg,FILE_APPEND);
-// 		}
 	}
 	
 	private function getCancelableList(){

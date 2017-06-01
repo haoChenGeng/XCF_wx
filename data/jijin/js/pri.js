@@ -5,7 +5,7 @@ mui.init();
 		getFundList(type);
 
 		function getFundList(type) {
-			mui.ajax('http://localhost:8009/systemsetup/PrivateFund/fund_list/'+type,{
+			mui.ajax('/systemsetup/PrivateFund/fund_list/'+type,{
 				data: {},
 				dataType: 'json',
 				type: 'get',
@@ -13,6 +13,7 @@ mui.init();
 					
 				},
 				success: function(res) {
+// console.log(res);
 					renderList(res);					
 				},
 				error: function(res) {
@@ -22,7 +23,7 @@ mui.init();
 		}
 
 		function consultFund(id,name,cust,phone) {
-			mui.ajax('http://localhost:8009//systemsetup/OrderInfo/order_add',{
+			mui.ajax('/systemsetup/OrderInfo/order_add',{
 				data: {
 					fundid: id,
 					fundname: name,
@@ -32,6 +33,7 @@ mui.init();
 				dataType: 'json',
 				type: 'post',
 				success: function(res) {
+					console.log(res);
 					if (res.code === '0000') {
 						mui.alert(res.msg);
 					}else {
@@ -157,9 +159,7 @@ mui.init();
 			}else {
 				mask.close();
 				document.getElementById('order').style.display = 'none';
-				consultFund(id,name,custName,custPhone);
-				document.getElementById('custName').value = '';
-				document.getElementById('custPhone').value = '';
+				consultFund(id,name,custName,custPhone);				
 			}
 		});		
 	})();

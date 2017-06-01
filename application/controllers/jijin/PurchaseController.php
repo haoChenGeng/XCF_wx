@@ -216,8 +216,8 @@ class PurchaseController extends MY_Controller {
 					if ($purchase['code'] == '0000'){
 						$log_msg = $arr['ret_msg'] = '基金'.$post['purchasetype'].'申请已受理';
 					}else{
-						if ($purchase['code'] == '0016' || $purchase['code'] == '0017' || $purchase['code'] == '0018') {
-							$log_msg = $arr['ret_msg'] = $purchase['msg'];
+						if ($purchase['code'] == '0016' || $purchase['code'] == '0017') {
+							$log_msg = $arr['ret_msg'] = str_replace('[]', '', $purchase['msg']);
 						}else{
 							$log_msg = '调用'.$post['purchasetype'].'接口失败';
 						}

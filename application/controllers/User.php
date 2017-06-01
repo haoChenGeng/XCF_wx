@@ -23,35 +23,52 @@ class User extends MY_Controller {
 			redirect ( $this->base . "/User/home/");
 		}
 		$post = $this->input->post ();
-		if (! empty ( $post )){
-			if (empty ( $post ['T_pwd'] )){
-				$fail_message = '密码不能为空，系统正在返回...';
-			}
-			else{
-				$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
-				$decryptData ='';
-				openssl_private_decrypt(base64_decode($post['T_pwd']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
-				$div_bit = strpos($decryptData,(string)$_SESSION['rand_code']);
-				unset($_SESSION['rand_code']);
-				if ($div_bit)	{
-					$post ['T_name'] = substr($decryptData, 0, $div_bit);
-					if (!preg_match ('/^[1][34578][0-9]{9}$/', $post ['T_name'])) {
-						$fail_message = '输入用户名不正确，系统正在返回...';
-					}
-					else {
-						$T_pwd = substr($decryptData, $div_bit+7);
-						if(empty($T_pwd))
-						{
-							$fail_message = '密码不能为空，系统正在返回...';
+		if (!empty ($post['T_pwd'])){
+			$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
+			$decryptData ='';
+			openssl_private_decrypt(base64_decode($post['T_pwd']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
+			$div_bit = strpos($decryptData,(string)$_SESSION['loginRandCode']);
+			unset($_SESSION['loginRandCode']);
+			if ($div_bit){
+				$T_name = trim(substr($decryptData, 0, $div_bit));
+				$T_pwd = substr($decryptData, $div_bit+7);
+				$user_info = $this->db->where(array('Customername'=>$T_name))->get('customer')->row_array();
+				if (!empty($user_info)){
+					if ($user_info['status'] != 0){
+						$T_pwd = MD5($T_pwd);
+						$passkey = $this->config->item ( 'passkey' );
+						$T_pwd = MD5 ( MD5 ( $passkey ) . substr ( $T_pwd, 5, 20 ) );
+						$trytimes = (time()-$user_info['logintime']>3600) ? 0 : $user_info['trytimes'];
+						if ($trytimes < 3){
+							if ($user_info ['Customername'] == $T_name && $user_info ['Password'] == $T_pwd) {
+								$_SESSION ['customer_id'] = $user_info ['id'];
+								$_SESSION ['customer_name'] = $user_info ['Customername'];
+								$this->db->set(array('trytimes'=>0,'logintime'=>time()))->where(array('id'=>$user_info['id']))->update('customer');
+								if (isset($_SESSION['next_url'])){
+									$next_url = $_SESSION['next_url'];
+									unset($_SESSION['next_url']);
+									redirect ($next_url);
+								}else{
+									redirect ($this->base . "/User/home/");
+								}
+								exit ();
+							}else{
+								$trytimes ++;
+								$this->db->set(array('trytimes'=>$trytimes,'logintime'=>time()))->where(array('id'=>$user_info['id']))->update('customer');
+								$fail_message = (3-$trytimes) > 0 ? '密码错误，还可重试'.(3-$trytimes).'次' : '密码错误，请于1小时后重试';
+							}
+						}else{
+							$fail_message = '密码错误次数超过3次，请'.intval((3600+$user_info['logintime']-time())/60).'分钟后重试';
 						}
-						else
-						{
-							$post['T_pwd'] = MD5($T_pwd);
-						}
+				
+					}else{
+						$fail_message = '该用户已被屏蔽，系统正在返回...';
 					}
 				}else{
-					$fail_message = '随机校验码错误，系统正在返回...';
+					$fail_message = '用户不存在，系统正在返回...';
 				}
+			}else{
+				$fail_message = '系统错误，正在返回...';
 			}
 			if (isset($fail_message))	{
 				Message ( Array (
@@ -61,42 +78,9 @@ class User extends MY_Controller {
 						'base' => $this->base
 						) );
 			}
-			if (! empty ( $post ) && preg_match ( '/^[1][34578][0-9]{9}$/', $post ['T_name'] )) {
-				$T_name = trim($post["T_name"]);
-				$T_pwd = $post ["T_pwd"];
-				$passkey = $this->config->item ( 'passkey' );
-				$T_pwd = MD5 ( MD5 ( $passkey ) . substr ( $T_pwd, 5, 20 ) );
-				$info = $this->db->where(array('Customername'=>$T_name))->get('customer')->row_array();	
-				if ($info ['Customername'] == $T_name && $info ['Password'] == $T_pwd) {
-					// $info = $this->model_common->db_one_str('customer', "((Username = '" . $T_name . "') or (tel = '" . $T_name . "') or (email = '" . $T_name . "')) and Password = '" . $T_pwd . "'");
-					if ($info ['status'] == 0) {
-						Message ( Array (
-								'msgTy' => 'fail',
-								'msgContent' => '该用户已被屏蔽，系统正在返回...',
-								'msgUrl' => $this->base . "/user/login/",
-								'base' => $this->base
-								) );
-					}
-					$_SESSION ['customer_id'] = $info ['id'];
-					$_SESSION ['customer_name'] = $info ['Customername'];
-					if (isset($_SESSION['next_url'])){
-						redirect ($_SESSION['next_url']);
-						unset($_SESSION['next_url']);
-					}else{
-						redirect ($this->base . "/User/home/");
-					}
-					exit ();
-				}
-			}
-			Message ( Array (
-					'msgTy' => 'fail',
-					'msgContent' => '账户名或密码不正确，系统正在返回...',
-					'msgUrl' => $this->base . "/user/login/",
-					'base' => $this->base
-					) );
 		}else {
 			$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
-			$_SESSION['rand_code'] = $data['rand_code'] = "\t".mt_rand(100000,999999);                                     //随机生成验证码
+			$_SESSION['loginRandCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);                                     //随机生成验证码
 			$this->load->view ( 'user/login', $data);
 		}
 	}
@@ -115,6 +99,8 @@ class User extends MY_Controller {
 		if (! empty ( $post )) {
 			if (empty ( $post['sms_code'] ) || strtolower ( $_SESSION ['telcode'] ) != strtolower ( $post['sms_code'] )) {
 				$fail_message = '验证码不正确，系统正在返回...';
+			}else{
+				$this->db->set(array('times'=>'times-1'))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
 			}
 			if (!isset($fail_message) && empty ( $post ['pwd'] )){
 				$fail_message = '密码不能为空，系统正在返回...';
@@ -223,6 +209,7 @@ class User extends MY_Controller {
 			if (empty ( $post['sms_code'] ) || strtolower ( $_SESSION ['telcode'] ) != strtolower ( $post['sms_code'] )) {
 				$failmessage = '验证码不正确，系统正在返回...';
 			}else{
+				$this->db->set(array('times'=>'times-1'))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
 				if (empty($post['tel'])){
 					$failmessage = '用户名不能为空，系统正在返回...';
 				}else{
@@ -349,10 +336,14 @@ class User extends MY_Controller {
 		if (strlen ( $post ['tel'] ) > 11) {
 			echo '手机号错误'; exit;
 		}
+		$curtomerInfo = $this->db->where('Customername',$post ['tel'])->get('p2_customer')->row_array();
 		if ($post['type'] != 1){
-			$curtomerInfo = $this->db->where('Customername',$post ['tel'])->get('p2_customer')->row_array();
 			if (!empty($curtomerInfo)){
 				echo '该手机号已注册'; exit;
+			}
+		}else{
+			if (empty($curtomerInfo)){
+				echo '该用户不存在'; exit;
 			}
 		}
 		if (isset($_SESSION['send_sms'])){
@@ -360,11 +351,22 @@ class User extends MY_Controller {
 			if ($timediff < 60){
 				echo '短信验证码已经发送,如未收到请在'.(60 - $timediff).'秒后重试';
 				exit;
-			}else{
-				$_SESSION['send_sms'] = time();
 			}
+		}
+		$sendSms = $this->db->where(array('dealitem'=>'sendSms'))->get('p2_dealitems')->row_array();
+		if (empty($sendSms)){
+			$this->db->set(array('dealitem'=>'sendSms','updatetime'=>time(),'times'=>1))->insert('p2_dealitems');
 		}else{
-			$_SESSION['send_sms'] = time();
+			if ((time()-$sendSms['updatetime'])> 3600){
+				$this->db->set(array('updatetime'=>time(),'times'=>1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
+			}else{
+				if ($sendSms['times'] > 300){
+					echo '短信验证码发送失败，请稍后重试';
+					exit;
+				}else{
+					$this->db->set(array('times'=>$sendSms['times']+1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
+				}
+			}
 		}
 		if (ISTESTING) {
 			$_SESSION ['telcode'] = $telcode = '1234';
@@ -374,61 +376,13 @@ class User extends MY_Controller {
 			$_SESSION ['T_name'] = $post ['tel'];
 			$content = "您的验证码是:" . $telcode;
 			$res2 = $this->NDFsendSms ( $post ['tel'], $content );
-			if($res2===false){
-				$res ['returnCode']=999999;
-			}
-			else{
-				$res = json_decode ( $res2, TRUE );
-			}
-			switch ($res ['returnCode']) {
-				case 0 :
-					$result = '验证码已发送！';
-					break;
-				case 130001 :
-					$result = '参数为空';
-					break;
-				case 130002 :
-					$result = '手机号码格式错误';
-					break;
-				case 130003 :
-					$result = '签名错误';
-					break;
-				case 130004 :
-					$result = '短信服务器内部错误';
-					break;
-				case 130005 :
-					$result = '找不到业务的信息';
-					break;
-				case 130006 :
-					$result = '业务下找不到模块的信息';
-					break;
-				case 130011 :
-					$result = '验证码验证失败';
-					break;
-				case 130012 :
-					$result = '验证码已过期';
-					break;
-				case 130013 :
-					$result = '错误次数超过3次';
-					break;
-				case 130021 :
-					$result = '实际号码个数超过100';
-					break;
-				case 130022 :
-					$result = '短信发送失败';
-					break;
-				case 130023 :
-					$result = '请设置短信模板或消息模板';
-					break;
-				case 130031 :
-					$result = '推送消息失败';
-					break;
-				case 999999 :  //网络连接不上自定义代码,前端显示给用户或运维同事
-					$result = '网络超时或短信系统没反应';
-					break;
-				default :
-					$result = '';
-					break;
+			$res = json_decode ( $res2, TRUE );
+			file_put_contents('log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证码,返回数据:".serialize($res2)."\r\n\r\n",FILE_APPEND);
+			if (isset($res['returnCode']) && $res['returnCode'] == 0){
+				$result = '验证码已发送！';
+				$_SESSION['send_sms'] = time();
+			}else{
+				$result = '验证码发送失败';
 			}
 			echo $result;
 		}
