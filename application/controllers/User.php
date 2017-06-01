@@ -86,6 +86,10 @@ class User extends MY_Controller {
 	}
 	
 	function home(){
+		redirect('/weixin/oauth/checkwxaccess');
+	}
+	
+	function homeaccess(){
 		$this->getRecommendFunds($data);
 		$this->load->view('index',$data);
 	}
