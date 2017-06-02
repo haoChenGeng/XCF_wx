@@ -52,7 +52,8 @@ class Account extends MY_Controller {
 						$data['error_warning'] = '系统错误，请重试';
 					}
 				}
-			}else{
+			}
+			if (empty($post) || isset($data['error_warning'])){
 				$data['base'] = $this->base;
 				$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
 				$data['rand_code'] = "\t".mt_rand(100000,999999);                                //随机生成验证码
