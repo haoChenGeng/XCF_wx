@@ -12,6 +12,11 @@ class OrderInfo extends MY_Controller {
 	public function order_add()
 	{
 		$post = $this->input->post();
+		//先判断数据库中是否有重复的数据
+		$returnData = $this->db->select('custname,fundid')->where(array('custphone'=>$post['custphone'],'fundid'=>$post['fundid']))->get('orderinfo')->result_array();
+		if(count($returnData)>0){
+			echo json_encode(array('code'=>'9999','msg'=>'您已经预约过该基金！')); exit;
+		}
 		$insert_data = array(
 				'custname' => $post['custname'],
 				'custphone' => $post['custphone'],
