@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html>
+	<header class="head">
+	  <div class="head-back">
+	  <span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
+	  </div>
+	</header>
     <head>
         <?php echo file_get_contents('../Public/head.html'); ?> 
         <title>写评论</title>
