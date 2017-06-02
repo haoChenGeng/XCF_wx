@@ -146,17 +146,22 @@
       	<span class="names">验证码</span>
           <input type="text"  class="input" name="sms_code"  data-reg="^\d{4}$" data-error="验证码错误" placeholder="请输入验证码"/>
 
-      </li>
-      <li>
-      	<span class="names">新密码</span>
-          <input type="password"  class="input" name="pwd" id="pwdHide"  data-reg="^.{6,20}$" data-error="密码不符合要求" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请输入6~20位新密码"/>
-      </li>
-      <li>
-      	<span class="names">确认密码</span>
-          <input type="password"  class="input" name="pwdtxt" id="pwdShow"  data-reg="^.{6,20}$" data-error="密码不符合要求" placeholder="请再次输入新密码"/>
-      </li>
-      <input type="hidden" name="openid" id="openid" value="<?php if(isset($openid)){ echo $openid; }?>" />
-  </ul>
+        </li>
+        <li>
+        	<span class="names">理财师工号</span>
+            <input type="text"  class="input" id="planner_id" name="planner_id" data-reg="^(|xn[0-9]{6})$" data-error="理财师工号错误" placeholder="输入理财师工号(可不填)"/>
+            <a href="#" id="queryPlanner" class="input_btn">理财师信息</a>
+        </li>
+        <li>
+        	<span class="names">新密码</span>
+            <input type="password"  class="input" name="pwd" id="pwdHide"  data-reg="^.{6,20}$" data-error="密码不符合要求" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请输入6~20位新密码"/>
+        </li>
+        <li>
+        	<span class="names">确认密码</span>
+            <input type="password"  class="input" name="pwdtxt" id="pwdShow"  data-reg="^.{6,20}$" data-error="密码不符合要求" placeholder="请再次输入新密码"/>
+        </li>
+        <input type="hidden" name="openid" id="openid" value="<?php if(isset($openid)){ echo $openid; }?>" />
+    </ul>
 <!--     <a href="#" class="ret_paw_btn">&nbsp;</a> -->
     <input class="ret_paw_btn btn" id = "submit_button" type="submit" style="border: none;" value="注 册"/>
 </section>
@@ -192,6 +197,25 @@
         
         $('#sendSms').on('click',function(){
             sendSms($("#tel"),$('#sendSms'));
+        });
+
+        $('#queryPlanner').on('click',function(){
+            var str= $('#planner_id').val();
+            var regstr = "^xn[0-9]{6}$";
+            var reg = new RegExp(regstr,'g');
+            if(reg!=null&& !reg.test( str )){
+                M.alert({
+                    title:'提示',
+                    message:$('#planner_id').attr('data-error')
+                });
+            }else{
+                $.post("/User/queryPlanner", {planner_id:str},function(res){
+                    M.alert({
+                        title:'提示',
+                        message:res==null||res==''||res==undefined?'理财师查询失败':res
+                    });
+                })
+            }
         });
     });
 </script>        
