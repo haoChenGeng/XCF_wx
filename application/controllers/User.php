@@ -144,6 +144,7 @@ class User extends MY_Controller {
 						"Password" => $T_pwd,
 						"addtime" => time(),
 						"status" => 1,
+						"planner_id" => !empty($post['planner_id']) ? $post['planner_id'] : '',
 						);
 				if (! empty ( $arr ['register_openid'] )) {
 					$wxApi = new Api ();
@@ -362,6 +363,7 @@ class User extends MY_Controller {
 			}else{
 				if ($sendSms['times'] > 300){
 					echo '短信验证码发送失败，请稍后重试';
+					file_put_contents('log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证被拒绝,短信接口可能遭受攻击，1小时内超过300条短信未返回正确验证码\r\n\r\n",FILE_APPEND);
 					exit;
 				}else{
 					$this->db->set(array('times'=>$sendSms['times']+1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
@@ -483,4 +485,15 @@ class User extends MY_Controller {
 		return $randNum;
 	}
 	
+	function queryPlanner(){
+		$post = $this->input->post ();
+		if (!empty($post['planner_id'])){
+			$plannerInfo = $this->db->where(array('EmployeeID'=> $post['planner_id']))->get('p2_planner')->row_array();
+			if (!empty($plannerInfo['FName'])){
+				echo '您选择了'.$plannerInfo['FName'].'理财师';
+				exit;
+			}
+		}
+		echo '您输入的理财师工号不存在';
+	}
 }

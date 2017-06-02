@@ -12,7 +12,7 @@ function sendSms(inputTel,sendSmsBtn,type)
             message:inputTel.attr('data-error')
         });
     }else{
-        $.post("/user/send_sms", {tel:str,type:type},function(res){
+        $.post("/User/send_sms", {tel:str,type:type},function(res){
             M.alert({
                 title:'提示',
                 message:res==null||res==''||res==undefined?'发送失败':res
