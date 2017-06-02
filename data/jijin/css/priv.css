@@ -1,3 +1,36 @@
+.head {
+    height: 40px;
+    border-bottom: 1px solid #ccc;
+    background: #fff;
+}
+
+.head-back {
+    margin-left: 30px;
+    line-height: 40px;
+}
+
+.head-back-icon {
+  position: relative;
+  color: #007aff;
+}
+
+.head-back-icon:after, .head-back-icon:before {
+  border: 10px solid transparent;
+  border-right: 10px solid #fff;
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+  left: -25px;
+  content: ' '
+}
+
+.head-back-icon:before {
+  border-right-color: #007aff;
+  left: -27px;
+}
+
+
 .info-list {
   display: flex;
 }

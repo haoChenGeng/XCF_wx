@@ -129,32 +129,34 @@
 
 <body>
 
-<!-- <header class="header_password"> -->
-<!-- 	<span>注册</span> -->
-<!-- </header> -->
+<header class="head">
+  <div class="head-back">
+    <span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
+  </div>
+</header>
 <form  method="post" action="/user/register" id="info_form" onsubmit="return false">
 <section class="content ret_password wrap">
  	<ul class="con_password" style="margin-top: 80px;">
     	<li>
-        	<span class="names">+86</span>
-            <input type="text"  class="input" id="tel" name="mobile" data-reg="^[1][34578][0-9]{9}$" data-error="手机号错误" placeholder="输入手机号"/>
-            <a href="#" id="sendSms" class="input_btn">获取验证码</a>
-        </li>
-        <li>
-        	<span class="names">验证码</span>
-            <input type="text"  class="input" name="sms_code"  data-reg="^\d{4}$" data-error="验证码错误" placeholder="请输入验证码"/>
+      	<span class="names">+86</span>
+          <input type="text"  class="input" id="tel" name="mobile" data-reg="^[1][34578][0-9]{9}$" data-error="手机号错误" placeholder="输入手机号"/>
+          <a href="#" id="sendSms" class="input_btn">获取验证码</a>
+      </li>
+      <li>
+      	<span class="names">验证码</span>
+          <input type="text"  class="input" name="sms_code"  data-reg="^\d{4}$" data-error="验证码错误" placeholder="请输入验证码"/>
 
-        </li>
-        <li>
-        	<span class="names">新密码</span>
-            <input type="password"  class="input" name="pwd" id="pwdHide"  data-reg="^.{6,20}$" data-error="密码不符合要求" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请输入6~20位新密码"/>
-        </li>
-        <li>
-        	<span class="names">确认密码</span>
-            <input type="password"  class="input" name="pwdtxt" id="pwdShow"  data-reg="^.{6,20}$" data-error="密码不符合要求" placeholder="请再次输入新密码"/>
-        </li>
-        <input type="hidden" name="openid" id="openid" value="<?php if(isset($openid)){ echo $openid; }?>" />
-    </ul>
+      </li>
+      <li>
+      	<span class="names">新密码</span>
+          <input type="password"  class="input" name="pwd" id="pwdHide"  data-reg="^.{6,20}$" data-error="密码不符合要求" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请输入6~20位新密码"/>
+      </li>
+      <li>
+      	<span class="names">确认密码</span>
+          <input type="password"  class="input" name="pwdtxt" id="pwdShow"  data-reg="^.{6,20}$" data-error="密码不符合要求" placeholder="请再次输入新密码"/>
+      </li>
+      <input type="hidden" name="openid" id="openid" value="<?php if(isset($openid)){ echo $openid; }?>" />
+  </ul>
 <!--     <a href="#" class="ret_paw_btn">&nbsp;</a> -->
     <input class="ret_paw_btn btn" id = "submit_button" type="submit" style="border: none;" value="注 册"/>
 </section>
