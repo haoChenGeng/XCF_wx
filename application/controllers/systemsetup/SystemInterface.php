@@ -68,7 +68,7 @@ class SystemInterface extends MY_Controller {
 				'partnerId' => array('description' => 'partnerId'),
 				'moduleId' => array('description' => 'moduleId'),
 				'url' => array('description' => '接口地址'),
-				'password' => array('description' => '密码'), );
+				'password' => array('description' => '密钥'), );
 		//设置页面右上角导航条按钮(函数中已进行权限检查)
 		$data['buttons'] = $this->Model_pageDeal->getButtonList($data['accessCommand']);
 		//设置form提交的url
@@ -135,7 +135,7 @@ class SystemInterface extends MY_Controller {
 					if ($flag){
 						$flag = $this->db->set($new_data)->insert($data['tableName']);
 					}else{
-						$data['error_warning'] = '基金后台通信密码设置失败</br>';
+						$data['error_warning'] = '基金后台通信密钥设置失败</br>';
 					}
 				}else{
 					$flag = $this->db->set($new_data)->insert($data['tableName']);
@@ -184,7 +184,7 @@ class SystemInterface extends MY_Controller {
 						if ($flag){
 							$flag = $this->db->set($new_data)->where($data['selcet_key'],$input[$data['selcet_key']])->update($data['tableName']);
 						}else{
-							$data['error_warning'] = '基金后台通信密码设置失败</br>';
+							$data['error_warning'] = '基金后台通信密钥设置失败</br>';
 						}
 					}else{
 						$flag = $this->db->set($new_data)->where($data['selcet_key'],$input[$data['selcet_key']])->update($data['tableName']);
@@ -245,7 +245,7 @@ class SystemInterface extends MY_Controller {
 		$data['forms'][] = array('type'=>'normal', 'description'=>'partnerId', 'content'=> 'type="text" name="partnerId"  placeholder="partnerId"');		
 		$data['forms'][] = array('type'=>'normal', 'description'=>'moduleId',  'content'=> 'type="text" name="moduleId" placeholder="moduleId"');
 		$data['forms'][] = array('type'=>'normal', 'required'=>1, 'description'=>'接口地址', 'required'=>1, 'content'=> 'type="text" name="url"  placeholder="接口地址"');
-		$data['forms'][] = array('type'=>'normal', 'description'=>'密码',  'content'=> 'type="password" id="password" name="password" placeholder="密码"');
+		$data['forms'][] = array('type'=>'normal', 'description'=>'密钥',  'content'=> 'type="password" id="password" name="password" placeholder="密钥"');
 		$_SESSION[$data['Model'].'_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);
 		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
 		$data['public_key'] = str_replace(array("\r","\n"),'', $data['public_key']);
@@ -280,7 +280,7 @@ class SystemInterface extends MY_Controller {
 		$data['forms'][] = array('type'=>'normal', 'description'=>'partnerId', 'content'=> 'type="text" name="partnerId" value="'.$interface['partnerId'].'" placeholder="partnerId"');
 		$data['forms'][] = array('type'=>'normal', 'description'=>'moduleId',  'content'=> 'type="text" name="moduleId" value="'.$interface['moduleId'].'" placeholder="moduleId"');
 		$data['forms'][] = array('type'=>'normal', 'required'=>1, 'description'=>'接口地址', 'required'=>1, 'content'=> 'type="text" name="url" value="'.$interface['url'].'" placeholder="接口地址"');
-		$data['forms'][] = array('type'=>'normal', 'description'=>'密码',  'content'=> 'type="password" id="password" name="password" value="******" placeholder="密码"');
+		$data['forms'][] = array('type'=>'normal', 'description'=>'密钥',  'content'=> 'type="password" id="password" name="password" value="******" placeholder="密钥"');
 		$_SESSION[$data['Model'].'_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);
 		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
 		$data['public_key'] = str_replace(array("\r","\n"),'', $data['public_key']);
