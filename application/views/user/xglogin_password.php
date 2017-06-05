@@ -128,7 +128,11 @@
 </head>
 
 <body>
-
+<header class="head">
+  <div class="head-back">
+    <span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
+  </div>
+</header>
 <form  method="post" action="/User/updatePass" id="info_form">
 <section class="content ret_password xglogin wrap">
  	<ul class="con_password my_per">

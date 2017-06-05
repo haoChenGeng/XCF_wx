@@ -11,6 +11,12 @@
 <link rel="stylesheet" href="/data/css/style.css" />
 </head>
 
+<header class="head">
+  <div class="head-back">
+    <span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
+  </div>
+</header>
+
 <body>
     <section class="engin wrap">
         <form  name="form" method="post" action="/user/login/<?php echo isset($type)?$type:1;?>" id="login_form" onsubmit="return false">

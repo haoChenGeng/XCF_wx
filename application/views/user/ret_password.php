@@ -128,6 +128,11 @@
 </head>
 
 <body>
+<header class="head">
+  <div class="head-back">
+    <span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
+  </div>
+</header>
 <form method="post" action="/user/findPass/1" id="info_form">
 <section class="content ret_password wrap">
  	<ul class="con_password" style="margin-top: 80px;">

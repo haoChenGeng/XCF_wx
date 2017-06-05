@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html>
+	<header class="head">
+	  <div class="head-back">
+	  <span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
+	  </div>
+	</header>
     <head>
         <meta charset="utf-8" />
         <link rel="Shortcut Icon" href="/favicon.ico?v1" type="image/x-icon" />

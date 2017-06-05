@@ -129,21 +129,28 @@
 
 <body>
 
-<!-- <header class="header_password"> -->
-<!-- 	<span>注册</span> -->
-<!-- </header> -->
+<header class="head">
+  <div class="head-back">
+    <span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
+  </div>
+</header>
 <form  method="post" action="/user/register" id="info_form" onsubmit="return false">
 <section class="content ret_password wrap">
  	<ul class="con_password" style="margin-top: 80px;">
     	<li>
-        	<span class="names">+86</span>
-            <input type="text"  class="input" id="tel" name="mobile" data-reg="^[1][34578][0-9]{9}$" data-error="手机号错误" placeholder="输入手机号"/>
-            <a href="#" id="sendSms" class="input_btn">获取验证码</a>
+      	<span class="names">+86</span>
+          <input type="text"  class="input" id="tel" name="mobile" data-reg="^[1][34578][0-9]{9}$" data-error="手机号错误" placeholder="输入手机号"/>
+          <a href="#" id="sendSms" class="input_btn">获取验证码</a>
+      </li>
+      <li>
+      	<span class="names">验证码</span>
+          <input type="text"  class="input" name="sms_code"  data-reg="^\d{4}$" data-error="验证码错误" placeholder="请输入验证码"/>
+
         </li>
         <li>
-        	<span class="names">验证码</span>
-            <input type="text"  class="input" name="sms_code"  data-reg="^\d{4}$" data-error="验证码错误" placeholder="请输入验证码"/>
-
+        	<span class="names">理财师工号</span>
+            <input type="text"  class="input" id="planner_id" name="planner_id" data-reg="^(|xn[0-9]{6})$" data-error="理财师工号错误" placeholder="输入理财师工号(可不填)"/>
+            <a href="#" id="queryPlanner" class="input_btn">理财师信息</a>
         </li>
         <li>
         	<span class="names">新密码</span>
@@ -190,6 +197,25 @@
         
         $('#sendSms').on('click',function(){
             sendSms($("#tel"),$('#sendSms'));
+        });
+
+        $('#queryPlanner').on('click',function(){
+            var str= $('#planner_id').val();
+            var regstr = "^xn[0-9]{6}$";
+            var reg = new RegExp(regstr,'g');
+            if(reg!=null&& !reg.test( str )){
+                M.alert({
+                    title:'提示',
+                    message:$('#planner_id').attr('data-error')
+                });
+            }else{
+                $.post("/User/queryPlanner", {planner_id:str},function(res){
+                    M.alert({
+                        title:'提示',
+                        message:res==null||res==''||res==undefined?'理财师查询失败':res
+                    });
+                })
+            }
         });
     });
 </script>        
