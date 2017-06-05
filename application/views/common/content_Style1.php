@@ -24,12 +24,12 @@
 		</div>
 	</div>
 		<div class="container-fluid">
-			<?php if (isset($error_warning)) { ?>
+			<?php if (!empty($error_warning)) { ?>
 			<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 			</div>
 			<?php } ?>
-			<?php if (isset($success)) { ?>
+			<?php if (!empty($success)) { ?>
 			<div class="alert alert-success"><i class="fa fa-check-circle"></i> <?php echo $success; ?>
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 			</div>

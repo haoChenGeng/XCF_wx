@@ -392,23 +392,15 @@ class User extends MY_Controller {
 	}
 		// 发短信
 	private function NDFsendSms($mobile, $content = '') {
-		// $this->check_login();
 		if (empty ( $mobile )) {
 			return false;
 		}
-		// $this =& get_instance();
 		$ISTESTING = false;
-		if ($ISTESTING) {
-			$sms_url = $this->config->item ( 'test_sms_url' );
-			$sms_signature_key = $this->config->item ( 'test_sms_signature_key' );
-			$partnerId = $this->config->item ( 'test_partnerId' );
-			$moduleId = $this->config->item ( 'test_moduleId' );
-		} else {
-			$sms_url = $this->config->item ( 'sms_url' );
-			$sms_signature_key = $this->config->item ( 'sms_signature_key' );
-			$partnerId = $this->config->item ( 'partnerId' );
-			$moduleId = $this->config->item ( 'moduleId' );
-		}
+		$messageInterface = $this->db->where(array('name'=>'MessageInterface'))->get('p2_interface')->row_array();
+		$sms_url = $messageInterface['url'];
+		$sms_signature_key = $messageInterface['password'];
+		$partnerId = $messageInterface['partnerId'];
+		$moduleId = $messageInterface['moduleId'];
 		$signTextTemp = "mobile=$mobile&moduleId=$moduleId&partnerId=$partnerId&value=$content" . $sms_signature_key;
 		$signature = sha1 ( $signTextTemp );
 		$post_data = "partnerId=$partnerId&mobile=$mobile&signature=$signature&value=$content&moduleId=SENDSMS";
