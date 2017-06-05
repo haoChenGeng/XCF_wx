@@ -252,7 +252,7 @@ class UserManage extends MY_Controller {
 		$data['forms'][] = array('type'=>'normal','description'=>'所在部门', 'required'=> 1, 'content'=> 'type="text" name="dept" value="'.$user['dept'].'" placeholder="所在部门"');
 		$_SESSION[$data['Model'].'_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);
 		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
-		$data['public_key'] = str_replace("\n",'', $data['public_key']);
+		$data['public_key'] = str_replace(array("\r","\n"),'', $data['public_key']);
 	}
 	
 	//获取oper_edit的修改数据
