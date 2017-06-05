@@ -23,7 +23,7 @@
 						echo '<div class="m-item">
 								  <i class="icon icon-phone"></i>
 								  <label>
-						  			  <input type="text" name="verificationCode"  class="w80-p" placeholder="请输入短信验证码(必填)"/>
+						  			  <input type="text" name="verificationCode"  class="w80-p" style="padding-left:10px;" placeholder="请输入短信验证码(必填)"/>
 								  </label>
 							  </div>';
 					}
@@ -31,7 +31,7 @@
 				<div class="m-item">
 					<i class="icon icon-phone"></i>
             		<label>
-                		<input type="password" id="tpasswd" class="w80-p"  name="tpasswd"   data-reg=".+"  data-error="交易密码不能为空" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请输入交易密码" />
+                		<input type="password" id="tpasswd" class="w80-p"  name="tpasswd"   data-reg=".+"  data-error="交易密码不能为空" data-key="<?php echo $public_key;?>"  style="padding-left: 10px;" data-code="<?php echo $rand_code;?>" placeholder="请输入交易密码" />
                 		<input type="hidden" name="operation"  value=<?php echo $operation?>></input>
             		</label>
         		</div>
