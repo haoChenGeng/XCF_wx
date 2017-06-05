@@ -17,7 +17,6 @@ class Risk_assessment extends MY_Controller {
 	//测试题目
 	function index() {
 		//获取题目	
-// 		$jz = new fund_interface();
 		$ret = $this->fund_interface->risk_test_query('13','001','','','1','1');
 		$data['base'] = $this->base;
 		if (key_exists('code',$ret) && $ret['code'] == '0000'){
@@ -54,17 +53,7 @@ class Risk_assessment extends MY_Controller {
 				$pointList = $pointList.$res[1];
 			}
 		}
-		
-//   		$answerList = '01:A|02:B|03:C|04:D|05:A|06:A|07:A|08:A|09:A|10:B|11:B|12:B';
-//   		$pointList = '5|5|5|5|0|0|0|0|0|0|0|0';
-
-// 		var_dump($answerList);
-		
-		
-// 		$jz = new fund_interface();
-		
 		$ret = $this->fund_interface->risk_test_result($answerList,$pointList);
-var_dump($ret);
 		if (empty($ret)) {
 			$data['ret_code'] = 'xxxx1';
 			$data['ret_msg'] = '风险测试失败';
