@@ -89,8 +89,15 @@ class User extends MY_Controller {
 	function home(){
 		$this->getRecommendFunds($data);
 		$this->load->view('index',$data);
+		//PC端测试完后,正式部署微信时,用只留下面语句
+		//redirect('/weixin/oauth/checkwxaccess');
 	}
 	
+	function homeaccess(){
+// 		$data['headimgurl']=$_SESSION['headimgurl'];
+ 		$this->getRecommendFunds($data);
+ 		$this->load->view('index',$data);
+	}
 	function register() {
 		if (isset ( $_SESSION ['customer_id'] )) {
 			redirect ( $this->base . "/User/home");
