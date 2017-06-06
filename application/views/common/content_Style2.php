@@ -97,7 +97,7 @@
 									}
 									echo '"><label class="col-sm-2 control-label" >'.$val['description'].'</label>'.
 											'<div class="col-sm-10">
-										<input '.$val['content'].'" class="form-control"/>';
+										<input '.$val['content'].' class="form-control"/>';
 									if (isset($val['error'])){
 										echo '<div class="text-danger">'.$val['error'].'</div>';
 									}
@@ -122,8 +122,7 @@
 
 <?php 
 
-
-if (isset($cascade)){
+if (isset($cascade) && is_array($cascade)){
 	echo "<script type='text/javascript'>\r\nvar subDatas = {};\r\n";
 	foreach ($cascade as $key => $val){
 		echo "subDatas['".$key."'] = $.parseJSON('".$val."');\r\n";
