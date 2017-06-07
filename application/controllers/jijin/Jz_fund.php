@@ -222,4 +222,19 @@ class Jz_fund extends MY_Controller
 		}
 	}
 	
+	function getFundCurve(){
+		$get = $this->input->get();
+		$tableName = 'p2_netvalue_'.$get['fundCode'];
+		$startDate = date('Y-m-d',time());
+		$startDate = (substr($startDate,0,4)-1).substr($startDate,4);
+// var_dump($startDate);
+		$fundCure = $this->db->select('net_date,net_day_growth')->where('net_date>',$startDate)->get($tableName)->result_array();
+		if (!empty($fundCure) && is_array($fundCure)){
+			$return = array('code'=>0,'data'=>&$fundCure);
+		}else{
+			$return = array('code'=>1,'msg'=>'数据不存在');
+		}
+		echo json_encode($return);
+// var_dump($return);
+	}
 }
