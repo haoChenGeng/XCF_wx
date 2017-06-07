@@ -41,6 +41,14 @@
 			    			<div class="pos-ab"></div>
 							<a href="/user/login/1" class="dib login-btn pos-ab">登录</a>
 						  </div>';
+					echo '<div>
+			    			<div class="pos-ab"></div>
+							<a href="/user/login/1" class="dib login-btn pos-ab">登录</a>
+						  </div>';
+                  /* 添加用户的微信头像显示,上产品时取代上一行的echo语句
+  				  echo '<div><div class="pos-ab"></div><a href="/user/login/1" style="background-color:yellow;background:url('.$_SESSION['headimgurl'].') no-repeat;background-size:100%;" class="dib login-btn pos-ab">登录</a>
+						  </div>'; 
+				  */	
 				}
 			?>		
 		</div>
