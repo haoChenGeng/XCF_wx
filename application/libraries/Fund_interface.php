@@ -372,4 +372,13 @@ class Fund_interface
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
+	
+	function feeQuery($feeQuery){
+		$feeQuery['code'] = 'feeQuery';
+		$feeQuery['customerNo'] = $_SESSION['customer_name'];
+		$submitData = $this->getSubmitData($feeQuery);
+		// return $submitData;
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
 }
