@@ -48,32 +48,41 @@ class Risk_assessment extends MY_Controller {
 				}
 				
 				$questioncode = $post['questioncode'.$i];
-				$res = explode('|',(empty($post[$i])?'-|0':$post[$i]));
-				$answerList = $answerList.$questioncode.':'.$res[0];
-				$pointList = $pointList.$res[1];
+				if (!empty($post[$i])){
+					$res = explode('|',$post[$i]);
+					$answerList = $answerList.$questioncode.':'.$res[0];
+					$pointList = $pointList.$res[1];
+				}else{
+					$data['ret_code'] = 'xxxx2';
+					$data['ret_msg'] = '您有题目尚未作答';
+					$data['custrisk']='-';
+					break;
+				}
 			}
 		}
-		$ret = $this->fund_interface->risk_test_result($answerList,$pointList);
-		if (empty($ret)) {
-			$data['ret_code'] = 'xxxx1';
-			$data['ret_msg'] = '风险测试失败';
-			$data['custrisk']='-';
-		} else {
-			if ($ret['code'] == '0000') {
-				$data['ret_code'] = '0000';
-				$data['ret_msg'] = '风险测试成功';
-				switch ($ret['data']['custrisk']) {////风险承受能力(1:安全型 2:保守型 3:稳健型 4:积极型 5:进取型)
-					case 1:$data['custrisk']='安全型 ';break;
-					case 2:$data['custrisk']='保守型 ';break;
-					case 3:$data['custrisk']='稳健型 ';break;
-					case 4:$data['custrisk']='积极型 ';break;
-					case 5:$data['custrisk']='进取型 ';break;
-					default:$data['custrisk']='安全型 ';break;
-				}
-			} else {
-				$data['ret_code'] = $ret['code'];
+		if (empty($data['ret_code'])){
+			$ret = $this->fund_interface->risk_test_result($answerList,$pointList);
+			if (empty($ret)) {
+				$data['ret_code'] = 'xxxx1';
 				$data['ret_msg'] = '风险测试失败';
 				$data['custrisk']='-';
+			} else {
+				if ($ret['code'] == '0000') {
+					$data['ret_code'] = '0000';
+					$data['ret_msg'] = '风险测试成功';
+					switch ($ret['data']['custrisk']) {////风险承受能力(1:安全型 2:保守型 3:稳健型 4:积极型 5:进取型)
+						case 1:$data['custrisk']='安全型 ';break;
+						case 2:$data['custrisk']='保守型 ';break;
+						case 3:$data['custrisk']='稳健型 ';break;
+						case 4:$data['custrisk']='积极型 ';break;
+						case 5:$data['custrisk']='进取型 ';break;
+						default:$data['custrisk']='安全型 ';break;
+					}
+				} else {
+					$data['ret_code'] = $ret['code'];
+					$data['ret_msg'] = '风险测试失败';
+					$data['custrisk']='-';
+				}
 			}
 		}
 		$data['base'] = $this->base;

@@ -17,6 +17,7 @@ class PurchaseController extends MY_Controller {
 	
 	//申购 认购前准备
 	function Apply() {
+		$get = $this->input->get();
 		if ($get['purchasetype'] == '认购'){
 			$_SESSION['fundPageOper'] = 'buy';
 		}elseif($get['purchasetype'] == '申购'){
@@ -27,7 +28,6 @@ class PurchaseController extends MY_Controller {
 			redirect($this->base . "/jijin/Jz_account/register");
 			exit;
 		}
-		$get = $this->input->get();
 		$this->load->config('jz_dict');
 		$fundInfo = $this->db->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
 		$data['fundcode'] = $get['fundcode'];
@@ -44,11 +44,13 @@ class PurchaseController extends MY_Controller {
 		$tmp = isset($this->config->item('sharetype')[$data['shareclasses']])?$this->config->item('sharetype')[$data['shareclasses']]:null;
 		$data['sharetypename'] = is_null($tmp)?'-':$tmp;
 		if ($get['purchasetype'] == '认购'){
+			$data['businesscode'] = 20;
 			$data['first_per_min'] = $fundInfo['first_per_min_20'];
 			$data['first_per_max'] = $fundInfo['first_per_max_20'];
 			$data['con_per_min'] = $fundInfo['con_per_min_20'];
 			$data['con_per_max'] = $fundInfo['con_per_max_20'];
 		}elseif($get['purchasetype'] == '申购'){
+			$data['businesscode'] = 22;
 			$data['first_per_min'] = $fundInfo['first_per_min_22'];
 			$data['first_per_max'] = $fundInfo['first_per_max_22'];
 			$data['con_per_min'] = $fundInfo['con_per_min_22'];
@@ -87,7 +89,7 @@ class PurchaseController extends MY_Controller {
 					unset($json['custrisk']);
 					unset($json['fundname']);
 					unset($json['sharetypename']);
-					$data['json'] = base64_encode(json_encode($json));
+					$data['json'] = json_encode($json);
 					//生成用户银行卡信息
 					$channel_info = $this->fund_interface->paymentChannel();
 					$channel_info = setkey($channel_info,'channelid');
@@ -125,7 +127,7 @@ class PurchaseController extends MY_Controller {
 			$arr['ret_msg'] = isset($errMsg) ? $errMsg :'系统故障，请稍候重试';
 			switch ($error_code){
 				case 0:
-					$arr['data'] = base64_encode(json_encode($data));
+					$arr['data'] = json_encode($data);
 					$arr['forward_url'] = '/jijin/PurchaseController/load_apply_fund';
 					$arr['forward_msg'] = '继续够买';
 					$arr['head_title'] = '购买提醒';
@@ -166,7 +168,7 @@ class PurchaseController extends MY_Controller {
 			$_SESSION['jz_fundPageOper'] = 'purchase';
 			redirect($this->base . "/jijin/Jz_fund");
 		}else{
-			$data = json_decode(base64_decode($post['data']),true);
+			$data = json_decode($post['data'],true);
 			$data['base'] = $this->base;
 			$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
 			$data['rand_code'] = "\t".mt_rand(100000,999999);
@@ -194,7 +196,7 @@ class PurchaseController extends MY_Controller {
 			unset($_SESSION['apply_rand_code']);
 			if ($div_bit !== false){                           //找到一次性随机验证码
 				$tpasswd = substr($decryptData, 0, $div_bit);
-				$purchaseData = json_decode(base64_decode($post['json']),true);
+				$purchaseData = json_decode($post['json'],true);
 				$purchaseData['tpasswd'] = $tpasswd;
 				$purchaseData['applicationamt'] = $post['sum'];
 				$purchaseData['mobileno'] = $_SESSION['bank_info']['mobileno'];
@@ -243,5 +245,17 @@ class PurchaseController extends MY_Controller {
 		$this->load->view('ui/view_operate_result',$arr);
 	}
 	
+	function purchaseFee(){
+		$post = $this->input->post();
+// $post = unserialize('a:6:{s:9:"channelid";s:4:"KQ02";s:17:"applicationamount";s:3:"100";s:12:"businesscode";s:2:"22";s:4:"tano";s:2:"09";s:8:"fundcode";s:6:"096001";s:9:"sharetype";s:1:"A";}');
+// var_dump($post);
+		$purchaseFee = $this->fund_interface->feeQuery($post);
+		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询基金交易费用，调用数据为：".serialize($post)."\r\n返回数据为".serialize($purchaseFee)."\r\n\r\n",FILE_APPEND);
+		if ($purchaseFee['code'] == '0000' && is_array($purchaseFee['data'])){
+			echo json_encode(array('code'=>0,'charge'=>$purchaseFee['data']['charge']));
+		}else{
+			echo json_encode(array('code'=>1,'charge'=>$purchaseFee['data']['charge']));
+		}
+	}
 	
 }
