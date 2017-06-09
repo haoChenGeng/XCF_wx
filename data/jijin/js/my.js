@@ -25,6 +25,8 @@
 		 			fundList.innerHTML = '<a class="fund-list-error" href="'+aa+'/jijin/Jz_account/register?next_url=jz_my&myPageOper=asset" id="errorMsg">'+data.errorMsg+'</a>';	 			
 		 		}else {
 		 			document.getElementById('totalBalance').innerHTML = data.totalfundvolbalance || 0;
+		 			document.getElementById('yesterDayIncome').innerHTML = data.yestincomesum || 0;
+		 			document.getElementById('totalIncome').innerHTML = data.addincomesum || 0;
 		 			var listWrap = document.getElementById('buyFundList');
 		 			var fragment = document.createDocumentFragment();
 		 				var oLi = document.createElement('li');
@@ -38,10 +40,10 @@
 			 				oLi.setAttribute('class','mui-table-view-cell');
 			 				oLi.innerHTML = '<div class="mui-media-body clear">'+
 																'<a type="button" href="'+aa+'/jijin/RedeemFundController/Redeem?json='+data.fund_list.data[i].json+'" class="mui-btn mui-btn-success fund-btn-redeem">赎回</a>'+
-																'<p>名称：<span>'+data.fund_list.data[i].fundname+'</span></p>'+
-																'<p>代码：<span>'+data.fund_list.data[i].fundcode+'</span></p>'+
+																'<p>名称：<span>'+data.fund_list.data[i].fundname+'('+data.fund_list.data[i].fundcode+')</span></p>'+
 																'<p>净值/份额：<span>'+data.fund_list.data[i].nav+'/'+data.fund_list.data[i].fundvolbalance+'</span></p>'+
-																'<p>类型：<span>'+data.fund_list.data[i].fundtypename+'</span></p>'+
+																'<p>昨日收益：<span>'+data.fund_list.data[i].yestincome+'</span></p>'+
+																'<p>累计收益：<span>'+data.fund_list.data[i].addincome+'</span></p>'+
 														 	'</div>';
 							if (data.fund_list.data[i].redeem != 'Y') {
 								oLi.querySelector('.fund-btn-redeem').href = "javascript:;";
