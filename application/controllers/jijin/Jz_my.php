@@ -240,4 +240,14 @@ class Jz_my extends MY_Controller
 		echo json_encode($res);
 	}
 	
+	function test(){
+		$res = $this->fund_interface->asset();
+		$data['data'] = $res['data'];
+		var_dump($res);
+		$fundInterface = $this->db->where(array('name'=>'FundInterface'))->get('p2_interface')->row_array();
+		$data['url'] = $fundInterface['url'].'/jijin/XCFinterface';
+		$this->load->view('UrlTest',$data);
+		return;
+	}
+
 }

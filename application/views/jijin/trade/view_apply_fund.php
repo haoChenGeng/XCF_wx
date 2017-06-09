@@ -102,9 +102,7 @@
                     return false;
                 }
                 jsonData = JSON.parse($('#json').val());
-    console.log(jsonData.businesscode);
                 $.post("/jijin/PurchaseController/purchaseFee", {channelid:$('#pay_way').val(),applicationamount:$('#sum').val(),businesscode:jsonData.businesscode,tano:jsonData.tano,fundcode:$('#fundcode').val(),sharetype:jsonData.shareclasses},function(res){
-    console.log(res);
                     retData = JSON.parse(res);
                 	if (retData.code == 0){
                         //验证全部通过回调               

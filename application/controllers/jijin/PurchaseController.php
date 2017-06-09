@@ -247,8 +247,6 @@ class PurchaseController extends MY_Controller {
 	
 	function purchaseFee(){
 		$post = $this->input->post();
-// $post = unserialize('a:6:{s:9:"channelid";s:4:"KQ02";s:17:"applicationamount";s:3:"100";s:12:"businesscode";s:2:"22";s:4:"tano";s:2:"09";s:8:"fundcode";s:6:"096001";s:9:"sharetype";s:1:"A";}');
-// var_dump($post);
 		$purchaseFee = $this->fund_interface->feeQuery($post);
 		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询基金交易费用，调用数据为：".serialize($post)."\r\n返回数据为".serialize($purchaseFee)."\r\n\r\n",FILE_APPEND);
 		if ($purchaseFee['code'] == '0000' && is_array($purchaseFee['data'])){
