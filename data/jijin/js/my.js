@@ -29,14 +29,15 @@
 		 			document.getElementById('totalIncome').innerHTML = data.addincomesum || 0;
 		 			var listWrap = document.getElementById('buyFundList');
 		 			var fragment = document.createDocumentFragment();
-		 				var oLi = document.createElement('li');
 		 			if (!data.fund_list.data.length) {
+		 				var oLi = document.createElement('li');
 		 				oLi.setAttribute('class','mui-table-view-cell');
 		 				oLi.innerHTML = '<p class="fund-list-error"><span>未购买任何基金</span></p>';								 	
 						fragment.appendChild(oLi);
-		 			} else {	 			
+		 			} else {
 			 			for (var i = data.fund_list.data.length - 1; i >= 0; i--) {
 			 				if (0 === data.fund_list.data[i].length) continue;
+			 				var oLi =document.createElement('li');
 			 				oLi.setAttribute('class','mui-table-view-cell');
 			 				oLi.innerHTML = '<div class="mui-media-body clear">'+
 																'<a type="button" href="'+aa+'/jijin/RedeemFundController/Redeem?json='+data.fund_list.data[i].json+'" class="mui-btn mui-btn-success fund-btn-redeem">赎回</a>'+
