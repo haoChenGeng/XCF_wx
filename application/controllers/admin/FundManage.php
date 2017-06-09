@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Recommend extends MY_Controller {
+class FundManage extends MY_Controller {
 	private $logfile_suffix;
 	function __construct() {
 		parent::__construct ();
@@ -16,20 +16,20 @@ class Recommend extends MY_Controller {
 			exit;
 		}
 		//设置页面标题
-		$data['heading_title'] = '基金产品';
+		$data['heading_title'] = '基金产品管理';
 		//设置本页面的链接地址
 		$data['accessUrl'] = $this->unifyEntrance.$accessCode;
 		//设置页面导航内容
 		$data['breadcrumbs'][] = array(	'text' => '首页', 'href' => $this->config->item('home_page'));
 		$data['breadcrumbs'][] = array(	'text' => $data['heading_title'], 'href' => $this->base.$data['accessUrl']);
 		//设置页面所提供的操作
-		$oper_arr = array('oper_add' => 'operadd', 'oper_delete' => 'operdelete');
+		$oper_arr = array('oper_add' => 'operadd', 'oper_delete' => 'operdelete','oper_download' => 'operdownload');
 		//设置数据库表名
 		$data['tableName'] = 'fundlist';
 		//设置选择记录时，获取哪个字段的值
 		$data['selcet_key'] = 'id';
 		//设置页面操作内容描述
-		$data['operContent'] ='基金产品';
+		$data['operContent'] ='基金产品管理';
 		//选择输入值
 		$input = $this->input->post();
 		//依据$input['selectoper']设置需要跳转的函数
@@ -97,6 +97,12 @@ class Recommend extends MY_Controller {
 		foreach ($db_content as $val){
 			$data['table_content'][$i] = $val;
 			$data['table_content'][$i]['recommend'] = $val['recommend'] == 1 ? '是' : '否';
+			if (!empty($data['operButton'])){
+				foreach ($data['operButton'] as $v){
+					$data['table_content'][$i]['operButton'][$v['operation']]['description'] = $v['description'];
+					$data['table_content'][$i]['operButton'][$v['operation']]['iconType'] = $v['iconType'];
+				}
+			}
 			$i++;
 		}
 		//页面下方的分页导航
@@ -112,6 +118,19 @@ class Recommend extends MY_Controller {
 	
 	private function operdelete(&$input, &$data){
 		return $this->updateRecommend($input, $data, 0);
+	}
+	
+	private function operdownload(&$input, &$data){
+		$fundcode = $this->db->select('fundcode')->where(array('id'=>$input['editItem']))->get('p2_fundlist')->row_array()['fundcode'];
+var_dump($fundcode);
+		$this->load->library(array('Fund_interface'));
+		$this->load->model("Model_db");
+		if ($this->fund_interface->getFundNetvalue($fundcode)){
+			$data['success'] = '历史净值数据更新成功';                //设置操作成功提示
+		}else{
+			$data['error_warning'] = '历史净值数据更新失败';          //设置操作失败提示
+		}
+		return $this->operdefault($input,$data);
 	}
 	
 	private function updateRecommend(&$input, &$data, $setval){

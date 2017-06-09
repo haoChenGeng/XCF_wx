@@ -107,7 +107,6 @@ class Fund_interface
 					}
 				}
 				if (!empty($fundcodes)){
-					$this->CI->load->model("Model_db");
 					foreach ($fundcodes as $val){
 						$this->getFundNetvalue($val);
 					}
@@ -142,8 +141,11 @@ class Fund_interface
 			foreach ($updateData as $key=>$val){
 				$updateData[$key]['XGRQ'] = $currentdate;
 			}
-			$this->CI->Model_db->incremenUpdate('p2_netvalue_'.$fundcode, $fundNetvalue['data'], 'net_date');
+			$flag = $this->CI->Model_db->incremenUpdate('p2_netvalue_'.$fundcode, $fundNetvalue['data'], 'net_date');
+		}else{
+			$flag = FALSAE;
 		}
+		return $flag;
 	}
 	
 	private function creatFundNetValue($tableName){
