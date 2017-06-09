@@ -93,12 +93,70 @@ class Fund_interface
 			$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 			$funddata = $this->getReturnData($returnData)['data']['fundList'];
 			if (is_array($funddata) && !empty($funddata)){
+				$preFundInfo = $this->CI->db->select('fundcode,nav,navdate')->get('p2_fundlist')->result_array();
+				$preFundInfo = setkey($preFundInfo, 'fundcode');
 				$flag = $this->CI->Model_db->incremenUpdate('fundlist', $funddata, 'fundcode');
 				if ($flag){
 					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'fundlist'))->update('dealitems');
 				}
+				$fundcodes = array_column($funddata, 'fundcode');
+				$tables = $this->CI->db->list_tables();
+				foreach ($fundcodes as $key=>$val){
+					if (in_array('p2_netvalue_'.$val, $tables)){
+						unset($fundcodes[$key]);
+					}
+				}
+				if (!empty($fundcodes)){
+					$this->CI->load->model("Model_db");
+					foreach ($fundcodes as $val){
+						$this->getFundNetvalue($val);
+					}
+				}
+				$currentdate = date('Y-m-d',time());
+				foreach ($funddata as $val){
+					if ($val['navdate'] != $preFundInfo[$val['fundcode']]['navdate']){
+						$val['navdate'] = date('Y-m-d',strtotime($val['navdate']));
+						$updateNav = array('net_date' => $val['navdate'],
+								'net_unit' => $val['nav'],
+								'net_sum' => $val['totalnav'],
+								'net_day_growth' => ($val['nav']-$preFundInfo[$val['fundcode']]['nav'])/$preFundInfo[$val['fundcode']]['nav'],
+								'XGRQ' => $currentdate,
+						);
+						$this->CI->db->replace('p2_netvalue_'.$val['fundcode'],$updateNav);
+					}
+				}
 			}
 		}
+	}
+	
+	function getFundNetvalue($fundcode){
+		$submitData = $this->getSubmitData(array("code"=>'fundNetvalue','fund_code'=>$fundcode));
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		$fundNetvalue = $this->getReturnData($returnData);
+		if ($fundNetvalue['code'] == '0000' && is_array($fundNetvalue['data'])){
+			if (!$this->CI->db->table_exists('p2_netvalue_'.$fundcode)){
+				$this->creatFundNetValue('p2_netvalue_'.$fundcode);
+			}
+			$updateData = &$fundNetvalue['data'];
+			$currentdate = date('Y-m-d',time());
+			foreach ($updateData as $key=>$val){
+				$updateData[$key]['XGRQ'] = $currentdate;
+			}
+			$this->CI->Model_db->incremenUpdate('p2_netvalue_'.$fundcode, $fundNetvalue['data'], 'net_date');
+		}
+	}
+	
+	private function creatFundNetValue($tableName){
+		$sql = "CREATE TABLE `".$tableName."` (
+				`net_date` varchar(24) ,
+				`net_unit` varchar(24) DEFAULT NULL,
+				`net_sum` varchar(24) DEFAULT NULL,
+				`net_day_growth` varchar(24) DEFAULT NULL,
+				`XGRQ` datetime DEFAULT NULL COMMENT '更新日期',
+				PRIMARY KEY (`net_date`)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+		$flag = $this->CI->db->query($sql);
+		return $flag;
 	}
 	
 	function channel(){
