@@ -122,7 +122,6 @@ class FundManage extends MY_Controller {
 	
 	private function operdownload(&$input, &$data){
 		$fundcode = $this->db->select('fundcode')->where(array('id'=>$input['editItem']))->get('p2_fundlist')->row_array()['fundcode'];
-var_dump($fundcode);
 		$this->load->library(array('Fund_interface'));
 		$this->load->model("Model_db");
 		if ($this->fund_interface->getFundNetvalue($fundcode)){
