@@ -16,7 +16,7 @@ class FundManage extends MY_Controller {
 			exit;
 		}
 		//设置页面标题
-		$data['heading_title'] = '基金产品管理';
+		$data['heading_title'] = '公募基金管理';
 		//设置本页面的链接地址
 		$data['accessUrl'] = $this->unifyEntrance.$accessCode;
 		//设置页面导航内容
@@ -29,7 +29,7 @@ class FundManage extends MY_Controller {
 		//设置选择记录时，获取哪个字段的值
 		$data['selcet_key'] = 'id';
 		//设置页面操作内容描述
-		$data['operContent'] ='基金产品管理';
+		$data['operContent'] ='公募基金管理';
 		//选择输入值
 		$input = $this->input->post();
 		//依据$input['selectoper']设置需要跳转的函数
