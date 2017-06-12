@@ -108,7 +108,8 @@ function complete(obj) {
             	var payDiv = document.getElementById('payDiv'),
             	applicationval = parseFloat(document.getElementById('applicationval').value),
             	availablevol = parseFloat(document.getElementById('availablevol').value),
-                div = document.createElement('div');
+                div1 = document.createElement('div');
+            	div2 = document.createElement('div');
                 if ((applicationval-parseInt(applicationval*100)/100) > 0.0000000001) {
                     alert('份额最小单位为0.01');
                     return false;
@@ -117,21 +118,38 @@ function complete(obj) {
                     return false;
                 }
                 document.getElementById('applicationval').value = applicationval;
-               //验证全部通过回调        
-                document.title = '赎回确认';
-                document.getElementById('redeemChange').innerHTML = '赎回确认';
-                document.getElementById('nextBtn').style.display = 'none';
-                document.getElementById('commit').style.display = 'block';
-                document.getElementById('applicationval').setAttribute('readonly','true');
-                div.setAttribute('class','m2-item');
-                div.innerHTML = '<div class="item-width-wrap">'+
-                                    '<span class="m2-item-t1">交易密码：</span>'+
-                                    '<label>'+
-                                        '<input type="password" id="passwd" name="tpasswd" data-reg=".+"  data-error="交易密码不能为空" placeholder="请输入交易密码" />'+
-                                    '</label>'+
-                                '</div>'; 
-                document.getElementById('info_form').insertBefore(div, payDiv.nextSibling);
-                $('#nextBtn').off();
+                $.post("/jijin/RedeemFundController/redeemFee", {channelid:"<?php echo $channelid?>",applicationvol:applicationval,businesscode:24,tano:"<?php echo $tano?>",fundcode:$('#fundcode').val(),sharetype:"<?php echo $sharetype?>"},function(res){
+                	retData = JSON.parse(res);
+                	if (retData.code == 0){
+console.log(retData);
+                        //验证全部通过回调        
+                        document.title = '赎回确认';
+                        document.getElementById('redeemChange').innerHTML = '赎回确认';
+                        document.getElementById('nextBtn').style.display = 'none';
+                        document.getElementById('commit').style.display = 'block';
+                        document.getElementById('applicationval').setAttribute('readonly','true');
+                        div1.setAttribute('class','m2-item');
+                        div1.innerHTML = '<div class="item-width-wrap">'+
+                                            '<span class="m2-item-t1">交易密码：</span>'+
+                                            '<label>'+
+                                                '<input type="password" id="passwd" name="tpasswd" data-reg=".+"  data-error="交易密码不能为空" placeholder="请输入交易密码" />'+
+                                            '</label>'+
+                                        '</div>'; 
+                        document.getElementById('info_form').insertBefore(div1, payDiv.nextSibling);
+                        div2.setAttribute('class','m2-item');
+                        div2.innerHTML = '<div class="item-width-wrap">'+
+                        					'<span class="m2-item-t1">赎回费用：</span>'+
+                                            '<label>'+
+                                            	'<input type="text"  style="color:#333;" value="'+retData.charge+'"/>'+
+                                            '</label>'+
+                                        '</div>'; 
+                        document.getElementById('info_form').insertBefore(div2, payDiv.nextSibling);
+                        $('#nextBtn').off();
+                    }else{
+                    	alert('查询赎回费用失败');
+                	}
+                }); 
+
             });
         });
         $('#commit').on('click',function () {
