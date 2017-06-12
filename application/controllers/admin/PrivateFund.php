@@ -269,7 +269,7 @@ class PrivateFund extends MY_Controller {
 				'items'=> array(array('val'=>1, 'name'=>'股权型'),array('val'=>2, 'name'=>'海外型'),array('val'=>3, 'name'=>'对冲型'),array('val'=>4, 'name'=>'股票型'),
 				array('val'=>5, 'name'=>'债券型'),array('val'=>6, 'name'=>'定增型')));
 		
-		$data['forms'][] = array('type'=>'select', 'description'=>'是否显示', 'required'=>1, 'name'=>'isshow', 'val'=>$fund['isshow'],
+		$data['forms'][] = array('type'=>'select', 'description'=>'是否显示', 'required'=>1, 'name'=>'isshow', 'val'=>'',
 				'items'=> array(array('val'=>0, 'name'=>'否'),array('val'=>1, 'name'=>'是')));
 		
 		

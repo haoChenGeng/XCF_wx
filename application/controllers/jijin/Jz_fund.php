@@ -140,7 +140,8 @@ class Jz_fund extends MY_Controller
 		}
 		$data['base'] = $this->base;
 		$data['next_url'] = isset($get['next_url']) ? $get['next_url'] : '/jijin/Jz_fund/index/fund';
-		$this->load->view('/jijin/trade/jijinprodetail', $data);
+var_dump($data);
+		$this->load->view('/jijin/trade/prodetail', $data);
 	}
 	
 	private function getCancelableList(){
