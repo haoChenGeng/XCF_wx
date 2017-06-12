@@ -24,10 +24,12 @@ class Test extends MY_Controller
 //     	$res = $this->fund_interface->Trans_applied('20170301', '20170501');
 //     	var_dump($res);
 //     	var_dump(date('Y-m-d H:i:s',1493716505));
-$this->load->database();
-    	$this->db->query('UPDATE `p2_dealitems` SET `times` = `times`-1 WHERE `dealitem` = "sendSms"');
+// $this->load->database();
+//     	$this->db->query('UPDATE `p2_dealitems` SET `times` = `times`-1 WHERE `dealitem` = "sendSms"');
 //     	$this->load->library('Fund_interface');
 //     	$this->fund_interface->fund_list();
+// $_SERVER['CI_ENV'] = 'test';
+var_dump($_SERVER);
     }
     
 }
