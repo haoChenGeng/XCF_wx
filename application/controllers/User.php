@@ -393,6 +393,7 @@ class User extends MY_Controller {
 		}
 		if (ISTESTING) {
 			$_SESSION ['telcode'] = $telcode = '1234';
+			$_SESSION ['T_name'] = $post ['tel'];
 			echo '您的验证码为:1234';
 		}else{
 			$_SESSION ['telcode'] = $telcode = $this->TelCode();
