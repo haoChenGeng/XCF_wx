@@ -2,6 +2,7 @@
 if (! defined ( 'BASEPATH' ))
 	exit ( 'No direct script access allowed' );
 header ( "Content-type: text/html; charset=utf-8" );
+include_once 'weixin/Api.php';
 
 class User extends MY_Controller {
 	private $logfile_suffix;
@@ -40,6 +41,8 @@ class User extends MY_Controller {
 						$T_pwd = MD5 ( MD5 ( $passkey ) . substr ( $T_pwd, 5, 20 ) );
 						$trytimes = (time()-$user_info['logintime']>3600) ? 0 : $user_info['trytimes'];
 						if ($trytimes < 3){
+							var_dump($T_name);
+							var_dump($T_pwd);
 							if ($user_info ['Customername'] == $T_name && $user_info ['Password'] == $T_pwd) {
 								$_SESSION ['customer_id'] = $user_info ['id'];
 								$_SESSION ['customer_name'] = $user_info ['Customername'];
@@ -87,16 +90,18 @@ class User extends MY_Controller {
 
 
 	function home(){
-		$this->getRecommendFunds($data);
-		$this->load->view('index',$data);
-		//PC端测试完后,正式部署微信时,用只留下面语句
-		//redirect('/weixin/oauth/checkwxaccess');
+		if (ISTESTING) {
+			$this->getRecommendFunds($data);
+			$this->load->view('index',$data);
+		}
+		else 
+			redirect('/weixin/oauth/checkwxaccess');
 	}
 	
 	function homeaccess(){
-// 		$data['headimgurl']=$_SESSION['headimgurl'];
- 		$this->getRecommendFunds($data);
- 		$this->load->view('index',$data);
+  		$data['headimgurl']=$_SESSION['headimgurl'];
+  		$this->getRecommendFunds($data);
+  		$this->load->view('index',$data);
 	}
 	function register() {
 		if (isset ( $_SESSION ['customer_id'] )) {
@@ -154,15 +159,18 @@ class User extends MY_Controller {
 						"status" => 1,
 						"planner_id" => !empty($post['planner_id']) ? $post['planner_id'] : '',
 						);
-				if (! empty ( $arr ['register_openid'] )) {
-					$wxApi = new Api ();
-					$userInfo = $wxApi->getUserInfo ( $arr ['register_openid'] );
-					if (! empty ( $userInfo )) {
-						$arr ['headImg'] = $userInfo ['headimgurl'];
-						$arr ['sex'] = $userInfo ['sex'];
-						$arr ['nick_name'] = $userInfo ['nickname'];
-						$arr ['province'] = $userInfo ['province'];
-						$arr ['city'] = $userInfo ['city'];
+				if (!ISTESTING) {
+					if (! empty ($_SESSION['open_id'])) {
+						$wxApi = new Api ();
+						$userInfo = $wxApi->getUserInfo ( $_SESSION['open_id']);
+						if (! empty ( $userInfo )) {
+							$arr ['register_openid']=$_SESSION['open_id'];
+							$arr ['headImg'] = $userInfo ['headimgurl'];
+							$arr ['sex'] = $userInfo ['sex'];
+							$arr ['nick_name'] = $userInfo ['nickname'];
+							$arr ['province'] = $userInfo ['province'];
+							$arr ['city'] = $userInfo ['city'];
+						}
 					}
 				}
 				$res = $this->db->set($arr)->insert('customer');
