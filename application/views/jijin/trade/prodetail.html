@@ -41,10 +41,10 @@
       <div class="m-content-t3">
         <p>净值走势</p>
         <div  id="chartContent">
-          <div class="m-content-t3-chart" style="height: 280px;display: block;" id="one"></div>
-          <div class="m-content-t3-chart" style="height: 280px;" id="three"></div>
-          <div class="m-content-t3-chart" style="height: 280px;" id="six"></div>
-          <div class="m-content-t3-chart" style="height: 280px;" id="year"></div>
+          <div class="m-content-t3-chart" style="height: 280px;display: block;" id="one">1</div>
+          <div class="m-content-t3-chart" style="height: 280px;" id="three">2</div>
+          <div class="m-content-t3-chart" style="height: 280px;" id="six">3</div>
+          <div class="m-content-t3-chart" style="height: 280px;" id="year">4</div>
         </div>
         <div class="m-content-t3-tab" id="worthChart">
           <div class="tabItem tab-active">1月</div>
@@ -81,11 +81,12 @@ function getQueryString(e) {
 
 var nav=document.getElementById("worthChart").getElementsByTagName("div");  
 var con=document.getElementById("chartContent").getElementsByTagName("div");
-console.log(nav);
+console.log(con);
 for(i=0;i<nav.length;i++){
     nav[i].index = i;
     nav[i].addEventListener('click', function() {
       for(var n = 0; n < con.length; n++) {
+        console.log(this);
           con[n].style.display = "none";
           nav[n].classList.remove('tab-active');
       }
@@ -765,7 +766,7 @@ console.log(sixData.length);
       }]
     };
 
-    var opOne = clone(Options);
+    /*var opOne = clone(Options);
     var opThree = clone(Options);
     var opSix = clone(Options);
     var opYear = clone(Options);
@@ -786,15 +787,15 @@ console.log(sixData.length);
       opYear.xAxis.data[i] = year[i].net_date.replace(/-/g, '');
       opYear.series.data[i] = year[i].net_day_growth;
     }
-
-    var n1 = echarts.init(document.getElementById("one"));
+*/
+    /*var n1 = echarts.init(document.getElementById("one"));
     var n2 = echarts.init(document.getElementById("three"));
     var n3 = echarts.init(document.getElementById("six"));
     var n4 = echarts.init(document.getElementById("year"));
     $("#one").css({ height: "280px"}), n1.resize(), n1.setOption(opOne);
     $("#three").css({ height: "280px"}), n1.resize(), n1.setOption(opThree);
     $("#six").css({ height: "280px"}), n1.resize(), n1.setOption(opSix);
-    $("#year").css({ height: "280px"}), n1.resize(), n1.setOption(opYear);
+    $("#year").css({ height: "280px"}), n1.resize(), n1.setOption(opYear);*/
   }
 });
 </script>

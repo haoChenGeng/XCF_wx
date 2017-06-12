@@ -119,10 +119,8 @@ class Jz_fund extends MY_Controller
 	public function showprodetail()
 	{
 		$get = $this->input->get();
-// 		$post = $this->input->post();
 		$fund_list = $this->db->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
 		$this->load->config('jz_dict');
-// 		$fund_list = $fund_list['data'][0];
 		$tmp = isset($this->config->item('fundtype')[$fund_list['fundtype']])?$this->config->item('fundtype')[$fund_list['fundtype']]:null;
 		$fund_list['fundtype'] = is_null($tmp)?'-':$tmp;
 		$tmp = isset($this->config->item('sharetype')[$fund_list['shareclasses']])?$this->config->item('sharetype')[$fund_list['shareclasses']]:null;
@@ -140,7 +138,7 @@ class Jz_fund extends MY_Controller
 		}
 		$data['base'] = $this->base;
 		$data['next_url'] = isset($get['next_url']) ? $get['next_url'] : '/jijin/Jz_fund/index/fund';
-		$this->load->view('/jijin/trade/jijinprodetail', $data);
+		$this->load->view('/jijin/trade/prodetail', $data);
 	}
 	
 	private function getCancelableList(){
@@ -227,14 +225,12 @@ class Jz_fund extends MY_Controller
 		$tableName = 'p2_netvalue_'.$get['fundCode'];
 		$startDate = date('Y-m-d',time());
 		$startDate = (substr($startDate,0,4)-1).substr($startDate,4);
-// var_dump($startDate);
-		$fundCure = $this->db->select('net_date,net_day_growth')->where('net_date>',$startDate)->get($tableName)->result_array();
+		$fundCure = $this->db->select('net_date,net_day_growth')->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
 		if (!empty($fundCure) && is_array($fundCure)){
 			$return = array('code'=>0,'data'=>&$fundCure);
 		}else{
 			$return = array('code'=>1,'msg'=>'数据不存在');
 		}
 		echo json_encode($return);
-// var_dump($return);
 	}
 }

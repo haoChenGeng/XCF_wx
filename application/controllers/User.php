@@ -113,7 +113,7 @@ class User extends MY_Controller {
 			if (empty ( $post['sms_code'] ) || strtolower ( $_SESSION ['telcode'] ) != strtolower ( $post['sms_code'] )) {
 				$fail_message = '验证码不正确，系统正在返回...';
 			}else{
-				$this->db->set(array('times'=>'times-1'))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
+				$this->db->query('UPDATE `p2_dealitems` SET `times` = `times`-1 WHERE `dealitem` = "sendSms"');
 			}
 			if (!isset($fail_message) && empty ( $post ['pwd'] )){
 				$fail_message = '密码不能为空，系统正在返回...';
@@ -226,7 +226,7 @@ class User extends MY_Controller {
 			if (empty ( $post['sms_code'] ) || strtolower ( $_SESSION ['telcode'] ) != strtolower ( $post['sms_code'] )) {
 				$failmessage = '验证码不正确，系统正在返回...';
 			}else{
-				$this->db->set(array('times'=>'times-1'))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
+				$this->db->query('UPDATE `p2_dealitems` SET `times` = `times`-1 WHERE `dealitem` = "sendSms"');
 				if (empty($post['tel'])){
 					$failmessage = '用户名不能为空，系统正在返回...';
 				}else{
@@ -377,9 +377,14 @@ class User extends MY_Controller {
 			if ((time()-$sendSms['updatetime'])> 3600){
 				$this->db->set(array('updatetime'=>time(),'times'=>1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
 			}else{
-				if ($sendSms['times'] > 300){
+				$smsSetting = $this->db->where(array('name'=>'smsErrTimes'))->get('p2_interface')->row_array();
+				if (empty($smsSetting)){
+					$this->db->set(array('name'=>'smsErrTimes','description'=>'系统防短信攻击设置(通过设置1小时内，短信验证码未返回最大次数partnerId来阻止短信攻击)','partnerId'=>300,'url'=>'#'))->insert('p2_interface');
+				}
+				$allowtime = empty($smsSetting['partnerId']) ? 300 : $smsSetting['partnerId'];
+				if ($sendSms['times'] > $allowtime){
 					echo '短信验证码发送失败，请稍后重试';
-					file_put_contents('log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证被拒绝,短信接口可能遭受攻击，1小时内超过300条短信未返回正确验证码\r\n\r\n",FILE_APPEND);
+					file_put_contents(FCPATH.'/log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证被拒绝,短信接口可能遭受攻击，1小时内超过300条短信未返回正确验证码\r\n\r\n",FILE_APPEND);
 					exit;
 				}else{
 					$this->db->set(array('times'=>$sendSms['times']+1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');

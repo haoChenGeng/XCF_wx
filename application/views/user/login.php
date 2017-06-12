@@ -46,6 +46,8 @@
 <script>
     Zepto(function($) {
         M.checkBoxInit();
+        this.clientHeight = document.documentElement.clientHeight;
+        $('body').height(this.clientHeight);
         $('#login').on('click', function () {
             M.checkForm(function () {
             	var encrypt = new JSEncrypt();
