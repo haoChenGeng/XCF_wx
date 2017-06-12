@@ -2,6 +2,7 @@
 include_once(dirname(__DIR__).DIRECTORY_SEPARATOR.'weixin/CommonUtil.php');
 include_once "wxBizMsgCrypt.php";
 include_once 'wxConfig.php';
+include_once 'CommonUtil.php';
 class Api extends MY_Controller
 {
     private $access_token='';
@@ -52,7 +53,6 @@ class Api extends MY_Controller
                         $this->access_token = $token;
                         $this->accessTokenInvalidTime = time() + $resultArr['expires_in'] - 5 * 60;
                         $resultArr['accessTokenInvalidTime']=$this->accessTokenInvalidTime;
-
                         fwrite($fp, json_encode($resultArr));
                         flock($fp, LOCK_UN);
                     } else {
@@ -249,5 +249,26 @@ class Api extends MY_Controller
         }
 
         return $resArr;
+    }
+    public function getUserInfo($openid){
+    	$resArr=array();
+    	if(!empty($openid)) {
+    		$this->verifyAccessToken();
+    		$userInfoUrl='https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN';
+    		$userInfoUrl=strtr($userInfoUrl,array('ACCESS_TOKEN'=>$this->access_token,'OPENID'=>$openid));
+    		CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"Api userInfoUrl".$userInfoUrl."\r\n");
+    		
+    		$jsonStr= CommonUtil::httpsRequest($userInfoUrl);
+    		CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"Api userInfoUrl".$jsonStr."\r\n");
+    		
+    		if (!empty($jsonStr)) {
+    			$resultArr = json_decode($jsonStr, true);
+    			if(!isset($resultArr['errcode'])) {
+    				$resArr=$resultArr;
+    			}
+    		}
+    	}
+    	CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"Api resArr ".serialize($resArr)."\r\n");
+    	return $resArr;
     }
 }
