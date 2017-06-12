@@ -370,9 +370,10 @@ class User extends MY_Controller {
 				$this->db->set(array('updatetime'=>time(),'times'=>1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
 			}else{
 				$smsSetting = $this->db->where(array('name'=>'smsErrTimes'))->get('p2_interface')->row_array();
+				if (empty($smsSetting)){
+					$this->db->set(array('name'=>'smsErrTimes','description'=>'系统防短信攻击设置(通过设置1小时内，短信验证码未返回最大次数partnerId来阻止短信攻击)','partnerId'=>300,'url'=>'#'))->insert('p2_interface');
+				}
 				$allowtime = empty($smsSetting['partnerId']) ? 300 : $smsSetting['partnerId'];
-echo $allowtime;
-echo $sendSms['times'];
 				if ($sendSms['times'] > $allowtime){
 					echo '短信验证码发送失败，请稍后重试';
 					file_put_contents(FCPATH.'/log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证被拒绝,短信接口可能遭受攻击，1小时内超过300条短信未返回正确验证码\r\n\r\n",FILE_APPEND);
