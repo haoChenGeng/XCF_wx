@@ -67,7 +67,7 @@
       </div>
     </section>
     <section class="m-footer">
-      <p class="m-footer-content">立即申购</p>
+      <p class="m-footer-content" onclick="goto_buyfund()">立即<?php echo $purchasetype;?></p>
     </section>
   </div>
 <script src="../../../../data/jijin/js/echarts.js"></script>
@@ -75,6 +75,11 @@
 <script src="../../../../data/jijin/js/prodetail.js"></script>
 <script>
 
+function goto_buyfund() {
+    window.location.href = "<?php echo "/jijin/PurchaseController/Apply?fundcode=".$fundlist['fundcode'].'&purchasetype='.$purchasetype;?>"
+}
+
+</script>
 </script>
 </body>
 </html>

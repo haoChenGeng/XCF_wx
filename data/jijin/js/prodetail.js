@@ -31,7 +31,7 @@ $(document).ready(function() {
   (function() {
     var fundCode = getQueryString('fundcode');
     $.ajax({
-      url: 'http://localhost:8009/jijin/jz_fund/getFundCurve',
+      url: '/jijin/jz_fund/getFundCurve',
       data: {
         fundCode: fundCode
       },
@@ -69,8 +69,8 @@ $(document).ready(function() {
     var three = new Date().valueOf() - 3*30*24*60*60*1000;
     var half = new Date().valueOf() - 6*30*24*60*60*1000;
     for (var i = 0; i < data.length; i++) {
-console.log(half);
-console.log(new Date(data[i].net_date.replace(/-/g, '/')).valueOf());  
+//console.log(half);
+//console.log(new Date(data[i].net_date.replace(/-/g, '/')).valueOf());  
       var start = new Date(data[0].net_date.replace(/-/g, '/')).valueOf();
       if (today > start) {
         oneData = [];
@@ -98,8 +98,8 @@ console.log(new Date(data[i].net_date.replace(/-/g, '/')).valueOf());
         break;
       }
     }
-console.log(oneData);
-console.log(threeData);
+//console.log(oneData);
+//console.log(threeData);
     var yearData = data;
 
     var Options = {
