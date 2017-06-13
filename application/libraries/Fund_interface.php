@@ -139,7 +139,12 @@ class Fund_interface
 			$updateData = &$fundNetvalue['data'];
 			$currentdate = date('Y-m-d',time());
 			foreach ($updateData as $key=>$val){
-				$updateData[$key]['XGRQ'] = $currentdate;
+				if (empty($val['net_date'])){
+					unset ($updateData[$key]);
+				}else{
+					$updateData[$key]['net_day_growth'] = empty($val['net_day_growth']) ? 0 : $val['net_day_growth'];
+					$updateData[$key]['XGRQ'] = $currentdate;
+				}
 			}
 			$flag = $this->CI->Model_db->incremenUpdate('p2_netvalue_'.$fundcode, $fundNetvalue['data'], 'net_date');
 		}else{
@@ -151,9 +156,9 @@ class Fund_interface
 	private function creatFundNetValue($tableName){
 		$sql = "CREATE TABLE `".$tableName."` (
 				`net_date` varchar(24) ,
-				`net_unit` varchar(24) DEFAULT DEFAULT '0' NOT NULL,
-				`net_sum` varchar(24) DEFAULT DEFAULT '0' NOT NULL,
-				`net_day_growth` varchar(24) DEFAULT '0' NOT NULL,
+				`net_unit` varchar(24) DEFAULT '0',
+				`net_sum` varchar(24) DEFAULT '0',
+				`net_day_growth` varchar(24) NOT NULL DEFAULT '0',
 				`XGRQ` datetime DEFAULT NULL COMMENT '更新日期',
 				PRIMARY KEY (`net_date`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
