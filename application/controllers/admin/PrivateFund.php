@@ -259,10 +259,10 @@ class PrivateFund extends MY_Controller {
 			$data['forms'][] = array('type'=>'normal', 'description'=>'ID', 'content'=> 'type="text" name="id" value="'.$fund['id'].'" readonly=true');
 		}
 		$data['forms'][] = array('type'=>'normal', 'description'=>'基金名称', 'required'=>1, 'content'=> 'type="text" name="name" value="'.$fund['name'].'" placeholder="私募基金产品名称"');
-		$data['forms'][] = array('type'=>'normal', 'description'=>'标签', 'required'=>1, 'content'=> 'type="text" name="label" value="'.$fund['label'].'" placeholder="多个标签项，以中文的分号分隔"');
-		$data['forms'][] = array('type'=>'normal', 'description'=>'投资策略', 'required'=>1, 'content'=> 'type="text" name="strategy" value="'.$fund['strategy'].'" placeholder="产品的投资策略"');
-		$data['forms'][] = array('type'=>'normal','description'=>'产品优势', 'required'=> 1, 'content'=> 'type="text" name="advantage" value="'.$fund['advantage'].'" placeholder="产品的优势"');
-		$data['forms'][] = array('type'=>'normal','description'=>'综合评价', 'required'=> 1, 'content'=> 'type="text" name="evaluate" value="'.$fund['evaluate'].'" placeholder="描述对产品的评价"');
+		$data['forms'][] = array('type'=>'normal', 'description'=>'标签', 'required'=>1, 'content'=> 'type="text" maxlength="12" name="label" value="'.$fund['label'].'" placeholder="多个标签项，以中文的分号分隔"');
+		$data['forms'][] = array('type'=>'normal', 'description'=>'投资策略', 'required'=>1, 'content'=> 'type="text"  maxlength="5" name="strategy" value="'.$fund['strategy'].'" placeholder="产品的投资策略"');
+		$data['forms'][] = array('type'=>'normal','description'=>'产品优势', 'required'=> 1, 'content'=> 'type="text" maxlength="12" name="advantage" value="'.$fund['advantage'].'" placeholder="产品的优势"');
+		$data['forms'][] = array('type'=>'normal','description'=>'综合评价', 'required'=> 1, 'content'=> 'type="text" maxlength="12" name="evaluate" value="'.$fund['evaluate'].'" placeholder="描述对产品的评价"');
 		//$data['forms'][] = array('type'=>'normal','description'=>'基金类型', 'required'=> 1, 'content'=> 'type="text" name="type" value="'.$fund['type'].'" placeholder=""');
 		//：1、股权型；2、海外型；3、对冲型；4、股票型；5、债券型；6、定增型
 		$data['forms'][] = array('type'=>'select', 'description'=>'基金类型', 'required'=>1, 'name'=>'type', 'val'=>$fund['type'],
