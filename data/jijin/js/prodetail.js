@@ -107,7 +107,8 @@ $(document).ready(function() {
         trigger: "axis",
         axisPointer: {
           type: "line"
-        }
+        },
+        formatter: '{c}%'
       },
       legend: {
         data: ["净值走势"],
@@ -129,7 +130,12 @@ $(document).ready(function() {
         data: []
       },
       yAxis: {
-        type: "value"
+        type: "value",
+        min: 'dataMin',
+        max: 'dataMax',
+        axisLabel: {
+          formatter: '{value}%'
+        }
       },
       series: []
     };
@@ -166,28 +172,22 @@ $(document).ready(function() {
     };
     for (var i = 0; i < oneData.length; i++) {
       opOne.xAxis.data[i] = oneData[i].net_date.replace(/-/g, '');
-      c.data[i] = oneData[i].net_day_growth;
+      c.data[i] = ((oneData[i].net_day_growth/oneData[oneData.length-1].net_day_growth-1)*100).toFixed(4);
     }
     c.data.reverse();
     opOne.xAxis.data.reverse();
-    opOne.yAxis.min = 'dataMin';
-    opOne.yAxis.max = 'dataMax';
     opOne.series.push(c);
     for (var i = 0; i < threeData.length; i++) {
       opThree.xAxis.data[i] = threeData[i].net_date.replace(/-/g, '');
-      d.data[i] = threeData[i].net_day_growth;
+      d.data[i] = ((threeData[i].net_day_growth/threeData[threeData.length-1].net_day_growth-1)*100).toFixed(4);
     }
-    opThree.yAxis.min = 'dataMin';
-    opThree.yAxis.max = 'dataMax';
     d.data.reverse();
     opThree.xAxis.data.reverse();
     opThree.series.push(d);
     for (var i = 0; i < halfData.length; i++) {
       opSix.xAxis.data[i] = halfData[i].net_date.replace(/-/g, '');
-      a.data[i] = halfData[i].net_day_growth;
+      a.data[i] = ((halfData[i].net_day_growth/halfData[halfData.length-1].net_day_growth-1)*100).toFixed(4);
     }
-    opSix.yAxis.min = 'dataMin';
-    opSix.yAxis.max = 'dataMax';
     a.data.reverse();
     opSix.xAxis.data.reverse();
     opSix.series.push(a);
@@ -195,8 +195,6 @@ $(document).ready(function() {
       opYear.xAxis.data[i] = data[i].net_date.replace(/-/g, '');
       b.data[i] = ((data[i].net_day_growth/data[data.length-1].net_day_growth-1)*100).toFixed(4);
     }
-    opYear.yAxis.min = 'dataMin';
-    opYear.yAxis.max = 'dataMax';
     b.data.reverse();
     opYear.xAxis.data.reverse();
     opYear.series.push(b);
