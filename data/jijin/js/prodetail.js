@@ -69,8 +69,6 @@ $(document).ready(function() {
     var three = new Date().valueOf() - 3*30*24*60*60*1000;
     var half = new Date().valueOf() - 6*30*24*60*60*1000;
     for (var i = 0; i < data.length; i++) {
-//console.log(half);
-//console.log(new Date(data[i].net_date.replace(/-/g, '/')).valueOf());  
       var start = new Date(data[0].net_date.replace(/-/g, '/')).valueOf();
       if (today > start) {
         oneData = [];
@@ -98,8 +96,6 @@ $(document).ready(function() {
         break;
       }
     }
-//console.log(oneData);
-//console.log(threeData);
     var yearData = data;
 
     var Options = {
@@ -172,24 +168,36 @@ $(document).ready(function() {
       opOne.xAxis.data[i] = oneData[i].net_date.replace(/-/g, '');
       c.data[i] = oneData[i].net_day_growth;
     }
+    c.data.reverse();
     opOne.xAxis.data.reverse();
+    opOne.yAxis.min = 'dataMin';
+    opOne.yAxis.max = 'dataMax';
     opOne.series.push(c);
     for (var i = 0; i < threeData.length; i++) {
       opThree.xAxis.data[i] = threeData[i].net_date.replace(/-/g, '');
       d.data[i] = threeData[i].net_day_growth;
     }
+    opThree.yAxis.min = 'dataMin';
+    opThree.yAxis.max = 'dataMax';
+    d.data.reverse();
     opThree.xAxis.data.reverse();
     opThree.series.push(d);
     for (var i = 0; i < halfData.length; i++) {
       opSix.xAxis.data[i] = halfData[i].net_date.replace(/-/g, '');
       a.data[i] = halfData[i].net_day_growth;
     }
+    opSix.yAxis.min = 'dataMin';
+    opSix.yAxis.max = 'dataMax';
+    a.data.reverse();
     opSix.xAxis.data.reverse();
     opSix.series.push(a);
     for (var i = 0; i < data.length; i++) {
       opYear.xAxis.data[i] = data[i].net_date.replace(/-/g, '');
       b.data[i] = data[i].net_day_growth;
     }
+    opYear.yAxis.min = 'dataMin';
+    opYear.yAxis.max = 'dataMax';
+    b.data.reverse();
     opYear.xAxis.data.reverse();
     opYear.series.push(b);
 
