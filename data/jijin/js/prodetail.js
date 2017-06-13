@@ -114,7 +114,7 @@ $(document).ready(function() {
         }
       },
       legend: {
-        data: [],
+        data: ["净值走势"],
         bottom: "10px"
       },
       toolbox: {
@@ -143,8 +143,10 @@ $(document).ready(function() {
     var opSix = clone(Options);
     var opYear = clone(Options);
 
-    opSix.legend.data.push('6个月净值涨幅');
-    opYear.legend.data.push('1年净值涨幅');
+    opOne.legend.data.push('1个月净值走势');
+    opThree.legend.data.push('3个月净值走势');
+    opSix.legend.data.push('6个月净值走势');
+    opYear.legend.data.push('1年净值走势');
 
     var a = {
       name: '6个月净值走势',
@@ -168,23 +170,27 @@ $(document).ready(function() {
     };
     for (var i = 0; i < oneData.length; i++) {
       opOne.xAxis.data[i] = oneData[i].net_date.replace(/-/g, '');
-      c.data[i] = oneData[i].oneData[i].net_day_growth;
+      c.data[i] = oneData[i].net_day_growth;
     }
+    opOne.xAxis.data.reverse();
     opOne.series.push(c);
     for (var i = 0; i < threeData.length; i++) {
       opThree.xAxis.data[i] = threeData[i].net_date.replace(/-/g, '');
-      c.data[i] = threeData[i].net_day_growth;
+      d.data[i] = threeData[i].net_day_growth;
     }
+    opThree.xAxis.data.reverse();
     opThree.series.push(d);
     for (var i = 0; i < halfData.length; i++) {
       opSix.xAxis.data[i] = halfData[i].net_date.replace(/-/g, '');
       a.data[i] = halfData[i].net_day_growth;
     }
+    opSix.xAxis.data.reverse();
     opSix.series.push(a);
     for (var i = 0; i < data.length; i++) {
       opYear.xAxis.data[i] = data[i].net_date.replace(/-/g, '');
       b.data[i] = data[i].net_day_growth;
     }
+    opYear.xAxis.data.reverse();
     opYear.series.push(b);
 
     var n1 = echarts.init(document.getElementById("one"));

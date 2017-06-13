@@ -35,20 +35,20 @@
 		    <div class="ctrl"></div>
 			<?php
 				if (isset($_SESSION['customer_id'])){
-					echo '<a href="/application/views/user/personalCenter.html" class="info-link dib pos-ab"><img src="/data/img/personal-center.png" alt="个人中心" width="130" height="130"></a>';
+					if(ISTESTING)
+						echo '<a href="/application/views/user/personalCenter.html" class="info-link dib pos-ab" ><img src="/data/img/personal-center.png" alt="个人中心" width="130" height="130"></a>';
+					else
+						echo '<a href="/application/views/user/personalCenter.html" style="left:25px;top:25px;width:130px;height:130px;background-color:yellow;background:url('.$_SESSION['headimgurl'].') no-repeat;background-size:100%;" class="info-link dib login-btn pos-ab" >我的</a>';
+						
 				}else{
-					echo '<div>
+					if(ISTESTING)
+						echo '<div>
 			    			<div class="pos-ab"></div>
 							<a href="/user/login/1" class="dib login-btn pos-ab">登录</a>
-						  </div>';
-					echo '<div>
-			    			<div class="pos-ab"></div>
-							<a href="/user/login/1" class="dib login-btn pos-ab">登录</a>
-						  </div>';
-                  /* 添加用户的微信头像显示,上产品时取代上一行的echo语句
-  				  echo '<div><div class="pos-ab"></div><a href="/user/login/1" style="background-color:yellow;background:url('.$_SESSION['headimgurl'].') no-repeat;background-size:100%;" class="dib login-btn pos-ab">登录</a>
+							</div>';
+					else
+						echo '<div><div class="pos-ab"></div><a href="/user/login/1" style="background-color:yellow;background:url('.$_SESSION['headimgurl'].') no-repeat;background-size:100%;" class="dib login-btn pos-ab">登录</a>
 						  </div>'; 
-				  */	
 				}
 			?>		
 		</div>
