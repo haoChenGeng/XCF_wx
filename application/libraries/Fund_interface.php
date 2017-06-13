@@ -139,8 +139,12 @@ class Fund_interface
 			$updateData = &$fundNetvalue['data'];
 			$currentdate = date('Y-m-d',time());
 			foreach ($updateData as $key=>$val){
-				$updateData[$key]['net_day_growth'] = empty($val['net_day_growth']) ? 0 : ['net_day_growth'];
-				$updateData[$key]['XGRQ'] = $currentdate;
+				if (empty($val['net_date'])){
+					unset ($updateData[$key]);
+				}else{
+					$updateData[$key]['net_day_growth'] = empty($val['net_day_growth']) ? 0 : $val['net_day_growth'];
+					$updateData[$key]['XGRQ'] = $currentdate;
+				}
 			}
 			$flag = $this->CI->Model_db->incremenUpdate('p2_netvalue_'.$fundcode, $fundNetvalue['data'], 'net_date');
 		}else{
