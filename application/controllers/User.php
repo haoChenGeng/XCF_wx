@@ -2,6 +2,7 @@
 if (! defined ( 'BASEPATH' ))
 	exit ( 'No direct script access allowed' );
 header ( "Content-type: text/html; charset=utf-8" );
+include_once 'weixin/Api.php';
 
 class User extends MY_Controller {
 	private $logfile_suffix;
@@ -40,6 +41,8 @@ class User extends MY_Controller {
 						$T_pwd = MD5 ( MD5 ( $passkey ) . substr ( $T_pwd, 5, 20 ) );
 						$trytimes = (time()-$user_info['logintime']>3600) ? 0 : $user_info['trytimes'];
 						if ($trytimes < 3){
+							var_dump($T_name);
+							var_dump($T_pwd);
 							if ($user_info ['Customername'] == $T_name && $user_info ['Password'] == $T_pwd) {
 								$_SESSION ['customer_id'] = $user_info ['id'];
 								$_SESSION ['customer_name'] = $user_info ['Customername'];
@@ -87,10 +90,19 @@ class User extends MY_Controller {
 
 
 	function home(){
-		$this->getRecommendFunds($data);
-		$this->load->view('index',$data);
+		if (ISTESTING) {
+			$this->getRecommendFunds($data);
+			$this->load->view('index',$data);
+		}
+		else 
+			redirect('/weixin/oauth/checkwxaccess');
 	}
 	
+	function homeaccess(){
+  		$data['headimgurl']=$_SESSION['headimgurl'];
+  		$this->getRecommendFunds($data);
+  		$this->load->view('index',$data);
+	}
 	function register() {
 		if (isset ( $_SESSION ['customer_id'] )) {
 			redirect ( $this->base . "/User/home");
@@ -101,7 +113,7 @@ class User extends MY_Controller {
 			if (empty ( $post['sms_code'] ) || strtolower ( $_SESSION ['telcode'] ) != strtolower ( $post['sms_code'] )) {
 				$fail_message = '验证码不正确，系统正在返回...';
 			}else{
-				$this->db->set(array('times'=>'times-1'))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
+				$this->db->query('UPDATE `p2_dealitems` SET `times` = `times`-1 WHERE `dealitem` = "sendSms"');
 			}
 			if (!isset($fail_message) && empty ( $post ['pwd'] )){
 				$fail_message = '密码不能为空，系统正在返回...';
@@ -147,15 +159,18 @@ class User extends MY_Controller {
 						"status" => 1,
 						"planner_id" => !empty($post['planner_id']) ? $post['planner_id'] : '',
 						);
-				if (! empty ( $arr ['register_openid'] )) {
-					$wxApi = new Api ();
-					$userInfo = $wxApi->getUserInfo ( $arr ['register_openid'] );
-					if (! empty ( $userInfo )) {
-						$arr ['headImg'] = $userInfo ['headimgurl'];
-						$arr ['sex'] = $userInfo ['sex'];
-						$arr ['nick_name'] = $userInfo ['nickname'];
-						$arr ['province'] = $userInfo ['province'];
-						$arr ['city'] = $userInfo ['city'];
+				if (!ISTESTING) {
+					if (! empty ($_SESSION['open_id'])) {
+						$wxApi = new Api ();
+						$userInfo = $wxApi->getUserInfo ( $_SESSION['open_id']);
+						if (! empty ( $userInfo )) {
+							$arr ['register_openid']=$_SESSION['open_id'];
+							$arr ['headImg'] = $userInfo ['headimgurl'];
+							$arr ['sex'] = $userInfo ['sex'];
+							$arr ['nick_name'] = $userInfo ['nickname'];
+							$arr ['province'] = $userInfo ['province'];
+							$arr ['city'] = $userInfo ['city'];
+						}
 					}
 				}
 				$res = $this->db->set($arr)->insert('customer');
@@ -211,7 +226,7 @@ class User extends MY_Controller {
 			if (empty ( $post['sms_code'] ) || strtolower ( $_SESSION ['telcode'] ) != strtolower ( $post['sms_code'] )) {
 				$failmessage = '验证码不正确，系统正在返回...';
 			}else{
-				$this->db->set(array('times'=>'times-1'))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
+				$this->db->query('UPDATE `p2_dealitems` SET `times` = `times`-1 WHERE `dealitem` = "sendSms"');
 				if (empty($post['tel'])){
 					$failmessage = '用户名不能为空，系统正在返回...';
 				}else{
@@ -362,9 +377,14 @@ class User extends MY_Controller {
 			if ((time()-$sendSms['updatetime'])> 3600){
 				$this->db->set(array('updatetime'=>time(),'times'=>1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
 			}else{
-				if ($sendSms['times'] > 300){
+				$smsSetting = $this->db->where(array('name'=>'smsErrTimes'))->get('p2_interface')->row_array();
+				if (empty($smsSetting)){
+					$this->db->set(array('name'=>'smsErrTimes','description'=>'系统防短信攻击设置(通过设置1小时内，短信验证码未返回最大次数partnerId来阻止短信攻击)','partnerId'=>300,'url'=>'#'))->insert('p2_interface');
+				}
+				$allowtime = empty($smsSetting['partnerId']) ? 300 : $smsSetting['partnerId'];
+				if ($sendSms['times'] > $allowtime){
 					echo '短信验证码发送失败，请稍后重试';
-					file_put_contents('log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证被拒绝,短信接口可能遭受攻击，1小时内超过300条短信未返回正确验证码\r\n\r\n",FILE_APPEND);
+					file_put_contents(FCPATH.'/log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证被拒绝,短信接口可能遭受攻击，1小时内超过300条短信未返回正确验证码\r\n\r\n",FILE_APPEND);
 					exit;
 				}else{
 					$this->db->set(array('times'=>$sendSms['times']+1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
@@ -373,6 +393,7 @@ class User extends MY_Controller {
 		}
 		if (ISTESTING) {
 			$_SESSION ['telcode'] = $telcode = '1234';
+			$_SESSION ['T_name'] = $post ['tel'];
 			echo '您的验证码为:1234';
 		}else{
 			$_SESSION ['telcode'] = $telcode = $this->TelCode();
@@ -392,23 +413,15 @@ class User extends MY_Controller {
 	}
 		// 发短信
 	private function NDFsendSms($mobile, $content = '') {
-		// $this->check_login();
 		if (empty ( $mobile )) {
 			return false;
 		}
-		// $this =& get_instance();
 		$ISTESTING = false;
-		if ($ISTESTING) {
-			$sms_url = $this->config->item ( 'test_sms_url' );
-			$sms_signature_key = $this->config->item ( 'test_sms_signature_key' );
-			$partnerId = $this->config->item ( 'test_partnerId' );
-			$moduleId = $this->config->item ( 'test_moduleId' );
-		} else {
-			$sms_url = $this->config->item ( 'sms_url' );
-			$sms_signature_key = $this->config->item ( 'sms_signature_key' );
-			$partnerId = $this->config->item ( 'partnerId' );
-			$moduleId = $this->config->item ( 'moduleId' );
-		}
+		$messageInterface = $this->db->where(array('name'=>'MessageInterface'))->get('p2_interface')->row_array();
+		$sms_url = $messageInterface['url'];
+		$sms_signature_key = $messageInterface['password'];
+		$partnerId = $messageInterface['partnerId'];
+		$moduleId = $messageInterface['moduleId'];
 		$signTextTemp = "mobile=$mobile&moduleId=$moduleId&partnerId=$partnerId&value=$content" . $sms_signature_key;
 		$signature = sha1 ( $signTextTemp );
 		$post_data = "partnerId=$partnerId&mobile=$mobile&signature=$signature&value=$content&moduleId=SENDSMS";

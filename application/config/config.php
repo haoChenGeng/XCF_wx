@@ -526,21 +526,8 @@ xQfP9MI5T9r21q6oN0uHJc7X0336UfwYkoB/wb4Z9FYvJEr7lLdZa8DoTveMd4/T
 OFHhS33SmX/tPQpGCwIDAQAB');
 
 $config['unifyEntrance'] = '/Xnxcfindex/WK8YGc3Yi2oP3/';
-
 //定义需要跳转的网站
 // $config['member_url'] ='http://xcf.fortiddns.com:50280';                    //会员专区
-$config['fundUrl'] = /* '10.10.78.107' */'http://10.17.2.101';                     //基金系统
-// $config['fundUrl'] = 'http://192.168.220.152';
 
 date_default_timezone_set('Asia/ShangHai');
 $config['time_zone'] = date_default_timezone_get();
-
-//短信接口
-$config['test_partnerId'] = 21001;
-$config['test_moduleId'] = 'SENDSMS';
-$config['test_sms_url'] = 'http://10.17.2.205:8811/sms-web/sms/send';
-$config['test_sms_signature_key'] = 'k4JdkGvVfdRCz7Ju5yNdQXWH9Jkz4YX7';
-$config['partnerId'] = 21001;
-$config['moduleId'] = 'SENDSMS';
-$config['sms_url'] = 'http://10.17.2.205:8811/sms-web/sms/send';
-$config['sms_signature_key'] = 'k4JdkGvVfdRCz7Ju5yNdQXWH9Jkz4YX7';

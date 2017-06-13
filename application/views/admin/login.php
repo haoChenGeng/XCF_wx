@@ -71,5 +71,29 @@
 			$('#input-password').val(encrypted);
             $('#login_form').submit();
         });
+
+        $('#login_form').on('keydown',function(e) {
+        	//IE浏览器
+        	if(CheckBrowserIsIE()){
+        	 	keycode = e.keyCode;
+        	}else{
+        	//火狐浏览器
+        	keycode = e.which;
+        	}
+        	if (keycode == 13 ) //回车键是13
+        	{
+        	    $('#login_form').submit();
+        	}
+        });
+        	//判断访问者的浏览器是否是IE
+        	function CheckBrowserIsIE(){
+        	 	var result = false;
+        	 	var browser = navigator.appName;
+        	 	if(browser == "Microsoft Internet Explorer"){
+        	  		result = true;
+        	 	}
+        	 	return result;
+        	}
+
 </script>
 

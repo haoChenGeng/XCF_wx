@@ -73,7 +73,7 @@ class PrivateFund extends MY_Controller {
 		//设置搜索栏选项   例如('name'搜索项的数据库字段名,'filterType'搜索方式 =where =like 分别对应数据库查询的where和like, 'description'页面显示的搜索项名称)
 		$data['query'] = array('name' => array('filterType' => 'like', 'description' => '产品名称'));
 		//设置页面需要查询的数据库字段名
-		$data['dbFields'] = array('id','name', 'label','strategy','advantage','evaluate','type');
+		$data['dbFields'] = array('id','name', 'label','strategy','advantage','evaluate','type','isshow');
 		//设置页面显示的字段名称
 		$data['table_field']=array( 'id' => array('sort' => 1, 'description' => 'ID'),
 				'name' => array('sort' => 1, 'description' => '基金名称'),
@@ -82,6 +82,7 @@ class PrivateFund extends MY_Controller {
 				'advantage' => array('description' => '产品优势'),
 				'evaluate' => array('description' => '综合评价'),
 				'type' => array('description' => '基金类型'),
+				'isshow' => array('description' => '是否显示'),
 		);
 		//设置页面右上角导航条按钮(函数中已进行权限检查)
 		$data['buttons'] = $this->Model_pageDeal->getButtonList($data['accessCommand']);
@@ -103,9 +104,11 @@ class PrivateFund extends MY_Controller {
 		$i = 0;
 		//1、股权型；2、海外型；3、对冲型；4、股票型；5、债券型；6、定增型
 		$button_description = array('1'=>'股权型', '2' => '海外型', '3' =>'对冲型','4' =>'股票型','5' =>'债券型','6' =>'定增型');
+		$show_description = array('0'=>'否','1'=>'是');
 		foreach ($db_content as $val){
 			$data['table_content'][$i] = $val;
 			$data['table_content'][$i]['type'] = $button_description[$val['type']];
+			$data['table_content'][$i]['isshow'] = $show_description[$val['isshow']];
 			if (!empty($data['operButton'])){
 				foreach ($data['operButton'] as $v){
 					$data['table_content'][$i]['operButton'][$v['operation']]['description'] = $v['description'];
@@ -262,9 +265,13 @@ class PrivateFund extends MY_Controller {
 		$data['forms'][] = array('type'=>'normal','description'=>'综合评价', 'required'=> 1, 'content'=> 'type="text" name="evaluate" value="'.$fund['evaluate'].'" placeholder="描述对产品的评价"');
 		//$data['forms'][] = array('type'=>'normal','description'=>'基金类型', 'required'=> 1, 'content'=> 'type="text" name="type" value="'.$fund['type'].'" placeholder=""');
 		//：1、股权型；2、海外型；3、对冲型；4、股票型；5、债券型；6、定增型
-		$data['forms'][] = array('type'=>'select', 'description'=>'基金类型', 'required'=>1, 'name'=>'type', 'val'=>0,
+		$data['forms'][] = array('type'=>'select', 'description'=>'基金类型', 'required'=>1, 'name'=>'type', 'val'=>$fund['type'],
 				'items'=> array(array('val'=>1, 'name'=>'股权型'),array('val'=>2, 'name'=>'海外型'),array('val'=>3, 'name'=>'对冲型'),array('val'=>4, 'name'=>'股票型'),
 				array('val'=>5, 'name'=>'债券型'),array('val'=>6, 'name'=>'定增型')));
+		
+		$data['forms'][] = array('type'=>'select', 'description'=>'是否显示', 'required'=>1, 'name'=>'isshow', 'val'=>'',
+				'items'=> array(array('val'=>0, 'name'=>'否'),array('val'=>1, 'name'=>'是')));
+		
 		
 		$_SESSION[$data['Model'].'_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);
 		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
@@ -279,6 +286,7 @@ class PrivateFund extends MY_Controller {
 				'advantage' => $input['advantage'],
 				'evaluate' => $input['evaluate'],
 				'type' => $input['type'],
+				'isshow' => $input['isshow'],
 		);
 		
 		return $arr;

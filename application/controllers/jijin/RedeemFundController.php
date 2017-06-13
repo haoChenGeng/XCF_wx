@@ -88,4 +88,15 @@ class RedeemFundController extends MY_Controller {
 		$this->load->view('ui/view_operate_result',$data);
 	}
 	
+	function redeemFee(){
+		$post = $this->input->post();
+		$purchaseFee = $this->fund_interface->feeQuery($post);
+		file_put_contents('log/trade/redeem'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询基金赎回费用，调用数据为：".serialize($post)."\r\n返回数据为".serialize($purchaseFee)."\r\n\r\n",FILE_APPEND);
+		if ($purchaseFee['code'] == '0000' && is_array($purchaseFee['data'])){
+			echo json_encode(array('code'=>0,'charge'=>$purchaseFee['data']['charge']));
+		}else{
+			echo json_encode(array('code'=>1,'charge'=>$purchaseFee['data']['charge']));
+		}
+	}
+	
 }

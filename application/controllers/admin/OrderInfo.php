@@ -12,6 +12,11 @@ class OrderInfo extends MY_Controller {
 	public function order_add()
 	{
 		$post = $this->input->post();
+		//先判断数据库中是否有重复的数据
+		$returnData = $this->db->select('custname,fundid')->where(array('custphone'=>$post['custphone'],'fundid'=>$post['fundid']))->get('orderinfo')->result_array();
+		if(count($returnData)>0){
+			echo json_encode(array('code'=>'9999','msg'=>'您已经预约过该基金！')); exit;
+		}
 		$insert_data = array(
 				'custname' => $post['custname'],
 				'custphone' => $post['custphone'],
@@ -111,7 +116,9 @@ class OrderInfo extends MY_Controller {
 		//获取页面的其他相关信息，并获得$filter_data 即数据库查询条件
 		$filter_data = $this->Model_pageDeal->getPageData($input, $data);
 		
-// 		$filter_data['where']['orderdate ='] = $input['querydate'];
+		if(isset($input['orderdate'])){
+		   $filter_data['where']['orderdate ='] = $input['orderdate'];
+		}
 		
 		//根据$filter_data获得满足查询条件的数据总数
 		$this->load->model("Model_db");

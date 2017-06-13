@@ -74,7 +74,7 @@
                 <input class="btn btn-fix-right" id="nextBtn" type="button" style="display:block;" value="下一步"/>
                 <input class="btn btn-fix-right" id="commit" type="button" style="display:none;" value="确定购买"/>
             </section>
-            <input type="hidden" name="json" value='<?php echo $json;?>' />
+            <input type="hidden" id="json" name="json" value='<?php echo $json;?>' />
             <input type="hidden" id="purchasetype" name="purchasetype" value='<?php echo $purchasetype;?>' />
         </form>
     </section>
@@ -95,28 +95,46 @@
                     sum = document.getElementById('sum').value,
                     payDiv = document.getElementById('payDiv'),
                     purchasetype = document.getElementById('purchasetype').value,
-                    div = document.createElement('div');
+                    div1 = document.createElement('div');
+                	div2 = document.createElement('div');
                 if (!sum || parseInt(sum, 10) < parseInt(min, 10) || parseInt(sum, 10) > parseInt(max, 10)) {
                     alert('金额输入错误');
                     return false;
                 }
-                //验证全部通过回调               
-                document.title = purchasetype+'确认';
-                document.getElementById('applyChange').innerHTML = purchasetype+'确认';
-                document.getElementById('nextBtn').style.display = 'none';
-                document.getElementById('commit').style.display = 'block';
-                document.getElementById('sum').setAttribute('readonly','true');
-                document.getElementById('pay_way').disabled = true;
-                document.getElementById('nextBtn').id = 'commit';
-                div.setAttribute('class','m2-item');
-                div.innerHTML = '<div class="item-width-wrap">'+
-                                    '<span class="m2-item-t1">交易密码：</span>'+
-                                    '<label>'+
-                                        '<input type="password" id="passwd" name="tpasswd" data-reg=".+"  data-error="交易密码不能为空" placeholder="请输入交易密码" />'+
-                                    '</label>'+
-                                '</div>'; 
-                document.getElementById('info_form').insertBefore(div, payDiv.nextSibling);
-                $('#nextBtn').off();
+                jsonData = JSON.parse($('#json').val());
+                $.post("/jijin/PurchaseController/purchaseFee", {channelid:$('#pay_way').val(),applicationamount:$('#sum').val(),businesscode:jsonData.businesscode,tano:jsonData.tano,fundcode:$('#fundcode').val(),sharetype:jsonData.shareclasses},function(res){
+                    retData = JSON.parse(res);
+                	if (retData.code == 0){
+                        //验证全部通过回调               
+                        document.title = purchasetype+'确认';
+                        document.getElementById('applyChange').innerHTML = purchasetype+'确认';
+                        document.getElementById('nextBtn').style.display = 'none';
+                        document.getElementById('commit').style.display = 'block';
+                        document.getElementById('sum').setAttribute('readonly','true');
+                        document.getElementById('pay_way').disabled = true;
+                        document.getElementById('nextBtn').id = 'commit';
+                        div1.setAttribute('class','m2-item');
+                        div1.innerHTML = '<div class="item-width-wrap">'+
+                                              '<span class="m2-item-t1">交易密码：</span>'+
+                                              '<label>'+
+                                              '<input type="password" id="passwd" name="tpasswd" data-reg=".+"  data-error="交易密码不能为空" placeholder="请输入交易密码" />'+
+                                              '</label>'+
+                                        '</div>'; 
+                        document.getElementById('info_form').insertBefore(div1, payDiv.nextSibling);
+                        div2.setAttribute('class','m2-item');
+                        div2.innerHTML = '<div class="item-width-wrap">'+
+                        					'<span class="m2-item-t1"><?php echo $purchasetype?>费用：</span>'+
+                                            '<label>'+
+                                            	'<input type="text"  style="color:#333;" value="'+retData.charge+'"/>'+
+                                            '</label>'+
+                                        '</div>'; 
+                        document.getElementById('info_form').insertBefore(div2, payDiv.nextSibling);
+                        $('#nextBtn').off();
+                	}else{
+                    	alert('查询<?php echo $purchasetype?>费用失败');
+                	}
+                });
+
             });
         });
         $('#commit').on('click',function () {
