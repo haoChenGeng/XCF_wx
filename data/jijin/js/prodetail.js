@@ -168,12 +168,12 @@ $(document).ready(function() {
     };
     for (var i = 0; i < oneData.length; i++) {
       opOne.xAxis.data[i] = oneData[i].net_date.replace(/-/g, '');
-      c.data[i] = oneData[i].oneData[i].net_day_growth;
+      c.data[i] = oneData[i].net_day_growth;
     }
     opOne.series.push(c);
     for (var i = 0; i < threeData.length; i++) {
       opThree.xAxis.data[i] = threeData[i].net_date.replace(/-/g, '');
-      c.data[i] = threeData[i].net_day_growth;
+      d.data[i] = threeData[i].net_day_growth;
     }
     opThree.series.push(d);
     for (var i = 0; i < halfData.length; i++) {
