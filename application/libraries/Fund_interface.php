@@ -151,9 +151,9 @@ class Fund_interface
 	private function creatFundNetValue($tableName){
 		$sql = "CREATE TABLE `".$tableName."` (
 				`net_date` varchar(24) ,
-				`net_unit` varchar(24) DEFAULT DEFAULT '0' NOT NULL,
-				`net_sum` varchar(24) DEFAULT DEFAULT '0' NOT NULL,
-				`net_day_growth` varchar(24) DEFAULT '0' NOT NULL,
+				`net_unit` varchar(24) NOT NULL DEFAULT '0',
+				`net_sum` varchar(24) NOT NULL  DEFAULT '0',
+				`net_day_growth` varchar(24) NOT NULL DEFAULT '0',
 				`XGRQ` datetime DEFAULT NULL COMMENT '更新日期',
 				PRIMARY KEY (`net_date`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
