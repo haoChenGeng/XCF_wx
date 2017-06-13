@@ -193,7 +193,7 @@ $(document).ready(function() {
     opSix.series.push(a);
     for (var i = 0; i < data.length; i++) {
       opYear.xAxis.data[i] = data[i].net_date.replace(/-/g, '');
-      b.data[i] = data[i].net_day_growth;
+      b.data[i] = ((data[i].net_day_growth/data[data.length-1].net_day_growth-1)*100).toFixed(4);
     }
     opYear.yAxis.min = 'dataMin';
     opYear.yAxis.max = 'dataMax';
