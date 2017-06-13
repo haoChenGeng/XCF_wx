@@ -99,13 +99,10 @@ class Api extends MY_Controller
         if(empty($from_xml)) {
             $echoStr = $_GET["echostr"];
             if ($this->checkSignature()) {
-				CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"connected to WX server OK"."\r\n");
 				echo $echoStr;
                 exit;
             }
         }else{
-			CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"Post data : "."\r\n");
-			CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',serialize($from_xml));
         }
     }
 	
@@ -116,12 +113,10 @@ class Api extends MY_Controller
      */
     public function handleaxcf()
     {
-		CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"in handleaxcf"."\r\n");
 		$from_xml = $GLOBALS["HTTP_RAW_POST_DATA"];
         if(empty($from_xml)) {
             $echoStr = $_GET["echostr"];
             if ($this->checkSignature()) {
-				CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"connected to WX server OK"."\r\n");
 				echo $echoStr;
                 exit;
             }
@@ -129,10 +124,8 @@ class Api extends MY_Controller
             $xmlMsg = '';
             $pc = new WXBizMsgCrypt(TOKEN, encodingAesKey, APPID);
             $errCode = $pc->decryptMsg($_GET['msg_signature'], $_GET['timestamp'], $_GET['nonce'], $from_xml, $xmlMsg);
-			CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"in post handle"."\r\n");
 			if ($errCode == 0) {
                 libxml_disable_entity_loader(true);
-				CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',serialize($xmlMsg)."\r\n");
                 $resMsg= $this->dealMsg($xmlMsg);
 
                 $encryptMsg = '';
@@ -188,7 +181,6 @@ class Api extends MY_Controller
         $contentArr=array();
 		switch($msgType){
             case MSG_TYPE_TEXT: //文本消息推送
-           		CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"in WX MSG_TYPE_TEXT"."\r\n");
 				$contentArr=$this->dealTextMsg($postObj);
                 break;
             case MSG_TYPE_EVENT://事件推送
@@ -206,13 +198,11 @@ class Api extends MY_Controller
         $resArr=array();
         $this->logOpenID( "TEXT"." | " .trim($postObj->FromUserName)  ." | " .trim($postObj->ToUserName). " | ". trim($postObj->Content));
         if(strtolower(trim($keyword))=='s33'){
-       		CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"in send to Robot"."\r\n");
             $resArr['MsgType']=MSG_TYPE_TEXT;
             $resArr['Content']="欢迎您的到来！";
         }
 		else
 		{
-				CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"in send to Robot"."\r\n");
 				$resArr['MsgType']=MSG_TYPE_TEXT;
 				$resArr['Content']="欢迎您的到来！";
 			//$resArr['MsgType']='transfer_customer_service';
@@ -256,11 +246,7 @@ class Api extends MY_Controller
     		$this->verifyAccessToken();
     		$userInfoUrl='https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN';
     		$userInfoUrl=strtr($userInfoUrl,array('ACCESS_TOKEN'=>$this->access_token,'OPENID'=>$openid));
-    		CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"Api userInfoUrl".$userInfoUrl."\r\n");
-    		
     		$jsonStr= CommonUtil::httpsRequest($userInfoUrl);
-    		CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"Api userInfoUrl".$jsonStr."\r\n");
-    		
     		if (!empty($jsonStr)) {
     			$resultArr = json_decode($jsonStr, true);
     			if(!isset($resultArr['errcode'])) {
@@ -268,7 +254,6 @@ class Api extends MY_Controller
     			}
     		}
     	}
-    	CommonUtil::wLog(__DIR__.DIRECTORY_SEPARATOR.'weixin.txt',"Api resArr ".serialize($resArr)."\r\n");
     	return $resArr;
     }
 }
