@@ -114,7 +114,7 @@ $(document).ready(function() {
         }
       },
       legend: {
-        data: [],
+        data: ["净值走势"],
         bottom: "10px"
       },
       toolbox: {
@@ -143,8 +143,10 @@ $(document).ready(function() {
     var opSix = clone(Options);
     var opYear = clone(Options);
 
-    opSix.legend.data.push('6个月净值涨幅');
-    opYear.legend.data.push('1年净值涨幅');
+    opOne.legend.data.push('1个月净值走势');
+    opThree.legend.data.push('3个月净值走势');
+    opSix.legend.data.push('6个月净值走势');
+    opYear.legend.data.push('1年净值走势');
 
     var a = {
       name: '6个月净值走势',
