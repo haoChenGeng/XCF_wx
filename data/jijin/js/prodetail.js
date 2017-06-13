@@ -170,21 +170,25 @@ $(document).ready(function() {
       opOne.xAxis.data[i] = oneData[i].net_date.replace(/-/g, '');
       c.data[i] = oneData[i].net_day_growth;
     }
+    opOne.xAxis.data.reverse();
     opOne.series.push(c);
     for (var i = 0; i < threeData.length; i++) {
       opThree.xAxis.data[i] = threeData[i].net_date.replace(/-/g, '');
       d.data[i] = threeData[i].net_day_growth;
     }
+    opThree.xAxis.data.reverse();
     opThree.series.push(d);
     for (var i = 0; i < halfData.length; i++) {
       opSix.xAxis.data[i] = halfData[i].net_date.replace(/-/g, '');
       a.data[i] = halfData[i].net_day_growth;
     }
+    opSix.xAxis.data.reverse();
     opSix.series.push(a);
     for (var i = 0; i < data.length; i++) {
       opYear.xAxis.data[i] = data[i].net_date.replace(/-/g, '');
       b.data[i] = data[i].net_day_growth;
     }
+    opYear.xAxis.data.reverse();
     opYear.series.push(b);
 
     var n1 = echarts.init(document.getElementById("one"));
