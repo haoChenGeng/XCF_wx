@@ -99,8 +99,9 @@ switch (ENVIRONMENT)
  * Include the path if the folder is not in the same directory
  * as this file.
  */
+	define('WXCODEPATH', '/fundwx/');	
 	if(ENVIRONMENT=='production')
-		$system_path = '/fundwx/system'; //运维定义安全目录,用于存放运行代码,请修改fundwx为对应的安全目录名字
+		$system_path = WXCODEPATH.'system'; //运维定义安全目录,用于存放运行代码,请修改fundwx为对应的安全目录名字
 	else
 		$system_path = 'system';
 
@@ -118,7 +119,7 @@ switch (ENVIRONMENT)
  * NO TRAILING SLASH!
  */
 	if(ENVIRONMENT=='production')
-		$application_folder = '/fundwx/application'; //运维定义安全目录,用于存放运行代码,请修改fundwx为对应的安全目录名字
+		$application_folder =WXCODEPATH. 'application'; //运维定义安全目录,用于存放运行代码,请修改fundwx为对应的安全目录名字
 	else
 		$application_folder = 'application';
 
