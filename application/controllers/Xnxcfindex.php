@@ -30,8 +30,10 @@ class Xnxcfindex extends MY_Controller {
 			$callClass = new $className;
 			$callClass->index($accessCode);
 		}else{
-			$fileName = str_replace('//', '/', $application_folder.'/controllers/admin/Account.php');
-			//$fileName = str_replace('//', '/', FCPATH.'application/controllers/admin/Account.php');
+			if(ENVIRONMENT=='production')
+				$fileName = str_replace('//', '/',  WXCODEPATH.'application/controllers/admin/Account.php');
+			else
+			    $fileName = str_replace('//', '/', FCPATH.'application/controllers/admin/Account.php');
 			require_once $fileName;
 			$callClass = new Account;
 			$callClass->login();
