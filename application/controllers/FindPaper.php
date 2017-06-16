@@ -20,7 +20,7 @@ class FindPaper extends MY_Controller {
     	$paperInfo['readTimes'] ++;
     	$this->db->set(array('readTimes'=>$paperInfo['readTimes']))->where(array('id'=>$paperId))->update('p2_paper');
     	$this->load->view('Public/head.html');
-    	$data['filePath'] = $this->base.'/application/views/find/'.$paperId.'/';
+    	$data['filePath'] = $this->base.'/data/find/'.$paperId.'/';
     	$this->load->view('find/'.$paperId.'/'.$paperInfo['url'],$data);
     	$data = array('id'=>$paperInfo['id'],'readTimes'=>$paperInfo['readTimes']);
     	$this->load->view('find/foot.php',$data);

@@ -10,7 +10,7 @@
             			$classType = ($key < 5) ? "li10" : "li01";
             			$idVal = substr(101+$key,0,2);
             			echo '<li class="'.$classType.'" id="'.$idVal.'" name="lixun">
-                    			<img src="'.'/application/views/find/'.$val['id'].'/'.$val['img'].'" />
+                    			<img src="'.'/data/find/'.$val['id'].'/'.$val['img'].'" />
                     			<a href="'.$this->base.'/FindPaper/getPaper/'.$val['id'].'">
                         			<span>'.$val['title'].'</span>
                     			</a>
