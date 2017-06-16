@@ -225,7 +225,7 @@ class Jz_fund extends MY_Controller
 		$tableName = 'p2_netvalue_'.$get['fundCode'];
 		$startDate = date('Y-m-d',time());
 		$startDate = (substr($startDate,0,4)-1).substr($startDate,4);
-		$fundCure = $this->db->select('net_date,net_unit net_day_growth')->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
+		$fundCure = $this->db->select('net_date,net_day_growth')->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
 		if (!empty($fundCure) && is_array($fundCure)){
 			$return = array('code'=>0,'data'=>&$fundCure);
 		}else{

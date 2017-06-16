@@ -69,6 +69,8 @@ $(document).ready(function() {
     var three = new Date().valueOf() - 3*30*24*60*60*1000;
     var half = new Date().valueOf() - 6*30*24*60*60*1000;
     for (var i = 0; i < data.length; i++) {
+//console.log(half);
+//console.log(new Date(data[i].net_date.replace(/-/g, '/')).valueOf());  
       var start = new Date(data[0].net_date.replace(/-/g, '/')).valueOf();
       if (today > start) {
         oneData = [];
@@ -96,6 +98,8 @@ $(document).ready(function() {
         break;
       }
     }
+//console.log(oneData);
+//console.log(threeData);
     var yearData = data;
 
     var Options = {
@@ -107,8 +111,7 @@ $(document).ready(function() {
         trigger: "axis",
         axisPointer: {
           type: "line"
-        },
-        formatter: '{c}%'
+        }
       },
       legend: {
         data: ["净值走势"],
@@ -130,12 +133,7 @@ $(document).ready(function() {
         data: []
       },
       yAxis: {
-        type: "value",
-        min: 'dataMin',
-        max: 'dataMax',
-        axisLabel: {
-          formatter: '{value}%'
-        }
+        type: "value"
       },
       series: []
     };
@@ -172,30 +170,26 @@ $(document).ready(function() {
     };
     for (var i = 0; i < oneData.length; i++) {
       opOne.xAxis.data[i] = oneData[i].net_date.replace(/-/g, '');
-      c.data[i] = ((oneData[i].net_day_growth/oneData[oneData.length-1].net_day_growth-1)*100).toFixed(4);
+      c.data[i] = oneData[i].net_day_growth;
     }
-    c.data.reverse();
     opOne.xAxis.data.reverse();
     opOne.series.push(c);
     for (var i = 0; i < threeData.length; i++) {
       opThree.xAxis.data[i] = threeData[i].net_date.replace(/-/g, '');
-      d.data[i] = ((threeData[i].net_day_growth/threeData[threeData.length-1].net_day_growth-1)*100).toFixed(4);
+      d.data[i] = threeData[i].net_day_growth;
     }
-    d.data.reverse();
     opThree.xAxis.data.reverse();
     opThree.series.push(d);
     for (var i = 0; i < halfData.length; i++) {
       opSix.xAxis.data[i] = halfData[i].net_date.replace(/-/g, '');
-      a.data[i] = ((halfData[i].net_day_growth/halfData[halfData.length-1].net_day_growth-1)*100).toFixed(4);
+      a.data[i] = halfData[i].net_day_growth;
     }
-    a.data.reverse();
     opSix.xAxis.data.reverse();
     opSix.series.push(a);
     for (var i = 0; i < data.length; i++) {
       opYear.xAxis.data[i] = data[i].net_date.replace(/-/g, '');
-      b.data[i] = ((data[i].net_day_growth/data[data.length-1].net_day_growth-1)*100).toFixed(4);
+      b.data[i] = data[i].net_day_growth;
     }
-    b.data.reverse();
     opYear.xAxis.data.reverse();
     opYear.series.push(b);
 

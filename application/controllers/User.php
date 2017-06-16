@@ -41,6 +41,8 @@ class User extends MY_Controller {
 						$T_pwd = MD5 ( MD5 ( $passkey ) . substr ( $T_pwd, 5, 20 ) );
 						$trytimes = (time()-$user_info['logintime']>3600) ? 0 : $user_info['trytimes'];
 						if ($trytimes < 3){
+							var_dump($T_name);
+							var_dump($T_pwd);
 							if ($user_info ['Customername'] == $T_name && $user_info ['Password'] == $T_pwd) {
 								$_SESSION ['customer_id'] = $user_info ['id'];
 								$_SESSION ['customer_name'] = $user_info ['Customername'];
