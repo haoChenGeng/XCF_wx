@@ -8,7 +8,10 @@ class Xnxcfindex extends MY_Controller {
     }
     
     function index() {
-    	$fileName = str_replace('//', '/', FCPATH.'application/controllers/User.php');
+    	if(ENVIRONMENT=='production')
+    		$fileName = str_replace('//', '/', WXCODEPATH.'application/controllers/User.php');
+   		else
+   			$fileName = str_replace('//', '/', FCPATH.'application/controllers/User.php');
     	require_once $fileName;
     	$callClass = new User;
     	$callClass->home();
@@ -17,14 +20,20 @@ class Xnxcfindex extends MY_Controller {
 	public function WK8YGc3Yi2oP3($accessCode=''){
 		if (!empty($accessCode) && isset($_SESSION['accessList'][$accessCode])){
 			$loadPHP = current($_SESSION['accessList'][$accessCode]);
-			$fileName = str_replace('//', '/', FCPATH.'application/controllers'.$loadPHP.'.php');
+			if(ENVIRONMENT=='production')
+				$fileName = str_replace('//', '/', WXCODEPATH.'application/controllers'.$loadPHP.'.php');
+			else 
+				$fileName = str_replace('//', '/', FCPATH.'application/controllers'.$loadPHP.'.php');
 			require_once $fileName;
 			$className = explode('/', $loadPHP);
 			$className = end($className);
 			$callClass = new $className;
 			$callClass->index($accessCode);
 		}else{
-			$fileName = str_replace('//', '/', FCPATH.'application/controllers/admin/Account.php');
+			if(ENVIRONMENT=='production')
+				$fileName = str_replace('//', '/',  WXCODEPATH.'application/controllers/admin/Account.php');
+			else
+			    $fileName = str_replace('//', '/', FCPATH.'application/controllers/admin/Account.php');
 			require_once $fileName;
 			$callClass = new Account;
 			$callClass->login();
