@@ -88,7 +88,6 @@ class Jz_account extends MY_Controller
 			$this->form_validation->set_rules('mobiletelno','银行预留电话','required|max_length[20]|numeric');
 			$this->form_validation->set_rules('channelid','银行','required');
 			$this->form_validation->set_rules('certificatetype','证件类型','required');
-			
 			if ($this->form_validation->run() == TRUE)
 			{
 				//查询该用户或输入身份证已开户
@@ -315,7 +314,6 @@ class Jz_account extends MY_Controller
     		//判断一次性验证码是否存在
     		$div_bit = strpos($decryptData,(string)$_SESSION['rand_code']);
     		$openPhoneTrans = $_SESSION['data_OPT'];
-    		unset($_SESSION['data_OPT']);
     		unset($_SESSION['rand_code']);
     		if ($div_bit !== false){                      //找到一次性验证码
     			//----------- 记录解密后post数据 ---------------------
@@ -323,15 +321,10 @@ class Jz_account extends MY_Controller
     			$openPhoneTrans['lpasswd'] = substr($decryptData, 0, $div_bit);
     			//开通用户手机交易功能
     			$res = $this->fund_interface->openPhoneTrans($openPhoneTrans);
-// $data['data'] = $res['data'];
-// var_dump($res);
-// $data['url'] = $this->config->item('fundUrl').'/jijin/XCFinterface';
-// $this->load->view('UrlTest',$data);
-// var_dump($res);
-// return;
     			//log开通用户手机交易返回信息
     			file_put_contents('log/user/OpenPhoneTrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()). ":\r\n用户:".$_SESSION ['customer_name']."开通用户手机交易功能(open_phone_trans接口)返回数据".serialize($res)."\r\n\r\n",FILE_APPEND);
     			if ($res['code'] == '0000'){
+    				unset($_SESSION['data_OPT']);
     				Message(Array(
     						'msgTy' => 'sucess',
     						'msgContent' => '开通手机交易成功',
@@ -339,9 +332,10 @@ class Jz_account extends MY_Controller
     						'base' => $this->base
     						));
     			}else{
-    				if ($res['code'] == '0016'){
+    				if ($res['code'] == '0016' || $res['code'] == '-520008999'){
     					$message = '交易密码输入错误，请重试！';
     				}
+    				$nextUrl = $this->base . '/jijin/Jz_account/open_phone_trans';
     			}
     		}else{
     			$log_message = '一次性随机验证码未找到';
@@ -352,10 +346,13 @@ class Jz_account extends MY_Controller
     		if (!isset($message)){
     			$message = '开通手机交易失败，系统正在返回';
     		}
+    		if (!isset($nextUrl)){
+    			$nextUrl = $this->base . '/jijin/Jz_my';
+    		}
     		Message(Array(
     				'msgTy' => 'fail',
     				'msgContent' => $message,
-    				'msgUrl' => $this->base . '/jijin/Jz_my',                           //调用my界面
+    				'msgUrl' => $nextUrl,                           //调用my界面
     				'base' => $this->base
     				));
     	}

@@ -36,7 +36,8 @@
 -->
 			</section>
 			<section class="m-btn-wrap">
-				<input class="btn" type="submit" value="下一步"/>
+				<input class="btn  btn-fix-left" onclick="window.location.href='/jijin/Jz_my'" type="button" value="返回"/>
+				<input class="btn  btn-fix-right btn-submit" type="submit" value="下一步"/>
 			</section>
 		</form>
 		
@@ -52,7 +53,7 @@
 <script>
 	Zepto(function($) {
 		M.checkBoxInit();
-        $('.btn').on('click', function () {
+        $('.btn-submit').on('click', function () {
             M.checkForm(function () {
             	var encrypt = new JSEncrypt();
 				encrypt.setPublicKey($('#lpasswd').attr('data-key'));
