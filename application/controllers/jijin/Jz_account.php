@@ -325,6 +325,7 @@ class Jz_account extends MY_Controller
     			file_put_contents('log/user/OpenPhoneTrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()). ":\r\n用户:".$_SESSION ['customer_name']."开通用户手机交易功能(open_phone_trans接口)返回数据".serialize($res)."\r\n\r\n",FILE_APPEND);
     			if ($res['code'] == '0000'){
     				unset($_SESSION['data_OPT']);
+    				$_SESSION['JZ_user_id'] = 1;
     				Message(Array(
     						'msgTy' => 'sucess',
     						'msgContent' => '开通手机交易成功',
