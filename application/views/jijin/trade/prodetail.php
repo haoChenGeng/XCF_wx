@@ -10,7 +10,7 @@
 <body>
 	<div class="wrap">
     <section class="m-item-wrap m-item-5-wrap">
-      <h3 class="text-center m-item-5"><span class="head-back-icon" onclick="window.history.go(-1)"></span><?php echo $fundlist['fundname'].'('.$fundlist['fundcode'].')';?></h3>      
+      <h3 class="text-center m-item-5"><span class="head-back-icon" onclick="window.history.go(-1)"></span><span style="width: 90%;display: inline-block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin-left: 25px;"><?php echo $fundlist['fundname'].'('.$fundlist['fundcode'].')';?></span></h3>      
     </section>
     <section class="m-content">
       <div class="m-content-t1">

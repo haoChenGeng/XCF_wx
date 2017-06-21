@@ -90,7 +90,7 @@ class User extends MY_Controller {
 
 
 	function home(){
-		if (ISTESTING) {
+		if (1) {
 			$this->getRecommendFunds($data);
 			$this->load->view('index',$data);
 		}

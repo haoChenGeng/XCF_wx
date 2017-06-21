@@ -33,7 +33,7 @@ mui.init();
 				dataType: 'json',
 				type: 'post',
 				success: function(res) {
-					console.log(res);
+// console.log(res);
 					if (res.code === '0000') {
 						mui.alert(res.msg);
 					}else {
@@ -131,7 +131,10 @@ mui.init();
 	(function() {
 		var name;
 		var id;
-		var mask = mui.createMask();
+		var mask = mui.createMask(function() {
+			document.getElementById('order').style.display = 'none';
+			
+		});
 		document.getElementById('info').addEventListener('tap',function(e) {
 			if (e.target.innerHTML.trim() == '预约咨询') {
 				var a = e.target.parentNode.nextSibling.firstElementChild;
@@ -144,7 +147,7 @@ mui.init();
 				mask.close();
 			}
 		});
-		document.getElementById('cancel').addEventListener('click', function(e) {
+		document.getElementById('cancel').addEventListener('tap', function(e) {
 			document.getElementById('order').style.display = 'none';
 			mask.close();
 		});
