@@ -18,8 +18,8 @@ class Test extends MY_Controller
 //     	$data['url'] = $this->config->item('fundUrl').'/jijin/XCFinterface';
 //     	$data['formData'] = array('code'=>'功能号','customerNo'=>'客户号','certificatetype'=>'证件类型','certificateno'=>'证件号码','custno'=>'金证客户号','lpasswd'=>'密码');
 //     	$this->load->view('UrlTest',$data);
-//     	$this->load->library('Fund_interface');
-//     	var_dump($this->fund_interface->getReturnData('K4D8YD4bSe4UB6fGkIAYKOUCiUhjSDtGXJNVHH83W3ursvByZBHfUukg/e1VWwhWcPZ/1YX9PlMhHFspABgGOQ=='));
+    	$this->load->library('Fund_interface');
+    	var_dump($this->fund_interface->getReturnData('K4D8YD4bSe4UB6fGkIAYKMZQehk24aNoIeXssB8/Xc5vjauLR9dGLxPGl3Fo6okJ6REAFzWjIZ5/ZSup7mgTmKRaqnJzPFvJpRXUKe06I9Q='));
 //     	var_dump($this->fund_interface->RenewFundAESKey('123456'));
 //     	$res = $this->fund_interface->Trans_applied('20170301', '20170501');
 //     	var_dump($res);
@@ -29,7 +29,7 @@ class Test extends MY_Controller
 //     	$this->load->library('Fund_interface');
 //     	$this->fund_interface->fund_list();
 // $_SERVER['CI_ENV'] = 'test';
-var_dump($_SERVER);
+// var_dump($_SERVER);
     }
     
 }
