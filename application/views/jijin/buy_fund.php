@@ -65,6 +65,13 @@
 									</div>
 								</div>
 							</ul>
+							<?php 
+								if(isset($_SESSION['listAllFund'])){
+									echo '';
+								}else{
+									echo '<a href="/jijin/jz_fund/getALLFundList/buy" id="getAllFund" class="input_btn">点击获取全部基金信息</a>';
+								}
+							?>
 						</div>
 					</div>
 				</div>
@@ -76,9 +83,16 @@
 								</div>
 							</div>
 							<ul class="mui-table-view" id="apply">
-								
 							</ul>
+							<?php 
+								if(isset($_SESSION['listAllFund'])){
+									echo '';
+								}else{
+									echo '<a href="/jijin/jz_fund/getALLFundList/apply" id="getAllFund" class="input_btn">点击获取全部基金信息</a>';
+								}
+							?>
 						</div>
+
 					</div>
 				</div>
 				<div id="item3mobile" class="mui-slider-item mui-control-content <?php echo ($pageOper == 'today')? 'mui-active' : '';?>">
@@ -154,6 +168,16 @@
 	    	id:'exit'
 	  	});
 	});
+
+//     $('#getAllFund').on('click',function(){
+//         $.post("/User/queryPlanner", {planner_id:str},function(res){
+//                 M.alert({
+//                     title:'提示',
+//                     message:res==null||res==''||res==undefined?'理财师查询失败':res
+//                 });
+//             })
+//         }
+//     });
 	
 </script>
 </body>

@@ -83,12 +83,13 @@ class Fund_interface
 	}
 
 	function fund_list(){
-		$startTime = strtotime(date('Y-m-d',time()).' 09:00:00');						//从9:00到10:00每隔5分钟自动更新基金列表
+		$invalidTime = strtotime(date('Y-m-d',time()))-50400;			//设置基金列表失效时间，即昨天10点之前获得的基金信息必须进行更新。
+		$startTime = strtotime(date('Y-m-d',time()).' 09:20:00');		//设置自动更新时间段[$startTime,$endTime](从9:20到10:00)每隔5分钟自动更新基金列表
 		$endTime = strtotime(date('Y-m-d',time()).' 10:00:00');
 		$currentTime = time();
 		$this->CI->load->model("Model_db");
 		$updatetime = $this->CI->db->where(array('dealitem' => 'fundlist'))->get('dealitems')->row_array()['updatetime'];
-		if ($updatetime<$startTime || ($updatetime<$endTime && ($currentTime-$updatetime)>1800)){
+		if ($updatetime<$invalidTime || ($currentTime > $startTime && $updatetime<$endTime && ($currentTime-$updatetime)>300)){
 			$submitData = $this->getSubmitData(array("code"=>'fundlist'));
 			$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 			$funddata = $this->getReturnData($returnData)['data']['fundList'];

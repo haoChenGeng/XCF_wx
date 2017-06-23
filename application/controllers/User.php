@@ -435,26 +435,37 @@ class User extends MY_Controller {
 		$this->load->library('Fund_interface');
 		$res = $this->fund_interface->fund_list();
 		$this->load->config('jz_dict');
+		if (!isset($_SESSION['riskLevel'])){
+			$_SESSION['riskLevel'] = '01';
+		}
 		$select = array('fundcode','tano','fundname','fundtype','nav','growthrate',/* 'fundincomeunit', */'status','growth_year');
-		$candidateFunds = $this->db->select($select)->where(array('recommend >'=>0))->get('fundlist')->result_array();//->get_compiled_select('fundlist');
+		$candidateFunds = $this->db->select($select)->where(array('recommend >'=>0,'risklevel <='=>$_SESSION['riskLevel']))->get('fundlist')->result_array();//->get_compiled_select('fundlist');
 		$candidateNum = count($candidateFunds);
 		$selectNum = 0;
 		if ($candidateNum <3){
 			$data['Recommend'] = $candidateFunds;
 			$selectNum = $candidateNum;
-			$candidateFunds = $this->db->select($select)->where(array('recommend =' => 0))->get('fundlist')->result_array();
+			$candidateFunds = $this->db->select($select)->where(array('recommend =' => 0,'risklevel <='=>$_SESSION['riskLevel']))->get('fundlist')->result_array();
 			$candidateNum = count($candidateFunds);
 		}
-		if ($candidateNum > 0){
-			$randSeq = array_rand(range(0,$candidateNum-1),3-$selectNum);
-			if (is_array($randSeq)){
-				foreach ($randSeq as $val){
-					$data['Recommend'][] = $candidateFunds[$val];
+		if ($candidateNum > (3-$selectNum)){
+			if ($candidateNum > 0){
+				var_dump($candidateNum-1,3-$selectNum);
+				$randSeq = array_rand(range(0,$candidateNum-1),3-$selectNum);
+				if (is_array($randSeq)){
+					foreach ($randSeq as $val){
+						$data['Recommend'][] = $candidateFunds[$val];
+					}
+				}else{
+					$data['Recommend'][] = $candidateFunds[$randSeq];
 				}
-			}else{
-				$data['Recommend'][] = $candidateFunds[$randSeq];
 			}
-
+		}else{
+			if ($candidateNum > 0){
+				foreach ($candidateFunds as $val){
+					$data['Recommend'][] = $val;
+				}
+			}
 		}
 		foreach ($data['Recommend'] as $key => $val){
 			$data['Recommend'][$key]['fundtype'] = $this->config->item('fundtype')[$val['fundtype']];
