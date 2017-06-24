@@ -136,7 +136,13 @@ mui.init();
 			
 		});
 		document.getElementById('info').addEventListener('tap',function(e) {
-			if (e.target.innerHTML.trim() == '预约咨询') {
+			if (e.target.classList.contains('info-list-left')) {
+				var a = e.target.nextSibling.firstElementChild;
+				name = a.innerHTML;
+				id = a.dataset.id;
+				mask.show();
+				document.getElementById('order').style.display = 'block';
+			}else if (e.target.innerHTML.trim() == '预约咨询') {
 				var a = e.target.parentNode.nextSibling.firstElementChild;
 				name = a.innerHTML;
 				id = a.dataset.id;
