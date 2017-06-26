@@ -154,7 +154,8 @@
 	    	id:'exit'
 	  	});
 	});
-	
+	var num = Math.floor(Math.random()*1000);
+	var stateObj = { foo: "bar" }; history.replaceState(stateObj, "page 2", '<?php echo $base;?>'+'/jijin/Jz_fund?num='+num);
 </script>
 </body>
 </html>
