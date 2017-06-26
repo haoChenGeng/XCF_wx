@@ -60,8 +60,8 @@ mui.init();
 					oLi.classList.add('mui-table-view-cell');
 					oLi.innerHTML = '<div class="mui-media-body info-list">'+
 														'<div class="info-list-left">'+
-															'<p class="info-left-adv">'+data[i].strategy+'</p>'+
-															'<p class="info-left-title">'+data[i].advantage+'</p>'+
+															'<p class="info-left-adv order">'+data[i].strategy+'</p>'+
+															'<p class="info-left-title order">'+data[i].advantage+'</p>'+
 															'<button class="info-order">'+
 																'预约咨询'+
 															'</button>'+
@@ -142,7 +142,7 @@ mui.init();
 				id = a.dataset.id;
 				mask.show();
 				document.getElementById('order').style.display = 'block';
-			}else if (e.target.innerHTML.trim() == '预约咨询') {
+			}else if (e.target.innerHTML.trim() == '预约咨询' || e.target.classList.contains('order')) {
 				var a = e.target.parentNode.nextSibling.firstElementChild;
 				name = a.innerHTML;
 				id = a.dataset.id;
