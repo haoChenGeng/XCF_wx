@@ -123,8 +123,18 @@
 	    	id:'exit'
 	  	});
 	});
-	var num = Math.floor(Math.random()*1000);
-	var stateObj = { foo: "bar" }; history.replaceState(stateObj, "page 2", '<?php echo $base;?>'+'/jijin/Jz_my?num='+num);
+	pushHistory(); 
+    window.addEventListener("popstate", function(e) { 
+        // alert("我监听到了浏览器的返回按钮事件啦");
+        window.location.href = '<?php echo $base;?>'+'/jijin/Jz_fund';
+    }, false); 
+    function pushHistory() { 
+        var state = { 
+          title: "my",
+          url: "#"
+        };
+        window.history.pushState(state, "title", "#");
+    } 
 </script>
 </body>
 </html>
