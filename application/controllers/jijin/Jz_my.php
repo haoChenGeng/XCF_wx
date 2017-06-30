@@ -144,7 +144,6 @@ class Jz_my extends MY_Controller
 	
 	//获取已购基金列表和总资产
 	private function getMyFundList() {
-		
 		//调用接口
 		$res = $this->fund_interface->asset();
 		file_put_contents('log/trade/Jz_my'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['customer_name'].'进行资产查询，返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
@@ -240,7 +239,7 @@ class Jz_my extends MY_Controller
 		echo json_encode($res);
 	}
 	
-	function test(){
+/* 	function test(){
 		$res = $this->fund_interface->asset();
 		$data['data'] = $res['data'];
 		var_dump($res);
@@ -248,6 +247,21 @@ class Jz_my extends MY_Controller
 		$data['url'] = $fundInterface['url'].'/jijin/XCFinterface';
 		$this->load->view('UrlTest',$data);
 		return;
-	}
+	} */
 
+	function investorManagement(){
+		$this->fund_interface->asset();
+		$post = $this->input->post();
+		if (!empty($post)){
+			var_dump($post);
+		}else{
+			$data['formData']['custtype'] = array('des'=>'您是怎样的投资者？','select'=>array('1','2','3'));
+			$data['formData']['perinvesttype'] = array('des'=>'您的职业是？','select'=>array('1','2','3'));
+			$data['formData']['Perfinancialassets'] = array('des'=>'您的年末金融资产是多少？','select'=>array('25'=>'0元—50万','200'=>'50万—300万','400'=>'300万—500万','500'=>'500万以上'));
+			$data['formData']['peravgincome'] = array('des'=>'您近三年年均收入是多少？','select'=>array('5'=>'0元—10万','25'=>'10万—30万','50'=>'30万—100万','100'=>'100万以上'));
+			$data['formData']['perinvestexp'] = array('des'=>'您投资证券、基金、期货、黄金、外汇等的投资经历有几年？','select'=>array('0.5'=>'不满1年','2'=>'1年—3年','5'=>'3年—10年','10'=>'10年以上'));
+			$data['formData']['perinvestwork'] = array('des'=>'您从事金融产品设计、投资、风险管理及相关工作经历有几年？','select'=>array('0.5'=>'不满1年','2'=>'1年—3年','5'=>'3年—10年','10'=>'10年以上'));
+			$this->load->view('/jijin/account/investorManagement',$data);
+		}
+	}
 }

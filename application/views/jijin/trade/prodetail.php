@@ -27,15 +27,15 @@
       <div class="m-content-t2">
         <div class="m-content-t2-detail">
           <p>起投金额(元)</p>
-          <p>100.00</p>
+          <p><?php echo $fundlist['firstMin']?></p>
         </div>
         <div class="m-content-t2-detail">
           <p>基金类型</p>
-          <p>货币型</p>
+          <p><?php echo $fundlist['sharetype']?></p>
         </div>
         <div class="m-content-t2-detail">
           <p>风险等级</p>
-          <p>积极型</p>
+          <p><?php echo $fundlist['risklevel']?></p>
         </div>
       </div>
       <div class="m-content-t3">

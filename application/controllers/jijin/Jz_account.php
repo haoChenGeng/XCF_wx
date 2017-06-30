@@ -233,13 +233,17 @@ class Jz_account extends MY_Controller
 					$_SESSION['JZ_user_id'] = 1;
 					$_SESSION['riskLevel'] = '01';
 					file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."用户基金开户成功\r\n\r\n",FILE_APPEND);
-					Message(Array(
+					ob_start();
+					$arr = Array(
 							'msgTy' => 'sucess',
-							'msgContent' => '注册成功',
-							'msgUrl' => $this->base . '/jijin/Jz_my', //调用我的基金界面
+							'msgContent' => '基金开户成功',
 							'base' => $this->base
-							));
-					exit;
+							);
+					$this->load->view('jijin/account/registerResult', $arr);
+					ob_end_flush();
+					exit();
+					
+					Message();
 				}
 				else{                                      //调用金证接口开户失败
 						$err_msg = '系统故障';

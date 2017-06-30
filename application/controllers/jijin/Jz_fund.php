@@ -75,10 +75,12 @@ class Jz_fund extends MY_Controller
 		//调用接口
 		$fund_list = array();
 		$this->fund_interface->fund_list();
-		if (!isset($_SESSION['listAllFund'])){
+		if (!isset($_SESSION['viewAllFund'])){
+			$_SESSION['viewAllFund'] = 0;
+		}elseif ( 0 == $_SESSION['viewAllFund']){
 			$this->db->where(array('risklevel <='=>$_SESSION['riskLevel']));
 		}
-		$res = $this->db->get('fundlist')->result_array();
+		$res = $this->db->select('status,fundcode,fundname,fundtype,nav,tano,taname,risklevel')->get('fundlist')->result_array();
 		$this->load->config('jz_dict');
 		$i = 0;
 		foreach ($res as $key => $val)
@@ -91,6 +93,8 @@ class Jz_fund extends MY_Controller
 				$fund_list['data'][$i]['nav'] = $val['nav'];
 				$fund_list['data'][$i]['tano'] = $val['tano'];
 				$fund_list['data'][$i]['taname'] = $val['taname'];
+				$risklevel = intval($val['risklevel']);
+				$fund_list['data'][$i]['risklevel'] = isset($this->config->item('productrisk')[$risklevel])?'['.$this->config->item('productrisk')[$risklevel].']':'';
 				$i++;
 			}
 		}
@@ -120,7 +124,7 @@ class Jz_fund extends MY_Controller
 	public function showprodetail()
 	{
 		$get = $this->input->get();
-		$fund_list = $this->db->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
+		$fund_list = $this->db->select('fundtype,fundname,fundcode,shareclasses,nav,navdate,growth_day,status,risklevel,first_per_min_22,first_per_min_20')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
 		$this->load->config('jz_dict');
 		$tmp = isset($this->config->item('fundtype')[$fund_list['fundtype']])?$this->config->item('fundtype')[$fund_list['fundtype']]:null;
 		$fund_list['fundtype'] = is_null($tmp)?'-':$tmp;
@@ -128,15 +132,18 @@ class Jz_fund extends MY_Controller
 		$fund_list['sharetype'] = is_null($tmp)?'-':$tmp;
 		$tmp = isset($this->config->item('fund_status')[$fund_list['status']])?$this->config->item('fund_status')[$fund_list['status']]['status']:null;
 		$fund_list['status'] = is_null($tmp)?'-':$tmp;
-		$tmp = isset($this->config->item('custrisk')[intval($fund_list['risklevel'])])?$this->config->item('custrisk')[intval($fund_list['risklevel'])]:null;
-		$fund_list['risklevel'] = $fund_list['risklevel'].'('.$tmp.')';
-		$data['fundlist'] = $fund_list;
+		$productrisk = intval($fund_list['risklevel']);
+		$tmp = isset($this->config->item('productrisk')[$productrisk])?$this->config->item('productrisk')[$productrisk]:null;
+		$fund_list['risklevel'] = 'R'.$productrisk.'('.$tmp.')';
 		$data['purchasetype'] = $get['purchasetype'];
 		if ($get['purchasetype'] == '申购'){
 			$_SESSION['fundPageOper'] = 'apply';
+			$fund_list['firstMin'] = $fund_list['first_per_min_22'];
 		}elseif($get['purchasetype'] == '认购'){
 			$_SESSION['fundPageOper'] = 'buy';
+			$fund_list['firstMin'] = $fund_list['first_per_min_20'];
 		}
+		$data['fundlist'] = $fund_list;
 		$data['base'] = $this->base;
 		$data['next_url'] = isset($get['next_url']) ? $get['next_url'] : '/jijin/Jz_fund/index/fund';
 		$this->load->view('/jijin/trade/prodetail', $data);
@@ -174,9 +181,35 @@ class Jz_fund extends MY_Controller
 		echo json_encode($return);
 	}
 	
-	public function getALLFundList($activePage='buy'){
-		$_SESSION['listAllFund'] = 'all';
-		$_SESSION['fundPageOper'] = $activePage;
-		$this->index($activePage);
+	public function viewAllFund(){
+		$post = $this->input->post();
+		if (isset($_SESSION ['customer_id'])){
+			if (isset($post['allow'])){
+				$flag = $this->db->set(array('viewAllFund'=>$post['allow']))->where(array('id'=>$_SESSION ['customer_id']))->update('p2_customer');
+				if ($flag){
+					$message = '修改成功';
+					$flag = 'sucess';
+					$_SESSION['viewAllFund'] = $post['allow'];
+				}else{
+					$message = '修改失败';
+					$flag = 'fail';
+				}
+			}else{
+				$this->load->view('jijin/trade/viewAllFund');
+			}
+		}else{
+			$flag = 'fail';
+			$message = '您尚未登录，不能做相关修改';
+		}
+		if (isset($message)){
+			$this->load->helper(array("output"));
+			Message(Array(
+					'msgTy' => $flag,
+					'msgContent' => $message,
+					'msgUrl' => '/jijin/jz_fund',                           //调用my界面
+					'base' => $this->base
+					));
+		}
 	}
+	
 }

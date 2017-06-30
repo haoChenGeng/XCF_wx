@@ -15,9 +15,19 @@ class Test extends MY_Controller
     }
     
     function index() {
+    	var_dump($_SESSION['viewAllFund'],$_SESSION['riskLevel']);
+//     	ob_start();
+//     	$arr = Array(
+//     			'msgTy' => 'sucess',
+//     			'msgContent' => '基金开户成功',
+//     			'base' => $this->base
+//     			);
+//     	$this->load->view('jijin/account/registerResult', $arr);
+//     	ob_end_flush();
+//     	exit();
 //     	$randSeq = array_rand(range(0,0),1);
 //     	var_dump($randSeq);
-    	var_dump(strtotime(date('Y-m-d',time()).' 10:00:00'));
+//     	var_dump(strtotime(date('Y-m-d',time()).' 10:00:00'));
 //     	$data['url'] = $this->config->item('fundUrl').'/jijin/XCFinterface';
 //     	$data['formData'] = array('code'=>'功能号','customerNo'=>'客户号','certificatetype'=>'证件类型','certificateno'=>'证件号码','custno'=>'金证客户号','lpasswd'=>'密码');
 //     	$this->load->view('UrlTest',$data);
