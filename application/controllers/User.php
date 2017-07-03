@@ -449,7 +449,6 @@ class User extends MY_Controller {
 		}
 		if ($candidateNum > (3-$selectNum)){
 			if ($candidateNum > 0){
-				var_dump($candidateNum-1,3-$selectNum);
 				$randSeq = array_rand(range(0,$candidateNum-1),3-$selectNum);
 				if (is_array($randSeq)){
 					foreach ($randSeq as $val){
