@@ -211,10 +211,10 @@ class User extends MY_Controller {
 		if (isset ( $_SESSION ['customer_name'] )) {
 			unset ( $_SESSION ['customer_name'] );
 		}
-		if (isset($_SESSION['JZ_user_id'])) {
-			unset($_SESSION['JZ_user_id']);
+		if (isset($_SESSION['viewAllFund'])) {
+			unset($_SESSION['viewAllFund']);
 		}
-		session_destroy ();
+		session_destroy();
 		redirect ( $this->base . "/user/login");
 	}
 	

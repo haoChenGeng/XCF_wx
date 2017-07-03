@@ -25,7 +25,11 @@
         			if (isset($val['select'])){
         				echo '<select id='.$key.' name='.$key.' class="select-certificate" >';
         				foreach ($val['select'] as $k=>$v){
-        					echo '<option value='.$k.'>'.$v.'</option>';
+        					echo '<option value="'.$k.'"';
+        					if (isset($val['value']) && $val['value'] == $k){
+        						echo ' selected="selected"';
+        					} 
+        					echo '>'.$v.'</option>';
         				}
         				echo "</select>";
         			}else{
@@ -38,8 +42,6 @@
                 <input class="btn btn-fix-left" id="backBtn" type="button" value="返回"/>
                 <input class="btn btn-fix-right" id="commit" type="button" value="提交"/>
             </section>
-            <input type="hidden" id="json" name="json" value='<?php echo $json;?>' />
-            <input type="hidden" id="purchasetype" name="purchasetype" value='<?php echo $purchasetype;?>' />
         </form>
     </section>
 </section>
