@@ -89,12 +89,12 @@ class User extends MY_Controller {
 
 
 	function home(){
-// 		if (ISTESTING) {
+		if (ISTESTING) {
 			$this->getRecommendFunds($data);
 			$this->load->view('index',$data);
-// 		}
-// 		else 
-// 			redirect('/weixin/oauth/checkwxaccess');
+		}
+		else 
+			redirect('/weixin/oauth/checkwxaccess');
 	}
 	
 	function homeaccess(){

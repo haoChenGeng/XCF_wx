@@ -182,6 +182,19 @@
 //         }
 //     });
 	
+    pushHistory(); 
+    window.addEventListener("popstate", function(e) { 
+        // alert("我监听到了浏览器的返回按钮事件啦");
+        window.location.href = '/jijin/Jz_account/logout';
+    }, false); 
+    function pushHistory() { 
+        var state = { 
+          title: "buy_fund",
+          url: "#"
+        };
+        window.history.pushState(state, "title", "#");
+    } 
+
 </script>
 </body>
 </html>

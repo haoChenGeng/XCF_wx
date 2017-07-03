@@ -19,7 +19,7 @@
 			<span class="mui-tab-label">基金首页</span>
 		</a>
 -->
-		<a class="mui-tab-item" href="#tabbar-with-chat" id="buy_fund">
+		<a class="mui-tab-item" href="#tabbar-with-contact" id="buy_fund">
 			<span class="mui-icon icon-email iconfont"></span></span>
 			<span class="mui-tab-label">购买基金</span>
 		</a>
@@ -123,7 +123,18 @@
 	    	id:'exit'
 	  	});
 	});
-			 
+	pushHistory(); 
+    window.addEventListener("popstate", function(e) { 
+        // alert("我监听到了浏览器的返回按钮事件啦");
+        window.location.href = '<?php echo $base;?>'+'/jijin/Jz_fund';
+    }, false); 
+    function pushHistory() { 
+        var state = { 
+          title: "my",
+          url: "#"
+        };
+        window.history.pushState(state, "title", "#");
+    } 
 </script>
 </body>
 </html>
