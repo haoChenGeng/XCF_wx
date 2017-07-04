@@ -9,13 +9,13 @@ date.toLocaleDateString();
 
 var nav = document.getElementById("worthChart").getElementsByTagName("div");  
 var con = document.getElementById("chartContent").getElementsByClassName('m-content-t3-chart');
-console.log(con);
+// console.log(con);
 for(i=0;i<nav.length;i++){
     nav[i].index = i;
     nav[i].addEventListener('click', function() {
       
       for(var n = 0; n < con.length; n++) {
-console.log(nav[n]);
+// console.log(nav[n]);
           con[n].style.display = "none";
           nav[n].classList.remove('tab-active');
       }
