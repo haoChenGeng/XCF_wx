@@ -73,7 +73,12 @@
             	<a href="/jijin/Jz_account/entrance" id="fund_access" class="span01">公募</a>
             </li>
             <li class="li01 li02">
-            	<a href="/application/views/privateFund/private.html" id="" class="span01">私募</a>
+				<?php 
+            	if (isset($_SESSION['customer_id']))
+	            	echo '<a href="/Pf_assessment/userpfa" id="" class="span01">私募</a>';
+            	else
+    	        	echo '<a href="/user/login/1" id="" class="span01">私募</a>';
+    	       	?>
             </li>
             <li class="li01 li03">
             	<a href="/FindPaper" id="sign_in" class="span01">发现</a>
