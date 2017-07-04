@@ -144,7 +144,6 @@ class Jz_my extends MY_Controller
 	
 	//获取已购基金列表和总资产
 	private function getMyFundList() {
-		
 		//调用接口
 		$res = $this->fund_interface->asset();
 		file_put_contents('log/trade/Jz_my'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['customer_name'].'进行资产查询，返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
@@ -240,7 +239,7 @@ class Jz_my extends MY_Controller
 		echo json_encode($res);
 	}
 	
-	function test(){
+/* 	function test(){
 		$res = $this->fund_interface->asset();
 		$data['data'] = $res['data'];
 		var_dump($res);
@@ -248,6 +247,58 @@ class Jz_my extends MY_Controller
 		$data['url'] = $fundInterface['url'].'/jijin/XCFinterface';
 		$this->load->view('UrlTest',$data);
 		return;
-	}
+	} */
 
+	function investorManagement(){
+		$_SESSION['myPageOper'] = 'account';
+		$this->fund_interface->asset();
+		$post = $this->input->post();
+		if (!empty($post)){
+			if (empty($post['investorInfo'])){
+				$this->load->model('Model_db');
+				$post['customerId'] = $_SESSION['customer_id'];
+				$newData[] = &$post;
+				$flag = $this->Model_db->incremenUpdate('p2_investorInfo', $newData, 'customerId');
+				if ($flag){
+					$data['ret_code'] = '0000';
+					$data['ret_msg'] = '投资者信息提交成功!';
+				}else{
+					$data['ret_code'] = 'TJSB';
+					$data['ret_msg'] = '投资者信息提交失败，请重试!';
+				}
+				$data['head_title'] = '提交结果';
+				$data['back_url'] = '/jijin/Jz_my';
+				$data['base'] = $this->base;
+				$this->load->view('ui/view_operate_result',$data);
+			}else{
+				$investorInfo = json_decode($post['investorInfo']);
+				$this->getInvestorPageData($data['formData'], $investorInfo);
+				$this->load->view('/jijin/account/editInvestorInfo',$data);
+			}
+		}else{
+			$investorInfo = $this->db->select('Perfinancialassets,peravgincome,perinvestexp,perinvestwork')->where(array('customerId'=>$_SESSION['customer_id']))->get('p2_investorInfo')->row_array();
+			if (empty($investorInfo)){
+				$investorInfo = $data['formData'] = array();
+				$this->getInvestorPageData($data['formData'], $investorInfo);
+				$this->load->view('/jijin/account/editInvestorInfo',$data);
+			}else{
+				$data['investorInfo'] = json_encode($investorInfo);
+				$this->load->view('/jijin/account/investorInfo',$data);
+			}
+		}
+	}
+	
+	private function getInvestorPageData(&$formData,&$investorInfo){
+// 		$formData['custtype'] = array('des'=>'您是怎样的投资者？','select'=>array('1','2','3'));
+// 		$formData['perinvesttype'] = array('des'=>'您的职业是？','select'=>array('1','2','3'));
+		$formData['Perfinancialassets'] = array('des'=>'您的年末金融资产是多少？','select'=>array('25'=>'0元—50万','200'=>'50万—300万','400'=>'300万—500万','500'=>'500万以上'));
+		$formData['peravgincome'] = array('des'=>'您近三年年均收入是多少？','select'=>array('5'=>'0元—10万','25'=>'10万—30万','50'=>'30万—100万','100'=>'100万以上'));
+		$formData['perinvestexp'] = array('des'=>'您投资证券、基金、期货、黄金、外汇等的投资经历有几年？','select'=>array('0.5'=>'不满1年','2'=>'1年—3年','5'=>'3年—10年','10'=>'10年以上'));
+		$formData['perinvestwork'] = array('des'=>'您从事金融产品设计、投资、风险管理及相关工作经历有几年？','select'=>array('0.5'=>'不满1年','2'=>'1年—3年','5'=>'3年—10年','10'=>'10年以上'));
+		if (!empty($investorInfo)){
+			foreach ($investorInfo as $key=>$val){
+				$formData[$key]['value'] = $val;
+			}
+		}
+	}
 }

@@ -29,6 +29,7 @@ class PurchaseController extends MY_Controller {
 			exit;
 		}
 		$this->load->config('jz_dict');
+		$custrisk = $this->config->item('custrisk');
 		$fundInfo = $this->db->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
 		$data['fundcode'] = $get['fundcode'];
 		$data['nav'] = $fundInfo['nav'];
@@ -68,6 +69,7 @@ class PurchaseController extends MY_Controller {
 					$error_code =1;
 					$errMsg = '尚未进行风险等级测试';
 				}else{
+					$custriskLevel = intval($purchase_info['data']['custrisk']);
 					//生成基金购买信息
 					if (key_exists('isfirstbuy',$purchase_info['data']) && $purchase_info['data']['isfirstbuy'] == 0){
 						$data['min_money'] = $data['con_per_min'];
@@ -98,7 +100,7 @@ class PurchaseController extends MY_Controller {
 							$data['bank_msg'][$val['channelid']] = $channel_info[$val['channelid']]['channelname'].':'.substr($val['depositacct'],0,3).'***'.substr($val['depositacct'],-3);
 						}
 					}
-					if ($purchase_info['data']['custrisk'] >= intval($data['risklevel'])){
+					if ($custriskLevel >= intval($data['risklevel'])){
 						$data['base'] = $this->base;
 						$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
 						$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
@@ -111,7 +113,15 @@ class PurchaseController extends MY_Controller {
 						exit();
 					}else{
 						$error_code = 0;
-						$errMsg = '风险等级和产品不匹配';
+						if (1== $custriskLevel){
+							$errMsg = '您的风险水平为为"安全型"，只能购买与您风险水平相匹配的产品。';
+							$forward_url = '/jijin/Risk_assessment';
+							$forward_msg = '重新评测';
+						}else{
+							$errMsg = '您的风险水平为"'.$custrisk[$custriskLevel].'"，与当前产品风险水平不匹配，您是否充分了解该产品的风险特征，并自愿承担由此可能产生的一切不利后果和损失。';
+							$forward_url = '/jijin/PurchaseController/load_apply_fund';
+							$forward_msg = '确认够买';
+						}
 					}
 				}
 			}else{
@@ -128,8 +138,8 @@ class PurchaseController extends MY_Controller {
 			switch ($error_code){
 				case 0:
 					$arr['data'] = json_encode($data);
-					$arr['forward_url'] = '/jijin/PurchaseController/load_apply_fund';
-					$arr['forward_msg'] = '继续够买';
+					$arr['forward_url'] = $forward_url;
+					$arr['forward_msg'] = $forward_msg;
 					$arr['head_title'] = '购买提醒';
 					$_SESSION['bank_info'] = $purchase_info['data']['bank_info'];
 					$_SESSION['bank_info']['mobileno'] = $purchase_info['data']['mobileno'];

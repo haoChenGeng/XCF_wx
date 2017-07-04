@@ -121,7 +121,6 @@ function complete(obj) {
                 $.post("/jijin/RedeemFundController/redeemFee", {channelid:"<?php echo $channelid?>",applicationvol:applicationval,businesscode:24,tano:"<?php echo $tano?>",fundcode:$('#fundcode').val(),sharetype:"<?php echo $sharetype?>"},function(res){
                 	retData = JSON.parse(res);
                 	if (retData.code == 0){
-console.log(retData);
                         //验证全部通过回调        
                         document.title = '赎回确认';
                         document.getElementById('redeemChange').innerHTML = '赎回确认';

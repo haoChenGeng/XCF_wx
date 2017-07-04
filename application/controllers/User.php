@@ -41,11 +41,10 @@ class User extends MY_Controller {
 						$T_pwd = MD5 ( MD5 ( $passkey ) . substr ( $T_pwd, 5, 20 ) );
 						$trytimes = (time()-$user_info['logintime']>3600) ? 0 : $user_info['trytimes'];
 						if ($trytimes < 3){
-							var_dump($T_name);
-							var_dump($T_pwd);
 							if ($user_info ['Customername'] == $T_name && $user_info ['Password'] == $T_pwd) {
 								$_SESSION ['customer_id'] = $user_info ['id'];
 								$_SESSION ['customer_name'] = $user_info ['Customername'];
+								$_SESSION['viewAllFund'] = $user_info ['viewAllFund'];
 								$this->db->set(array('trytimes'=>0,'logintime'=>time()))->where(array('id'=>$user_info['id']))->update('customer');
 								if (isset($_SESSION['next_url'])){
 									$next_url = $_SESSION['next_url'];
@@ -90,7 +89,7 @@ class User extends MY_Controller {
 
 
 	function home(){
-		if (1) {
+		if (ISTESTING) {
 			$this->getRecommendFunds($data);
 			$this->load->view('index',$data);
 		}
@@ -212,10 +211,10 @@ class User extends MY_Controller {
 		if (isset ( $_SESSION ['customer_name'] )) {
 			unset ( $_SESSION ['customer_name'] );
 		}
-		if (isset($_SESSION['JZ_user_id'])) {
-			unset($_SESSION['JZ_user_id']);
+		if (isset($_SESSION['viewAllFund'])) {
+			unset($_SESSION['viewAllFund']);
 		}
-		session_destroy ();
+		session_destroy();
 		redirect ( $this->base . "/user/login");
 	}
 	
@@ -435,26 +434,37 @@ class User extends MY_Controller {
 		$this->load->library('Fund_interface');
 		$res = $this->fund_interface->fund_list();
 		$this->load->config('jz_dict');
+		if (!isset($_SESSION['riskLevel'])){
+			$_SESSION['riskLevel'] = '01';
+		}
 		$select = array('fundcode','tano','fundname','fundtype','nav','growthrate',/* 'fundincomeunit', */'status','growth_year');
-		$candidateFunds = $this->db->select($select)->where(array('recommend >'=>0))->get('fundlist')->result_array();//->get_compiled_select('fundlist');
+		$candidateFunds = $this->db->select($select)->where(array('recommend >'=>0,'risklevel <='=>$_SESSION['riskLevel']))->get('fundlist')->result_array();//->get_compiled_select('fundlist');
 		$candidateNum = count($candidateFunds);
 		$selectNum = 0;
 		if ($candidateNum <3){
 			$data['Recommend'] = $candidateFunds;
 			$selectNum = $candidateNum;
-			$candidateFunds = $this->db->select($select)->where(array('recommend =' => 0))->get('fundlist')->result_array();
+			$candidateFunds = $this->db->select($select)->where(array('recommend =' => 0,'risklevel <='=>$_SESSION['riskLevel']))->get('fundlist')->result_array();
 			$candidateNum = count($candidateFunds);
 		}
-		if ($candidateNum > 0){
-			$randSeq = array_rand(range(0,$candidateNum-1),3-$selectNum);
-			if (is_array($randSeq)){
-				foreach ($randSeq as $val){
-					$data['Recommend'][] = $candidateFunds[$val];
+		if ($candidateNum > (3-$selectNum)){
+			if ($candidateNum > 0){
+				var_dump($candidateNum-1,3-$selectNum);
+				$randSeq = array_rand(range(0,$candidateNum-1),3-$selectNum);
+				if (is_array($randSeq)){
+					foreach ($randSeq as $val){
+						$data['Recommend'][] = $candidateFunds[$val];
+					}
+				}else{
+					$data['Recommend'][] = $candidateFunds[$randSeq];
 				}
-			}else{
-				$data['Recommend'][] = $candidateFunds[$randSeq];
 			}
-
+		}else{
+			if ($candidateNum > 0){
+				foreach ($candidateFunds as $val){
+					$data['Recommend'][] = $val;
+				}
+			}
 		}
 		foreach ($data['Recommend'] as $key => $val){
 			$data['Recommend'][$key]['fundtype'] = $this->config->item('fundtype')[$val['fundtype']];

@@ -25,6 +25,6 @@
         <p class="affis"><a href="<?php echo $msgUrl;?>">如果你的浏览器没有自动跳转，请点击这里</a></p>
     </div>
 </div>
-<script language="javascript">setTimeout("location.href='<?php echo $msgUrl;?>';", 30000);</script>
+<script language="javascript">setTimeout("location.href='<?php echo $msgUrl;?>';", 3000);</script>
 </body>
 </html>
