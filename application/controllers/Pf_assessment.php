@@ -15,11 +15,10 @@ class Pf_assessment extends MY_Controller {
 		if (empty ( $_SESSION ['customer_id'] ))
 			exit ();
 		if ($this->get_user_status ())
-			$data['needdoaccessment']=0;
-		else 
-			$data['needdoaccessment']=1;
-		$this->load->view ( "/privateFund/private.html",$data ); // 已经评测过显示基金页面
-		
+			$data ['needdoaccessment'] = 0;
+		else
+			$data ['needdoaccessment'] = 1;
+		$this->load->view ( "/privateFund/private.html", $data ); // 已经评测过显示基金页面
 	}
 	private function get_user_status() {
 		$user_data = $this->db->select ( Array (
@@ -32,16 +31,14 @@ class Pf_assessment extends MY_Controller {
 		else
 			return true;
 	}
-	
-	function accessmentstatus()
-	{
+	function accessmentstatus() {
 		if (empty ( $_SESSION ['customer_id'] ))
 			exit ();
-		if($this->get_user_status())
-			$ret['data']=1;
+		if ($this->get_user_status ())
+			$ret ['data'] = 1;
 		else
-			$ret['data']=0;
-			
+			$ret ['data'] = 0;
+		
 		$ret ['status'] = 0;
 		$ret ['msg'] = '成功';
 		echo json_encode ( $ret );
@@ -50,7 +47,11 @@ class Pf_assessment extends MY_Controller {
 	function get_assessment() {
 		if (empty ( $_SESSION ['customer_id'] ))
 			exit ();
-		$post = $this->input->post ();
+		$post = $this->input->post ();//
+	    $post['1_1']="A";
+	    $post['2_1']="A";
+	    $post['3_5']="A";
+	    
 		// $risk_level = 11;
 		if (empty ( $post )) {
 			echo "参数不对";
@@ -74,39 +75,16 @@ class Pf_assessment extends MY_Controller {
 			$risk_level_text = 'C5 级 - 进取型投资者';
 			$risk_level = 5;
 		}
-		$retsave = $this->save_self_confirm_data ( $_SESSION ['Id'], serialize ( $post ), $risk_level_text );
-		if ($retsave) {
-			if (! empty ( $risk_level )) {
-				$res = $this->db->set ( array (
-						'Risk_level' => $risk_level 
-				) )->where ( Array (
-						'Id' => $_SESSION ['Id'] 
-				) )->update ( 'user' );
-			}
-			if (! $res) {
-// 				'msgContent' => '保存测试评级失败,请重试...',
-			}
-			$user_status = $this->get_user_status ( $_SESSION ['Id'] );
-			if ($user_status) {
-				$user_status = $user_status | 0b0010000;
-				if (! empty ( $risk_level )) { // 更新等级结果到数据库
-					$res = $this->db->set ( array (
-							'Status' => $user_status 
-					) )->where ( Array (
-							'Id' => $_SESSION ['Id'] 
-					) )->update ( 'user' );
-				}
-				if (! $res) {
-// 							'msgContent' => '保存测试评级失败,请重试...',
-					exit ();
-				}
-			}
-		} else {
-// 					'msgContent' => '评级保存失败,请重试...',
-			exit ();
-		}
+		$retsave = $this->save_self_confirm_data ( $_SESSION ['customer_id'], serialize ( $post ), $risk_level_text . ',' . $mark );
 		
-		$ret ['status'] = 0;
+		var_dump($_SESSION ['customer_id']);
+		$res = $this->db->set ( array (
+						'pflevel' => $risk_level 
+				) )->where ( Array (
+						'id' => $_SESSION ['customer_id']
+				) )->update ( 'p2_customer' );
+		
+				$ret ['status'] = 0;
 		$ret ['data'] ['score'] = $mark;
 		$ret ['data'] ['level'] = $risk_level;
 		$ret ['data'] ['levelcomment'] = $risk_level_text;
@@ -114,8 +92,8 @@ class Pf_assessment extends MY_Controller {
 		echo json_encode ( $ret );
 	}
 	private function save_self_confirm_data($id, $answer, $level = "") {
-		$time = gmtime ();
-		$ip = real_ip ();
+		$time =time ();
+		$ip = " ";
 		$user_confirm_date ['user_id'] = $id;
 		$user_confirm_date ['ip'] = $ip;
 		$user_confirm_date ['user_submit'] = $answer;
@@ -132,7 +110,7 @@ class Pf_assessment extends MY_Controller {
 			return false;
 	}
 	private function count_right_answer($post) {
-		$question = $this->read_questionwithscore();
+		$question = $this->read_questionwithscore ();
 		$mark = 0;
 		$mark_3_4 = 0;
 		$mark_4_3 = 0;
@@ -143,7 +121,7 @@ class Pf_assessment extends MY_Controller {
 			$this_row_mark = $this->db->where ( Array (
 					'type' => $type,
 					'question_no' => $question_no 
-			) )->get ( 'assessment_question' )->row_array ();
+			) )->get ( 'p2_pfa_question' )->row_array ();
 			$this_mark = 0;
 			if ($type == 3 and $question_no == 4) {
 				switch ($value) {
@@ -233,11 +211,11 @@ class Pf_assessment extends MY_Controller {
 	}
 	private function read_questionwithscore() {
 		$assessment_question = $this->db->where ( Array (
-				'type!=' => - 1
-				) )->get ( 'pfa_question' )->result_array ();
-				if ($detail == false) {
-					// 处理成建档的产品列表
-				}
-				return $assessment_question;
+				'type!=' => - 1 
+		) )->get ( 'pfa_question' )->result_array ();
+		if ($detail == false) {
+			// 处理成建档的产品列表
+		}
+		return $assessment_question;
 	}
 }
