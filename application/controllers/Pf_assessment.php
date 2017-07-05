@@ -33,6 +33,19 @@ class Pf_assessment extends MY_Controller {
 			return true;
 	}
 	
+	function accessmentstatus()
+	{
+		if (empty ( $_SESSION ['customer_id'] ))
+			exit ();
+		if($this->get_user_status())
+			$ret['data']=1;
+		else
+			$ret['data']=0;
+			
+		$ret ['status'] = 0;
+		$ret ['msg'] = '成功';
+		echo json_encode ( $ret );
+	}
 	// 提交测试结果
 	function get_assessment() {
 		if (empty ( $_SESSION ['customer_id'] ))
