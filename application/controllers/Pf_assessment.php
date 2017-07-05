@@ -76,8 +76,6 @@ class Pf_assessment extends MY_Controller {
 			$risk_level = 5;
 		}
 		$retsave = $this->save_self_confirm_data ( $_SESSION ['customer_id'], serialize ( $post ), $risk_level_text . ',' . $mark );
-		
-		var_dump($_SESSION ['customer_id']);
 		$res = $this->db->set ( array (
 						'pflevel' => $risk_level 
 				) )->where ( Array (
