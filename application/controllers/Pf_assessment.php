@@ -22,23 +22,50 @@ class Pf_assessment extends MY_Controller {
 	}
 	private function get_user_status() {
 		$user_data = $this->db->select ( Array (
-				'pflevel' 
+				'pflevel',
+				'readpfmsg' 
 		) )->where ( Array (
 				'id' => $_SESSION ['customer_id'] 
 		) )->get ( 'p2_customer' )->row_array ();
-		if (empty ( $user_data ['pflevel'] ))
-			return false;
-		else
-			return true;
+		return $user_data;
+	}
+	function updateReadPfMsg() {
+		if (empty ( $_SESSION ['customer_id'] ))
+			exit ();
+		$post = $this->input->post ();
+		$post ['donereadmsg'] = 1;
+		if ($post ['donereadmsg'] == 1) {
+			$res = $this->db->set ( array (
+					'readpfmsg' => 1 
+			) )->where ( Array (
+					'id' => $_SESSION ['customer_id'] 
+			) )->update ( 'p2_customer' );
+			if ($res) {
+				$ret ['status'] = 0;
+				$ret ['msg'] = '保存成功!';
+			} else {
+				$ret ['status'] = 1;
+				$ret ['msg'] = '保存失败!';
+			}
+		}else 
+		{
+			$ret ['status'] = 0;
+			$ret ['msg'] = '未作任何操作!';
+		}
+		echo json_encode ( $ret );
 	}
 	function accessmentstatus() {
 		if (empty ( $_SESSION ['customer_id'] ))
 			exit ();
-		if ($this->get_user_status ())
-			$ret ['data'] = 1;
+		$user_status = $this->get_user_status ();
+		if (empty ( $user_status ['pflevel'] ))
+			$ret ['data'] ['pflevel'] = 0;
 		else
-			$ret ['data'] = 0;
-		
+			$ret ['data'] ['pflevel'] = 1;
+		if (empty ( $user_status ['readpfmsg'] ))
+			$ret ['data'] ['readpfmsg'] = 0;
+		else
+			$ret ['data'] ['readpfmsg'] = 1;
 		$ret ['status'] = 0;
 		$ret ['msg'] = '成功';
 		echo json_encode ( $ret );
@@ -47,11 +74,11 @@ class Pf_assessment extends MY_Controller {
 	function get_assessment() {
 		if (empty ( $_SESSION ['customer_id'] ))
 			exit ();
-		$post = $this->input->post ();//
-	    $post['1_1']="A";
-	    $post['2_1']="A";
-	    $post['3_5']="A";
-	    
+		$post = $this->input->post (); //
+		$post ['1_1'] = "A";
+		$post ['2_1'] = "A";
+		$post ['3_5'] = "A";
+		
 		// $risk_level = 11;
 		if (empty ( $post )) {
 			echo "参数不对";
@@ -77,12 +104,12 @@ class Pf_assessment extends MY_Controller {
 		}
 		$retsave = $this->save_self_confirm_data ( $_SESSION ['customer_id'], serialize ( $post ), $risk_level_text . ',' . $mark );
 		$res = $this->db->set ( array (
-						'pflevel' => $risk_level 
-				) )->where ( Array (
-						'id' => $_SESSION ['customer_id']
-				) )->update ( 'p2_customer' );
+				'pflevel' => $risk_level 
+		) )->where ( Array (
+				'id' => $_SESSION ['customer_id'] 
+		) )->update ( 'p2_customer' );
 		
-				$ret ['status'] = 0;
+		$ret ['status'] = 0;
 		$ret ['data'] ['score'] = $mark;
 		$ret ['data'] ['level'] = $risk_level;
 		$ret ['data'] ['levelcomment'] = $risk_level_text;
@@ -90,7 +117,7 @@ class Pf_assessment extends MY_Controller {
 		echo json_encode ( $ret );
 	}
 	private function save_self_confirm_data($id, $answer, $level = "") {
-		$time =time ();
+		$time = time ();
 		$ip = " ";
 		$user_confirm_date ['user_id'] = $id;
 		$user_confirm_date ['ip'] = $ip;
