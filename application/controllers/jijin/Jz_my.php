@@ -17,7 +17,6 @@ class Jz_my extends MY_Controller
 	//我的基金页面入口
 	function index($activePage = 'fund')
 	{
-		
 		if (!$this->logincontroller->isLogin()) {
 			$_SESSION['next_url'] = $this->base.'/jijin/Jz_my';
 		}
@@ -148,11 +147,20 @@ class Jz_my extends MY_Controller
 		$res = $this->fund_interface->asset();
 		file_put_contents('log/trade/Jz_my'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['customer_name'].'进行资产查询，返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
 		$data = &$res['data'];
+		$this->load->config('jz_dict');
+		$productrisk = $this->config->item('productrisk');
 		if (!empty($res['data']['fund_list'])) {
+			$custrisk = $this->getRiskLevel(1);
 			foreach ($data['fund_list'] as $key=>$val){
 				if (is_array($val)){
 					$data['fund_list']['data'][$key] = $val;
 					$data['fund_list']['data'][$key]['json'] = base64_encode(json_encode($val));
+					if ($val['risklevel'] > $custrisk){
+						$risklevel = intval($val['risklevel']);
+						$data['fund_list']['data'][$key]['riskDes'] = isset($productrisk[$risklevel])?'['.$productrisk[$risklevel].']':'';
+					}else{
+						$data['fund_list']['data'][$key]['riskDes'] = '';
+					}
 					unset($data['fund_list'][$key]);
 				}
 			}
@@ -163,15 +171,26 @@ class Jz_my extends MY_Controller
 	}
 	
 	//风险测试
-	private function getRiskLevel() {
-		//调用接口
-		$res = $this->fund_interface->AccountInfo();
-		$this->load->config('jz_dict');
-		if (!empty($res['data'])) {
-			$tmp = null;
+	private function getRiskLevel($type = 0) {
+		//调用接口获取用户风险等级
+		if (!isset($_SESSION['custrisk'])){
+			$res = $this->fund_interface->AccountInfo();
+			if (!empty($res['data'])) {
+				$_SESSION['custrisk'] = (int)$res['data']['custrisk'];
+			}else{
+				$_SESSION['custrisk'] = '-';
+			}
+		}
+		if (1 == $type){
+			return $_SESSION['custrisk'];
+		}else{
+			$res['code'] = '0000';
+			$res['msg'] = '个人信息查询成功';
+			$this->load->config('jz_dict');
 			$custrisk = $this->config->item('custrisk');
-			if (isset($custrisk[(int)$res['data']['custrisk']])){
-				$res['data']['custriskname'] = $custrisk[(int)$res['data']['custrisk']];
+			if (isset($custrisk[$_SESSION['custrisk']])){
+				$res['data']['custrisk'] = 'R'.$_SESSION['custrisk'];
+				$res['data']['custriskname'] = $custrisk[$_SESSION['custrisk']];
 			}else{
 				$res['data']['custrisk'] = $res['data']['custriskname'] = '-';
 			}
@@ -242,14 +261,14 @@ class Jz_my extends MY_Controller
 /* 	function test(){
 		$res = $this->fund_interface->asset();
 		$data['data'] = $res['data'];
-		var_dump($res);
+// 		var_dump($res);
 		$fundInterface = $this->db->where(array('name'=>'FundInterface'))->get('p2_interface')->row_array();
 		$data['url'] = $fundInterface['url'].'/jijin/XCFinterface';
 		$this->load->view('UrlTest',$data);
 		return;
 	} */
 
-	function investorManagement(){
+	function investorManagement($nexturl=''){
 		$_SESSION['myPageOper'] = 'account';
 		$this->fund_interface->asset();
 		$post = $this->input->post();
@@ -258,7 +277,18 @@ class Jz_my extends MY_Controller
 				$this->load->model('Model_db');
 				$post['customerId'] = $_SESSION['customer_id'];
 				$newData[] = &$post;
-				$flag = $this->Model_db->incremenUpdate('p2_investorInfo', $newData, 'customerId');
+//调用投资者信息录入接口和准入接口,成功后写入数据库
+				$this->db->trans_start();
+				$flag = $this->Model_db->incremenUpdate('p2_investorinfo', $newData, 'customerId');
+				$fundadmittance = $this->db->select('fundadmittance')->where(array('id'=>$_SESSION['customer_id']))->get('p2_customer')->row_array()['fundadmittance'];
+				if (!$fundadmittance){
+					$flag = $flag && $this->db->set(array('fundadmittance'=>1))->where(array('id'=>$_SESSION['customer_id']))->update('p2_customer');
+					$data['back_url'] = '/jijin/Risk_assessment';
+					$data['nextDes'] = '继续风险测评';
+				}else{
+					$data['back_url'] = '/jijin/Jz_my';
+				}
+				$this->db->trans_complete();
 				if ($flag){
 					$data['ret_code'] = '0000';
 					$data['ret_msg'] = '投资者信息提交成功!';
@@ -267,7 +297,6 @@ class Jz_my extends MY_Controller
 					$data['ret_msg'] = '投资者信息提交失败，请重试!';
 				}
 				$data['head_title'] = '提交结果';
-				$data['back_url'] = '/jijin/Jz_my';
 				$data['base'] = $this->base;
 				$this->load->view('ui/view_operate_result',$data);
 			}else{
@@ -276,7 +305,10 @@ class Jz_my extends MY_Controller
 				$this->load->view('/jijin/account/editInvestorInfo',$data);
 			}
 		}else{
-			$investorInfo = $this->db->select('Perfinancialassets,peravgincome,perinvestexp,perinvestwork')->where(array('customerId'=>$_SESSION['customer_id']))->get('p2_investorInfo')->row_array();
+			if ($nexturl == 'Risk_assessment'){
+				$data['infoMessage'] = '风险测评前，请完善投资者信息。';
+			}
+			$investorInfo = $this->db->select('Perfinancialassets,peravgincome,perinvestexp,perinvestwork')->where(array('customerId'=>$_SESSION['customer_id']))->get('p2_investorinfo')->row_array();
 			if (empty($investorInfo)){
 				$investorInfo = $data['formData'] = array();
 				$this->getInvestorPageData($data['formData'], $investorInfo);

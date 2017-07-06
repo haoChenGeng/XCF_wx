@@ -44,7 +44,8 @@ class User extends MY_Controller {
 							if ($user_info ['Customername'] == $T_name && $user_info ['Password'] == $T_pwd) {
 								$_SESSION ['customer_id'] = $user_info ['id'];
 								$_SESSION ['customer_name'] = $user_info ['Customername'];
-								$_SESSION['viewAllFund'] = $user_info ['viewAllFund'];
+								$_SESSION['qryallfund'] = $user_info ['qryallfund'];
+// 								$_SESSION['fundadmittance'] = $user_info ['fundadmittance'];
 								$this->db->set(array('trytimes'=>0,'logintime'=>time()))->where(array('id'=>$user_info['id']))->update('customer');
 								if (isset($_SESSION['next_url'])){
 									$next_url = $_SESSION['next_url'];
@@ -102,6 +103,7 @@ class User extends MY_Controller {
   		$this->getRecommendFunds($data);
   		$this->load->view('index',$data);
 	}
+	
 	function register() {
 		if (isset ( $_SESSION ['customer_id'] )) {
 			redirect ( $this->base . "/User/home");
@@ -207,12 +209,9 @@ class User extends MY_Controller {
 	function logout() {
 		if (isset ( $_SESSION ['customer_id'] )) {
 			unset ( $_SESSION ['customer_id'] );
-		}
-		if (isset ( $_SESSION ['customer_name'] )) {
 			unset ( $_SESSION ['customer_name'] );
-		}
-		if (isset($_SESSION['viewAllFund'])) {
-			unset($_SESSION['viewAllFund']);
+			unset($_SESSION['qryallfund']);
+// 			unset($_SESSION['fundadmittance']);
 		}
 		session_destroy();
 		redirect ( $this->base . "/user/login");

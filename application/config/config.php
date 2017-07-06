@@ -519,7 +519,7 @@ $config['JZ_AES_key'] = 'b5e0a60bc2f662a189eeb270fd585b60';                     
 $config['RSA_publickey'] = APPPATH.'config/rsa_public_key.pem';                         //储存RSA 公钥的文件路径
 $config['RSA_privatekey'] = APPPATH.'config/rsa_private_key.pem';                       //储存RSA 私钥的文件路径
 
-$config['fund_RSA_privatekey'] =  str_replace(array("\r","\n"), '',						//访问公募基金的RSA工钥
+$config['fund_RSA_publickey'] =  str_replace(array("\r","\n"), '',						//访问公募基金的RSA公钥
 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfgdfpTRKmbVMNkkdO8PgNa/kD
 KrlxS5DEZ3gYvVo+pw7zxslb+AoO6K1WfwEDdJDzxrRXHSVEOFM7PgXnu2jkw26w
 xQfP9MI5T9r21q6oN0uHJc7X0336UfwYkoB/wb4Z9FYvJEr7lLdZa8DoTveMd4/T
