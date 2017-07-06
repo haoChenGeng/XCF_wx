@@ -173,24 +173,24 @@ class Jz_my extends MY_Controller
 	//风险测试
 	private function getRiskLevel($type = 0) {
 		//调用接口获取用户风险等级
-		if (!isset($_SESSION['custrisk'])){
+		if (!isset($_SESSION['risklevel'])){
 			$res = $this->fund_interface->AccountInfo();
 			if (!empty($res['data'])) {
-				$_SESSION['custrisk'] = (int)$res['data']['custrisk'];
+				$_SESSION['risklevel'] = (int)$res['data']['custrisk'];
 			}else{
-				$_SESSION['custrisk'] = '-';
+				$_SESSION['risklevel'] = '-';
 			}
 		}
 		if (1 == $type){
-			return $_SESSION['custrisk'];
+			return $_SESSION['risklevel'];
 		}else{
 			$res['code'] = '0000';
 			$res['msg'] = '个人信息查询成功';
 			$this->load->config('jz_dict');
 			$custrisk = $this->config->item('custrisk');
-			if (isset($custrisk[$_SESSION['custrisk']])){
-				$res['data']['custrisk'] = 'R'.$_SESSION['custrisk'];
-				$res['data']['custriskname'] = $custrisk[$_SESSION['custrisk']];
+			if (isset($custrisk[$_SESSION['risklevel']])){
+				$res['data']['custrisk'] = 'R'.$_SESSION['risklevel'];
+				$res['data']['custriskname'] = $custrisk[$_SESSION['risklevel']];
 			}else{
 				$res['data']['custrisk'] = $res['data']['custriskname'] = '-';
 			}

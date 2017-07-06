@@ -231,7 +231,6 @@ class Jz_account extends MY_Controller
 				if (isset($res_bMC['code']) && $res_bMC['code'] == '0000')        //判断调用金证接口开户是否成功    isset($res_bMC['code']) && $res_bMC['code'] == '0000'
 				{
 					$_SESSION['JZ_user_id'] = 1;
-					$_SESSION['riskLevel'] = '01';
 					file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."用户基金开户成功\r\n\r\n",FILE_APPEND);
 					ob_start();
 					$arr = Array(
