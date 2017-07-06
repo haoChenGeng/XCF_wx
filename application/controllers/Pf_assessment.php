@@ -41,15 +41,15 @@ class Pf_assessment extends MY_Controller {
 					'id' => $_SESSION ['customer_id'] 
 			) )->update ( 'p2_customer' );
 			if ($res) {
-				$ret ['status'] = 0;
+				$ret ['code'] = 0;
 				$ret ['msg'] = '保存成功!';
 			} else {
-				$ret ['status'] = 1;
+				$ret ['code'] = 1;
 				$ret ['msg'] = '保存失败!';
 			}
 		}else 
 		{
-			$ret ['status'] = 0;
+			$ret ['code'] = 0;
 			$ret ['msg'] = '未作任何操作!';
 		}
 		echo json_encode ( $ret );
@@ -66,7 +66,7 @@ class Pf_assessment extends MY_Controller {
 			$ret ['data'] ['readpfmsg'] = 0;
 		else
 			$ret ['data'] ['readpfmsg'] = 1;
-		$ret ['status'] = 0;
+		$ret ['code'] = 0;
 		$ret ['msg'] = '成功';
 		echo json_encode ( $ret );
 	}
@@ -109,7 +109,7 @@ class Pf_assessment extends MY_Controller {
 				'id' => $_SESSION ['customer_id'] 
 		) )->update ( 'p2_customer' );
 		
-		$ret ['status'] = 0;
+		$ret ['code'] = 0;
 		$ret ['data'] ['score'] = $mark;
 		$ret ['data'] ['level'] = $risk_level;
 		$ret ['data'] ['levelcomment'] = $risk_level_text;
@@ -229,7 +229,7 @@ class Pf_assessment extends MY_Controller {
 		) )->where ( Array (
 				'type!=' => - 1 
 		) )->get ( 'pfa_question' )->result_array ();
-		$ret ['status'] = 0;
+		$ret ['code'] = 0;
 		$ret ['data'] = $assessment_question;
 		$ret ['msg'] = '成功';
 		echo json_encode ( $ret );
