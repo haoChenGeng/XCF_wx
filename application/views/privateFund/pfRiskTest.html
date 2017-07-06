@@ -9,7 +9,11 @@
 	<link rel="stylesheet" href="../../../data/jijin/css/priv.css">
 </head>
 <body>
-	
+	<header class="head">
+	  <div class="head-back">
+	    <span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
+	  </div>
+	</header>
 <script src="../../../data/jijin/js/mui.min.js"></script>
 <script>
 	mui.init();
@@ -27,33 +31,44 @@ console.log(res);
 			}
 		},
 		error: function(xhr) {
-			alert('获取题目出错！')
+			alert('获取题目出错！');
 		}
 	});
 	function renderQues(data) {
-		var ques = [];
+		var type = [];
 		for (var i = 0; i < data.length; i++) {
-			var type = {};
-
+			type[0] = data[0].type;
+			// y = data[i].type;
+			if (i > 0) {
+				if (data[i].type != data[i-1].type) {
+					type.push(data[i].type);
+				}				
+			}
+			console.log(type);
 		}
+
+
+		data.map(function(item) {
+			
+		});
 	}
+
+
+
 	function eliminateDuplicates(arr) {
-	 var i,
-	 len=arr.length,
-	 out=[],
-	 obj={};
-	 for (i=0;i<len;i++) {
-		 obj[arr[i]]=0;
-console.log(obj);
-console.log(arr[i]);
-	 }
-	 for (i in obj) {
-		 out.push(i);
-	 }
-	 return out;
-	}
-	var a = [1,1,2,2,3,3,4,4];
-	eliminateDuplicates(a);
+     var i,
+     len=arr.length,
+     out=[],
+     obj={};
+     for (i=0;i<len;i++) {
+         obj[arr[i]]=0;
+     }
+     for (i in obj) {
+         out.push(i);
+     }
+     return out;
+    }
+	
 </script>
 </body>
 </html>

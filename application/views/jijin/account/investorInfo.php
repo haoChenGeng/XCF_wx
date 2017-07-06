@@ -18,9 +18,13 @@
     </section>
     <section class="m2-item-wrap">
     <div class="text" id="u174">
-    <div class="text" id="u176">
-        <p style="font-size: 18px;"><span style="color: rgb(51, 51, 51); font-size: 13px;">根据您所提交的相关信息，您的投资者类为</span><span style="color: rgb(255, 0, 0); font-size: 18px;">普通投资者</span></p><p style="font-size: 13px;"><span style="color: rgb(51, 51, 51); font-size: 13px;">&nbsp;</span></p><p style="font-size: 13px;"><span style="color: rgb(51, 51, 51); font-size: 13px;">&nbsp;</span></p>
-        <p><span>根据证监会关于基金销售管理的相关规定，投资者需要分为普通投资者与专业投资者。普通投资者在信息告知、风险警示、适当性匹配等方面享有特别保护，具体如下：</span></p>
+    <div class="text" id="u176" style="padding: 0 20px;font-size: 15px;">
+        <p style="font-size: 18px;">
+            <span style="color: rgb(51, 51, 51); font-size: 13px;text-align: center;display: block;">根据您所提交的相关信息，您的投资者类为</span>
+            <span style="color: rgb(255, 0, 0); font-size: 18px;text-align: center;display: block;">普通投资者</span>
+        </p>
+        <p style="font-size: 13px;"><span style="color: rgb(51, 51, 51); font-size: 13px;">&nbsp;</span></p>
+        <p>根据证监会关于基金销售管理的相关规定，投资者需要分为普通投资者与专业投资者。普通投资者在信息告知、风险警示、适当性匹配等方面享有特别保护，具体如下：</p>
         <p><span>（1）不向普通投资者主动推介不符合其投资目标或者风险等级高于其风险承受能力的产品或者服务。</span></p>
         <p><span>（2）向普通投资者销售高风险产品或提供相关服务时，制定专门的工作程序，告知特别的风险点。</span></p>
         <p><span>（3）向普通投资者销售产品或者提供服务前，告知下列信息：</span><span>&nbsp;</span></p><p><span>1）可能直接导致本金亏损的事项；</span></p><p><span>2）可能直接导致超过原始本金损失的事项；</span></p><p><span>3）因公司业务或者财产状况变化，可能导致本金或者原始本金亏损的事项；</span></p><p><span>4）因公司业务或者财产状况变化，影响客户判断的重要事由；</span></p><p><span>5）限制投资者权利行使期限或者可解除合同期限等全部限制内容；</span></p>

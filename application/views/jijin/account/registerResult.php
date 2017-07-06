@@ -25,8 +25,8 @@
     	<?php
     		if ($msgTy == 'sucess'){
     			echo '<p>为了维护投资者合法权益，根据《证券期货投资者适当性管理办法》，在进行基金交易前需完善个人信息，请尽快完善。</p>';
-    			echo '<p class="affs"><input class="btn" id="nextBtn" type="button" value="完善信息"/></p>
-					  <p class="affs"><input class="btn" id="backBtn" type="button" value="稍后完善"/></p>';
+    			echo '<section class="m-btn-wrap"><input class="btn" id="nextBtn" type="button" value="完善信息"/>
+					  <input class="btn" id="backBtn" type="button" value="稍后完善"/></section>';
     		}
     	?>
     </div>

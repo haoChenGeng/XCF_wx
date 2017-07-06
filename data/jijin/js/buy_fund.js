@@ -35,7 +35,7 @@ window.onload = function () {
 			 				var oLi =document.createElement('li');
 			 				oLi.setAttribute('class','mui-table-view-cell');
 			 				oLi.innerHTML = '<div class="mui-media-body clear">'+
-																'<p>名称：<span>'+data.buy.data[i].fundname+data.buy.data[i].risklevel+'</span></p>'+
+																'<p>名称：<span>'+data.buy.data[i].fundname+'</span><span style="float:right;margin-right:20px;color:red;">'+data.buy.data[i].risklevel+'</span></p>'+
 																'<p>代码：<span>'+data.buy.data[i].fundcode+'</span></p>'+
 																'<p>净值：<span>'+data.buy.data[i].nav+'</span></p>'+
 																'<p>类型：<span>'+data.buy.data[i].fundtypename+'</span></p>'+
@@ -82,7 +82,7 @@ window.onload = function () {
 				 				var oLi = document.createElement('li');
 				 				oLi.setAttribute('class','mui-table-view-cell');
 				 				oLi.innerHTML = '<div class="mui-media-body clear">'+
-																	'<p>名称：<span>'+data.apply.data[i].fundname+data.apply.data[i].risklevel+'</span></p>'+
+																	'<p>名称：<span>'+data.apply.data[i].fundname+'</span><span style="float:right;margin-right:20px;color:red;">'+data.apply.data[i].risklevel+'</span></p>'+
 																	'<p>代码：<span>'+data.apply.data[i].fundcode+'</span></p>'+
 																	'<p>净值：<span>'+data.apply.data[i].nav+'</span></p>'+
 																	'<p>类型：<span>'+data.apply.data[i].fundtypename+'</span></p>'+

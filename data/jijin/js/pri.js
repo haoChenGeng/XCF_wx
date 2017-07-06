@@ -9,7 +9,7 @@ function getFundList(type) {
 			
 		},
 		success: function(res) {
-			renderList(res);					
+			renderList(res);
 		},
 		error: function(res) {
 			alert('查询基金失败！');
@@ -61,7 +61,7 @@ function needModal(data) {
 				window.location.href = '/index.php';
 			}
 		});
-	}else if(data.readpfmsg === 1 && data.pflevel ===1) {
+	}else if(data.readpfmsg === 1 && data.pflevel === 1) {
 		getFundList(type);
 	}else {
 		alert('系统错误！');
@@ -194,8 +194,9 @@ function renderList(data) {
 (function() {
 	var name;
 	var id;
+	var order = document.getElementById('order');
 	var mask = mui.createMask(function() {
-		document.getElementById('order').style.display = 'none';
+		order.style.display = 'none';
 		
 	});
 	document.getElementById('info').addEventListener('tap',function(e) {
@@ -204,20 +205,20 @@ function renderList(data) {
 			name = a.innerHTML;
 			id = a.dataset.id;
 			mask.show();
-			document.getElementById('order').style.display = 'block';
+			order.style.display = 'block';
 		}else if (e.target.innerHTML.trim() == '预约咨询' || e.target.classList.contains('order')) {
 			var a = e.target.parentNode.nextSibling.firstElementChild;
 			name = a.innerHTML;
 			id = a.dataset.id;
 			mask.show();
-			document.getElementById('order').style.display = 'block';
+			order.style.display = 'block';
 		}else {
-			document.getElementById('order').style.display = 'none';
+			order.style.display = 'none';
 			mask.close();
 		}
 	});
 	document.getElementById('cancel').addEventListener('tap', function(e) {
-		document.getElementById('order').style.display = 'none';
+		order.style.display = 'none';
 		mask.close();
 	});
 	document.getElementById('confirm').addEventListener('tap', function(e) {
@@ -230,7 +231,7 @@ function renderList(data) {
 			alert('请正确填写电话!');
 		}else {
 			mask.close();
-			document.getElementById('order').style.display = 'none';
+			order.style.display = 'none';
 			consultFund(id,name,custName,custPhone);				
 		}
 	});		

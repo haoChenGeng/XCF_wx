@@ -1796,3 +1796,41 @@ a.bank-info-del {
 }
 
 
+/* 头部返回按钮 */
+.head {
+    height: 70px;
+    border-bottom: 1px solid #ccc;
+    background: #fff;
+}
+
+.head-back {
+    padding-left: 28px;
+    line-height: 50px;
+}
+
+.head-back-icon {
+  position: relative;
+  color: #F5BE21;
+}
+
+.head-back-icon:after, .head-back-icon:before {
+  border: 10px solid transparent;
+  border-right: 10px solid #eee;
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: -1px;
+  left: -25px;
+  content: ' '
+}
+
+.head-back-icon:before {
+  border-right-color: #F5BE21;
+  left: -27px;
+}
+
+/* 投资者信息 */
+.investorInfo {
+    float: right;
+    width: 120px;
+}
