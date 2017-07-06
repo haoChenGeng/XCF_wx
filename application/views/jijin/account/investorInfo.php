@@ -30,7 +30,7 @@
         	<section class="m-btn-wrap mt10 clearfix">
         		<input type="hidden" id="investorInfo" name="investorInfo" value='<?php echo $investorInfo?>'/>
             	<input class="btn btn-fix-left" id="backBtn" type="button" value="确认"/>
-            	<input class="btn btn-fix-right" id="commit" type="button" value="重新提交"/>
+            	<input class="btn btn-fix-right" id="commit" type="button" value="修改个人信息"/>
         	</section>
         </form>
     </section>

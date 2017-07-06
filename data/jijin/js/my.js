@@ -41,7 +41,7 @@
 			 				oLi.setAttribute('class','mui-table-view-cell');
 			 				oLi.innerHTML = '<div class="mui-media-body clear">'+
 																'<a type="button" href="'+aa+'/jijin/RedeemFundController/Redeem?json='+data.fund_list.data[i].json+'" class="mui-btn mui-btn-success fund-btn-redeem">赎回</a>'+
-																'<p>名称：<span>'+data.fund_list.data[i].fundname+'('+data.fund_list.data[i].fundcode+')</span></p>'+
+																'<p>名称：<span>'+data.fund_list.data[i].fundname+'('+data.fund_list.data[i].fundcode+')'+data.fund_list.data[i].riskDes+'</span></p>'+
 																'<p>净值/份额：<span>'+data.fund_list.data[i].nav+'/'+data.fund_list.data[i].fundvolbalance+'</span></p>'+
 																'<p>昨日收益：<span>'+data.fund_list.data[i].yestincome+'</span></p>'+
 																'<p>累计收益：<span>'+data.fund_list.data[i].addincome+'</span></p>'+

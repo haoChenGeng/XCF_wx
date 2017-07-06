@@ -59,7 +59,7 @@
 				<div id="item1mobile" class="mui-slider-item mui-control-content <?php echo ($pageOper == 'buy')? 'mui-active' : '';?>">
 					<div id="scroll1" class="mui-scroll-wrapper">
 						<?php 
-							if( 1 == $_SESSION['viewAllFund']){
+							if( 1 == $_SESSION['qryallfund']){
 								echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。您已主动要求查看高于您风险等级的产品。';
 							}else{
 								echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。';
@@ -80,7 +80,7 @@
 
 					<div id="scroll2" class="mui-scroll-wrapper">
 					<?php 
-						if( 1 == $_SESSION['viewAllFund']){
+						if( isset( $_SESSION['qryallfund']) && 1 == $_SESSION['qryallfund']){
 							echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。您已主动要求查看高于您风险等级的产品。';
 						}else{
 							echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。';

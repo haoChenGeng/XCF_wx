@@ -11,11 +11,17 @@ class Risk_assessment extends MY_Controller {
 	{
 		parent::__construct();
         $this->load->library('Fund_interface');
+        $this->load->helper(array("url"));
         $_SESSION['myPageOper'] = 'account';
 	}
 	
 	//测试题目
 	function index() {
+		//判断客户是否完成投资者信息录入
+		$fundadmittance = $this->db->select('fundadmittance')->where(array('id'=>$_SESSION ['customer_id']))->get('p2_customer')->row_array()['fundadmittance'];
+		if(!$fundadmittance){
+			redirect('/jijin/jz_my/investorManagement/Risk_assessment');
+		}
 		//获取题目	
 		$ret = $this->fund_interface->risk_test_query('13','001','','','1','1');
 		$data['base'] = $this->base;

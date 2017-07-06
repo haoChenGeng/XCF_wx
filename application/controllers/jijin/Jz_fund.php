@@ -75,9 +75,9 @@ class Jz_fund extends MY_Controller
 		//调用接口
 		$fund_list = array();
 		$this->fund_interface->fund_list();
-		if (!isset($_SESSION['viewAllFund'])){
-			$_SESSION['viewAllFund'] = 0;
-		}elseif ( 0 == $_SESSION['viewAllFund']){
+		if (!isset($_SESSION['qryallfund'])){
+			$_SESSION['qryallfund'] = 0;
+		}elseif ( 0 == $_SESSION['qryallfund']){
 			$this->db->where(array('risklevel <='=>$_SESSION['riskLevel']));
 		}
 		$res = $this->db->select('status,fundcode,fundname,fundtype,nav,tano,taname,risklevel')->get('fundlist')->result_array();
@@ -185,11 +185,11 @@ class Jz_fund extends MY_Controller
 		$post = $this->input->post();
 		if (isset($_SESSION ['customer_id'])){
 			if (isset($post['allow'])){
-				$flag = $this->db->set(array('viewAllFund'=>$post['allow']))->where(array('id'=>$_SESSION ['customer_id']))->update('p2_customer');
+				$flag = $this->db->set(array('qryallfund'=>$post['allow']))->where(array('id'=>$_SESSION ['customer_id']))->update('p2_customer');
 				if ($flag){
 					$message = '修改成功';
 					$flag = 'sucess';
-					$_SESSION['viewAllFund'] = $post['allow'];
+					$_SESSION['qryallfund'] = $post['allow'];
 				}else{
 					$message = '修改失败';
 					$flag = 'fail';
