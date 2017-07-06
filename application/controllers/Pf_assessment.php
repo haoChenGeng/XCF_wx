@@ -1,6 +1,6 @@
 <?php
 if (! defined ( 'BASEPATH' )) {
-	exit ( 'No direct script access allowed' );
+	exit ( 'No direct script access allowed' ); 
 }
 
 /**
@@ -47,8 +47,7 @@ class Pf_assessment extends MY_Controller {
 				$ret ['code'] = 1;
 				$ret ['msg'] = '保存失败!';
 			}
-		}else 
-		{
+		} else {
 			$ret ['code'] = 0;
 			$ret ['msg'] = '未作任何操作!';
 		}
@@ -229,6 +228,45 @@ class Pf_assessment extends MY_Controller {
 		) )->where ( Array (
 				'type!=' => - 1 
 		) )->get ( 'pfa_question' )->result_array ();
+		// 转为数组供前端调用
+		foreach ( $assessment_question as $key => $value ) {
+			unset( $answerlist);
+			$answerlist=array(empty ( $value['A1'] )?"":$value['A1'],empty ( $value['A2'] )?"":$value['A2'],empty ( $value['A3'] )?"":$value['A3'],empty ( $value['A4'] )?"":$value['A4'],empty ( $value['A5'] )?"":$value['A5'],empty ( $value['A5'] )?"":$value['A5']);
+			unset ( $assessment_question[$key]['A1'] );
+			unset ( $assessment_question[$key]['A2'] );
+			unset ( $assessment_question[$key]['A3'] );
+			unset ( $assessment_question[$key]['A4'] );
+			unset ( $assessment_question[$key]['A5'] );
+			unset ( $assessment_question[$key]['A6'] );
+			
+// 			if (! empty ( $value['A1'] )) {
+// 				$answerlist [] = $value['A1'];
+// 				unset ( $assessment_question[$key]['A1'] );
+// 			}
+// 			if (! empty ( $assessment_question ['A2'] )) {
+// 				$answerlist [] = $value['A2'];
+// 				unset ($assessment_question[$key]['A2'] );
+// 			}
+// 			if (! empty ( $assessment_question ['A3'] )) {
+// 				$answerlist [] =$value['A3'];
+// 				unset ( $assessment_question[$key]['A3'] );
+// 			}
+// 			if (! empty ( $assessment_question ['A4'] )) {
+// 				$answerlist [] =$value['A4'];
+// 				unset ( $assessment_question[$key]['A4'] );
+// 			}
+// 			if (! empty ( $assessment_question ['A5'] )) {
+// 				$answerlist [] = $value['A5'];
+// 				unset ( $assessment_question[$key]['A5'] );
+// 			}
+// 			if (! empty ( $assessment_question ['A6'] )) {
+// 				$answerlist [] =$value['A6'];
+// 				unset ( $assessment_question[$key]['A6'] );
+// 			}
+			$assessment_question[$key]['answerlist'] = $answerlist;
+		}
+		
+		
 		$ret ['code'] = 0;
 		$ret ['data'] = $assessment_question;
 		$ret ['msg'] = '成功';
