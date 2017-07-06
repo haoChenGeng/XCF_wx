@@ -13,7 +13,7 @@
 
 <header class="head">
   <div class="head-back">
-    <span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
+    <a class="head-back-icon" href="<?php echo $this->base;?>">返回</a>
   </div>
 </header>
 

@@ -134,7 +134,7 @@
 	var active = document.getElementById('slider').querySelector('.mui-active');
   switch (active.hash) {
     case '#item1mobile':
-      page1();
+      // page1();
       break;
     case '#item2mobile':
       page2();

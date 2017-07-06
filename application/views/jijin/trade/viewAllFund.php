@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<link href="/data/css/mobile.css" media="screen" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="/data/css/style.css" />
 	<link rel="stylesheet" href="/data/jijin/css/risk.css">
-	<div class="head-back">
-		<span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
-	</div>
-	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 </head>
 <body>
 
 <div data-role="page" id="pageone">
+	<div class="head-back">
+		<span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
+	</div>
 	<div data-role="content">
 		<section class="m-item-wrap m-item-5-wrap">
 	        <div class="m-item-5">

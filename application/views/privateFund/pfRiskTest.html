@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="format-detection" content="telephone=no" />
+	<title>风险测评</title>
+	<link rel="stylesheet" href="../../../data/jijin/css/mui.min.css">
+	<link rel="stylesheet" href="../../../data/jijin/css/priv.css">
+</head>
+<body>
+	
+<script src="../../../data/jijin/js/mui.min.js"></script>
+<script>
+	mui.init();
+	mui.ajax('/Pf_assessment/read_question',{
+		type: 'get',
+		dataType: 'json',
+		data: {},
+		async: false,
+		success: function(res) {
+console.log(res);
+		},
+		error: function(xhr) {
+			alert('获取题目出错！')
+		}
+	});
+</script>
+</body>
+</html>

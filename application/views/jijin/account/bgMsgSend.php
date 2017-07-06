@@ -177,7 +177,7 @@
 	}
 
 	var chooseChannel = function(s) {
-		console.log(s);
+// console.log(s);
 		if (s.getAttribute("data-needProvCity")) {
 			document.getElementById('chooseCity').style.display = 'block';
 		}else {

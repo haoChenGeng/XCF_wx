@@ -30,7 +30,7 @@
 <!--  
 		<div class="mui-slider" id="header">
 			<div class="mui-slider-group mui-slider-loop">
-				<div class="mui-slider-item"><a href="###"><img style="height:102px" src="<?php echo $base.'/data/jijin/img/fund_banner.jpg';?>" class="slider-height" alt="huodong"></a></div>
+				<div class="mui-slider-item"><a href="###"><img style="height:102px" src="" class="slider-height" alt="huodong"></a></div>
 			</div>
 		</div>
 -->
@@ -58,14 +58,16 @@
 			<div class="mui-slider-group">
 				<div id="item1mobile" class="mui-slider-item mui-control-content <?php echo ($pageOper == 'buy')? 'mui-active' : '';?>">
 					<div id="scroll1" class="mui-scroll-wrapper">
-						<?php 
-							if( 1 == $_SESSION['viewAllFund']){
-								echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。您已主动要求查看高于您风险等级的产品。';
-							}else{
-								echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。';
-							}
-							echo '<a href="/jijin/jz_fund/viewAllFund" >前往了解</a>';
-						?>
+						<p style="color: #333;padding:5px 10px;">
+							<?php 
+								if( 1 == $_SESSION['viewAllFund']){
+									echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。您已主动要求查看高于您风险等级的产品。';
+								}else{
+									echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。';
+								}
+								echo '<a href="/jijin/jz_fund/viewAllFund" >前往了解</a>';
+							?>							
+						</p>
 						<div class="mui-scroll">
 							<ul class="mui-table-view" id="subscribe">
 								<div class="mui-loading">
@@ -79,14 +81,16 @@
 				<div id="item2mobile" class="mui-slider-item mui-control-content <?php echo ($pageOper == 'apply')? 'mui-active' : '';?>">
 
 					<div id="scroll2" class="mui-scroll-wrapper">
-					<?php 
-						if( 1 == $_SESSION['viewAllFund']){
-							echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。您已主动要求查看高于您风险等级的产品。';
-						}else{
-							echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。';
-						}
-						echo '<a href="/jijin/jz_fund/viewAllFund" >前往了解</a>';
-					?>
+						<p style="color: #333;padding:5px 10px;">
+							<?php 
+								if( 1 == $_SESSION['viewAllFund']){
+									echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。您已主动要求查看高于您风险等级的产品。';
+								}else{
+									echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。';
+								}
+								echo '<a href="/jijin/jz_fund/viewAllFund" >前往了解</a>';
+							?>							
+						</p>
 						<div class="mui-scroll">
 							<div class="mui-loading">
 								<div class="mui-spinner">
@@ -95,7 +99,7 @@
 							<ul class="mui-table-view" id="apply">
 							</ul>
 						</div>
-
+						
 					</div>
 				</div>
 				<div id="item3mobile" class="mui-slider-item mui-control-content <?php echo ($pageOper == 'today')? 'mui-active' : '';?>">
@@ -172,15 +176,6 @@
 	  	});
 	});
 
-//     $('#getAllFund').on('click',function(){
-//         $.post("/User/queryPlanner", {planner_id:str},function(res){
-//                 M.alert({
-//                     title:'提示',
-//                     message:res==null||res==''||res==undefined?'理财师查询失败':res
-//                 });
-//             })
-//         }
-//     });
 	
     pushHistory(); 
     window.addEventListener("popstate", function(e) { 
@@ -195,11 +190,6 @@
         window.history.pushState(state, "title", "#");
     } 
 
-    /*document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState == 'hidden') {
-        call('UserLeave', {});
-      }
-    });*/
 </script>
 </body>
 </html>
