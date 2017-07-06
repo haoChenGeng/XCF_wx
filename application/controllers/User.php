@@ -434,7 +434,7 @@ class User extends MY_Controller {
 		$res = $this->fund_interface->fund_list();
 		$this->load->config('jz_dict');
 		if (!isset($_SESSION['riskLevel'])){
-			$_SESSION['riskLevel'] = '01';
+			$_SESSION['riskLevel'] = '05';
 		}
 		$select = array('fundcode','tano','fundname','fundtype','nav','growthrate',/* 'fundincomeunit', */'status','growth_year');
 		$candidateFunds = $this->db->select($select)->where(array('recommend >'=>0,'risklevel <='=>$_SESSION['riskLevel']))->get('fundlist')->result_array();//->get_compiled_select('fundlist');
