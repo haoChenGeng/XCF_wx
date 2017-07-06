@@ -31,10 +31,29 @@ console.log(res);
 		}
 	});
 	function renderQues(data) {
+		var ques = [];
 		for (var i = 0; i < data.length; i++) {
-			
+			var type = {};
+
 		}
 	}
+	function eliminateDuplicates(arr) {
+	 var i,
+	 len=arr.length,
+	 out=[],
+	 obj={};
+	 for (i=0;i<len;i++) {
+		 obj[arr[i]]=0;
+console.log(obj);
+console.log(arr[i]);
+	 }
+	 for (i in obj) {
+		 out.push(i);
+	 }
+	 return out;
+	}
+	var a = [1,1,2,2,3,3,4,4];
+	eliminateDuplicates(a);
 </script>
 </body>
 </html>
