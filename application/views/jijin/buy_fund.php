@@ -58,16 +58,23 @@
 			<div class="mui-slider-group">
 				<div id="item1mobile" class="mui-slider-item mui-control-content <?php echo ($pageOper == 'buy')? 'mui-active' : '';?>">
 					<div id="scroll1" class="mui-scroll-wrapper">
+
 						<p style="color: #333;padding:5px 10px;">
-							<?php 
-								if( 1 == $_SESSION['qryallfund']){
-									echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。您已主动要求查看高于您风险等级的产品。';
-								}else{
-									echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。';
-								}
-								echo '<a href="/jijin/jz_fund/viewAllFund" >前往了解</a>';
+							<?php
+								if (isset($_SESSION['riskLevel'])){
+
+									if( 1 == $_SESSION['qryallfund']){
+										echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。您已主动要求查看高于您风险等级的产品。';
+									}else{
+										echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。';
+									}
+									echo '<a href="/jijin/jz_fund/viewAllFund" >前往了解</a>';
+
+								}						
 							?>							
 						</p>
+
+
 						<div class="mui-scroll">
 							<ul class="mui-table-view" id="subscribe">
 								<div class="mui-loading">
@@ -82,14 +89,16 @@
 
 					<div id="scroll2" class="mui-scroll-wrapper">
 						<p style="color: #333;padding:5px 10px;">
-							<?php 
-								if( isset( $_SESSION['qryallfund']) && 1 == $_SESSION['qryallfund']){
-									echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。您已主动要求查看高于您风险等级的产品。';
-								}else{
-									echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。';
+							<?php
+								if (isset($_SESSION['riskLevel'])){
+									if( isset( $_SESSION['qryallfund']) && 1 == $_SESSION['qryallfund']){
+										echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。您已主动要求查看高于您风险等级的产品。';
+									}else{
+										echo '根据证监会适当性管理办法，产品列表已根据您的风险等级作筛选。';
+									}
+									echo '<a href="/jijin/jz_fund/viewAllFund" >前往了解</a>';
 								}
-								echo '<a href="/jijin/jz_fund/viewAllFund" >前往了解</a>';
-							?>							
+							?>													
 						</p>
 						<div class="mui-scroll">
 							<div class="mui-loading">

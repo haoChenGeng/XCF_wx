@@ -433,17 +433,20 @@ class User extends MY_Controller {
 		$this->load->library('Fund_interface');
 		$res = $this->fund_interface->fund_list();
 		$this->load->config('jz_dict');
-		if (!isset($_SESSION['riskLevel'])){
-			$_SESSION['riskLevel'] = '01';
+		$qryallfund = isset($_SESSION['qryallfund']) ? $_SESSION['qryallfund'] : 0;
+		if (0 == $qryallfund && isset($_SESSION['riskLevel'])){
+			$custrisk = $_SESSION['riskLevel'];
+		}else{
+			$custrisk = '05';
 		}
 		$select = array('fundcode','tano','fundname','fundtype','nav','growthrate',/* 'fundincomeunit', */'status','growth_year');
-		$candidateFunds = $this->db->select($select)->where(array('recommend >'=>0,'risklevel <='=>$_SESSION['riskLevel']))->get('fundlist')->result_array();//->get_compiled_select('fundlist');
+		$candidateFunds = $this->db->select($select)->where(array('recommend >'=>0,'risklevel <='=>$custrisk))->get('fundlist')->result_array();//->get_compiled_select('fundlist');
 		$candidateNum = count($candidateFunds);
 		$selectNum = 0;
 		if ($candidateNum <3){
 			$data['Recommend'] = $candidateFunds;
 			$selectNum = $candidateNum;
-			$candidateFunds = $this->db->select($select)->where(array('recommend =' => 0,'risklevel <='=>$_SESSION['riskLevel']))->get('fundlist')->result_array();
+			$candidateFunds = $this->db->select($select)->where(array('recommend =' => 0,'risklevel <='=>$custrisk))->get('fundlist')->result_array();
 			$candidateNum = count($candidateFunds);
 		}
 		if ($candidateNum > (3-$selectNum)){

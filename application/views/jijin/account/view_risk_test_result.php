@@ -23,7 +23,7 @@
 	    		echo '<i class="risk-result-icon iconfont">&#xe606;</i>';
 	    	}
 	    	?>
-			<h2 style="text-align:center"><?php echo $ret_msg?><?php echo '['.$ret_code.']';?></h2> 
+			<h2 style="text-align:center"><?php echo $ret_msg?></h2> 
 			<h2 style="text-align:center">您的风险等级为： <?php echo $custrisk?></h2>
 		</div>
 		<a href="<?php  

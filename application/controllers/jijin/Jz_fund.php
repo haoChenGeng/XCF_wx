@@ -77,7 +77,8 @@ class Jz_fund extends MY_Controller
 		$this->fund_interface->fund_list();
 		if (!isset($_SESSION['qryallfund'])){
 			$_SESSION['qryallfund'] = 0;
-		}elseif ( 0 == $_SESSION['qryallfund']){
+		}
+		if ( 0 == $_SESSION['qryallfund'] && isset($_SESSION['riskLevel'])){
 			$this->db->where(array('risklevel <='=>$_SESSION['riskLevel']));
 		}
 		$res = $this->db->select('status,fundcode,fundname,fundtype,nav,tano,taname,risklevel')->get('fundlist')->result_array();
