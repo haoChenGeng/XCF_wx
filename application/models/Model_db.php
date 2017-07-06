@@ -116,7 +116,7 @@ class Model_db extends CI_Model {
 					if (isset($val[$v])){
 						$insertData[$i][$v] = $val[$v];
 					}else{
-						$insertData[$i][$v] = null;
+						$insertData[$i][$v] = '';
 					}
 				}
 				if ($i >= $this->maxOperitem) {

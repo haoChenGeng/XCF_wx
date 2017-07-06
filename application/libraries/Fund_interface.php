@@ -41,14 +41,18 @@ class Fund_interface
 		return array('data'=>$submitData);
 	}
 	
-	/* private  */function getReturnData($inputData){
-		$AES = new Crypt_AES(CRYPT_AES_MODE_ECB);
-		$AES->setKey($this->AESKey);
-		return json_decode($AES->decrypt(base64_decode($inputData)),true);
+	private function getReturnData($inputData){
+		if(!empty($inputData)){
+			$AES = new Crypt_AES(CRYPT_AES_MODE_ECB);
+			$AES->setKey($this->AESKey);
+			return json_decode($AES->decrypt(base64_decode($inputData)),true);
+		}else{
+			return FALSE;
+		}
 	}
 	
 	function RenewFundAESKey($fundUrl,$newKey) {
-		$public_key = $this->CI->config->item('fund_RSA_privatekey'); //获取RSA_加密公钥
+		$public_key = $this->CI->config->item('fund_RSA_publickey'); //获取RSA_加密公钥
 		if (!class_exists('Math_BigInteger')){
 			include 'data/encrpty/BigInteger.php';
 		}
@@ -68,11 +72,11 @@ class Fund_interface
 			$res = comm_curl($fundUrl.'/jijin/XCFinterface/renewCryptKey',$AESKey);
 // var_dump($res,strstr($res,'SUCESS'));
 			if (strstr($res,'SUCESS')){
-				$XCFkey = $this->CI->db->where(array('platformName'=>'Fund'))->get('communctionkey')->row_array();
+				$XCFkey = $this->CI->db->where(array('name'=>'FundInterface'))->get('interface')->row_array();
 				if(empty($XCFkey)){
-					$flag = $this->CI->db->set(array('platformName'=>'Fund','AESkey'=>$newKey))->insert('communctionkey');
+					$flag = $this->CI->db->set(array('name'=>'FundInterface','password'=>$newKey))->insert('interface');
 				}else{
-					$flag = $this->CI->db->set(array('AESkey'=>$newKey))->where(array('platformName'=>'Fund'))->update('communctionkey');
+					$flag = $this->CI->db->set(array('password'=>$newKey))->where(array('name'=>'FundInterface'))->update('interface');
 				}
 				if ($flag){
 					return true;
@@ -118,7 +122,7 @@ class Fund_interface
 						$val['navdate'] = date('Y-m-d',strtotime($val['navdate']));
 						$updateNav = array('net_date' => $val['navdate'],
 								'net_unit' => $val['nav'],
-								'net_sum' => $val['totalnav'],
+								'net_sum' => empty($val['totalnav']) ? 0 : $val['totalnav'],
 								'net_day_growth' => ($val['nav']-$preFundInfo[$val['fundcode']]['nav'])/$preFundInfo[$val['fundcode']]['nav'],
 								'XGRQ' => $currentdate,
 						);
@@ -149,7 +153,7 @@ class Fund_interface
 			}
 			$flag = $this->CI->Model_db->incremenUpdate('p2_netvalue_'.$fundcode, $fundNetvalue['data'], 'net_date');
 		}else{
-			$flag = FALSAE;
+			$flag = FALSE;
 		}
 		return $flag;
 	}

@@ -13,7 +13,7 @@
 <section class="wrap">
     <section class="m-item-wrap m-item-5-wrap">
         <div class="m-item-5 text-align:center">
-            <h3 class="text-center" id="applyChange">投资者信息</h3>
+            <h3 class="text-center"><?php echo (isset($infoMessage)) ? $infoMessage : '投资者信息';?></h3>
         </div>
     </section>
     <section class="m2-item-wrap">

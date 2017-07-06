@@ -21,7 +21,7 @@ header("Expires:0");
 	    <?php echo $ret_code=='0000'?'<i class="risk-result-icon iconfont">&#xe603;</i>':'<i class="risk-result-icon iconfont">&#xe606;</i>'?>
 		<h2 style="text-align:center"><?php echo $ret_msg?></h2> 
 	</div>
-	<a href="<?php echo $back_url?>" data-role="button" data-theme="b" class="risk-btn risk-result" >返回</a>
+	<a href="<?php echo $back_url?>" data-role="button" data-theme="b" class="risk-btn risk-result" ><?php echo isset($nextDes) ? $nextDes : '返回';?></a>
 </div>
 
 </body>
