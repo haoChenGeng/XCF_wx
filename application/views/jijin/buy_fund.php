@@ -31,7 +31,7 @@
 		<div class="mui-slider" id="header">
 			<div class="mui-slider-group mui-slider-loop">
 				<div class="mui-slider-item"><a href="###"><img style="height:102px" src="<?php echo $base.'/data/jijin/img/fund_banner.jpg';?>" class="slider-height" alt="huodong"></a></div>
-			</div>			
+			</div>
 		</div>
 -->
 		<div id="slider" class="mui-slider">
@@ -195,6 +195,11 @@
         window.history.pushState(state, "title", "#");
     } 
 
+    /*document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState == 'hidden') {
+        call('UserLeave', {});
+      }
+    });*/
 </script>
 </body>
 </html>
