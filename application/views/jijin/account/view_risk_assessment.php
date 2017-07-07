@@ -11,7 +11,7 @@
 </head>
 <body>
 	<div data-role="page" id="pageone">
-		<form method="post" action="/jijin/Risk_assessment/submit">
+		<form method="post" id="riskForm" action="/jijin/Risk_assessment/submit">
 			<div data-role="content">
 				<section class="m-item-wrap m-item-5-wrap">
 			        <div class="m-item-5">
@@ -21,7 +21,7 @@
 				<input type="hidden" id="cout" name="cout" value="<?php echo count($data)?>">
 				<ul data-role="listview">
 					<?php for($i=0;$i<count($data);$i++) { ?>		
-					<li data-role="list-divider" class="ul-title" ><?php echo $data[$i]['questioncode'].'. '.$data[$i]['questionname']?></li>				
+					<li data-role="list-divider" class="ul-title" name=<?php echo $i?>><?php echo $data[$i]['questioncode'].'. '.$data[$i]['questionname']?></li>				
 						 <li data-role="controlgroup" class="li-control" >
 						 <input type="hidden" id=<?php echo 'questioncode'.$i?> name=<?php echo 'questioncode'.$i?> value="<?php echo $data[$i]['questioncode']?>">			 
 						 <fieldset data-role="controlgroup">
@@ -40,9 +40,33 @@
 				</ul>
 			
 			</div>
-			<button data-role="submit" data-theme="b" class="risk-btn-submit" >提交</button>
+			<button data-role="submit" data-theme="b" id="riskSubmit" class="risk-btn-submit" >提交</button>
 			<button class="risk-back" onclick="history.go(-1);">返回</button>
 		</form>
 	</div>
+<script>
+	document.getElementById('riskSubmit').addEventListener('click', function (e) {
+		e.preventDefault();
+		var ques = document.getElementsByClassName('ul-title');
+		var tips = [];
+		for(var i = 0;i < ques.length;i ++ ) {
+		  var name = ques[i].getAttribute('name');
+		  var answer = ques[i].nextElementSibling.querySelectorAll('input[type=radio]');
+		  var checked = false;
+		  for(var j = 0;j < answer.length; j ++){
+			checked = checked || answer[j].checked;
+		  }
+		  if(!checked) {
+		    tips.push(parseInt(name)+1);
+		  }
+		}
+console.log(tips);
+		if (tips.length) {
+			alert('您还有第'+tips+'题没做！');
+		}else {
+			document.getElementById('riskForm').submit();
+		}
+	});
+</script>
 </body>
 </html>
