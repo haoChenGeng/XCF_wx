@@ -60,7 +60,6 @@
 		    tips.push(parseInt(name)+1);
 		  }
 		}
-console.log(tips);
 		if (tips.length) {
 			alert('您还有第'+tips+'题没做！');
 		}else {
