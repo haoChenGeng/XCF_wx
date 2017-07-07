@@ -116,6 +116,9 @@ function complete(obj) {
                 }else if (applicationval <= 0 ||  applicationval > availablevol) {
                     alert('输入份额错误或无效');
                     return false;
+                }else if (!applicationval) {
+                    alert('请输入赎回份额');
+                    return false;
                 }
                 document.getElementById('applicationval').value = applicationval;
                 $.post("/jijin/RedeemFundController/redeemFee", {channelid:"<?php echo $channelid?>",applicationvol:applicationval,businesscode:24,tano:"<?php echo $tano?>",fundcode:$('#fundcode').val(),sharetype:"<?php echo $sharetype?>"},function(res){
