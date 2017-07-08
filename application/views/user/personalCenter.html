@@ -12,7 +12,7 @@
 <body style="background-color: #f5f5f5;">	
     <header class="head">
       <div class="head-back">
-        <span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
+        <span class="head-back-icon" onclick="window.location.href = '/index.php'">返回</span>
       </div>
     </header>
 	<ul class="my-ul">
@@ -20,8 +20,8 @@
 		<li><a href="/application/views/onlineService.html" class="dib">帮助中心</a></li> <!-- helpCenter.html -->
 		<li class="dib"  onClick="toshare()"><a href="javascript:;">分享好友</a></li>
         <li><a href="/FindPaper/articleManagement" class="dib">文章管理</a></li>
-		<li><a href="../privateFund/testResult.html" class="dib">私募风险评测</a></li>
-	</ul>	
+		<li><a href="../privateFund/testResult.html?test=0" class="dib">私募风险评测</a></li>
+	</ul>
 	<div class="my-exit"><a href="/User/logout" class="dib">安全退出</a></div>
 	<div class="am-share">
 	    <ul class="am-share-sns">

@@ -54,7 +54,7 @@
 		  var answer = ques[i].nextElementSibling.querySelectorAll('input[type=radio]');
 		  var checked = false;
 		  for(var j = 0;j < answer.length; j ++){
-			checked = checked || answer[j].checked;
+				checked = checked || answer[j].checked;
 		  }
 		  if(!checked) {
 		    tips.push(parseInt(name)+1);

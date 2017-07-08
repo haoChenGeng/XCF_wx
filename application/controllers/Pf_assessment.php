@@ -95,14 +95,14 @@ class Pf_assessment extends MY_Controller {
 		if (empty ( $_SESSION ['customer_id'] ))
 			exit ();
 		$post = $this->input->post (); //
-		$post ['1_1'] = "A";
-		$post ['2_1'] = "A";
-		$post ['3_5'] = "A";
+		// $post ['1_1'] = "A";
+		// $post ['2_1'] = "A";
+		// $post ['3_5'] = "A";
 		
 		// $risk_level = 11;
-		if (empty ( $post )) {
-			echo "参数不对";
-		}
+		// if (empty ( $post )) {
+		// 	echo "参数不对";
+		// }
 		$mark = $this->count_right_answer ( $post );
 		$risk_level = 0;
 		$risk_level_text = "";
@@ -303,9 +303,9 @@ class Pf_assessment extends MY_Controller {
 		$assessment_question = $this->db->where ( Array (
 				'type!=' => - 1 
 		) )->get ( 'pfa_question' )->result_array ();
-		if ($detail == false) {
+		// if ($detail == false) {
 			// 处理成建档的产品列表
-		}
+		// }
 		return $assessment_question;
 	}
 }

@@ -157,3 +157,95 @@
     margin-top: 5px;
   }
 }
+
+/* 风险测评 */
+.risk-test {
+  color: #333;
+}
+
+.risk-test-title {
+  text-align: center;
+  font-size: 22px;
+  margin-top: 22px;
+}
+
+.risk-test-content {
+  margin: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.risk-type {
+  margin: 10px 0;
+}
+
+
+.risk-type-content input {
+  float: left;
+  height: 21px;
+}
+
+.input-wrap {
+  margin-left: 10px;
+}
+
+.risk-type-content p {
+  background-color: #f5bc44;
+  color: #fff;
+  padding: 5px;
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+.risk-answer {
+  margin: 5px 0 0 10px;
+}
+
+.risk-btn-submit {
+  float: left;
+  width: 45%;
+  height: 45px;
+  display: block;
+  margin: 15px 2%;
+  background: #f5bc44;
+  color: #fff;
+  font-size: 20px;
+  border-radius: 5px;
+  border: 0;
+  text-align: center;
+  line-height: 33px;
+}
+
+.risk-back {
+  float: right;
+  width: 45%;
+  height: 45px;
+  display: block;
+  margin: 15px 2%;
+  background: #f5bc44;
+  color: #fff;
+  font-size: 20px;
+  border-radius: 5px;
+  border: 0;
+  text-align: center;
+  line-height: 33px;
+}
+
+/* 评测结果 */
+.risk-success .mui-icon {
+  font-size: 120px;
+  color: #f5bc44;
+}
+
+.test-again {
+  width: 45%;
+  height: 45px;
+  background: #f5bc44;
+  color: #fff;
+  border-radius: 5px;
+  padding: 10px 30px;
+}
+
+.risk-success p,.risk-success span {
+  color: #333;
+}
