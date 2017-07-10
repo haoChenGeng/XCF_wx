@@ -72,12 +72,13 @@ window.onload = function () {
 			 		}else {
 			 			var nodeWrap = item2.querySelector('.mui-scroll'),
 			 				nodeChlid = item2.querySelector('.mui-scroll').childNodes;				 						 				
-			 			nodeWrap.removeChild(nodeChlid[1]);
+			 			// nodeWrap.removeChild(nodeChlid[1]);
 			 			var listWrap = document.getElementById('apply');
 			 			var fragment = document.createDocumentFragment();
 			 			if (0 === data.apply.length) {
 				 			listWrap.innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';														 	
 				 		} else {
+				 			listWrap.innerHTML = '';
 				 			for (var i = data.apply.data.length - 1; i >= 0; i--) {
 				 				var oLi = document.createElement('li');
 				 				oLi.setAttribute('class','mui-table-view-cell');
