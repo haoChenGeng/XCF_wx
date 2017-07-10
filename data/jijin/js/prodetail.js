@@ -114,7 +114,7 @@ $(document).ready(function() {
         }
       },
       legend: {
-        data: ["净值走势"],
+        data: [],
         bottom: "10px"
       },
       toolbox: {
