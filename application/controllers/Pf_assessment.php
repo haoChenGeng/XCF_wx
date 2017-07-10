@@ -1,6 +1,6 @@
 <?php
 if (! defined ( 'BASEPATH' )) {
-	exit ( 'No direct script access allowed' ); 
+	exit ( 'No direct script access allowed' );
 }
 
 /**
@@ -59,8 +59,29 @@ class Pf_assessment extends MY_Controller {
 		$user_status = $this->get_user_status ();
 		if (empty ( $user_status ['pflevel'] ))
 			$ret ['data'] ['pflevel'] = 0;
-		else
+		else {
 			$ret ['data'] ['pflevel'] = 1;
+			$ret ['data'] ['latestpflevel'] = $user_status ['pflevel'];
+			$risk_level_text = "";
+			switch ($user_status ['pflevel']) {
+				case 1 :
+					$risk_level_text = 'C1 级 - 保守型投资者';
+					break;
+				case 2 :
+					$risk_level_text = 'C2 级 - 稳健型投资者';
+					break;
+				case 3 :
+					$risk_level_text = 'C3 级 - 平衡型投资者';
+					break;
+				case 4 :
+					$risk_level_text = 'C4 级 - 成长型投资者';
+					break;
+				case 5 :
+					$risk_level_text = 'C5 级 - 进取型投资者';
+					break;
+			}
+			$ret ['data'] ['levelcomment']=$risk_level_text;
+		}
 		if (empty ( $user_status ['readpfmsg'] ))
 			$ret ['data'] ['readpfmsg'] = 0;
 		else
@@ -74,14 +95,14 @@ class Pf_assessment extends MY_Controller {
 		if (empty ( $_SESSION ['customer_id'] ))
 			exit ();
 		$post = $this->input->post (); //
-		$post ['1_1'] = "A";
-		$post ['2_1'] = "A";
-		$post ['3_5'] = "A";
+		// $post ['1_1'] = "A";
+		// $post ['2_1'] = "A";
+		// $post ['3_5'] = "A";
 		
 		// $risk_level = 11;
-		if (empty ( $post )) {
-			echo "参数不对";
-		}
+		// if (empty ( $post )) {
+		// 	echo "参数不对";
+		// }
 		$mark = $this->count_right_answer ( $post );
 		$risk_level = 0;
 		$risk_level_text = "";
@@ -230,42 +251,48 @@ class Pf_assessment extends MY_Controller {
 		) )->get ( 'pfa_question' )->result_array ();
 		// 转为数组供前端调用
 		foreach ( $assessment_question as $key => $value ) {
-			unset( $answerlist);
-			$answerlist=array(empty ( $value['A1'] )?"":$value['A1'],empty ( $value['A2'] )?"":$value['A2'],empty ( $value['A3'] )?"":$value['A3'],empty ( $value['A4'] )?"":$value['A4'],empty ( $value['A5'] )?"":$value['A5'],empty ( $value['A5'] )?"":$value['A5']);
-			unset ( $assessment_question[$key]['A1'] );
-			unset ( $assessment_question[$key]['A2'] );
-			unset ( $assessment_question[$key]['A3'] );
-			unset ( $assessment_question[$key]['A4'] );
-			unset ( $assessment_question[$key]['A5'] );
-			unset ( $assessment_question[$key]['A6'] );
+			unset ( $answerlist );
+			$answerlist = array (
+					empty ( $value ['A1'] ) ? "" : $value ['A1'],
+					empty ( $value ['A2'] ) ? "" : $value ['A2'],
+					empty ( $value ['A3'] ) ? "" : $value ['A3'],
+					empty ( $value ['A4'] ) ? "" : $value ['A4'],
+					empty ( $value ['A5'] ) ? "" : $value ['A5'],
+					empty ( $value ['A5'] ) ? "" : $value ['A5'] 
+			);
+			unset ( $assessment_question [$key] ['A1'] );
+			unset ( $assessment_question [$key] ['A2'] );
+			unset ( $assessment_question [$key] ['A3'] );
+			unset ( $assessment_question [$key] ['A4'] );
+			unset ( $assessment_question [$key] ['A5'] );
+			unset ( $assessment_question [$key] ['A6'] );
 			
-// 			if (! empty ( $value['A1'] )) {
-// 				$answerlist [] = $value['A1'];
-// 				unset ( $assessment_question[$key]['A1'] );
-// 			}
-// 			if (! empty ( $assessment_question ['A2'] )) {
-// 				$answerlist [] = $value['A2'];
-// 				unset ($assessment_question[$key]['A2'] );
-// 			}
-// 			if (! empty ( $assessment_question ['A3'] )) {
-// 				$answerlist [] =$value['A3'];
-// 				unset ( $assessment_question[$key]['A3'] );
-// 			}
-// 			if (! empty ( $assessment_question ['A4'] )) {
-// 				$answerlist [] =$value['A4'];
-// 				unset ( $assessment_question[$key]['A4'] );
-// 			}
-// 			if (! empty ( $assessment_question ['A5'] )) {
-// 				$answerlist [] = $value['A5'];
-// 				unset ( $assessment_question[$key]['A5'] );
-// 			}
-// 			if (! empty ( $assessment_question ['A6'] )) {
-// 				$answerlist [] =$value['A6'];
-// 				unset ( $assessment_question[$key]['A6'] );
-// 			}
-			$assessment_question[$key]['answerlist'] = $answerlist;
+			// if (! empty ( $value['A1'] )) {
+			// $answerlist [] = $value['A1'];
+			// unset ( $assessment_question[$key]['A1'] );
+			// }
+			// if (! empty ( $assessment_question ['A2'] )) {
+			// $answerlist [] = $value['A2'];
+			// unset ($assessment_question[$key]['A2'] );
+			// }
+			// if (! empty ( $assessment_question ['A3'] )) {
+			// $answerlist [] =$value['A3'];
+			// unset ( $assessment_question[$key]['A3'] );
+			// }
+			// if (! empty ( $assessment_question ['A4'] )) {
+			// $answerlist [] =$value['A4'];
+			// unset ( $assessment_question[$key]['A4'] );
+			// }
+			// if (! empty ( $assessment_question ['A5'] )) {
+			// $answerlist [] = $value['A5'];
+			// unset ( $assessment_question[$key]['A5'] );
+			// }
+			// if (! empty ( $assessment_question ['A6'] )) {
+			// $answerlist [] =$value['A6'];
+			// unset ( $assessment_question[$key]['A6'] );
+			// }
+			$assessment_question [$key] ['answerlist'] = $answerlist;
 		}
-		
 		
 		$ret ['code'] = 0;
 		$ret ['data'] = $assessment_question;
@@ -276,9 +303,9 @@ class Pf_assessment extends MY_Controller {
 		$assessment_question = $this->db->where ( Array (
 				'type!=' => - 1 
 		) )->get ( 'pfa_question' )->result_array ();
-		if ($detail == false) {
+		// if ($detail == false) {
 			// 处理成建档的产品列表
-		}
+		// }
 		return $assessment_question;
 	}
 }
