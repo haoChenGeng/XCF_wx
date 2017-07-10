@@ -45,13 +45,17 @@ function needModal(data) {
 	if (data.readpfmsg === 0) {
 		mui.alert(prompt,'温馨提示', function() {
 		  updataLoginStatus();
-			mui.confirm(riskTip,'温馨提示',btn,function(e) {
-				if (e.index == 1) {
-					window.location.href = '/application/views/privateFund/pfRiskTest.html';
-				}else {
-					window.location.href = '/index.php';
-				}
-			});		  
+		  if (data.pflevel === 0) {
+				mui.confirm(riskTip,'温馨提示',btn,function(e) {
+					if (e.index == 1) {
+						window.location.href = '/application/views/privateFund/pfRiskTest.html';
+					}else {
+						window.location.href = '/index.php';
+					}
+				});	  	
+		  }else {
+		  	getFundList(type);
+		  }
 		});
 	}else	if(data.readpfmsg === 1 && data.pflevel === 0) {
 		mui.confirm(riskTip,'温馨提示',btn,function(e) {
