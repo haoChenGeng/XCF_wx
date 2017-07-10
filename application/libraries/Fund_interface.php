@@ -318,6 +318,7 @@ class Fund_interface
 	function risk_test_result($answerList,$pointList){
 		$submitData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],'answerList'=>$answerList,'pointList'=>$pointList,"code"=>'riskResult'));
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+var_dump($returnData,$this->getReturnData($returnData));
 		return ($this->getReturnData($returnData));
 	}
 	
@@ -447,6 +448,18 @@ class Fund_interface
 		$feeQuery['code'] = 'feeQuery';
 		$feeQuery['customerNo'] = $_SESSION['customer_name'];
 		$submitData = $this->getSubmitData($feeQuery);
+		// return $submitData;
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function SDQryAllFund($feeQuery,$qryallfund=''){
+		$SDQryAllFund['code'] = 'SDQryAllFund';
+		$SDQryAllFund['customerNo'] = $_SESSION['customer_name'];
+		if (!empty($qryallfund)){
+			$SDQryAllFund['qryallfund'] = $qryallfund;
+		}
+		$submitData = $this->getSubmitData($SDQryAllFund);
 		// return $submitData;
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));

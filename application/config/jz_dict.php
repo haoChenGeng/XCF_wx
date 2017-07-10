@@ -113,6 +113,7 @@ $config['productrisk'] = array(
 		'4' => '中高风险',
 		'5' => '高风险',
 );
+
 $config['bankcard_status'] = array(
 		'0' => '正常',
 		'1' => '销户中',

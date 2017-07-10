@@ -148,7 +148,7 @@ class Jz_account extends MY_Controller
 			file_put_contents('log/user/register'.$this->logfile_suffix, date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开户失败,原因为：".$str."\r\n\r\n",FILE_APPEND);
 			Message(Array(
 					'msgTy' => 'fail',
-					'msgContent' => $err_msg.'<br/>注册失败，系统正在返回...',
+					'msgContent' => $err_msg.'<br/>鉴权失败，系统正在返回...',
 					'msgUrl' => $this->base . '/jijin/Jz_my',
 					'base' => $this->base
 			));

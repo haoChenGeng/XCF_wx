@@ -12,10 +12,15 @@ class Test extends MY_Controller
     function __construct()
     {
         parent::__construct();
+        $this->load->database();
     }
     
     function index() {
-    	var_dump($_SESSION['viewAllFund'],$_SESSION['riskLevel']);
+    	$arr = array('code'=>'bgMsgSend','certificatetype'=>'0','certificateno'=>'130426198906063501','depositacctname'=>'test','depositacct'=>'6225881209690998','channelid'=>'KQ03','mobiletelno'=>'13554719692','customerNo'=>'71','aa'=>'aaaaaaaaa');
+    	var_dump(base64_encode(json_encode($arr)));
+    	echo 'http://10.17.2.101/jijin/JFAPPinterface/test/'.base64_encode(json_encode($arr));
+//     	var_dump($this->db->select('*')->from('fundlist')->count_all_results());
+//     	var_dump($_SESSION['viewAllFund'],$_SESSION['riskLevel']);
 //     	ob_start();
 //     	$arr = Array(
 //     			'msgTy' => 'sucess',

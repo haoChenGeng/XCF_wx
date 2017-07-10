@@ -270,7 +270,6 @@ class Jz_my extends MY_Controller
 
 	function investorManagement($nexturl=''){
 		$_SESSION['myPageOper'] = 'account';
-		$this->fund_interface->asset();
 		$post = $this->input->post();
 		if (!empty($post)){
 			if (empty($post['investorInfo'])){
@@ -278,6 +277,8 @@ class Jz_my extends MY_Controller
 				$post['customerId'] = $_SESSION['customer_id'];
 				$newData[] = &$post;
 //调用投资者信息录入接口和准入接口,成功后写入数据库
+
+				$res = $this->fund_interface->SDQryAllFund();
 				$this->db->trans_start();
 				$flag = $this->Model_db->incremenUpdate('p2_investorinfo', $newData, 'customerId');
 				$fundadmittance = $this->db->select('fundadmittance')->where(array('id'=>$_SESSION['customer_id']))->get('p2_customer')->row_array()['fundadmittance'];
