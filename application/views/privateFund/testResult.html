@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="format-detection" content="telephone=no" />
+	<title>风险测评结果</title>
+	<link rel="stylesheet" href="../../../data/jijin/css/mui.min.css">
+	<link rel="stylesheet" href="../../../data/jijin/css/priv.css">
+</head>
+<body style="text-align: center;">
+	<header class="head" style="text-align: left;">
+	  <div class="head-back">
+	    <span class="head-back-icon" onclick="window.location.href = ('/application/views/user/personalCenter.html')">返回</span>
+	  </div>
+	</header>
+	<h1 class="risk-test-title">风险测评结果</h1>
+	<div class="risk-success" style="display: none;">
+		<p><span class="mui-icon mui-icon-checkmarkempty"></span></p>
+		<p>评测成功</p>
+		<p style="margin-bottom: 60px;">您的测试结果为：<span id="testLevel"></span></p>
+		<a href='/application/views/privateFund/pfRiskTest.html' class="test-again">重新测评</a>
+	</div>
+	<div class="nottest" style="display: none;">
+		<p style="width: 55%;margin: 20% auto;color: #333;font-size: 16px;">您还未完成风险承受能力评测,请点击按钮开始进行风险承受能力评测,谢谢!</p>
+		<a href='/application/views/privateFund/pfRiskTest.html' class="test-again">开始风险测评</a>
+	</div>
+<script src="../../../data/jijin/js/mui.min.js"></script>
+<script>
+	mui.init();
+	var url = window.location.href.toString();
+	var arrUrl = url.split('?');
+	var test = arrUrl[1];
+console.log(arrUrl);
+	if (test == 'test=1') {
+		mui.ajax('/Pf_assessment/get_assessment',{
+			type: 'get',
+			data: {},
+			dataType: 'json',
+			success: function(res) {
+	console.log(res);
+				if (res.code === 0) {
+					document.querySelector('.risk-success').style.display = 'block';
+					document.getElementById('testLevel').innerHTML = res.data.levelcomment;					
+				}else {
+					alert('获取结果失败！');
+				}
+			}
+		});		
+	}else {
+		mui.ajax('/Pf_assessment/accessmentstatus',{
+			type: 'get',
+			data: {},
+			dataType: 'json',
+			success: function(res) {
+console.log(res);
+				if (res.code !== 0) {
+					alert('获取评测信息失败!');
+				}else {
+					if (res.data.pflevel === 1) {
+						document.querySelector('.risk-success').style.display = 'block';
+						document.getElementById('testLevel').innerHTML = res.data.levelcomment;											
+					}else {
+						document.querySelector('.nottest').style.display = 'block';
+					}
+				}
+			}
+		});
+	}
+</script>
+</body>
+</html>
