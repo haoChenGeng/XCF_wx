@@ -173,24 +173,24 @@ class Jz_my extends MY_Controller
 	//风险测试
 	private function getRiskLevel($type = 0) {
 		//调用接口获取用户风险等级
-		if (!isset($_SESSION['risklevel'])){
+		if (!isset($_SESSION['riskLevel'])){
 			$res = $this->fund_interface->AccountInfo();
 			if (!empty($res['data'])) {
-				$_SESSION['risklevel'] = (int)$res['data']['custrisk'];
+				$_SESSION['riskLevel'] = (int)$res['data']['custrisk'];
 			}else{
-				$_SESSION['risklevel'] = '-';
+				$_SESSION['riskLevel'] = '-';
 			}
 		}
 		if (1 == $type){
-			return $_SESSION['risklevel'];
+			return $_SESSION['riskLevel'];
 		}else{
 			$res['code'] = '0000';
 			$res['msg'] = '个人信息查询成功';
 			$this->load->config('jz_dict');
 			$custrisk = $this->config->item('custrisk');
-			if (isset($custrisk[$_SESSION['risklevel']])){
-				$res['data']['custrisk'] = 'R'.$_SESSION['risklevel'];
-				$res['data']['custriskname'] = $custrisk[$_SESSION['risklevel']];
+			if (isset($custrisk[$_SESSION['riskLevel']])){
+				$res['data']['custrisk'] = 'R'.$_SESSION['riskLevel'];
+				$res['data']['custriskname'] = $custrisk[$_SESSION['riskLevel']];
 			}else{
 				$res['data']['custrisk'] = $res['data']['custriskname'] = '-';
 			}
@@ -278,7 +278,7 @@ class Jz_my extends MY_Controller
 				$newData[] = &$post;
 //调用投资者信息录入接口和准入接口,成功后写入数据库
 
-				$res = $this->fund_interface->SDQryAllFund();
+
 				$this->db->trans_start();
 				$flag = $this->Model_db->incremenUpdate('p2_investorinfo', $newData, 'customerId');
 				$fundadmittance = $this->db->select('fundadmittance')->where(array('id'=>$_SESSION['customer_id']))->get('p2_customer')->row_array()['fundadmittance'];

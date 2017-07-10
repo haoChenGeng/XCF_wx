@@ -318,7 +318,6 @@ class Fund_interface
 	function risk_test_result($answerList,$pointList){
 		$submitData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],'answerList'=>$answerList,'pointList'=>$pointList,"code"=>'riskResult'));
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
-var_dump($returnData,$this->getReturnData($returnData));
 		return ($this->getReturnData($returnData));
 	}
 	

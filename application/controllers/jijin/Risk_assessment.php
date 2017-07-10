@@ -77,6 +77,7 @@ class Risk_assessment extends MY_Controller {
 					$data['ret_code'] = '0000';
 					$data['ret_msg'] = '风险测试成功';
 					$_SESSION['riskLevel'] = intval($ret['data']['custrisk']);
+var_dump($_SESSION['riskLevel'],$ret['data']['custrisk']);
 					switch ($ret['data']['custrisk']) {////风险承受能力(1:安全型 2:保守型 3:稳健型 4:积极型 5:进取型)
 						case 1:$data['custrisk']='安全型 ';break;
 						case 2:$data['custrisk']='保守型 ';break;
