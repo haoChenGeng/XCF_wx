@@ -13,6 +13,23 @@
 		width: 446px;
 		margin: 0 auto;
 	}
+    #nextBtn {
+        width: 100%;
+        height: 75px;
+        border-radius: 5px;
+        background-color: #f5bc44;
+        border: 0;
+        color: #fff;
+    }
+    #backBtn {
+        width: 100%;
+        height: 75px;
+        border-radius: 5px;
+        background-color: #f5bc44;
+        border: 0;
+        color: #fff;
+        margin-top: 25px;
+    }
 </style>
 </head>
 <body>

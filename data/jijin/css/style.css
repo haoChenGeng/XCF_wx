@@ -265,7 +265,6 @@ body {
 }
 
 .fund-btn-redeem {
-	margin: 22px 0;
 	width: 22%;
 	border:2px solid #FB8F8B;
 	background-color: transparent;
@@ -273,6 +272,8 @@ body {
 	float: right;
 	height: 40px;
 	line-height: 24px;
+	position: relative;
+	top: 42px;
 }
 
 .fund-btn-bc {

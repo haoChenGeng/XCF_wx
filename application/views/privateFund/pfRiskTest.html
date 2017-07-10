@@ -8,12 +8,20 @@
 	<link rel="stylesheet" href="../../../data/jijin/css/mui.min.css">
 	<link rel="stylesheet" href="../../../data/jijin/css/priv.css">
 </head>
-<body>
+<body class="risk-test">
 	<header class="head">
 	  <div class="head-back">
 	    <span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
 	  </div>
 	</header>
+	<h1 class="risk-test-title">风险等级测评</h1>
+	<form action="/Pf_assessment/get_assessment" method="post" id="riskTest"> 
+		<section class="risk-test-content" >
+			
+		</section>		
+	</form>
+	<button data-role="submit" data-theme="b" id="riskSubmit" class="risk-btn-submit">提交</button>
+	<button class="risk-back" onclick="history.go(-1);">返回</button>
 <script src="../../../data/jijin/js/mui.min.js"></script>
 <script>
 	mui.init();
@@ -23,9 +31,9 @@
 		data: {},
 		async: false,
 		success: function(res) {
-console.log(res);
+// console.log(res);
 			if (res.code === 0) {
-				renderQues(res.data);						
+				renderQues(res.data);
 			}else {
 				alert('返回错误！');
 			}
@@ -34,23 +42,85 @@ console.log(res);
 			alert('获取题目出错！');
 		}
 	});
-	function renderQues(data) {
-		var type = [];
-		for (var i = 0; i < data.length; i++) {
-			type[0] = data[0].type;
-			// y = data[i].type;
-			if (i > 0) {
-				if (data[i].type != data[i-1].type) {
-					type.push(data[i].type);
-				}				
-			}
-			console.log(type);
+
+	document.getElementById('riskSubmit').addEventListener('click', function(e) {
+		e.preventDefault();
+		var ques = document.getElementsByClassName('risk-question');
+		var tips = [];
+		for(var i = 0;i < ques.length;i ++ ) {
+		  var name = ques[i].getAttribute('name');
+		  var answer = ques[i].parentNode.querySelectorAll('input[type=radio]');
+		  var checked = false;
+		  for(var j = 0;j < answer.length; j ++){
+				checked = checked || answer[j].checked;
+		  }
+		  if(!checked) {
+		    tips.push(name);
+		  }
 		}
+// console.log(tips);
+		if (tips.length) {
+			alert('您还有第'+tips+'题没做！');
+		}else {
+			getRiskResult();
+		}
+	});
 
+	function getRiskResult() {
+		var form = document.getElementById('riskTest');
+		form.submit();
+		window.location.href = '/application/views/privateFund/testResult.html?test=1';
+	}
 
-		data.map(function(item) {
-			
-		});
+	function renderQues(data) {
+		var quesArr = eliminateDuplicates(data);
+// console.log(eliminateDuplicates(data));
+		var test = document.createDocumentFragment();
+
+		for (var i = 0; i < quesArr.length; i++) {
+			var wrap = document.createElement('div');
+			wrap.classList.add('risk-type');
+			var type = document.createElement('h4');
+			wrap.appendChild(type);
+			type.innerHTML = quesArr[i].type_name;
+
+			for(var j = 0, length2 = data.length; j < length2; j++){
+				if (quesArr[i].type == data[j].type) {
+					var quesWrap = document.createElement('div');
+					quesWrap.classList.add('risk-type-content');
+					var ques = document.createElement('p');
+					quesWrap.appendChild(ques);
+					ques.setAttribute('name', i + '_' + data[j].question_no);
+					ques.classList.add('risk-question');
+					ques.innerHTML = data[j].question_no + '.' + data[j].question;
+					
+					for(var k = 0; k < data[j].answerlist.length; k++){
+						if (data[j].answerlist[k]) {
+							var answer = document.createElement('input');
+							var lab = document.createElement('label');
+							var labDiv = document.createElement('div');
+							labDiv.classList.add('input-wrap');
+							lab.classList.add('risk-answer');
+							lab.style.display = 'block';
+							var text = document.createTextNode(String.fromCharCode(64 + parseInt(k + 1)) + '.' + data[j].answerlist[k]);
+							answer.setAttribute('type', 'radio');
+							answer.value = String.fromCharCode(64 + parseInt(k + 1));
+							answer.name = i + '_' + data[j].question_no;
+							answer.id = String.fromCharCode(64 + parseInt(k + 1)) + 0 + i + '_' + data[j].question_no;
+							lab.setAttribute('for', String.fromCharCode(64 + parseInt(k + 1)) + 0 + i + '_' + data[j].question_no);
+							lab.appendChild(text);
+							labDiv.appendChild(answer);
+							labDiv.appendChild(lab);
+							quesWrap.appendChild(labDiv);
+						}
+					}
+					wrap.appendChild(quesWrap);
+				}
+			}
+			test.appendChild(wrap);
+		}
+// console.log(test);
+		document.querySelector('.risk-test-content').appendChild(test);
 	}
 
 
@@ -59,15 +129,19 @@ console.log(res);
      var i,
      len=arr.length,
      out=[],
-     obj={};
+    obj={};
      for (i=0;i<len;i++) {
-         obj[arr[i]]=0;
+	      obj[arr[i].type] = arr[i].type_name;
      }
      for (i in obj) {
-         out.push(i);
+     	var item = {};
+     	item.type = i;
+     	// item.ques = [];
+     	item.type_name = obj[i];
+        out.push(item);
      }
      return out;
-    }
+  }
 	
 </script>
 </body>

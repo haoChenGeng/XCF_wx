@@ -18,8 +18,8 @@
 	            <h3 class="text-center">适当性管理</h3>
 	        </div>
 	    </section>
-		<h2 style="text-align:center">风险不匹配警示函</br></h2>
-		<p style="text-align:center;padding: 50px 20px;">本人对申请购买产品的风险等级高于本人风险承受能力情况已知悉，并且已充分了解该产品的风险特征和可能的不利后果。</br></br>经本人审慎考虑，坚持申请查看或者购买高于本人本人风险承受能力外的产品，并自愿承担由此可能产生的一切不利后果和损失。</br></p>
+		<h2 style="text-align:center;color: #333;">风险不匹配警示函</br></h2>
+		<p style="text-align:center;padding: 50px 20px;color: #333;">本人对申请购买产品的风险等级高于本人风险承受能力情况已知悉，并且已充分了解该产品的风险特征和可能的不利后果。</br></br>经本人审慎考虑，坚持申请查看或者购买高于本人本人风险承受能力外的产品，并自愿承担由此可能产生的一切不利后果和损失。</br></p>
 	</div>
 	<form  name="form" method="post" action="/jijin/jz_fund/viewAllFund" id="login_form">
 		<?php $allow = (isset($_SESSION['qryallfund']) && !$_SESSION['qryallfund']) ? 1 : 0;?>
