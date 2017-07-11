@@ -113,19 +113,24 @@
 		  	}
 		  }
 		}
-console.log(JSON.stringify(formArr));
+console.log(typeof JSON.stringify(formArr));
 		mui.ajax('/Pf_assessment/get_assessment',{
 			type: 'post',
 			dataType: 'json',
-			data: JSON.stringify(formArr),
+			data: {			
+				data: JSON.stringify(formArr) 
+			},
 			success: function(res) {
 console.log(res);
+				if (res.code === 0) {
+					localStorage.setItem('result',res.data);
+					window.location.href = '/application/views/privateFund/testResult.html?test=1';					
+				}
 			},
 			error: function(xhr) {
 				alert('请求错误');
 			}
 		});
-		// window.location.href = '/application/views/privateFund/testResult.html?test=1';
 	}
 
 
