@@ -258,7 +258,7 @@ class Pf_assessment extends MY_Controller {
 					empty ( $value ['A3'] ) ? "" : $value ['A3'],
 					empty ( $value ['A4'] ) ? "" : $value ['A4'],
 					empty ( $value ['A5'] ) ? "" : $value ['A5'],
-					empty ( $value ['A5'] ) ? "" : $value ['A5'] 
+					empty ( $value ['A6'] ) ? "" : $value ['A6'] 
 			);
 			unset ( $assessment_question [$key] ['A1'] );
 			unset ( $assessment_question [$key] ['A2'] );
