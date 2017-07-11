@@ -103,6 +103,17 @@ class Pf_assessment extends MY_Controller {
 		// if (empty ( $post )) {
 		// 	echo "参数不对";
 		// }
+//前端传送过来的格式		$post_temp='[{"0_1":"A"},{"1_1":"C"},{"1_2":"B"},{"1_3":"C"},{"1_4":"B"},{"2_1":"B"},{"2_2":"B"},{"2_3":"B"},{"3_1":"B"},{"3_2":"C"},{"3_3":"C"},{"3_4_B":"B"},{"3_4_C":"C"},{"4_1":"C"},{"4_2":"C"},{"4_3_C":"C"},{"5_1":"B"},{"5_2":"C"},{"5_3":"C"},{"6_1":"D"},{"6_2":"C"},{"6_3":"B"}]';
+		$post_temp2=json_decode ($post,true);
+		unset($post);
+		foreach ($post_temp2 as $key =>$value)
+		{
+			foreach($value as $key2=>$value2)
+			{
+				$post[$key2]=$value2;
+			}
+			
+		}
 		$mark = $this->count_right_answer ( $post );
 		$risk_level = 0;
 		$risk_level_text = "";
