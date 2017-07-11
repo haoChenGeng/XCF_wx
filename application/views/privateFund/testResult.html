@@ -34,8 +34,9 @@
 console.log(arrUrl);
 	if (test == 'test=1') {
 		var result = localStorage.getItem('result');
+console.log(result);
 		document.querySelector('.risk-success').style.display = 'block';
-		document.getElementById('testLevel').innerHTML = result.levelcomment;					
+		document.getElementById('testLevel').innerHTML = result;					
 	}else {
 		mui.ajax('/Pf_assessment/accessmentstatus',{
 			type: 'get',
