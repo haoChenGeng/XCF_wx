@@ -31,7 +31,6 @@
 		data: {},
 		async: false,
 		success: function(res) {
-// console.log(res);
 			if (res.code === 0) {
 				renderQues(res.data);
 			}else {
@@ -54,7 +53,6 @@
 		  if (answer.length) {
 			  for(var j = 0;j < answer.length; j ++){
 					checked = checked || answer[j].checked;
-
 			  }
 			  if(!checked) {
 			    tips.push(name);
@@ -106,14 +104,11 @@
 		  for(var j = 0, length2 = answer.length; j < length2; j++){
 		  	var a = {};
 		  	if (answer[j].checked) {
-		  		// a.name = answer[j].name;
-		  		// a.value = answer[j].value;
 		  		a[answer[j].name] = answer[j].value;
 					formArr.push(a);
 		  	}
 		  }
 		}
-console.log(typeof JSON.stringify(formArr));
 		mui.ajax('/Pf_assessment/get_assessment',{
 			type: 'post',
 			dataType: 'json',
@@ -121,7 +116,6 @@ console.log(typeof JSON.stringify(formArr));
 				data: JSON.stringify(formArr) 
 			},
 			success: function(res) {
-console.log(res);
 				if (res.code === 0) {
 					localStorage.setItem('result',res.data.levelcomment);
 					window.location.href = '/application/views/privateFund/testResult.html?test=1';					
@@ -136,7 +130,6 @@ console.log(res);
 
 	function renderQues(data) {
 		var quesArr = eliminateDuplicates(data);
-// console.log(eliminateDuplicates(data));
 		var test = document.createDocumentFragment();
 
 		for (var i = 0; i < quesArr.length; i++) {
@@ -186,7 +179,6 @@ console.log(res);
 			}
 			test.appendChild(wrap);
 		}
-// console.log(test);
 		document.querySelector('.risk-test-content').appendChild(test);
 	}
 

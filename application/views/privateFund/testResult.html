@@ -31,10 +31,8 @@
 	var url = window.location.href.toString();
 	var arrUrl = url.split('?');
 	var test = arrUrl[1];
-console.log(arrUrl);
 	if (test == 'test=1') {
 		var result = localStorage.getItem('result');
-console.log(result);
 		document.querySelector('.risk-success').style.display = 'block';
 		document.getElementById('testLevel').innerHTML = result;					
 	}else {
@@ -43,7 +41,6 @@ console.log(result);
 			data: {},
 			dataType: 'json',
 			success: function(res) {
-console.log(res);
 				if (res.code !== 0) {
 					alert('获取评测信息失败!');
 				}else {
