@@ -31,7 +31,6 @@
 		data: {},
 		async: false,
 		success: function(res) {
-// console.log(res);
 			if (res.code === 0) {
 				renderQues(res.data);
 			}else {
@@ -51,14 +50,43 @@
 		  var name = ques[i].getAttribute('name');
 		  var answer = ques[i].parentNode.querySelectorAll('input[type=radio]');
 		  var checked = false;
-		  for(var j = 0;j < answer.length; j ++){
-				checked = checked || answer[j].checked;
+		  if (answer.length) {
+			  for(var j = 0;j < answer.length; j ++){
+					checked = checked || answer[j].checked;
+			  }
+			  if(!checked) {
+			    tips.push(name);
+			  }		  	
 		  }
-		  if(!checked) {
-		    tips.push(name);
-		  }
+			var found = false;
+			var found2 = false;
+			if (name == '3_4') {
+				var an = document.getElementsByName('3_4_A')[0];
+				var bn = document.getElementsByName('3_4_B')[0];
+				var cn = document.getElementsByName('3_4_C')[0];
+				var dn = document.getElementsByName('3_4_D')[0];
+				var en = document.getElementsByName('3_4_E')[0];
+				if (an.checked) {found = true;}
+				if (bn.checked) {found = true;}
+				if (cn.checked) {found = true;}
+				if (dn.checked) {found = true;}
+				if (en.checked) {found = true;}
+
+				if (!found) {tips.push(name);}
+			}
+			if (name == '4_3') {
+				var ans = document.getElementsByName('4_3_A')[0];
+				var bns = document.getElementsByName('4_3_B')[0];
+				var cns = document.getElementsByName('4_3_C')[0];
+				var dns = document.getElementsByName('4_3_D')[0];
+				if (ans.checked) {found2 = true;}
+				if (bns.checked) {found2 = true;}
+				if (cns.checked) {found2 = true;}
+				if (dns.checked) {found2 = true;}
+
+				if (!found2) {tips.push(name);}
+			}
 		}
-// console.log(tips);
 		if (tips.length) {
 			alert('您还有第'+tips+'题没做！');
 		}else {
@@ -67,14 +95,41 @@
 	});
 
 	function getRiskResult() {
-		var form = document.getElementById('riskTest');
-		form.submit();
-		window.location.href = '/application/views/privateFund/testResult.html?test=1';
+		var ques = document.getElementsByClassName('risk-question');
+		var formArr = [];
+		for (var i = 0; i < ques.length; i++) {
+			var index = ques[i].getAttribute('name');
+		  var answer = ques[i].parentNode.querySelectorAll('input[data-name=box]');
+			var value;
+		  for(var j = 0, length2 = answer.length; j < length2; j++){
+		  	var a = {};
+		  	if (answer[j].checked) {
+		  		a[answer[j].name] = answer[j].value;
+					formArr.push(a);
+		  	}
+		  }
+		}
+		mui.ajax('/Pf_assessment/get_assessment',{
+			type: 'post',
+			dataType: 'json',
+			data: {			
+				data: JSON.stringify(formArr) 
+			},
+			success: function(res) {
+				if (res.code === 0) {
+					localStorage.setItem('result',res.data.levelcomment);
+					window.location.href = '/application/views/privateFund/testResult.html?test=1';					
+				}
+			},
+			error: function(xhr) {
+				alert('请求错误');
+			}
+		});
 	}
+
 
 	function renderQues(data) {
 		var quesArr = eliminateDuplicates(data);
-// console.log(eliminateDuplicates(data));
 		var test = document.createDocumentFragment();
 
 		for (var i = 0; i < quesArr.length; i++) {
@@ -89,10 +144,10 @@
 					var quesWrap = document.createElement('div');
 					quesWrap.classList.add('risk-type-content');
 					var ques = document.createElement('p');
-					quesWrap.appendChild(ques);
 					ques.setAttribute('name', i + '_' + data[j].question_no);
 					ques.classList.add('risk-question');
 					ques.innerHTML = data[j].question_no + '.' + data[j].question;
+					quesWrap.appendChild(ques);
 					
 					for(var k = 0; k < data[j].answerlist.length; k++){
 						if (data[j].answerlist[k]) {
@@ -104,8 +159,13 @@
 							lab.style.display = 'block';
 							var text = document.createTextNode(String.fromCharCode(64 + parseInt(k + 1)) + '.' + data[j].answerlist[k]);
 							answer.setAttribute('type', 'radio');
+							answer.dataset.name = 'box';
 							answer.value = String.fromCharCode(64 + parseInt(k + 1));
 							answer.name = i + '_' + data[j].question_no;
+							if (answer.name == '3_4' || answer.name == '4_3') {
+								answer.setAttribute('type', 'checkbox');
+								answer.name = answer.name + '_' + answer.value;
+							}
 							answer.id = String.fromCharCode(64 + parseInt(k + 1)) + 0 + i + '_' + data[j].question_no;
 							lab.setAttribute('for', String.fromCharCode(64 + parseInt(k + 1)) + 0 + i + '_' + data[j].question_no);
 							lab.appendChild(text);
@@ -119,7 +179,6 @@
 			}
 			test.appendChild(wrap);
 		}
-// console.log(test);
 		document.querySelector('.risk-test-content').appendChild(test);
 	}
 

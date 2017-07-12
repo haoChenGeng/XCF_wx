@@ -105,11 +105,15 @@ function complete(obj) {
         M.checkBoxInit();
         $('#nextBtn').on('click',function(){
             M.checkForm(function () {
-            	var payDiv = document.getElementById('payDiv'),
-            	applicationval = parseFloat(document.getElementById('applicationval').value),
-            	availablevol = parseFloat(document.getElementById('availablevol').value),
+                var payDiv = document.getElementById('payDiv'),
+                applicationval = parseFloat(document.getElementById('applicationval').value),
+                availablevol = parseFloat(document.getElementById('availablevol').value),
                 div1 = document.createElement('div');
-            	div2 = document.createElement('div');
+                div2 = document.createElement('div');
+                if (availablevol === 0) {
+                    alert('无可用份额');
+                    return false;
+                }
                 if ((applicationval-parseInt(applicationval*100)/100) > 0.0000000001) {
                     alert('份额最小单位为0.01');
                     return false;
