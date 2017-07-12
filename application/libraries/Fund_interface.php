@@ -70,7 +70,6 @@ class Fund_interface
 // var_dump($AESKey,$fundUrl.'/jijin/XCFinterface/renewCryptKey');
 		if (!empty($AESKey)){
 			$res = comm_curl($fundUrl.'/jijin/XCFinterface/renewCryptKey',$AESKey);
-// var_dump($res,strstr($res,'SUCESS'));
 			if (strstr($res,'SUCESS')){
 				$XCFkey = $this->CI->db->where(array('name'=>'FundInterface'))->get('interface')->row_array();
 				if(empty($XCFkey)){
@@ -452,15 +451,25 @@ class Fund_interface
 		return ($this->getReturnData($returnData));
 	}
 	
-	function SDQryAllFund($feeQuery,$qryallfund=''){
+	function SDQryAllFund($qryallfund=null){
 		$SDQryAllFund['code'] = 'SDQryAllFund';
 		$SDQryAllFund['customerNo'] = $_SESSION['customer_name'];
-		if (!empty($qryallfund)){
+		if ($qryallfund !==null){
 			$SDQryAllFund['qryallfund'] = $qryallfund;
 		}
 		$submitData = $this->getSubmitData($SDQryAllFund);
 		// return $submitData;
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function SDCustomAssetInfo($SDCustomAssetInfo){
+		$SDCustomAssetInfo['code'] = 'SDCustomAssetInfo';
+		$SDCustomAssetInfo['customerNo'] = $_SESSION['customer_name'];
+		$submitData = $this->getSubmitData($SDCustomAssetInfo);
+		// return $submitData;
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+var_dump($returnData);
 		return ($this->getReturnData($returnData));
 	}
 }

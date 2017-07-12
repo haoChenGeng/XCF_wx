@@ -17,17 +17,17 @@
 		<div class="indslide swiper-container pos-re">
 		    <div class="slide swiper-wrapper">
 	        <div class="item swiper-slide">
-	        	<a href="javascript:;" class="dib">
+	        	<a href="/data/img/bannerDetail-1.jpg" class="dib">
 							<img src="/data/img/banner-1.jpg" alt="活动1">
 						</a>
 					</div>
 					<div class="item swiper-slide">
-	        	<a href="javascript:;" class="dib">
+	        	<a href="/data/img/bannerDetail-2.jpg" class="dib">
 							<img src="/data/img/banner-2.jpg" alt="活动2">
 						</a>
 					</div>
 					<div class="item swiper-slide">
-	        	<a href="javascript:;" class="dib">
+	        	<a href="/data/img/bannerDetail-3.jpg" class="dib">
 							<img src="/data/img/banner-3.jpg" alt="活动3">
 						</a>
 					</div>

@@ -186,13 +186,17 @@ class Jz_fund extends MY_Controller
 		$post = $this->input->post();
 		if (isset($_SESSION ['customer_id'])){
 			if (isset($post['allow'])){
-				$res = $this->fund_interface->SDQryAllFund($post['allow']);
-var_dump($res);
-				$flag = $this->db->set(array('qryallfund'=>$post['allow']))->where(array('id'=>$_SESSION ['customer_id']))->update('p2_customer');
-				if ($flag){
-					$message = '修改成功';
-					$flag = 'sucess';
-					$_SESSION['qryallfund'] = $post['allow'];
+				$res = $this->fund_interface->SDQryAllFund();	//$post['allow']
+				if (isset($res['code']) && '0000'==$res['code']){
+					$flag = $this->db->set(array('qryallfund'=>$post['allow']))->where(array('id'=>$_SESSION ['customer_id']))->update('p2_customer');
+					if ($flag){
+						$message = '修改成功';
+						$flag = 'sucess';
+						$_SESSION['qryallfund'] = $post['allow'];
+					}else{
+						$message = '修改失败';
+						$flag = 'fail';
+					}
 				}else{
 					$message = '修改失败';
 					$flag = 'fail';

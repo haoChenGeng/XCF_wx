@@ -114,7 +114,7 @@ class PurchaseController extends MY_Controller {
 					}else{
 						$error_code = 0;
 						if (1== $custriskLevel){
-							$errMsg = '您的风险水平为为"安全型"，只能购买与您风险水平相匹配的产品。';
+							$errMsg = '您的风险水平为"安全型"，只能购买与您风险水平相匹配的产品。';
 							$forward_url = '/jijin/Risk_assessment';
 							$forward_msg = '重新评测';
 						}else{
