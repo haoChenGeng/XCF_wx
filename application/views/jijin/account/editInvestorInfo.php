@@ -20,7 +20,7 @@
         <form  method="post" action="/jijin/Jz_my/investorManagement" id="info_form">
         	<?php
         		foreach ($formData as $key=>$val){
-        			echo "<div class='m2-item clearfix'>
+        			echo "<div class='m2-item'>
     						<label class='select-label' style='width:90%;'>".$val['des']."\r\n";
         			if (isset($val['select'])){
         				echo '<select id='.$key.' name='.$key.' class="select-certificate investorInfo" >';
@@ -33,7 +33,7 @@
         				}
         				echo "</select>";
         			}else{
-        				echo '<input id="'.$key.'" name="'.$key. '"/>';
+        				echo '<input id="'.$key.'" class="w80-p" name="'.$key. '"/>';
         			}
         			echo "\r\n</label>\r\n</div>\r\n";
         		}

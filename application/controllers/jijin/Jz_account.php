@@ -223,7 +223,6 @@ class Jz_account extends MY_Controller
 				$logData['tpasswd'] = $logData['lpasswd'] = '***';
 				$logData['certificateno'] = substr($logData['certificateno'],0,6).'***'.substr($logData['certificateno'],-3);
 				$logData['depositacct'] = substr($logData['depositacct'],0,3).'***'.substr($logData['depositacct'],-3);
-// var_dump($post);
 				//调用金证开户接口,并记录调用金证接口数据及返回结果(去除密码部分)
 				file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用金证bgMsgCheck数据为:".serialize($logData),FILE_APPEND);
 				$res_bMC = $this->fund_interface->bgMsgCheck($registerData);
@@ -232,6 +231,10 @@ class Jz_account extends MY_Controller
 				{
 					$_SESSION['JZ_user_id'] = 1;
 					file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."用户基金开户成功\r\n\r\n",FILE_APPEND);
+					$accessRes = $this->fund_interface->SDAccess($registerData['mobileno']);
+					if (isset($accessRes['code']) && '0000' == $accessRes['code']){
+						$this->db->set(array('fundadmittance'=>1))->where(array('id'=>$_SESSION['customer_id']))->update('p2_customer');
+					}
 					ob_start();
 					$arr = Array(
 							'msgTy' => 'sucess',
@@ -241,8 +244,6 @@ class Jz_account extends MY_Controller
 					$this->load->view('jijin/account/registerResult', $arr);
 					ob_end_flush();
 					exit();
-					
-					Message();
 				}
 				else{                                      //调用金证接口开户失败
 						$err_msg = '系统故障';

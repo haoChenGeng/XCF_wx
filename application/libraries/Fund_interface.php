@@ -437,7 +437,6 @@ class Fund_interface
 		$revoke['code'] = 'revoke';
 		$revoke['customerNo'] = $_SESSION['customer_name'];
 		$submitData = $this->getSubmitData($revoke);
-// return $submitData;
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
@@ -446,7 +445,6 @@ class Fund_interface
 		$feeQuery['code'] = 'feeQuery';
 		$feeQuery['customerNo'] = $_SESSION['customer_name'];
 		$submitData = $this->getSubmitData($feeQuery);
-		// return $submitData;
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
@@ -458,7 +456,6 @@ class Fund_interface
 			$SDQryAllFund['qryallfund'] = $qryallfund;
 		}
 		$submitData = $this->getSubmitData($SDQryAllFund);
-		// return $submitData;
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
@@ -467,9 +464,18 @@ class Fund_interface
 		$SDCustomAssetInfo['code'] = 'SDCustomAssetInfo';
 		$SDCustomAssetInfo['customerNo'] = $_SESSION['customer_name'];
 		$submitData = $this->getSubmitData($SDCustomAssetInfo);
-		// return $submitData;
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
-var_dump($returnData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function SDAccess($mobileno=''){
+		$SDAccess['code'] = 'SDAccess';
+		if (!empty($mobileno)){
+			$SDAccess['mobileno'] = $mobileno;
+		}
+		$SDAccess['customerNo'] = $_SESSION['customer_name'];
+		$submitData = $this->getSubmitData($SDAccess);
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
 }

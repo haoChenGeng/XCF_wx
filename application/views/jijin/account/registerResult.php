@@ -41,7 +41,8 @@
     	<p class="affs"><b<?php if($msgTy == 'fail'){?> class="cuo"<?php }?>></b><?php echo $msgContent;?></p>
     	<?php
     		if ($msgTy == 'sucess'){
-    			echo '<p>为了维护投资者合法权益，根据《证券期货投资者适当性管理办法》，在进行基金交易前需完善个人信息，请尽快完善。</p>';
+    			echo '<p>为了维护投资者合法权益，根据《证券期货投资者适当性管理办法》，在进行基金交易前需完善个人信息，请尽快完善。</p>
+					  <p>基金过往业绩不代表未来表现，不构成投资建议。基金有风险，投资需谨慎。</p>';
     			echo '<section class="m-btn-wrap"><input class="btn" id="nextBtn" type="button" value="完善信息"/>
 					  <input class="btn" id="backBtn" type="button" value="稍后完善"/></section>';
     		}
