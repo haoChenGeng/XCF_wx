@@ -16,9 +16,9 @@ class Test extends MY_Controller
     }
     
     function index() {
-    	$this->load->model('Model_db');
-    	$arr = array(0=>array('Customername'=>13211112222));
-    	$this->Model_db->incremenUpdate('customer',$arr,'Customername');
+//     	$this->load->model('Model_db');
+//     	$arr = array(0=>array('Customername'=>13211112222));
+//     	$this->Model_db->incremenUpdate('customer',$arr,'Customername');
 //     	var_dump($this->db->dbprefix('p2_customer'));
 //     	var_dump(date('Y-m-d H:i:s',1499652514));
 //     	$arr = array('code'=>'bgMsgSend','certificatetype'=>'0','certificateno'=>'130426198906063501','depositacctname'=>'test','depositacct'=>'6225881209690998','channelid'=>'KQ03','mobiletelno'=>'13554719692','customerNo'=>'60','channelname'=>'bankName111111bank');
@@ -32,12 +32,12 @@ class Test extends MY_Controller
 //     	var_dump($this->db->select('*')->from('fundlist')->count_all_results());
 //     	var_dump($_SESSION['viewAllFund'],$_SESSION['riskLevel']);
 //     	ob_start();
-//     	$arr = Array(
-//     			'msgTy' => 'sucess',
-//     			'msgContent' => '基金开户成功',
-//     			'base' => $this->base
-//     			);
-//     	$this->load->view('jijin/account/registerResult', $arr);
+    	$arr = Array(
+    			'msgTy' => 'sucess',
+    			'msgContent' => '基金开户成功',
+    			'base' => $this->base
+    			);
+    	$this->load->view('jijin/account/registerResult', $arr);
 //     	ob_end_flush();
 //     	exit();
 //     	$randSeq = array_rand(range(0,0),1);
