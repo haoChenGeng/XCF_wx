@@ -33,7 +33,11 @@
         				}
         				echo "</select>";
         			}else{
-        				echo '<input id="'.$key.'" style="box-sizing:border-box;border:1px solid #A9A9A9;border-radius:3px;line-height:20px;padding:5px;" class="investorInfo" name="'.$key. '"/>';
+        				echo '<input id="'.$key.'" style="box-sizing:border-box;border:1px solid #A9A9A9;border-radius:3px;line-height:20px;padding:5px;" class="investorInfo" name="'.$key. '"';
+        				if (isset($val['value'])){
+        					echo 'value="'.$val['value'].'"';
+        				}
+        				echo '/>';
         			}
         			echo "\r\n</label>\r\n</div>\r\n";
         		}
