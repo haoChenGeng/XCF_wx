@@ -21,7 +21,7 @@
         	<?php
         		foreach ($formData as $key=>$val){
         			echo "<div class='m2-item'>
-    						<label class='select-label' style='width:90%;'>".$val['des']."\r\n";
+    						<label class='select-label' style='width:90%;line-height:30px;'>".$val['des']."\r\n";
         			if (isset($val['select'])){
         				echo '<select id='.$key.' name='.$key.' class="select-certificate investorInfo" >';
         				foreach ($val['select'] as $k=>$v){
@@ -33,7 +33,7 @@
         				}
         				echo "</select>";
         			}else{
-        				echo '<input id="'.$key.'" class="w80-p" name="'.$key. '"/>';
+        				echo '<input id="'.$key.'" style="box-sizing:border-box;border:1px solid #A9A9A9;border-radius:3px;line-height:20px;padding:5px;" class="investorInfo" name="'.$key. '"/>';
         			}
         			echo "\r\n</label>\r\n</div>\r\n";
         		}
