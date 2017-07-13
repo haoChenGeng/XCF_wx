@@ -3,39 +3,45 @@
 	min-width: 320px;
 	padding: 0 15px;
 	display: table;
-	/*background: url(../img/beijingtu.png);*/
-}
-.mui-slider{
-	margin-top: 190px;
-}
-.info-wrapper{
-	
-}
-.backImg{
-	width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-
-}
-.backImg img,.info-wrapper,.desc-img{
-	width: 100%;
 }
 
-.info-left-box,
-.info-right-box {
-	height: 169px;
+.mui-slider {
+	margin-top: 36%;
 }
+
+.info-wrapper {}
+
+.backImg {
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.backImg img,
+.info-wrapper {
+	width: 100%;
+}
+
+.desc-img {
+	width: 100%;
+	min-height: 100%;
+}
+
 .info-left-box a,
 .info-right-box a {
 	display: table;
-	margin-top: 10px;
 }
 
 .info-left-box a>img,
 .info-right-box a>img {
 	width: 100%;
+	margin-top: 10px;
 }
+
+.jz-img {}
+
+.info-img {}
 
 .info-left-box {
 	padding-right: 5px;
@@ -243,4 +249,18 @@ body {
 	position: fixed;
 	z-index: 20;
 	background-color: #000;
+}
+
+
+.mui-slider-item a {
+	padding: 0 15px;
+}
+
+#mainView {
+	background-image: url(../img/beijingtu.jpg);
+	background-size: 100% 100%;
+}
+
+.mui-slider {
+	width: 100%;
 }

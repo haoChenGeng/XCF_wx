@@ -28,29 +28,30 @@ $(function(){
 		//监听页面切换事件方案1,通过view元素监听所有页面切换事件，目前提供pageBeforeShow|pageShow|pageBeforeBack|pageBack四种事件(before事件为动画开始前触发)
 		//第一个参数为事件名称，第二个参数为事件回调，其中e.detail.page为当前页面的html对象
 		view.addEventListener('pageBeforeShow', function(e) {
-							console.log(e.detail.page.id + ' beforeShow');
+			if(e.detail.page.id=="mainView"){
+				showMain();
+				loadimgF(10);
+			}
+							//console.log(e.detail.page.id + ' beforeShow');
 		});
 		view.addEventListener('pageShow', function(e) {
-			if(e.detail.page.id=="mainView"){
-				loadimgF(10);
-			}else{
+			if(e.detail.page.id!="mainView"){
 				moveImgLoag();
+				hideMain();
 			}
-			
-							console.log(e.detail.page.id + ' show');
+							//console.log(e.detail.page.id + ' show');
 		});
 		view.addEventListener('pageBeforeBack', function(e) {
-							console.log(e.detail.page.id + ' beforeBack');
+							//console.log(e.detail.page.id + ' beforeBack');
 		});
 		view.addEventListener('pageBack', function(e) {
-							console.log(e.detail.page.id + ' back');
+							//console.log(e.detail.page.id + ' back');
 		});
 	})(mui);
 
 	if(mui.os.stream){
 		document.getElementById("check_update").display = "none";
 	}
-
 	lazyImg();
 })
 function lazyImg(){
@@ -73,4 +74,11 @@ function loadimgF(t){
 
 function moveImgLoag(){
 	$(".jz-img").removeClass("imgLoad");
+}
+
+function hideMain(){
+	$(".main-wrapper").hide();
+}
+function showMain(){
+	$(".main-wrapper").show();
 }
