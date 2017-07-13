@@ -21,6 +21,7 @@
 .backImg img,
 .info-wrapper {
 	width: 100%;
+	margin-top: 5px;
 }
 
 .desc-img {
@@ -36,12 +37,9 @@
 .info-left-box a>img,
 .info-right-box a>img {
 	width: 100%;
-	margin-top: 10px;
+	margin-top: 6px;
 }
 
-.jz-img {}
-
-.info-img {}
 
 .info-left-box {
 	padding-right: 5px;
