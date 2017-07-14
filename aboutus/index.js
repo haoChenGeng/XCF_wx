@@ -15,14 +15,6 @@ $(function(){
 	//初始化单页的区域滚动
 	mui('.mui-scroll-wrapper').scroll();
 
-	var client = document.documentElement.clientHeight;
-	var b = document.body.clientHeight;
-	var o = document.querySelector('.mw').offsetHeight;
-	var bg = document.getElementById('bg');
-	bg.style.height = client > o ? client : o + 'px';
-	// alert(client);
-	// alert(b);
-	// alert(o);
 
 	var view = viewApi.view;
 	(function($) {

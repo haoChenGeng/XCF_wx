@@ -1,12 +1,8 @@
 .main-wrapper {
-	max-width: 640px;
+	max-width: 562px;
 	min-width: 320px;
 	padding: 0 15px;
 	display: table;
-}
-
-.info-wrapper img {
-	display: block;
 }
 
 .backImg {
@@ -19,7 +15,7 @@
 .backImg img,
 .info-wrapper {
 	width: 100%;
-	margin-top: 5px;
+	margin-top: 2%;
 }
 
 .desc-img {
@@ -35,7 +31,7 @@
 .info-left-box a>img,
 .info-right-box a>img {
 	width: 100%;
-	margin-top: 6px;
+	margin-top: 3%;
 }
 
 
@@ -255,15 +251,126 @@ body {
 	position: absolute;
 	top: 0;
 	left: 0;
-	padding-bottom: 20px;
+	width: 100%;
+	background: url(../img/beijingtu.jpg);
+	background-size: 100% 100%;
 }
 
+@media screen and (min-width: 562px) {
+	.mw {
+		left: 50%;
+		margin-left: -281px;
+	}
+}
+
+#mainView {
+	background: url(../img/beijingtu.jpg);
+	background-size: 100% 100%;
+	min-width: 320px;
+}
 
 .mui-slider {
 	width: 100%;
+	margin-top: 3%;
+	max-width: 562px;
+	min-width: 320px;
 }
 
-.logo {
-	text-align: right;
-	padding: 10px 20px;
+.logo img {
+	width: 100%; 
+	height: auto;
+	max-width: 100%; 
+	display: block; 
+}
+
+.mui-slider-loop {
+	margin-top: 3%;
+}
+
+@media screen and (max-height:480px) {
+	.mw {
+		margin-top: 0;
+	}
+	.logo {
+		width: 32%;
+		margin-left: 61%;
+	}
+	.info-left-box a>img, .info-right-box a>img {
+		margin-top: 1%;
+	}
+	.backImg img, .info-wrapper {
+		margin-top: 1%;
+	}
+	.mui-slider {
+		margin-top: 1%;
+	}
+	.mui-slider-item img {
+		height: 98px;
+	}
+}
+
+@media screen and (min-height:481px) and (max-height:568px) {
+	.mw {
+		padding-top: 2%;
+	}
+	.mui-slider-group {
+		margin-top: 4%;
+	}
+	.backImg img, .info-wrapper {
+		margin-top: 3%;
+	}
+	.logo {
+		width: 41%;
+		margin-left: 51%;
+	}
+	.info-left-box a>img, .info-right-box a>img {
+		margin-top: 4%;
+	}
+	.mui-slider {
+		margin-top: 4%;
+	}
+}
+
+@media screen and (min-height:569px) and (max-height:667px) {
+	.mw {
+		padding-top: 2%;
+	}
+	.mui-slider-group {
+		margin-top: 2%;
+	}
+	.backImg img, .info-wrapper {
+		margin-top: 2%;
+	}
+	.logo {
+		width: 45%;
+		margin-left: 47%;
+	}
+	.info-left-box a>img, .info-right-box a>img {
+		margin-top: 4%;
+	}
+	.mui-slider {
+		margin-top: 4%;
+	}
+}
+
+@media screen and (min-height:668px) {
+	.mw {
+		padding-top: 2%;
+	}
+	.mui-slider-group {
+		margin-top: 2%;
+	}
+	.backImg img, .info-wrapper {
+		margin-top: 2%;
+	}
+	.logo {
+		width: 43%;
+		margin-left: 49%;
+	}
+	.info-left-box a>img, .info-right-box a>img {
+		margin-top: 4%;
+	}
+	.mui-slider {
+		margin-top: 4%;
+	}
 }
