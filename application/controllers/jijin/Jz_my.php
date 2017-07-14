@@ -253,7 +253,7 @@ class Jz_my extends MY_Controller
 			if ($nexturl == 'Risk_assessment'){
 				$data['infoMessage'] = '风险测评前，请完善投资者信息。';
 			}
-			$investorInfo = $this->db->select('perinvesttype,perfinancialassets,peravgincome,perinvestexp,perinvestwork')->where(array('customerId'=>$_SESSION['customer_id']))->get('p2_investorinfo')->row_array();
+			$investorInfo = $this->db->select('annualincome,debt,investmentedu,investmentwork,execeptedearning,affordableloss,cerditrecord')->where(array('customerId'=>$_SESSION['customer_id']))->get('p2_investorinfo')->row_array();
 			if (empty($investorInfo)){
 				$investorInfo = $data['formData'] = array();
 				$this->getInvestorPageData($data['formData'], $investorInfo);
@@ -281,9 +281,7 @@ class Jz_my extends MY_Controller
 		$formData['cerditrecord'] = array('des'=>'诚信记录是否良好','select'=>array('1'=>'是','0'=>'否'));
 		if (!empty($investorInfo)){
 			foreach ($investorInfo as $key=>$val){
-				if(isset($formData[$key])){
-					$formData[$key]['value'] = $val;
-				}
+				$formData[$key]['value'] = $val;
 			}
 		}
 	}
