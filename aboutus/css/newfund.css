@@ -252,10 +252,12 @@ body {
 }
 
 .mw {
-	background-image: url(../img/beijingtu.jpg);
-	background-size: 100% 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
 	padding-bottom: 20px;
 }
+
 
 .mui-slider {
 	width: 100%;
