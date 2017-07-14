@@ -5,11 +5,9 @@
 	display: table;
 }
 
-.mui-slider {
-	margin-top: 36%;
+.info-wrapper img {
+	display: block;
 }
-
-.info-wrapper {}
 
 .backImg {
 	width: 100%;
@@ -105,7 +103,6 @@ body {
 	bottom: 0;
 	width: 100%;
 	height: 100%;
-	background-color: #efeff4;
 }
 
 .mui-pages {
@@ -254,11 +251,17 @@ body {
 	padding: 0 15px;
 }
 
-#mainView {
+.mw {
 	background-image: url(../img/beijingtu.jpg);
 	background-size: 100% 100%;
+	padding-bottom: 20px;
 }
 
 .mui-slider {
 	width: 100%;
+}
+
+.logo {
+	text-align: right;
+	padding: 10px 20px;
 }

@@ -13,7 +13,7 @@
 	            <h3 class="text-center"><?php echo $head_title?></h3>
 	        </div>
 	    </section>
-		<h2 style="text-align:center"><?php echo $ret_msg?></h2> 
+		<h3 style="text-align:center;padding: 30px;"><?php echo $ret_msg?></h3> 
 	</div>
 	<form  name="form" method="post" action=<?php echo $forward_url?> id="login_form">
 	    	<input type='hidden' id="data123" name="data" value=<?php echo isset($data)?$data:'';?> />

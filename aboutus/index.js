@@ -6,6 +6,8 @@ $(function(){
 		});
 	},1000)
 	
+
+
 	mui.init();
 	//初始化单页view
 	var viewApi = mui('#app').view({
@@ -82,3 +84,4 @@ function hideMain(){
 function showMain(){
 	$(".main-wrapper").show();
 }
+

@@ -12,9 +12,10 @@
 		<link rel="stylesheet" href="css/newfund.css">
 	</head>
 
-	<body>
+	<body class="clearfix">
 		<!--页面主结构开始-->
 		<div id="app" class="mui-views">
+			<!-- <img id="bg" src="img/beijingtu.jpg" style="width: 100%;" />		 -->
 			<div class="mui-view">
 				<div class="mui-navbar"></div>
 				<div class="mui-pages"></div>
@@ -23,83 +24,88 @@
 		<!--页面主结构结束-->
 		<!--单页面开始-->
 		<div id="mainView" class="mui-page">
-			<!--页面标题栏开始-->
-			<div class="mui-navbar-inner mui-bar mui-bar-nav"></div>
-			<!--页面标题栏结束-->
-			<!--页面主内容区开始-->
-			<div id="slider" class="mui-slider" >
-				<div class="mui-slider-group mui-slider-loop">
-					<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
-					<div class="mui-slider-item mui-slider-item-duplicate">
-						<a href="#">
-							<img src="img/slide1.jpg">
-						</a>
-					</div>
-					<!-- 第一张 -->
-					<div class="mui-slider-item">
-						<a href="#">
-							<img src="img/slide3.jpg">
-						</a>
-					</div>
-					<!-- 第二张 -->
-					<div class="mui-slider-item">
-						<a href="#">
-							<img src="img/slide2.jpg">
-						</a>
-					</div>
-					<!-- 第三张 -->
-					<div class="mui-slider-item">
-						<a href="#">
-							<img src="img/slide1.jpg">
-						</a>
-					</div>
-					<div class="mui-slider-item mui-slider-item-duplicate">
-						<a href="#">
-							<img src="img/slide3.jpg">
-						</a>
+			<div class="mw">
+				<!--页面标题栏开始-->
+				<div class="mui-navbar-inner mui-bar mui-bar-nav"></div>
+				<!--页面标题栏结束-->
+				<section class="logo">
+					<img src="img/logo.png" width="140" height="100" alt="小牛新财富">
+				</section>
+				<!--页面主内容区开始-->
+				<div id="slider" class="mui-slider" >
+					<div class="mui-slider-group mui-slider-loop">
+						<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+						<div class="mui-slider-item mui-slider-item-duplicate">
+							<a href="#">
+								<img src="img/slide1.jpg">
+							</a>
+						</div>
+						<!-- 第一张 -->
+						<div class="mui-slider-item">
+							<a href="#">
+								<img src="img/slide3.jpg">
+							</a>
+						</div>
+						<!-- 第二张 -->
+						<div class="mui-slider-item">
+							<a href="#">
+								<img src="img/slide2.jpg">
+							</a>
+						</div>
+						<!-- 第三张 -->
+						<div class="mui-slider-item">
+							<a href="#">
+								<img src="img/slide1.jpg">
+							</a>
+						</div>
+						<div class="mui-slider-item mui-slider-item-duplicate">
+							<a href="#">
+								<img src="img/slide3.jpg">
+							</a>
+						</div>
 					</div>
 				</div>
+				<div class="main-wrapper">
+					<div class="backImg">
+					</div>
+					<div class="info-wrapper mui-row">
+						<div class="mui-col-sm-6 mui-col-xs-6 info-left-box">
+							<a class="jz-img-a">
+								<img src="img/jiazaitu1.jpg" class="jz-img" />
+							</a>
+							<a href="#gslcDesc" style="margin-top: -1px;">
+								<img src="img/gongsilicheng.png" class="info-img" />
+							</a>
+						</div>
+						<div class="mui-col-sm-6 mui-col-xs-6 info-right-box">
+							<a href="#gywmDesc">
+								<img src="img/guanyuwomen.png" class="info-img" />
+							</a>
+							<a class="jz-img-a">
+								<img src="img/jiazaitu2.jpg" class="jz-img" />
+							</a>
+						</div>
+						<div class="mui-col-sm-6 mui-col-xs-6 info-left-box">
+							<a class="jz-img-a">
+								<img src="img/jiazaitu3.jpg" class="jz-img" />
+							</a>
+							<a href="#lxwmDesc">
+								<img src="img/lianxiwoemn.png" class="info-img" />
+							</a>
+						</div>
+						<div class="mui-col-sm-6 mui-col-xs-6 info-right-box">
+							<a href="#qyfgDesc" class="clickImg">
+								<img src="img/quyufugai.png" class="info-img" />
+							</a>
+							<a class="jz-img-a">
+								<img src="img/jiazaitu4.jpg" class="jz-img" />
+							</a>
+						</div>
+					</div>
+				</div>
+				<!--页面主内容区结束-->
+				
 			</div>
-			<div class="main-wrapper">
-				<div class="backImg">
-					<!-- <img src="img/beijingtu.jpg" /> -->
-				</div>
-				<div class="info-wrapper mui-row">
-					<div class="mui-col-sm-6 mui-col-xs-6 info-left-box">
-						<a class="jz-img-a">
-							<img src="img/jiazaitu1.jpg" class="jz-img" />
-						</a>
-						<a href="#gslcDesc" style="margin-top: -1px;">
-							<img src="img/gongsilicheng.png" class="info-img" />
-						</a>
-					</div>
-					<div class="mui-col-sm-6 mui-col-xs-6 info-right-box">
-						<a href="#gywmDesc">
-							<img src="img/guanyuwomen.png" class="info-img" />
-						</a>
-						<a class="jz-img-a">
-							<img src="img/jiazaitu2.jpg" class="jz-img" />
-						</a>
-					</div>
-					<div class="mui-col-sm-6 mui-col-xs-6 info-left-box">
-						<a class="jz-img-a">
-							<img src="img/jiazaitu3.jpg" class="jz-img" />
-						</a>
-						<a href="#lxwmDesc">
-							<img src="img/lianxiwoemn.png" class="info-img" />
-						</a>
-					</div>
-					<div class="mui-col-sm-6 mui-col-xs-6 info-right-box">
-						<a href="#qyfgDesc" class="clickImg">
-							<img src="img/quyufugai.png" class="info-img" />
-						</a>
-						<a class="jz-img-a">
-							<img src="img/jiazaitu4.jpg" class="jz-img" />
-						</a>
-					</div>
-				</div>
-			</div>
-			<!--页面主内容区结束-->
 		</div>
 		<!--单页面结束-->
 		<div id="gywmDesc" class="mui-page">
