@@ -218,7 +218,7 @@ class Jz_account extends MY_Controller
 // 				$post['tano'] = $this->config->item('ta')[0]['no'];
 				//查询基金公司信息
 				$registerData['tano'] = $this->db->select("tano")->get('p2_fundlist')->row_array()['tano'];
-				$registerData['custname'] = $registerData['depositacctname'];
+// 				$registerData['custname'] = $registerData['depositacctname'];
 				$logData = $registerData;
 				$logData['tpasswd'] = $logData['lpasswd'] = '***';
 				$logData['certificateno'] = substr($logData['certificateno'],0,6).'***'.substr($logData['certificateno'],-3);

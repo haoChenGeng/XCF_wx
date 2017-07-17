@@ -105,7 +105,7 @@ class PurchaseController extends MY_Controller {
 						$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
 						$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
 						$_SESSION['bank_info'] = $purchase_info['data']['bank_info'];
-						$_SESSION['bank_info']['mobileno'] = $purchase_info['data']['mobileno'];
+// 						$_SESSION['bank_info']['mobileno'] = $purchase_info['data']['mobileno'];
 						$_SESSION['apply_rand_code'] = $data['rand_code'];
 						ob_start();
 						$this->load->view('jijin/trade/view_apply_fund',$data);
@@ -142,7 +142,7 @@ class PurchaseController extends MY_Controller {
 					$arr['forward_msg'] = $forward_msg;
 					$arr['head_title'] = '购买提醒';
 					$_SESSION['bank_info'] = $purchase_info['data']['bank_info'];
-					$_SESSION['bank_info']['mobileno'] = $purchase_info['data']['mobileno'];
+// 					$_SESSION['bank_info']['mobileno'] = $purchase_info['data']['mobileno'];
 					$this->load->view('ui/operate_result2',$arr);
 					break;
 				case 1:
@@ -206,22 +206,24 @@ class PurchaseController extends MY_Controller {
 			unset($_SESSION['apply_rand_code']);
 			if ($div_bit !== false){                           //找到一次性随机验证码
 				$tpasswd = substr($decryptData, 0, $div_bit);
-				$purchaseData = json_decode($post['json'],true);
+				$fundInfo = json_decode($post['json'],true);
+// 				$purchaseData['mobileno'] = $_SESSION['bank_info']['mobileno'];
+				unset($_SESSION['bank_info']['mobileno']);
 				$purchaseData['tpasswd'] = $tpasswd;
 				$purchaseData['applicationamt'] = $post['sum'];
-				$purchaseData['mobileno'] = $_SESSION['bank_info']['mobileno'];
-				unset($_SESSION['bank_info']['mobileno']);
 				foreach ($_SESSION['bank_info'] as $val){
 					if ($val['channelid'] == $post['pay_way']){
 						$purchaseData = array_merge($purchaseData,$val);
 					}
 				}
-// var_dump($purchaseData);
-				unset($_SESSION['bank_info']);
-				//调用申购、认购接口
+				$purchaseData['branchcode'] = $purchaseData['paycenterid'];
+				$purchaseData['tano'] = $fundInfo['tano'];
+				$purchaseData['fundcode'] = $fundInfo['fundcode'];
+				$purchaseData['sharetype'] = $fundInfo['shareclasses'];
+				unset($purchaseData['paycenterid'],$purchaseData['depositacct'],$purchaseData['channelname']);
 				$purchase = $this->fund_interface->purchase($purchaseData);
 				$purchaseData['tpasswd'] = '***';
-				$purchaseData['depositacct'] = substr($purchaseData['depositacct'],0,3).'***'.substr($purchaseData['depositacct'],-3);
+// 				$purchaseData['depositacct'] = substr($purchaseData['depositacct'],0,3).'***'.substr($purchaseData['depositacct'],-3);
 				file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."进行".$post['purchasetype']."基金(purchase<520003>)操作\r\n申请数据为：".serialize($purchaseData)."\r\n返回数据:".serialize($purchase)."\r\n\r\n",FILE_APPEND);
 				if (key_exists('code',$purchase)){
 					$arr['ret_code'] = $purchase['code'];
