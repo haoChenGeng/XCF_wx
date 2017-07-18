@@ -6,6 +6,7 @@ $(function(){
 		});
 	},1000)
 	
+
 	mui.init();
 	//初始化单页view
 	var viewApi = mui('#app').view({
@@ -13,6 +14,7 @@ $(function(){
 	});
 	//初始化单页的区域滚动
 	mui('.mui-scroll-wrapper').scroll();
+
 
 	var view = viewApi.view;
 	(function($) {
@@ -82,3 +84,4 @@ function hideMain(){
 function showMain(){
 	$(".main-wrapper").show();
 }
+
