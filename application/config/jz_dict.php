@@ -175,7 +175,7 @@ $config['paystatus'] = array(
 $config['selectChannel'] = 'KQ';
 //需要提供开户省、市的银行列表
 $config['needProvCity'] = array(
-	'KQ' => array('平安银行','华夏银行'),
+	'KQ' => array(),
 );
 
 $config['investorType'] = array(

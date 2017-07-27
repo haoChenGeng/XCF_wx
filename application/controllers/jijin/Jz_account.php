@@ -47,7 +47,9 @@ class Jz_account extends MY_Controller
 		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
 		$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
 		$_SESSION['rand_code'] = $data['rand_code'];
-		$data['provCity'] = json_encode($this->fund_interface->provCity());
+		if (!empty($needPCBank)){
+			$data['provCity'] = json_encode($this->fund_interface->provCity());
+		}
 		$this->load->view('jijin/account/bgMsgSend',$data);
 	}
     

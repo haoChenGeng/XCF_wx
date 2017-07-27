@@ -207,7 +207,7 @@ class Fund_interface
 			$updatetime = 0;
 			$this->CI->db->set(array('dealitem' => 'paymentChannel','updatetime' => time()))->insert('dealitems');
 		}
-		if ($currentTime - $updatetime > 86400){
+		if ($currentTime - $updatetime > 8640000){
 			$logfile_suffix = '('.date('Y-m',time()).').txt';
 			$submitData = $this->getSubmitData(array('code'=>'paymentChannel'));
 			$paymentChannel = $this->getReturnData(comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData));

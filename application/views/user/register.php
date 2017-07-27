@@ -144,7 +144,7 @@
       </li>
       <li>
       	<span class="names">验证码</span>
-          <input type="text"  class="input" name="sms_code"  data-reg="^\d{4}$" data-error="验证码错误" placeholder="请输入验证码"/>
+          <input type="text"  class="input" name="sms_code"  data-reg="^\d{6}$" data-error="验证码错误" placeholder="请输入验证码"/>
 
         </li>
         <li>

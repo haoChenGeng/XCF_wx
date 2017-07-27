@@ -503,7 +503,7 @@ class User extends MY_Controller {
 				9
 				);
 		$randNum = "";
-		for ($i = 0; $i < 4; $i++) {
+		for ($i = 0; $i < 6; $i++) {
 			$randKey = mt_rand(0, 7);
 			$randNum .= $arr[$randKey];
 		}
