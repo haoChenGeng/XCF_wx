@@ -16,6 +16,44 @@ class Test extends MY_Controller
     }
     
     function index() {
+//     	$input['invtp'] = 2;
+//     	$aaa = isset($input['invtp']) ? $input['invtp'] : 1;
+//     	var_dump($aaa);
+//     	var_dump(date('Y-m-d',strtotime('20170203')));
+    	
+    	$questions = $this->db->get('question_investorinfo')->result_array();
+    	$i = 0;
+    	foreach ($questions as $key=>$val){
+    		$return["data"]['list'][$i] = array('infoKey'=>$val['infoKey'],'description'=>$val['description']);
+    		$answer = json_decode($val['selectList'],true);
+    		if (is_array($answer)){
+    			foreach ($answer as $k=>$v){
+    				$return["data"]['list'][$i]['selectList'][] = array('returnVal' => $k,'content'=>$v);
+    			}
+    		}
+    		$i++;
+    	}
+    	var_dump(json_encode($return["data"]['list']));
+    	
+/*     	$aaa = unserialize('a:4:{s:4:"code";s:4:"0000";s:3:"msg";s:25:"数据字典查询成功!";s:8:"trantype";s:6:"520020";s:4:"data";a:11:{i:0;a:4:{s:5:"sysid";s:1:"4";s:8:"dictitem";s:6:"120048";s:7:"subitem";s:2:"01";s:11:"subitemname";s:21:"法人或其他组织";}i:1;a:4:{s:5:"sysid";s:1:"4";s:8:"dictitem";s:6:"120048";s:7:"subitem";s:2:"02";s:11:"subitemname";s:12:"金融机构";}i:2;a:4:{s:5:"sysid";s:1:"4";s:8:"dictitem";s:6:"120048";s:7:"subitem";s:2:"03";s:11:"subitemname";s:21:"证券公司子公司";}i:3;a:4:{s:5:"sysid";s:1:"4";s:8:"dictitem";s:6:"120048";s:7:"subitem";s:2:"04";s:11:"subitemname";s:21:"期货公司子公司";}i:4;a:4:{s:5:"sysid";s:1:"4";s:8:"dictitem";s:6:"120048";s:7:"subitem";s:2:"05";s:11:"subitemname";s:21:"私募基金管理人";}i:5;a:4:{s:5:"sysid";s:1:"4";s:8:"dictitem";s:6:"120048";s:7:"subitem";s:2:"06";s:11:"subitemname";s:18:"社会保障基金";}i:6;a:4:{s:5:"sysid";s:1:"4";s:8:"dictitem";s:6:"120048";s:7:"subitem";s:2:"07";s:11:"subitemname";s:27:"企业年金等养老基金";}i:7;a:4:{s:5:"sysid";s:1:"4";s:8:"dictitem";s:6:"120048";s:7:"subitem";s:2:"08";s:11:"subitemname";s:33:"慈善基金等社会公益基金";}i:8;a:4:{s:5:"sysid";s:1:"4";s:8:"dictitem";s:6:"120048";s:7:"subitem";s:2:"09";s:11:"subitemname";s:37:"合格境外机构投资者（QFII）";}i:9;a:4:{s:5:"sysid";s:1:"4";s:8:"dictitem";s:6:"120048";s:7:"subitem";s:2:"10";s:11:"subitemname";s:47:"人民币合格境外机构投资者（RQFII）";}i:10;a:4:{s:5:"sysid";s:1:"4";s:8:"dictitem";s:6:"120048";s:7:"subitem";s:2:"11";s:11:"subitemname";s:9:"自然人";}}}')['data'];
+    	$i = ord('A');
+    	foreach ($aaa as $val){
+    		$select[$val['subitem']] = $val['subitemname'];
+    		$i++;
+    	}
+var_dump($select);
+		var_dump(json_encode($select));
+    	$formData['custtype'] = array('des'=>'您是怎样的投资者？','select'=>array('1','2','3'));
+    	$select = array('A'=>'未从事相关职业','B'=>'专业投资者的高级管理人员、从事金融相关业务的注册会计师或律师');
+    	var_dump(json_encode($select));
+    	$select = array('25'=>'0元—50万','200'=>'50万—300万','400'=>'300万—500万','500'=>'500万以上');
+    	var_dump(json_encode($select));
+    	$select = array('5'=>'0元—10万','25'=>'10万—30万','50'=>'30万—100万','100'=>'100万以上');
+    	var_dump(json_encode($select));
+    	$select = array('0.5'=>'不满1年','2'=>'1年—3年','5'=>'3年—10年','10'=>'10年以上');
+    	var_dump(json_encode($select)); */
+//     	$formData['perinvestwork'] = array('des'=>'您从事金融产品设计、投资、风险管理及相关工作经历有几年？','select'=>array('0.5'=>'不满1年','2'=>'1年—3年','5'=>'3年—10年','10'=>'10年以上'));
+    	 
 //     	$this->load->model('Model_db');
 //     	$arr = array(0=>array('Customername'=>13211112222));
 //     	$this->Model_db->incremenUpdate('customer',$arr,'Customername');
@@ -32,12 +70,12 @@ class Test extends MY_Controller
 //     	var_dump($this->db->select('*')->from('fundlist')->count_all_results());
 //     	var_dump($_SESSION['viewAllFund'],$_SESSION['riskLevel']);
 //     	ob_start();
-    	$arr = Array(
-    			'msgTy' => 'sucess',
-    			'msgContent' => '基金开户成功',
-    			'base' => $this->base
-    			);
-    	$this->load->view('jijin/account/registerResult', $arr);
+//     	$arr = Array(
+//     			'msgTy' => 'sucess',
+//     			'msgContent' => '基金开户成功',
+//     			'base' => $this->base
+//     			);
+//     	$this->load->view('jijin/account/registerResult', $arr);
 //     	ob_end_flush();
 //     	exit();
 //     	$randSeq = array_rand(range(0,0),1);

@@ -136,6 +136,7 @@ switch (ENVIRONMENT)
  *
  * NO TRAILING SLASH!
  */
+
 	$view_folder = '';
 
 
@@ -261,6 +262,10 @@ switch (ENVIRONMENT)
 	}
 
 	// The path to the "views" folder
+	if(ENVIRONMENT=='production'){
+		$view_folder = FCPATH. 'application/views'; //生产环境下将views直接放在web目录下的application/views中
+	}
+		
 	if ( ! is_dir($view_folder))
 	{
 		if ( ! empty($view_folder) && is_dir(APPPATH.$view_folder.DIRECTORY_SEPARATOR))
@@ -287,7 +292,7 @@ switch (ENVIRONMENT)
 	{
 		$view_folder = rtrim($view_folder, '/\\').DIRECTORY_SEPARATOR;
 	}
-
+	
 	define('VIEWPATH', $view_folder);
 
 /*
