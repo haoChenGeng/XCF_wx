@@ -125,7 +125,18 @@ class Jz_fund extends MY_Controller
 	public function showprodetail()
 	{
 		$get = $this->input->get();
-		$fund_list = $this->db->select('fundtype,fundname,fundcode,shareclasses,nav,navdate,growth_day,status,risklevel,first_per_min_22,first_per_min_20')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
+		$fund_list = $this->db->select('fundtype,fundname,fundcode,shareclasses,nav,navdate,growth_day,growthrate,fundincomeunit,status,risklevel,first_per_min_22,first_per_min_20')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
+		if (2 == $fund_list['fundtype']){
+			$fund_list['growth_day'] = round($fund_list['growthrate']*100,3);
+			$fund_list['nav'] = $fund_list['fundincomeunit'];
+			$data['field1'] = '七日年化收益率';
+			$data['field2'] = '万份收益';
+			$data['field3'] = '七日年化收益率走势(%)';
+		}else{
+			$data['field1'] = '日涨跌幅';
+			$data['field2'] = '最新净值(元)';
+			$data['field3'] = '净值走势(%)';
+		}
 		$this->load->config('jz_dict');
 		$tmp = isset($this->config->item('fundtype')[$fund_list['fundtype']])?$this->config->item('fundtype')[$fund_list['fundtype']]:null;
 		$fund_list['fundtype'] = is_null($tmp)?'-':$tmp;
@@ -173,7 +184,13 @@ class Jz_fund extends MY_Controller
 		$tableName = 'p2_netvalue_'.$get['fundCode'];
 		$startDate = date('Y-m-d',time());
 		$startDate = (substr($startDate,0,4)-1).substr($startDate,4);
-		$fundCure = $this->db->select('net_date,net_day_growth')->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
+		$fundtype = $this->db->select('fundtype')->where(array('fundCode'=>$get['fundCode']))->get('p2_fundlist')->row_array()['fundtype'];
+		if (2 == $fundtype){
+			$select = 'net_date,round(growthrate*100,3) as net_day_growth';
+		}else{
+			$select = 'net_date,net_day_growth';
+		}
+		$fundCure = $this->db->select($select)->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
 		if (!empty($fundCure) && is_array($fundCure)){
 			$return = array('code'=>0,'data'=>&$fundCure);
 		}else{

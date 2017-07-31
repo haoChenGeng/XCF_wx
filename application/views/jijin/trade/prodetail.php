@@ -16,11 +16,11 @@
       <div class="m-content-t1">
         <div class="m-content-t1-detail">
           <p><?php echo $fundlist['growth_day'].'%';?></p>
-          <p>日涨跌幅</p>
+          <p><?php echo $field1;?></p>
         </div>
         <div class="m-content-t1-detail">
           <p><?php echo $fundlist['nav'];?></p>
-          <p>最新净值(元)</p>
+          <p><?php echo $field2;?></p>
         </div>
         <div class="m-content-date">净值日期：<?php echo $fundlist['navdate'];?></div>
       </div>
@@ -39,7 +39,7 @@
         </div>
       </div>
       <div class="m-content-t3">
-        <p>净值走势</p>
+        <p><?php echo $field3;?></p>
         <div id="chartContent">
           <div class="m-content-t3-chart" style="height: 280px;display: block;" id="one">1</div>
           <div class="m-content-t3-chart" style="height: 280px;" id="three">2</div>
