@@ -49,6 +49,8 @@ class Jz_account extends MY_Controller
 		$_SESSION['rand_code'] = $data['rand_code'];
 		if (!empty($needPCBank)){
 			$data['provCity'] = json_encode($this->fund_interface->provCity());
+		}else{
+			$data['provCity'] = json_encode(array());
 		}
 		$this->load->view('jijin/account/bgMsgSend',$data);
 	}

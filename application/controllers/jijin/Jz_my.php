@@ -127,10 +127,10 @@ class Jz_my extends MY_Controller
 		//调用接口获取用户风险等级
 		if (!isset($_SESSION['riskLevel'])){
 			$res = $this->fund_interface->AccountInfo();
-			if (!empty($res['data'])) {
-				$_SESSION['riskLevel'] = (int)$res['data']['custrisk'];
+			if (!empty($res['data']['custrisk'])) {
+				$_SESSION['riskLevel'] = $res['data']['custrisk'];
 			}else{
-				$_SESSION['riskLevel'] = '-';
+				$_SESSION['riskLevel'] = '05';
 			}
 		}
 		if (1 == $type){
@@ -141,7 +141,7 @@ class Jz_my extends MY_Controller
 			$this->load->config('jz_dict');
 			$custrisk = $this->config->item('custrisk');
 			if (isset($custrisk[$_SESSION['riskLevel']])){
-				$res['data']['custrisk'] = 'R'.$_SESSION['riskLevel'];
+				$res['data']['custrisk'] = 'R'.intval($_SESSION['riskLevel']);
 				$res['data']['custriskname'] = $custrisk[$_SESSION['riskLevel']];
 			}else{
 				$res['data']['custrisk'] = $res['data']['custriskname'] = '-';
