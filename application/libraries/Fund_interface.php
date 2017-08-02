@@ -123,6 +123,8 @@ class Fund_interface
 								'net_unit' => $val['nav'],
 								'net_sum' => empty($val['totalnav']) ? 0 : $val['totalnav'],
 								'net_day_growth' => ($val['nav']-$preFundInfo[$val['fundcode']]['nav'])/$preFundInfo[$val['fundcode']]['nav'],
+								'fundincomeunit' => $val['fundincomeunit'],
+								'growthrate' => $val['growthrate'],
 								'XGRQ' => $currentdate,
 						);
 						$this->CI->db->replace('p2_netvalue_'.$val['fundcode'],$updateNav);
@@ -147,6 +149,7 @@ class Fund_interface
 					unset ($updateData[$key]);
 				}else{
 					$updateData[$key]['net_day_growth'] = empty($val['net_day_growth']) ? 0 : $val['net_day_growth'];
+					$updateData[$key]['growthrate'] = empty($val['growthrate']) ? 0 : $val['growthrate'];
 					$updateData[$key]['XGRQ'] = $currentdate;
 				}
 			}
@@ -163,6 +166,8 @@ class Fund_interface
 				`net_unit` varchar(24) DEFAULT '0',
 				`net_sum` varchar(24) DEFAULT '0',
 				`net_day_growth` varchar(24) NOT NULL DEFAULT '0',
+				`fundincomeunit` varchar(24) DEFAULT NULL,
+				`growthrate` varchar(24) NOT NULL DEFAULT '0',
 				`XGRQ` datetime DEFAULT NULL COMMENT '更新日期',
 				PRIMARY KEY (`net_date`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
