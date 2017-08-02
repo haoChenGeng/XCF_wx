@@ -173,13 +173,13 @@
 	document.getElementById('exit').addEventListener('tap', function() {
 	  	//退出基金		
 	  	mui.openWindow({
-		  	url: '/jijin/Jz_account/logout',                         //<?php echo $this->config->item("pre_homepage");?>
+		  	url: '/jijin/Jz_account/logout',       
 	    	id:'exit'
 	  	});
 	});
 
 	
-    pushHistory(); 
+    // pushHistory(); 
     window.addEventListener("popstate", function(e) { 
         // alert("我监听到了浏览器的返回按钮事件啦");
         window.location.href = '/jijin/Jz_account/logout';
