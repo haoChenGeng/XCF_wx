@@ -68,36 +68,51 @@ $(document).ready(function() {
     var today = new Date().valueOf() - 30*24*60*60*1000;
     var three = new Date().valueOf() - 3*30*24*60*60*1000;
     var half = new Date().valueOf() - 6*30*24*60*60*1000;
+    var start = new Date(data[0].net_date.replace(/-/g, '/')).valueOf();
+    var ii = start;
     for (var i = 0; i < data.length; i++) {
 //console.log(half);
 //console.log(new Date(data[i].net_date.replace(/-/g, '/')).valueOf());  
-      var start = new Date(data[0].net_date.replace(/-/g, '/')).valueOf();
       if (today > start) {
         oneData = [];
         break;
       }else if(today > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
-        oneData = data.slice(0,i);
+        ii = i;
         break;
-      }      
+      }
     }
-    for (var i = 0; i < data.length; i++) {
+    if (i == data.length){
+    	ii = i-1; 
+    }
+    oneData = data.slice(0,ii);
+//    ii = start;
+    for (; i < data.length; i++) {
       if (three > start) {
         threeData = [];
         break;
       }else if (three > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
-        threeData = data.slice(0, i);
+        ii = i;
         break;
       }
     }
-    for (var i = 0; i < data.length; i++) {
+    if (i == data.length){
+    	ii = i-1; 
+    }
+    threeData = data.slice(0, ii);
+//    ii = start;
+    for (; i < data.length; i++) {
       if (half > start) {
         halfData = [];
         break;
       }else if (half > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
-        halfData = data.slice(0, i);
+        ii = i;
         break;
       }
     }
+    if (i == data.length){
+    	ii = i-1; 
+    }
+    halfData = data.slice(0, ii);
 //console.log(oneData);
 //console.log(threeData);
     var yearData = data;

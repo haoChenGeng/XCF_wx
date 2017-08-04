@@ -8,7 +8,7 @@ class Account extends MY_Controller {
 		parent::__construct ();
 		$this->load->database();
 		$this->load->model ( "Model_pageDeal" );
-		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
+		$this->logfile_suffix = date('Ym',time()).'.txt';
 	}
 	
 	public function login() {

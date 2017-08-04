@@ -12,7 +12,7 @@ class Jz_account extends MY_Controller
         $this->load->database();
         $this->load->helper(array("url","output","comfunction"));   
         $this->load->library(array('Fund_interface','Logincontroller'));
-        $this->logfile_suffix = '('.date('Y-m',time()).').txt';
+        $this->logfile_suffix = date('Ym',time()).'.txt';
     }
     
 	function register()
@@ -131,9 +131,9 @@ class Jz_account extends MY_Controller
 							'depositacctname' => $post['depositacctname'],                       //银行帐户名
 							'depositacct' => $post['depositacct'],                               //银行卡号
 							'mobileno' => $post['mobiletelno'],                                  //银行预留电话
-							'bankname' => isset($post['bankname']) ? $post['bankname'] :'--',
-							'depositprov' => isset($post['depositprov']) ? $post['depositprov'] :'--',
-							'depositcity' => isset($post['depositcity']) ? $post['depositcity'] :'--',
+							'bankname' => isset($post['bankname']) ? $post['bankname'] :$paymentChannel['channelname'],
+							'depositprov' => isset($post['depositprov']) ? $post['depositprov'] :'全国',
+							'depositcity' => isset($post['depositcity']) ? $post['depositcity'] :'全国',
 					);
 					$this->load_bgMsgCheck();
 				}

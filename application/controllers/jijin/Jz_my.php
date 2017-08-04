@@ -11,7 +11,7 @@ class Jz_my extends MY_Controller
         parent::__construct();
         $this->load->database();
         $this->load->library(array('Fund_interface','Logincontroller'));
-        $this->logfile_suffix = '('.date('Y-m',time()).').txt';
+        $this->logfile_suffix = date('Ym',time()).'.txt';
     }
 
 	//我的基金页面入口
@@ -108,7 +108,7 @@ class Jz_my extends MY_Controller
 					$data['fund_list']['data'][$key] = $val;
 					$data['fund_list']['data'][$key]['json'] = base64_encode(json_encode($val));
 					if ($val['risklevel'] > $custrisk){
-						$risklevel = intval($val['risklevel']);
+						$risklevel = $val['risklevel'];
 						$data['fund_list']['data'][$key]['riskDes'] = isset($productrisk[$risklevel])?'['.$productrisk[$risklevel].']':'';
 					}else{
 						$data['fund_list']['data'][$key]['riskDes'] = '';

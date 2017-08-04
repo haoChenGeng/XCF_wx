@@ -12,7 +12,7 @@ class Fund_bank extends MY_Controller
         $this->load->database();
         $this->load->helper(array("output","comfunction"));       //"page"  "log"   "func",
         $this->load->library(array('Fund_interface','Logincontroller'));
-        $this->logfile_suffix = '('.date('Y-m',time()).').txt';
+        $this->logfile_suffix = date('Ym',time()).'.txt';
         $_SESSION['myPageOper'] = 'account';
     }
 
@@ -152,10 +152,10 @@ class Fund_bank extends MY_Controller
     				}
     				$_SESSION['operation_data']['depositacct'] = $post['depositacct'];         //银行卡号
     				$_SESSION['operation_data']['mobileno'] = $post['mobiletelno'];            //银行预留电话
+    				$_SESSION['operation_data']['bankname'] = isset($post['bankname']) ? $post['bankname'] : $paymentChannel['channelname'];
     				if (isset($post['depositprov'])){
     					$_SESSION['operation_data']['depositprov'] = $post['depositprov'];
     					$_SESSION['operation_data']['depositcity'] = $post['depositcity'];
-    					$_SESSION['operation_data']['bankname'] = $post['bankname'];
     				}
 // var_dump($_SESSION['operation_data']);
     				$this->load_bgMsgCheckOnly($post['operation']);

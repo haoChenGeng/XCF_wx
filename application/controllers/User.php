@@ -10,7 +10,7 @@ class User extends MY_Controller {
 		parent::__construct ();
 		$this->load->helper ( array("output","url",'comfunction'));
 		$this->load->model("Model_db");
-		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
+		$this->logfile_suffix = date('Ym',time()).'.txt';
 	}
 
 	private function userinfo(){
@@ -477,7 +477,7 @@ class User extends MY_Controller {
 				$data['Recommend'][$key]['purchasetype'] = '申购';
 			}
 			if ($val['fundtype'] == 2){
-				$data['Recommend'][$key]['growthrate'] = ($val['growthrate']*100).'%';
+				$data['Recommend'][$key]['growthrate'] = $val['growthrate'].'%';
 				$data['Recommend'][$key]['growthDes'] = '七日年化收益率';
 			}else{
 				$data['Recommend'][$key]['growthDes'] = '近一年收益率';

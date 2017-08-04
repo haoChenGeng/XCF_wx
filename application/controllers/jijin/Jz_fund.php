@@ -12,7 +12,7 @@ class Jz_fund extends MY_Controller
         $this->load->database();
         $this->load->helper(array("comfunction"));   
         $this->load->library(array('Fund_interface','Logincontroller'));
-        $this->logfile_suffix = '('.date('Y-m',time()).').txt';
+        $this->logfile_suffix = date('Ym',time()).'.txt';
     }
     
 	//购买基金页面入口
@@ -127,7 +127,7 @@ class Jz_fund extends MY_Controller
 		$get = $this->input->get();
 		$fund_list = $this->db->select('fundtype,fundname,fundcode,shareclasses,nav,navdate,growth_day,growthrate,fundincomeunit,status,risklevel,first_per_min_22,first_per_min_20')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
 		if (2 == $fund_list['fundtype']){
-			$fund_list['growth_day'] = round($fund_list['growthrate']*100,3);
+			$fund_list['growth_day'] = round($fund_list['growthrate'],3);
 			$fund_list['nav'] = $fund_list['fundincomeunit'];
 			$data['field1'] = '七日年化收益率';
 			$data['field2'] = '万份收益';
@@ -144,7 +144,7 @@ class Jz_fund extends MY_Controller
 		$fund_list['sharetype'] = is_null($tmp)?'-':$tmp;
 		$tmp = isset($this->config->item('fund_status')[$fund_list['status']])?$this->config->item('fund_status')[$fund_list['status']]['status']:null;
 		$fund_list['status'] = is_null($tmp)?'-':$tmp;
-		$productrisk = intval($fund_list['risklevel']);
+		$productrisk = $fund_list['risklevel'];
 		$tmp = isset($this->config->item('productrisk')[$productrisk])?$this->config->item('productrisk')[$productrisk]:null;
 		$fund_list['risklevel'] = 'R'.$productrisk.'('.$tmp.')';
 		$data['purchasetype'] = $get['purchasetype'];

@@ -124,7 +124,7 @@ class Fund_interface
 								'net_sum' => empty($val['totalnav']) ? 0 : $val['totalnav'],
 								'net_day_growth' => ($val['nav']-$preFundInfo[$val['fundcode']]['nav'])/$preFundInfo[$val['fundcode']]['nav'],
 								'fundincomeunit' => $val['fundincomeunit'],
-								'growthrate' => $val['growthrate'],
+								'growthrate' => $val['growthrate']/100,
 								'XGRQ' => $currentdate,
 						);
 						$this->CI->db->replace('p2_netvalue_'.$val['fundcode'],$updateNav);
@@ -184,7 +184,7 @@ class Fund_interface
 			$this->CI->db->set(array('dealitem' => 'channelInfo','updatetime' => time()))->insert('dealitems');
 		}
 		if ($currentTime - $updatetime > 86400){
-			$logfile_suffix = '('.date('Y-m',time()).').txt';
+			$logfile_suffix = date('Ym',time()).'.txt';
 			$submitData = $this->getSubmitData(array('code'=>'channel'));
 			$channel = $this->getReturnData(comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData));
 			if ($channel['code'] == '0000'){
@@ -213,7 +213,7 @@ class Fund_interface
 			$this->CI->db->set(array('dealitem' => 'paymentChannel','updatetime' => time()))->insert('dealitems');
 		}
 		if ($currentTime - $updatetime > 8640000){
-			$logfile_suffix = '('.date('Y-m',time()).').txt';
+			$logfile_suffix = date('Ym',time()).'.txt';
 			$submitData = $this->getSubmitData(array('code'=>'paymentChannel'));
 			$paymentChannel = $this->getReturnData(comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData));
 			if ($paymentChannel['code'] == '0000'){
@@ -245,7 +245,7 @@ class Fund_interface
 			$this->CI->db->set(array('dealitem' => 'provCity','updatetime' => time()))->insert('dealitems');
 		}
 		if ($currentTime - $updatetime > 86400){
-			$logfile_suffix = '('.date('Y-m',time()).').txt';
+			$logfile_suffix = date('Ym',time()).'.txt';
 			$provCity['code'] = 'provCity';
 			$provCity['customerNo'] = $_SESSION['customer_name'];
 			$submitData = $this->getSubmitData($provCity);

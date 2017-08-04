@@ -7,7 +7,7 @@ class MenuSetting extends MY_Controller {
 	function __construct() {
 		parent::__construct ();
 		$this->load->model ( array("Model_pageDeal") );
-		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
+		$this->logfile_suffix = date('Ym',time()).'.txt';
 	}
 	
 	public function index($accessCode='') {
