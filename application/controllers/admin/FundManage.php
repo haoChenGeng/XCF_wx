@@ -57,7 +57,7 @@ class FundManage extends MY_Controller {
 		//设置搜索栏选项   例如('name'搜索项的数据库字段名,'filterType'搜索方式 =where =like 分别对应数据库查询的where和like, 'description'页面显示的搜索项名称)
 		$data['query'] = array(
 				'fundcode' => array('filterType' => 'where', 'description' => '基金代码'),
-				'name' => array('filterType' => 'like', 'description' => '基金名称'),
+				'fundname' => array('filterType' => 'like', 'description' => '基金名称'),
 				'tano' => array('filterType' => 'like', 'description' => '基金公司'),
 				'fundtype' => array('filterType' => 'where', 'description' => '基金类型'),
 		);

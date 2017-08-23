@@ -42,6 +42,7 @@ class Fund_interface
 	}
 	
 	private function getReturnData($inputData){
+var_dump($inputData);exit;
 		if(!empty($inputData)){
 			$AES = new Crypt_AES(CRYPT_AES_MODE_ECB);
 			$AES->setKey($this->AESKey);
@@ -454,12 +455,10 @@ class Fund_interface
 		return ($this->getReturnData($returnData));
 	}
 	
-	function SDQryAllFund($qryallfund=null){
+	function SDQryAllFund($qryallfund = 1){
 		$SDQryAllFund['code'] = 'SDQryAllFund';
 		$SDQryAllFund['customerNo'] = $_SESSION['customer_name'];
-		if ($qryallfund !==null){
-			$SDQryAllFund['qryallfund'] = $qryallfund;
-		}
+		$SDQryAllFund['qryallfund'] = $qryallfund;
 		$submitData = $this->getSubmitData($SDQryAllFund);
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
