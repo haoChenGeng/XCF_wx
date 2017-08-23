@@ -1789,10 +1789,19 @@ a.bank-info-del {
     overflow: hidden;
 }
 
-
 .light-content li {
     padding: 10px;
     border-bottom: 1px solid #ccc;
+}
+
+.trade-file {
+    width: 90%;
+    display: block;
+    margin: 0 auto;
+}
+
+.trade-file > a {
+    color: #0066ff;
 }
 
 
