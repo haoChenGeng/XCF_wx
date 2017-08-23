@@ -118,7 +118,7 @@ class PurchaseController extends MY_Controller {
 							$forward_url = '/jijin/Risk_assessment';
 							$forward_msg = '重新评测';
 						}else{
-							$errMsg = '您的风险水平为"'.$custrisk[$custriskLevel].'"，与当前产品风险水平不匹配，您是否充分了解该产品的风险特征，并自愿承担由此可能产生的一切不利后果和损失。';
+							$errMsg = '您的风险水平为"'.$custrisk[$purchase_info['data']['custrisk']].'"，与当前产品风险水平不匹配，您是否充分了解该产品的风险特征，并自愿承担由此可能产生的一切不利后果和损失。';
 							$forward_url = '/jijin/PurchaseController/load_apply_fund';
 							$forward_msg = '确认够买';
 						}
