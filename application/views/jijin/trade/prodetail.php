@@ -65,6 +65,12 @@
           易日到账，T为交易日
         </p>
       </div>
+      <div class="m-content-t">
+        <a href="announcement.html" class="announcement">产品公告</a>
+      </div>
+      <div class="m-content-t">
+        <p>基金过往业绩不预示其未来表现，市场有风险，投资需谨慎。</p>
+      </div>
     </section>
     <section class="m-footer">
       <p class="m-footer-content" onclick="goto_buyfund()">立即<?php echo $purchasetype;?></p>

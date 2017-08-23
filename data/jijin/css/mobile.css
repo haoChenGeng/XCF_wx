@@ -1800,6 +1800,19 @@ a.bank-info-del {
     margin: 0 auto;
 }
 
+.protocol-context {
+    width: 90%;
+    overflow: scroll;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 3px;
+    height: 300px;
+    color: #333;
+    font-size: 14px;
+    line-height: 22px;
+}
+
 .trade-file > a {
     color: #0066ff;
 }
