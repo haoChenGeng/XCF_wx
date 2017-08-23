@@ -220,6 +220,7 @@ class PurchaseController extends MY_Controller {
 				$purchaseData['tano'] = $fundInfo['tano'];
 				$purchaseData['fundcode'] = $fundInfo['fundcode'];
 				$purchaseData['sharetype'] = $fundInfo['shareclasses'];
+				$purchaseData['purchasetype'] = $post['purchasetype'];
 				unset($purchaseData['paycenterid'],$purchaseData['depositacct'],$purchaseData['channelname']);
 				$purchase = $this->fund_interface->purchase($purchaseData);
 				$purchaseData['tpasswd'] = '***';

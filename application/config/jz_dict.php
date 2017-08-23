@@ -138,7 +138,7 @@ $config['bankcard_status'] = array(
 $config['fund_status'] = array(
 		'0' => array('status' => '交易', 'pre_purchase' => 'N', 'purchase' => 'Y', 'redeem' => 'Y', 'conversion' => 'Y', 'bonus_change' => 'Y'),
 		'1' => array('status' => '发行', 'pre_purchase' => 'Y', 'purchase' => 'N', 'redeem' => 'N', 'conversion' => 'N', 'bonus_change' => 'Y'),
-		'2' => array('status' => '发行成功', 'pre_purchase' => 'N', 'purchase' => 'Y', 'redeem' => 'N', 'conversion' => 'N', 'bonus_change' => 'Y'),
+		'2' => array('status' => '发行成功', 'pre_purchase' => 'N', 'purchase' => 'N', 'redeem' => 'N', 'conversion' => 'N', 'bonus_change' => 'Y'),
 		'3' => array('status' => '发行失败', 'pre_purchase' => 'N', 'purchase' => 'N', 'redeem' => 'N', 'conversion' => 'N', 'bonus_change' => 'N'),
 		'4' => array('status' => '基金停止交易', 'pre_purchase' => 'N', 'purchase' => 'N', 'redeem' => 'N', 'conversion' => 'N', 'bonus_change' =>'N'),
 		'5' => array('status' => '停止申购', 'pre_purchase' => 'N', 'purchase' => 'N', 'redeem' => 'Y', 'conversion' => 'Y', 'bonus_change' => 'Y'),

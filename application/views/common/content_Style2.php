@@ -23,7 +23,7 @@
 				<h3 class="panel-title"><i class="fa fa-pencil"></i> <?php echo $text_form; ?></h3>
 			</div>
 			<div class="panel-body">
-				<form action="<?php echo $form_action; ?>" method="post" enctype="multipart/form-data" id="form-user" class="form-horizontal">
+				<form action="<?php echo $form_action; ?>" method="post" enctype="multipart/form-data" id="form-submit" class="form-horizontal">
 					<?php
 						foreach ($forms as $key => $val){
 							switch ($val['type']) {
@@ -209,5 +209,10 @@ if (isset($public_key)){
 })();
 
 $('#tree').checktree();
+
+$('button').on('click',function(){
+	var $btn = $(this);
+	$("#form-submit").submit();
+});
 </script>
 
