@@ -42,7 +42,6 @@ class Fund_interface
 	}
 	
 	private function getReturnData($inputData){
-var_dump($inputData);exit;
 		if(!empty($inputData)){
 			$AES = new Crypt_AES(CRYPT_AES_MODE_ECB);
 			$AES->setKey($this->AESKey);
