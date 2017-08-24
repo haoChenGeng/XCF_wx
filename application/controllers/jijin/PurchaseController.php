@@ -114,13 +114,13 @@ class PurchaseController extends MY_Controller {
 					}else{
 						$error_code = 0;
 						if (1== $custriskLevel){
-							$errMsg = '您的风险水平为"安全型"，只能购买与您风险水平相匹配的产品。';
+							$errMsg = '您的风险评测结果是保守型，所购买产品的风险等级为中高，已超过您的风险承受能力，根据<a style="color: #0066fe;" href="/data/jijin/file/证券期货投资者适当性管理办法.pdf" >《证券期货投资者适当性管理办法》</a>，您只能购买您风险承受能力以内的产品。';
 							$forward_url = '/jijin/Risk_assessment';
 							$forward_msg = '重新评测';
 						}else{
-							$errMsg = '您的风险水平为"'.$custrisk[$purchase_info['data']['custrisk']].'"，与当前产品风险水平不匹配，您是否充分了解该产品的风险特征，并自愿承担由此可能产生的一切不利后果和损失。';
+							$errMsg = '您的风险水平为"'.$custrisk[$purchase_info['data']['custrisk']].'"，所购买产品的风险等级为中高，已超过您的风险承受能力，根据<a style="color: #0066fe;" href="/data/jijin/file/证券期货投资者适当性管理办法.pdf" >《证券期货投资者适当性管理办法》</a>，请确认您已经仔细阅读产品合同等法律文件以了解产品风险，确认继续购买该产品并自愿承担产品风险。';
 							$forward_url = '/jijin/PurchaseController/load_apply_fund';
-							$forward_msg = '确认够买';
+							$forward_msg = '我已悉知并确认购买';
 						}
 					}
 				}
@@ -140,7 +140,7 @@ class PurchaseController extends MY_Controller {
 					$arr['data'] = json_encode($data);
 					$arr['forward_url'] = $forward_url;
 					$arr['forward_msg'] = $forward_msg;
-					$arr['head_title'] = '购买提醒';
+					$arr['head_title'] = '适当性风险提示';
 					$_SESSION['bank_info'] = $purchase_info['data']['bank_info'];
 // 					$_SESSION['bank_info']['mobileno'] = $purchase_info['data']['mobileno'];
 					$this->load->view('ui/operate_result2',$arr);

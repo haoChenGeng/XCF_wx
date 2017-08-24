@@ -17,10 +17,14 @@
 	</div>
 	<form  name="form" method="post" action=<?php echo $forward_url?> id="login_form">
 	    	<input type='hidden' id="data123" name="data" value=<?php echo isset($data)?$data:'';?> />
-	    	<input type='submit' data-role="button" data-theme="b" class="risk-btn risk-result" value=<?php echo $forward_msg?> />
+	    	<a id="sub" data-role="button" data-theme="b" class="risk-btn risk-result" ><?php echo $forward_msg?></a>
 	</form>
 	<a href="<?php echo $back_url?>" data-role="button" data-theme="b" class="risk-btn risk-result" >返回</a>
 </div>
-
+<script>	
+	document.getElementById('sub').addEventListener('click', function() {
+		document.getElementById('login_form').submit();
+	});
+</script>
 </body>
 </html>

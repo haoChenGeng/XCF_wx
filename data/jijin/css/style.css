@@ -4,6 +4,10 @@ body {
 	margin: 0;
 }
 
+p {
+	color: #333;
+}
+
 /* comoon style */
 .clear:after {
 	content: "";
@@ -246,6 +250,18 @@ body {
 	background-size: auto 40px;
 }
 
+#history .mui-table-view-cell {
+	padding: 11px 5px;
+}
+
+#scroll4 .mui-table-view-cell:after {
+	left: 5px;
+}
+
+#history .query-padding {
+	padding: 11px 0;
+}
+
 .fund-btn-bd {
 	margin: 0 10px;
 	width: 42%;
@@ -374,12 +390,12 @@ input.delegate-search {
 .person-info-img {
 	float: left;
 	width: 75px;
-	height: 75px;
-	margin: 10px;
+	height: 84px;
+	margin: 15px;
 }
 
 .person-info-item {
-	margin: 20px;
+	margin: 10px;
 }
 
 .fund-logout:before {
@@ -559,6 +575,55 @@ h3.m-item-5 {
 
 .m-content-t4 {
 	padding: 10px;
+	border-bottom: 1px solid #333;
+}
+
+.m-content-t {
+	border-bottom: 1px solid #333;
+}
+
+.announcement-link {
+	text-decoration: none;
+	color: #333;
+	line-height: 50px;
+	margin-left: 5px;
+	position: relative;
+	display: block;
+	width: 90%;
+}
+
+.announcement-link:after, .announcement-link:before {
+  border: 10px solid transparent;
+  border-left: 10px solid #fff;
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 13px;
+  right: -25px;
+  content: ' '
+}
+
+.announcement-link:before {
+  border-left-color: #333;
+  right: -28px;
+}
+
+.announcement-list {	
+	margin: 0 auto;
+	padding: 0;
+}
+
+.announcement-list > li {
+	border-bottom: 1px solid #333;
+	line-height: 50px;
+	list-style: none;
+}
+
+.announcement-list > li > a {
+	display: block;
+	color: #0066fe;
+	text-decoration: none;
+	padding-left: 20px;
 }
 
 .m-footer {

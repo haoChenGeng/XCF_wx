@@ -11,7 +11,7 @@
 <body class="risk-test">
 	<header class="head">
 	  <div class="head-back">
-	    <span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
+	    <span class="head-back-icon" onclick="location.href = document.referrer;">返回</span>
 	  </div>
 	</header>
 	<h1 class="risk-test-title">风险等级测评</h1>
@@ -21,10 +21,11 @@
 		</section>		
 	</form>
 	<button data-role="submit" data-theme="b" id="riskSubmit" class="risk-btn-submit">提交</button>
-	<button class="risk-back" onclick="history.go(-1);">返回</button>
+	<button class="risk-back" onclick="location.href = document.referrer;" >返回</button>
 <script src="../../../data/jijin/js/mui.min.js"></script>
 <script>
 	mui.init();
+	
 	mui.ajax('/Pf_assessment/read_question',{
 		type: 'get',
 		dataType: 'json',

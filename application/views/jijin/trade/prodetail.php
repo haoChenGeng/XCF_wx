@@ -56,14 +56,17 @@
       <div class="m-content-t4">
         <p>交易规则：</p>
         <p class="m-content-t4-detail">
-          申购：T日购买，T+1日确认份额，T+2日收益到账
-        （QDII一般为T+2确认份额）
+          申购：T日购买，T+1日确认份额，T+2日收益到账（QDII一般为T+2确认份额）
         </p>
         <p class="m-content-t4-detail">
-          赎回：货币基金一般T+1个交易日到账，股票、混合、债券
-          等一般需T+3个交易日到账，QDII一般需要T+7个交
-          易日到账，T为交易日
+          赎回：货币基金一般T+1个交易日到账，股票、混合、债券等一般需T+3个交易日到账，QDII一般需要T+7个交易日到账，T为交易日
         </p>
+      </div>
+      <div class="m-content-t">
+        <a href="/application/views/jijin/trade/announcement.html" class="announcement-link">产品公告</a>
+      </div>
+      <div class="m-content-t">
+        <p>基金过往业绩不预示其未来表现，市场有风险，投资需谨慎。</p>
       </div>
     </section>
     <section class="m-footer">
