@@ -36,7 +36,10 @@
 		<header class="person-info clear" id="header">			
 			<img src="<?php echo $base.'/data/jijin/img/person-info.png';?>" alt="个人信息" class="person-info-img">
 			<p class="person-info-item">hi:<span><?php echo isset($_SESSION ['customer_name'])?$_SESSION ['customer_name']:'未登录';?></span></p>				
-			<p class="person-info-item">总资产：<span id="totalBalance">0</span>&nbsp;&nbsp;&nbsp;昨日收益：<span id="yesterDayIncome">0</span>&nbsp;&nbsp;&nbsp;累计收益：<span id="totalIncome">0</span></p>
+			<p class="person-info-item">
+				总资产：<span id="totalBalance">0</span><br>
+				昨日收益：<span id="yesterDayIncome">0</span><br>
+				累计收益：<span id="totalIncome">0</span></p>
 					
 		</header>
 		<div id="slider" class="mui-slider">

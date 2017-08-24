@@ -4,6 +4,10 @@ body {
 	margin: 0;
 }
 
+p {
+	color: #333;
+}
+
 /* comoon style */
 .clear:after {
 	content: "";
@@ -246,6 +250,18 @@ body {
 	background-size: auto 40px;
 }
 
+#history .mui-table-view-cell {
+	padding: 11px 5px;
+}
+
+#scroll4 .mui-table-view-cell:after {
+	left: 5px;
+}
+
+#history .query-padding {
+	padding: 11px 0;
+}
+
 .fund-btn-bd {
 	margin: 0 10px;
 	width: 42%;
@@ -374,12 +390,12 @@ input.delegate-search {
 .person-info-img {
 	float: left;
 	width: 75px;
-	height: 75px;
-	margin: 10px;
+	height: 84px;
+	margin: 15px;
 }
 
 .person-info-item {
-	margin: 20px;
+	margin: 10px;
 }
 
 .fund-logout:before {
