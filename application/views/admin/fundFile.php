@@ -42,7 +42,7 @@
 									}
 									echo '"><label class="col-sm-2 control-label" >'.$val['description'].'</label>'.
 											'<div class="col-sm-10">
-										<input '.$val['content'].'" class="form-control"/>';
+										<input '.$val['content'].'" id="search" list="fundList" class="form-control"/>';
 									if (isset($val['error'])){
 										echo '<div class="text-danger">'.$val['error'].'</div>';
 									}
@@ -52,7 +52,7 @@
 						}
 					?>
 					<input type="hidden" name="selectoper" value="<?php echo $selectoper;?>"  />
-					<input type="hidden" id="fundInfo" value="<?php echo $fundInfo;?>"  />
+					<input type="hidden" id="fundInfo" value='<?php echo $fundInfo;?>'  />
 					<?php if(isset($rand_code)){
 						echo '<input type="hidden" name="rand_code" value="'.$rand_code.'"  />';
 					}?>
@@ -65,8 +65,90 @@
 		}
 	?>
 </div>
-
+<datalist id="fundList">
+	
+</datalist>
 <script type="text/javascript">
+var searchInput = document.getElementById('search');
+var searchTime = {};
+
+var ie = !!window.ActiveXObject;  
+ if(ie){  
+    searchInput.onpropertychange = getSearchListValue();  
+ }else{  
+    searchInput.addEventListener("input",getSearchListValue(),false);  
+ }
+
+function renderList(arr) {
+console.log(arr);
+	var res = document.getElementById('fundList');
+	var dataList = document.createDocumentFragment();
+	for (var i = 0; i < arr.length; i++) {
+		var op = document.createElement('option');
+		op.innerHTML = arr[i];
+		dataList.appendChild(op);
+	}
+	res.innerHTML = '';
+	res.appendChild(dataList);
+console.log(searchInput.value);
+}
+
+/**
+ * 获取搜索提示结果集,支持中文搜索
+ * @param  {json} data 所有基金代码和名字
+ * @return {array}      搜索结果集
+ */
+function getList(data) {
+	var fundListData = JSON.parse(document.getElementById('fundInfo').value);
+console.log(fundListData);
+	var ret = [];
+	// var reg = new RegExp('^' + data);			//开头匹配
+	var reg = new RegExp(data);
+	var regType = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
+	for(var i = 0, length1 = fundListData.length; i < length1; i++){
+		for (var key in fundListData[i]) {
+			if (fundListData[i].hasOwnProperty(key)) {
+				if (!regType.test(data)) {
+					if (reg.test(key)) {
+						ret.push(key + fundListData[i][key]);
+					}
+				}else {
+					if (reg.test(fundListData[i][key])) {
+						ret.push(key + fundListData[i][key]);
+					}					
+				}
+			}
+		}
+	}
+console.log(ret);
+	if (ret.length > 20) {
+		ret.splice(0, ret.length-20);
+	}
+	renderList(ret);	
+}
+
+function getSearchListValue() {
+	document.getElementById('search').oninput = function() {
+		var value = this.value;
+		if (value.trim()) {
+			delaySearch('send',function() {
+				getList(value);
+			},1000);
+		}
+	};
+}
+
+function delaySearch(name,fn,time) {
+	if (searchTime[name]) {
+		window.clearTimeout(searchTime[name]);
+		delete searchTime[name];
+	}
+	return searchTime[name] = window.setTimeout(function() {
+		fn();
+		delete searchTime[name];
+	}, time);
+}
+
 $('button').on('click',function(){
 	var $btn = $(this);
 	$("#form-submit").submit();

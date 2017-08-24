@@ -197,7 +197,7 @@ exit;
 		$data['heading_title'] = $data['text_form'] ='增加菜单';
 		$fundcodes = $this->db->select('fundcode,fundname')->get('p2_fundlist')->result_array();
 		foreach ($fundcodes as $val){
-			$fundInfo[] = array('fundcode'=>$val['fundname']);
+			$fundInfo[] = array($val['fundcode']=>$val['fundname']);
 		}
 		$data['fundInfo'] = json_encode($fundInfo);
 		$data['forms'][] = array('type'=>'normal', 'description'=>'基金代码', 'required'=>1, 'content'=> 'type="text" name="fundcode" value="" placeholder="基金代码"');
