@@ -120,7 +120,7 @@ class PurchaseController extends MY_Controller {
 						}else{
 							$errMsg = '您的风险水平为"'.$custrisk[$purchase_info['data']['custrisk']].'"，所购买产品的风险等级为中高，已超过您的风险承受能力，根据<a style="color: #0066fe;" href="/data/jijin/file/证券期货投资者适当性管理办法.pdf" >《证券期货投资者适当性管理办法》</a>，请确认您已经仔细阅读产品合同等法律文件以了解产品风险，确认继续购买该产品并自愿承担产品风险。';
 							$forward_url = '/jijin/PurchaseController/load_apply_fund';
-							$forward_msg = '确认够买';
+							$forward_msg = '我已悉知并确认购买';
 						}
 					}
 				}
