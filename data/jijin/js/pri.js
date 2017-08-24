@@ -54,7 +54,8 @@ function needModal(data) {
 					}
 				});	  	
 		  }else {
-		  	getFundList(type);
+		  	getFundList(1);
+		  	scrollFundList(mui);
 		  }
 		});
 	}else	if(data.readpfmsg === 1 && data.pflevel === 0) {
@@ -66,7 +67,8 @@ function needModal(data) {
 			}
 		});
 	}else if(data.readpfmsg === 1 && data.pflevel === 1) {
-		getFundList(type);
+		getFundList(1);
+		scrollFundList(mui);
 	}else {
 		alert('系统错误！');
 	}
@@ -146,7 +148,7 @@ function renderList(data) {
 	}
 }
 
-(function($) {
+function scrollFundList($) {
 	$('.mui-scroll-wrapper').scroll({
 		indicators: true //是否显示滚动条
 	});
@@ -193,15 +195,14 @@ function renderList(data) {
 			sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
 		}
 	});
-})(mui);
+}
 
 (function() {
 	var name;
 	var id;
 	var order = document.getElementById('order');
 	var mask = mui.createMask(function() {
-		order.style.display = 'none';
-		
+		order.style.display = 'none';		
 	});
 	document.getElementById('info').addEventListener('tap',function(e) {
 		if (e.target.classList.contains('info-list-left')) {
