@@ -9,13 +9,11 @@ date.toLocaleDateString();
 
 var nav = document.getElementById("worthChart").getElementsByTagName("div");  
 var con = document.getElementById("chartContent").getElementsByClassName('m-content-t3-chart');
-// console.log(con);
 for(i=0;i<nav.length;i++){
     nav[i].index = i;
     nav[i].addEventListener('click', function() {
       
       for(var n = 0; n < con.length; n++) {
-// console.log(nav[n]);
           con[n].style.display = "none";
           nav[n].classList.remove('tab-active');
       }
@@ -39,7 +37,6 @@ $(document).ready(function() {
       type: 'get',
       async: true,
       success: function(res) {
-  // console.log(res);
         renderChart(res.data);
       },
       error: function() {
@@ -71,8 +68,6 @@ $(document).ready(function() {
     var start = new Date(data[0].net_date.replace(/-/g, '/')).valueOf();
     var ii = start;
     for (var i = 0; i < data.length; i++) {
-//console.log(half);
-//console.log(new Date(data[i].net_date.replace(/-/g, '/')).valueOf());  
       if (today > start) {
         oneData = [];
         break;
@@ -85,7 +80,6 @@ $(document).ready(function() {
     	ii = i-1; 
     }
     oneData = data.slice(0,ii);
-//    ii = start;
     for (; i < data.length; i++) {
       if (three > start) {
         threeData = [];
@@ -99,7 +93,6 @@ $(document).ready(function() {
     	ii = i-1; 
     }
     threeData = data.slice(0, ii);
-//    ii = start;
     for (; i < data.length; i++) {
       if (half > start) {
         halfData = [];
@@ -113,8 +106,6 @@ $(document).ready(function() {
     	ii = i-1; 
     }
     halfData = data.slice(0, ii);
-//console.log(oneData);
-//console.log(threeData);
     var yearData = data;
 
     var Options = {

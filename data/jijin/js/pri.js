@@ -1,22 +1,5 @@
 mui.init();
 
-function getFundList(type) {
-	mui.ajax('/admin/PrivateFund/fund_list/'+type,{
-		data: {},
-		dataType: 'json',
-		type: 'get',
-		beforeSend: function() {
-			
-		},
-		success: function(res) {
-			renderList(res);
-		},
-		error: function(res) {
-			alert('查询基金失败！');
-		}
-	});
-}
-
 (function getLoginStatus() {
 	mui.ajax('/Pf_assessment/accessmentstatus',{
 		data: {},
@@ -35,6 +18,24 @@ function getFundList(type) {
 		}
 	});
 })();
+
+
+function getFundList(type) {
+	mui.ajax('/admin/PrivateFund/fund_list/'+type,{
+		data: {},
+		dataType: 'json',
+		type: 'get',
+		beforeSend: function() {
+			
+		},
+		success: function(res) {
+			renderList(res);
+		},
+		error: function(res) {
+			alert('查询基金失败！');
+		}
+	});
+}
 
 function needModal(data) {
 	var prompt = '根据《私募投资基金募集行为管理办法》及《证券期货投资者适当性管理办法》规定，小牛投资咨询只向特定的合格投资者宣传推介相关私募投资产品。 阁下如有意向进行私募类相关产品投资且满足《私募投资基金管理募集行为管理办法》关于“合格投资者”之标准规定，具备相应风险识别能力和风险承担能力，愿意完成投资者风险测评，请阁下详细阅读本提示，完成注册投资者风险测评，方可获得小牛投资咨询私募投资基金产品宣传推介服务';
