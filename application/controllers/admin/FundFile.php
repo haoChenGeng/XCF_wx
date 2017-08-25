@@ -23,9 +23,9 @@ class FundFile extends MY_Controller {
 		$data['breadcrumbs'][] = array(	'text' => '首页', 'href' => $this->config->item('home_page'));
 		$data['breadcrumbs'][] = array(	'text' => $data['heading_title'], 'href' => $this->base.$data['accessUrl']);
 		//设置页面所提供的操作
-		$oper_arr = array('oper_add' => 'operadd', 'oper_delete' => 'operdelete','oper_download' => 'operdownload');
+		$oper_arr = array('oper_add' => 'operadd', 'oper_delete' => 'operdelete');
 		//设置数据库表名
-		$data['tableName'] = 'fundFile';
+		$data['tableName'] = 'fundfile';
 		//设置选择记录时，获取哪个字段的值
 		$data['selcet_key'] = 'id';
 		//设置页面操作内容描述
@@ -116,8 +116,7 @@ class FundFile extends MY_Controller {
 			unset($_SESSION[$data['Model'].'_randCode']);
 			if  (!isset($data['error_warning'])){
 				$fundname = $this->db->where(array('fundcode'=>$input['fundcode']))->get('p2_fundlist')->row_array()['fundname'];
-				$filePath = FCPATH."\\data\\jijin\\fundFiles\\".$input['fundcode']."\\";
-var_dump($input,$_FILES,$fundname);
+				$filePath = FCPATH."data\\jijin\\fundFiles\\".$input['fundcode']."\\";
 				if (!empty($fundname)){
 					if (!empty($_FILES['fundfile']['name']) && is_array($_FILES['fundfile']['name'])){
 						$this->load->model("Model_db");
@@ -144,40 +143,21 @@ var_dump($input,$_FILES,$fundname);
 								}
 							}
 						}
-// exit;
 						foreach ($_FILES['fundfile']['name'] as $key => $val){
-							if ($system){
-								$filename = iconv("UTF-8", "GB2312//IGNORE", $explodeName[$key][0]).'.'.end($explodeName[$key]);
-var_dump($filename,$val);
-								exec("copy ".$_FILES['fundfile']['tmp_name'][$key]." ".$filePath.$filename." /Y");
-							}else{
-								exec("cp ".$_FILES['logfile']['tmp_name'][$key]." ".$explodeName[$key][0].'.'.end($explodeName[$key]));
+							if ('pdf' == end($explodeName[$key])){
+								if ($system){
+									$filename = iconv("UTF-8", "GB2312//IGNORE", $explodeName[$key][0]).'.pdf';
+									exec("copy ".$_FILES['fundfile']['tmp_name'][$key]." ".$filePath.$filename." /Y");
+								}else{
+									exec("cp ".$_FILES['fundfile']['tmp_name'][$key]." ".$filePath.$explodeName[$key][0].'.pdf');
+								}
+								$newData[] = array('fundcode'=>$input['fundcode'],'fundname'=>$fundname,'filename'=>$explodeName[$key][0],'url'=>$explodeName[$key][0].'.pdf');
 							}
-							$newData[] = array('fundcode'=>$input['fundcode'],'fundname'=>$fundname,'filename'=>$explodeName[$key][0],'url'=>$explodeName[$key][0].'.'.end($explodeName[$key]));
 						}
-var_dump($newData);
 						$this->Model_db->incremenUpdate($data['tableName'],$newData,array('fundcode','filename'));
 					}else{
 						$data['error_warning'] = '您未上传任何文件';          //设置操作失败提示
 					}
-exit;
-/* 					$new_data = $this->getOperAddData($input,$data);
-					if (!empty($new_data)){
-						$flag = $this->db->set($new_data)->insert($data['tableName']);
-					}
-					file_put_contents('log/userOperation'.$this->logfile_suffix, date('Y-m-d H:i:s',time())."\r\n 用户".$_SESSION['admin_id']."(".$_SESSION['fullname'].")添加了".$data['operContent']."数据：".serialize($new_data)."\r\n\r\n",FILE_APPEND);
-					if ($flag){
-						$data['success'] = $data['operContent'].'添加成功';                //设置操作成功提示
-					}else{
-						$data['error_warning'] = $data['operContent'].'添加失败';          //设置操作失败提示
-					} */
-/* 					$new_data = $this->getOperAddData($input,$data);
- $data['success'] = $data['operContent'].'添加成功';                //设置操作成功提示
- }else{
- $data['error_warning'] = $data['operContent'].'添加失败';          //设置操作失败提示
- } */
-
-
 				}else{
 					$data['error_warning'] = $data['operContent'].'输入的基金'.$input['fundcode'].'不存在，添加失败';          //设置操作失败提示
 				}
@@ -197,7 +177,7 @@ exit;
 		$data['heading_title'] = $data['text_form'] ='增加菜单';
 		$fundcodes = $this->db->select('fundcode,fundname')->get('p2_fundlist')->result_array();
 		foreach ($fundcodes as $val){
-			$fundInfo[] = array('fundcode'=>$val['fundname']);
+			$fundInfo[] = array($val['fundcode']=>$val['fundname']);
 		}
 		$data['fundInfo'] = json_encode($fundInfo);
 		$data['forms'][] = array('type'=>'normal', 'description'=>'基金代码', 'required'=>1, 'content'=> 'type="text" name="fundcode" value="" placeholder="基金代码"');
@@ -209,7 +189,7 @@ exit;
 		if (isset($input['selected'])){
 			$msg = '';
 			$fileInfo = $this->db->select('fundcode,filename')->where_in($data['selcet_key'],$input['selected'])->get($data['tableName'])->result_array();
-			$filePath = FCPATH."\\data\\jijin\\fundFiles\\";
+			$filePath = FCPATH."data\\jijin\\fundFiles\\";
 //删除文件
 			if (strtoupper(substr(PHP_OS,0,3))==='WIN'){										//Windows系统
 				$filePath = str_replace('/',"\\",$filePath);
@@ -219,7 +199,7 @@ exit;
 			}else{												//UNIX系统
 				$filePath = str_replace("\\",'/',$filePath);
 				foreach ($fileInfo as $val){
-					exec("del  ".$filePath.$val['fundcode']."/".$val['filename'].".*");
+					exec("rm  ".$filePath.$val['fundcode']."/".$val['filename'].".*");
 				}
 			}
 			$flag = $this->db->where_in($data['selcet_key'],$input['selected'])->delete($data['tableName']);

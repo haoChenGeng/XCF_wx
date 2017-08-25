@@ -269,4 +269,20 @@ class PurchaseController extends MY_Controller {
 		}
 	}
 	
+	function fundFile(){
+		$input = $this->input->get();
+		$data = array();
+		if (!empty($input['fundcode'])){
+			$fundfile = $this->db->select('filename,url')->where(array('fundcode'=>$input['fundcode']))->get('p2_fundfile')->result_array();
+			if (!empty($fundfile)){
+				//删除文件
+				$filePath = "/data/jijin/fundFiles/".$input['fundcode']."/";
+				foreach ($fundfile as &$val){
+					$data['fundfile'][$val['filename']] = $filePath.$val['url'];
+				}
+			}
+		}
+		$this->load->view('jijin/trade/announcement',$data);
+	}
+	
 }
