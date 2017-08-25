@@ -254,6 +254,10 @@ body {
 	padding: 11px 5px;
 }
 
+#scroll3 .mui-table-view-cell:after {
+	left: 5px;
+}
+
 #scroll4 .mui-table-view-cell:after {
 	left: 5px;
 }
@@ -617,6 +621,7 @@ h3.m-item-5 {
 	border-bottom: 1px solid #333;
 	line-height: 50px;
 	list-style: none;
+	padding-left: 10px;
 }
 
 .announcement-list > li > a {

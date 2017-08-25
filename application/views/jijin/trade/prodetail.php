@@ -41,10 +41,10 @@
       <div class="m-content-t3">
         <p><?php echo $field3;?></p>
         <div id="chartContent">
-          <div class="m-content-t3-chart" style="height: 280px;display: block;" id="one">1</div>
-          <div class="m-content-t3-chart" style="height: 280px;" id="three">2</div>
-          <div class="m-content-t3-chart" style="height: 280px;" id="six">3</div>
-          <div class="m-content-t3-chart" style="height: 280px;" id="year">4</div>
+          <div class="m-content-t3-chart" style="height: 280px;display: block;" id="one"></div>
+          <div class="m-content-t3-chart" style="height: 280px;" id="three"></div>
+          <div class="m-content-t3-chart" style="height: 280px;" id="six"></div>
+          <div class="m-content-t3-chart" style="height: 280px;" id="year"></div>
         </div>
         <div class="m-content-t3-tab" id="worthChart">
           <div class="tabItem tab-active">1月</div>
@@ -73,7 +73,7 @@
       <p class="m-footer-content" onclick="goto_buyfund()">立即<?php echo $purchasetype;?></p>
     </section>
   </div>
-<script src="../../../../data/jijin/js/echarts.js"></script>
+<script src="../../../../data/jijin/js/echarts.min.js"></script>
 <script src="../../../../data/jijin/js/zepto.min.js"></script>
 <script src="../../../../data/jijin/js/prodetail.js"></script>
 <script>
