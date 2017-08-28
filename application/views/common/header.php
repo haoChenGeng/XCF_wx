@@ -24,10 +24,10 @@
         <a type="button" id="button-menu" class="pull-left"><i class="fa fa-indent fa-lg"></i></a>
         <a href="<?php echo $this->base;?>" class="navbar-brand"><img src="/data/image/logo.png" alt="MyCnCart" title="MyCnCart" /></a></div>
     <ul class="nav pull-right">
-    	<li><a href="<?php echo $this->base."/admin/account/logout";?>"><span class="hidden-xs hidden-sm hidden-md">安全退出</span> <i class="fa fa-sign-out fa-lg"></i></a></li>
+    	<li><a href="<?php echo $this->unifyEntrance."logout";?>"><span class="hidden-xs hidden-sm hidden-md">安全退出</span> <i class="fa fa-sign-out fa-lg"></i></a></li>
   	</ul>
   	<ul class="nav pull-right">
-  		<li><a href="<?php echo $this->base."/admin/account/revisePassword";?>"><span class="hidden-xs hidden-sm hidden-md">修改密码</span> <i class="fa fa-pencil"></i></a></li>
+  		<li><a href="<?php echo $this->unifyEntrance."revisePassword";?>"><span class="hidden-xs hidden-sm hidden-md">修改密码</span> <i class="fa fa-pencil"></i></a></li>
   	</ul>
 </header>
 

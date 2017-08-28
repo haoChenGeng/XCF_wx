@@ -56,6 +56,7 @@ class Account extends MY_Controller {
 			if (empty($post) || isset($data['error_warning'])){
 				$data['base'] = $this->base;
 				$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
+				$data['public_key'] = str_replace(array("\n","\r"),'', $data['public_key']);
 				$data['rand_code'] = "\t".mt_rand(100000,999999);                                //随机生成验证码
 				$_SESSION['rand_code'] = $data['rand_code'];
 				$this->load->view('admin/login.php', $data);
@@ -89,11 +90,11 @@ class Account extends MY_Controller {
 				$oldpassword =  substr($decryptData, 0, $div_bit);
 				$passkey = $this->config->item ( 'passkey' );
 				$oldpassword = MD5 ( MD5 ( $passkey ) . substr ( MD5($oldpassword), 5, 20 ) );
-				$password = $this->db->select('password')->where('id',$_SESSION['admin_id'])->get('cg_user')->row_array()['password'];
+				$password = $this->db->select('password')->where('id',$_SESSION['admin_id'])->get('p2_user')->row_array()['password'];
 				if ( $password == $oldpassword ){
 					$newpassword =  substr($decryptData, $div_bit+7);
 					$arr['password'] =  MD5 ( MD5 ( $passkey ) . substr ( MD5($newpassword), 5, 20 ) );
-					$flag = $this->db->set($arr)->where('id',$_SESSION['admin_id'])->update('cg_user');
+					$flag = $this->db->set($arr)->where('id',$_SESSION['admin_id'])->update('p2_user');
 					if ($flag){
 						$data['success'] = '密码修改成功';
 					}else{
@@ -107,12 +108,12 @@ class Account extends MY_Controller {
 			}
 		}
 		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
-		$data['public_key'] = str_replace("\n",'', $data['public_key']);
+		$data['public_key'] = str_replace(array("\n","\r"),'', $data['public_key']);
 		$_SESSION['rand_code'] = $data['rand_code'] = "\t".mt_rand(100000,999999);
 		if (!isset($data['success'])){
 			//设置跳转地址
-			$data['cancel'] = $this->base."/admin/Account/home";
-			$data['form_action'] = $this->base."/admin/Account/revisePassword";      //form提交地址
+			$data['cancel'] = $this->unifyEntrance."home";
+			$data['form_action'] = $this->unifyEntrance."revisePassword";      //form提交地址
 			$data['text_form'] = '修改密码';
 			$data['forms'][] = array('type'=>'normal', 'description'=>'旧密码', 'required'=>1, 'content'=> 'type="password" id="oldpassword" name="oldpassword" placeholder="请输入旧密码"');
 			$data['forms'][] = array('type'=>'normal', 'description'=>'新密码', 'required'=>1, 'content'=> 'type="password" id="newpassword" name="newpassword" placeholder="请输入新密码"');

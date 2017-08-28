@@ -24,10 +24,11 @@ class Xnxcfindex extends MY_Controller {
 			$callClass = new $className;
 			$callClass->index($accessCode);
 		}else{
-			$fileName = str_replace('//', '/', APPPATH.'/controllers/admin/Account.php');
+			$accessCode= empty($accessCode) || $accessCode == 'index.php' ? 'login' : $accessCode;
+			$fileName = str_replace('//', '/', APPPATH.'controllers/admin/Account.php');
 			require_once $fileName;
 			$callClass = new Account;
-			$callClass->login();
+			$callClass->$accessCode();
 		}
 	}
 	
