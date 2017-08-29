@@ -8,7 +8,7 @@ class Model_excelOper extends CI_Model {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
+		$this->logfile_suffix = date('Ym',time()).'.txt';
 		set_time_limit(1800);
 		ini_set('memory_limit', '1024M');
 		require_once( FCPATH.'data/PHPExcel/Classes/PHPExcel.php' );

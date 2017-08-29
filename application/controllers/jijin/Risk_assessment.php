@@ -11,11 +11,21 @@ class Risk_assessment extends MY_Controller {
 	{
 		parent::__construct();
         $this->load->library('Fund_interface');
+        $this->load->helper(array("url"));
         $_SESSION['myPageOper'] = 'account';
 	}
 	
 	//测试题目
 	function index() {
+		//判断客户是否完成投资者信息录入
+		$fundadmittance = $this->db->select('fundadmittance')->where(array('id'=>$_SESSION ['customer_id']))->get('p2_customer')->row_array()['fundadmittance'];
+		if(!$fundadmittance){
+// 			redirect('/jijin/jz_my/investorManagement/Risk_assessment');
+			$accessRes = $this->fund_interface->SDAccess();
+			if (isset($accessRes['code']) && '0000' == $accessRes['code']){
+				$this->db->set(array('fundadmittance'=>1))->where(array('id'=>$_SESSION['customer_id']))->update('p2_customer');
+			}
+		}
 		//获取题目	
 		$ret = $this->fund_interface->risk_test_query('13','001','','','1','1');
 		$data['base'] = $this->base;
@@ -70,6 +80,7 @@ class Risk_assessment extends MY_Controller {
 				if ($ret['code'] == '0000') {
 					$data['ret_code'] = '0000';
 					$data['ret_msg'] = '风险测试成功';
+					$_SESSION['riskLevel'] = $ret['data']['custrisk'];
 					switch ($ret['data']['custrisk']) {////风险承受能力(1:安全型 2:保守型 3:稳健型 4:积极型 5:进取型)
 						case 1:$data['custrisk']='安全型 ';break;
 						case 2:$data['custrisk']='保守型 ';break;

@@ -105,23 +105,29 @@ function complete(obj) {
         M.checkBoxInit();
         $('#nextBtn').on('click',function(){
             M.checkForm(function () {
-            	var payDiv = document.getElementById('payDiv'),
-            	applicationval = parseFloat(document.getElementById('applicationval').value),
-            	availablevol = parseFloat(document.getElementById('availablevol').value),
+                var payDiv = document.getElementById('payDiv'),
+                applicationval = parseFloat(document.getElementById('applicationval').value),
+                availablevol = parseFloat(document.getElementById('availablevol').value),
                 div1 = document.createElement('div');
-            	div2 = document.createElement('div');
+                div2 = document.createElement('div');
+                if (availablevol === 0) {
+                    alert('无可用份额');
+                    return false;
+                }
                 if ((applicationval-parseInt(applicationval*100)/100) > 0.0000000001) {
                     alert('份额最小单位为0.01');
                     return false;
                 }else if (applicationval <= 0 ||  applicationval > availablevol) {
                     alert('输入份额错误或无效');
                     return false;
+                }else if (!applicationval) {
+                    alert('请输入赎回份额');
+                    return false;
                 }
                 document.getElementById('applicationval').value = applicationval;
                 $.post("/jijin/RedeemFundController/redeemFee", {channelid:"<?php echo $channelid?>",applicationvol:applicationval,businesscode:24,tano:"<?php echo $tano?>",fundcode:$('#fundcode').val(),sharetype:"<?php echo $sharetype?>"},function(res){
                 	retData = JSON.parse(res);
                 	if (retData.code == 0){
-console.log(retData);
                         //验证全部通过回调        
                         document.title = '赎回确认';
                         document.getElementById('redeemChange').innerHTML = '赎回确认';

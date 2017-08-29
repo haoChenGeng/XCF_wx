@@ -8,7 +8,7 @@ class PaperManage extends MY_Controller {
 	function __construct() {
 		parent::__construct ();
 		$this->load->model ( array("Model_pageDeal") );
-		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
+		$this->logfile_suffix = date('Ym',time()).'.txt';
 	}
 	
 	public function index($accessCode) {
@@ -140,20 +140,22 @@ class PaperManage extends MY_Controller {
 					$this->db->set(array('title'=>$input['title']))->insert($data['tableName']);
 					$insertId = $this->db->insert_id();
 					if ($insertId){
-						$papaerPath = FCPATH."application\\views\\find\\".$insertId."\\";
+						$papaerPath = APPPATH."\\views\\find\\".$insertId."\\";
+						$imgPath = FCPATH."\\data\\find\\".$insertId."\\";
 						if (strtoupper(substr(PHP_OS,0,3))==='WIN'){
 							$papaerPath = str_replace('/','\\',$papaerPath);
 							exec("md ".$papaerPath);
 							exec("copy ".$_FILES['logfile']['tmp_name']." ".$papaerPath.$_FILES['logfile']['name']);
 							exec("copy ".$_FILES['htmlfile']['tmp_name']." ".$papaerPath.$_FILES['htmlfile']['name']);
 							exec('subst w: "C:\Program Files (x86)\WinRAR"');
-							exec("w:WinRAR.exe x ".$_FILES['imgfile']['tmp_name']." ".$papaerPath);
+							exec("w:WinRAR.exe x ".$_FILES['imgfile']['tmp_name']." ".$imgPath);
 						}else{
 							$papaerPath = str_replace('\\','/',$papaerPath);
+							$imgPath = str_replace('\\','/',$imgPath);
 							exec("mkdir -p ".$papaerPath);
 							exec("cp ".$_FILES['logfile']['tmp_name']." ".$papaerPath.$_FILES['logfile']['name']);
 							exec("cp ".$_FILES['htmlfile']['tmp_name']." ".$papaerPath.$_FILES['htmlfile']['name']);
-							exec("unzip ".$_FILES['imgfile']['tmp_name']." -d ".$papaerPath);
+							exec("unzip ".$_FILES['imgfile']['tmp_name']." -d ".$imgPath);
 						}
 					}
 					$flag = $this->db->set(array('url'=>$_FILES['htmlfile']['name'], 'img'=>$_FILES['logfile']['name']))->where(array('id'=>$insertId))->update($data['tableName']);
@@ -174,7 +176,7 @@ class PaperManage extends MY_Controller {
 		}
 	}
 	
-	private function operedit(&$input,&$data){
+/* 	private function operedit(&$input,&$data){
 		$data['cancel'] = $this->base.$data['accessUrl'];
 		$data['form_action'] = $this->base.$data['accessUrl'];      //form提交地址
 		$data['heading_title'] = $data['text_form'] ='修改'.$data['operContent'].'信息';
@@ -207,7 +209,7 @@ class PaperManage extends MY_Controller {
 			$data['selectoper'] = 'oper_edit';
 			return 'common/content_Style2';
 		}
-	}
+	} */
 	
 	private function operdelete(&$input, &$data){
 		if (isset($input['selected'])){
@@ -239,7 +241,7 @@ class PaperManage extends MY_Controller {
 		return $this->operdefault($input, $data);
 	}
 	
-	private function getselected($authority){
+/* 	private function getselected($authority){
 		$authority = json_decode($authority,true);
 		$selected[] = array();
 		$menu = $this->db->select('id, authIndex, authVal')->get('menu')->result_array();
@@ -249,7 +251,7 @@ class PaperManage extends MY_Controller {
 			}
 		}
 		return $selected;
-	}
+	} */
 	
 	//------------------------- oper_add辅助函数 --------------------------------------	
 	private function getOperAddPage(&$input,&$data){
@@ -284,7 +286,7 @@ class PaperManage extends MY_Controller {
 	}
 	
 	//------------------------- oper_edit辅助函数   --------------------------------------
-	private function getOperEditData(&$input,&$data){                              //通过函数获取修改记录时需要输入的字段
+/* 	private function getOperEditData(&$input,&$data){                              //通过函数获取修改记录时需要输入的字段
 		return $this->getOperAddData($input,$data);
 	}
 	
@@ -305,7 +307,7 @@ class PaperManage extends MY_Controller {
 		$data['selectoper'] = 'oper_edit';
 		$data['add_key'] = array('name','description','authority');
 		$_SESSION[$data['Model'].'_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);
-	}
+	} */
 	
 	//------------------------- oper_delete辅助函数   --------------------------------------
 	//删除菜单前检查是否有子菜单或按钮

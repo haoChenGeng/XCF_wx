@@ -1,0 +1,376 @@
+.main-wrapper {
+	max-width: 562px;
+	min-width: 320px;
+	padding: 0 15px;
+	display: table;
+}
+
+.backImg {
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.backImg img,
+.info-wrapper {
+	width: 100%;
+	margin-top: 2%;
+}
+
+.desc-img {
+	width: 100%;
+	min-height: 100%;
+}
+
+.info-left-box a,
+.info-right-box a {
+	display: table;
+}
+
+.info-left-box a>img,
+.info-right-box a>img {
+	width: 100%;
+	margin-top: 3%;
+}
+
+
+.info-left-box {
+	padding-right: 5px;
+}
+
+.info-right-box {
+	padding-left: 5px;
+}
+
+.detail-desc img {
+	cursor: pointer;
+}
+
+.detail-desc {
+	display: none;
+}
+
+.mui-action-back>img {
+	margin: 50px 10px;
+}
+
+.jz-img {
+	transform-origin: 0 0;
+	-ms-transform-origin: 0 0;
+	/* IE 9 */
+	-webkit-transform-origin: 0 0;
+	/* Safari 和 Chrome */
+	-moz-transform-origin: 0 0;
+	/* Firefox */
+	-o-transform-origin: 0 0;
+	/* Opera */
+	transform: rotateX(90deg);
+	-webkit-transform: rotateX(90deg);
+	/* Safari and Chrome */
+	transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	/* Safari */
+}
+
+.imgLoad {
+	transform: rotateX(0deg);
+	-webkit-transform: rotateX(0deg);
+	/* Safari and Chrome */
+}
+
+
+/*view css*/
+
+html,
+body {
+	background-color: #efeff4;
+}
+
+.mui-views,
+.mui-view,
+.mui-pages,
+.mui-page,
+.mui-page-content {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.mui-pages {
+	top: 0;
+	height: auto;
+}
+
+.mui-scroll-wrapper,
+.mui-scroll {
+	background-color: #efeff4;
+}
+
+.mui-page.mui-transitioning {
+	-webkit-transition: -webkit-transform 300ms ease;
+	transition: transform 300ms ease;
+}
+
+.mui-page-left {
+	-webkit-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+}
+
+.mui-navbar {
+	position: fixed;
+	right: 0;
+	left: 0;
+	z-index: 10;
+	height: 44px;
+}
+
+.mui-navbar .mui-bar {
+	position: absolute;
+	background: transparent;
+	text-align: center;
+	border: none;
+	box-shadow: none;
+}
+
+.mui-android .mui-navbar-inner.mui-navbar-left {
+	opacity: 0;
+}
+
+.mui-navbar .mui-btn-nav {
+	-webkit-transition: none;
+	transition: none;
+	-webkit-transition-duration: .0s;
+	transition-duration: .0s;
+}
+
+.mui-navbar .mui-bar .mui-title {
+	display: inline-block;
+	width: auto;
+}
+
+.mui-page-shadow {
+	position: absolute;
+	right: 100%;
+	top: 0;
+	width: 16px;
+	height: 100%;
+	z-index: -1;
+	content: '';
+}
+
+.mui-page-shadow {
+	background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+	background: linear-gradient(to right, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+}
+
+.mui-navbar-inner.mui-transitioning,
+.mui-navbar-inner .mui-transitioning {
+	-webkit-transition: opacity 300ms ease, -webkit-transform 300ms ease;
+	transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.mui-page {
+	display: none;
+}
+
+.mui-pages .mui-page {
+	display: block;
+}
+
+.mui-page .mui-table-view:first-child {
+	margin-top: 15px;
+}
+
+.mui-page .mui-table-view:last-child {
+	margin-bottom: 30px;
+}
+
+.mui-table-view {
+	margin-top: 20px;
+}
+
+.mui-table-view span.mui-pull-right {
+	color: #999;
+}
+
+.mui-table-view-divider {
+	background-color: #efeff4;
+	font-size: 14px;
+}
+
+.mui-table-view-divider:before,
+.mui-table-view-divider:after {
+	height: 0;
+}
+
+.head {
+	height: 40px;
+}
+
+#head {
+	line-height: 40px;
+}
+
+.head-img {
+	width: 40px;
+	height: 40px;
+}
+
+#head-img1 {
+	position: absolute;
+	bottom: 10px;
+	right: 40px;
+	width: 40px;
+	height: 40px;
+}
+
+.update {
+	font-style: normal;
+	color: #999999;
+	margin-right: -25px;
+	font-size: 15px
+}
+
+.mui-fullscreen {
+	position: fixed;
+	z-index: 20;
+	background-color: #000;
+}
+
+
+.mui-slider-item a {
+	padding: 0 15px;
+}
+
+.mw {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background: url(../img/beijingtu.jpg);
+	background-size: 100% 100%;
+}
+
+@media screen and (min-width: 562px) {
+	.mw {
+		left: 50%;
+		margin-left: -281px;
+	}
+}
+
+#mainView {
+	background: url(../img/beijingtu.jpg);
+	background-size: 100% 100%;
+	min-width: 320px;
+}
+
+.mui-slider {
+	width: 100%;
+	margin-top: 3%;
+	max-width: 562px;
+	min-width: 320px;
+}
+
+.logo img {
+	width: 100%; 
+	height: auto;
+	max-width: 100%; 
+	display: block; 
+}
+
+.mui-slider-loop {
+	margin-top: 3%;
+}
+
+@media screen and (max-height:480px) {
+	.mw {
+		margin-top: 0;
+	}
+	.logo {
+		width: 32%;
+		margin-left: 61%;
+	}
+	.info-left-box a>img, .info-right-box a>img {
+		margin-top: 1%;
+	}
+	.backImg img, .info-wrapper {
+		margin-top: 1%;
+	}
+	.mui-slider {
+		margin-top: 1%;
+	}
+	.mui-slider-item img {
+		height: 98px;
+	}
+}
+
+@media screen and (min-height:481px) and (max-height:568px) {
+	.mw {
+		padding-top: 2%;
+	}
+	.mui-slider-group {
+		margin-top: 4%;
+	}
+	.backImg img, .info-wrapper {
+		margin-top: 3%;
+	}
+	.logo {
+		width: 41%;
+		margin-left: 51%;
+	}
+	.info-left-box a>img, .info-right-box a>img {
+		margin-top: 4%;
+	}
+	.mui-slider {
+		margin-top: 4%;
+	}
+}
+
+@media screen and (min-height:569px) and (max-height:667px) {
+	.mw {
+		padding-top: 2%;
+	}
+	.mui-slider-group {
+		margin-top: 2%;
+	}
+	.backImg img, .info-wrapper {
+		margin-top: 2%;
+	}
+	.logo {
+		width: 45%;
+		margin-left: 47%;
+	}
+	.info-left-box a>img, .info-right-box a>img {
+		margin-top: 4%;
+	}
+	.mui-slider {
+		margin-top: 4%;
+	}
+}
+
+@media screen and (min-height:668px) {
+	.mw {
+		padding-top: 2%;
+	}
+	.mui-slider-group {
+		margin-top: 2%;
+	}
+	.backImg img, .info-wrapper {
+		margin-top: 2%;
+	}
+	.logo {
+		width: 43%;
+		margin-left: 49%;
+	}
+	.info-left-box a>img, .info-right-box a>img {
+		margin-top: 4%;
+	}
+	.mui-slider {
+		margin-top: 4%;
+	}
+}

@@ -96,13 +96,22 @@ $config['ta'] = array(
 );
 
 
-//风险承受能力(1:安全型 2:保守型 3:稳健型 4:积极型 5:进取型)
+//客户风险承受能力(1:安全型 2:保守型 3:稳健型 4:积极型 5:进取型)
 $config['custrisk'] = array(
-		'1' => '安全型',
-		'2' => '保守型',
-		'3' => '稳健型',
-		'4' => '积极型',
-		'5' => '进取型',
+		'01' => '安全型',
+		'02' => '保守型',
+		'03' => '稳健型',
+		'04' => '积极型',
+		'05' => '进取型',
+);
+
+//产品风险等级和客户风险承受能力对应
+$config['productrisk'] = array(
+		'01' => '低风险',
+		'02' => '低中风险',
+		'03' => '中风险',
+		'04' => '中高风险',
+		'05' => '高风险',
 );
 
 $config['bankcard_status'] = array(
@@ -129,7 +138,7 @@ $config['bankcard_status'] = array(
 $config['fund_status'] = array(
 		'0' => array('status' => '交易', 'pre_purchase' => 'N', 'purchase' => 'Y', 'redeem' => 'Y', 'conversion' => 'Y', 'bonus_change' => 'Y'),
 		'1' => array('status' => '发行', 'pre_purchase' => 'Y', 'purchase' => 'N', 'redeem' => 'N', 'conversion' => 'N', 'bonus_change' => 'Y'),
-		'2' => array('status' => '发行成功', 'pre_purchase' => 'N', 'purchase' => 'Y', 'redeem' => 'N', 'conversion' => 'N', 'bonus_change' => 'Y'),
+		'2' => array('status' => '发行成功', 'pre_purchase' => 'N', 'purchase' => 'N', 'redeem' => 'N', 'conversion' => 'N', 'bonus_change' => 'Y'),
 		'3' => array('status' => '发行失败', 'pre_purchase' => 'N', 'purchase' => 'N', 'redeem' => 'N', 'conversion' => 'N', 'bonus_change' => 'N'),
 		'4' => array('status' => '基金停止交易', 'pre_purchase' => 'N', 'purchase' => 'N', 'redeem' => 'N', 'conversion' => 'N', 'bonus_change' =>'N'),
 		'5' => array('status' => '停止申购', 'pre_purchase' => 'N', 'purchase' => 'N', 'redeem' => 'Y', 'conversion' => 'Y', 'bonus_change' => 'Y'),
@@ -166,5 +175,21 @@ $config['paystatus'] = array(
 $config['selectChannel'] = 'KQ';
 //需要提供开户省、市的银行列表
 $config['needProvCity'] = array(
-	'KQ' => array('平安银行','华夏银行'),
+	'KQ' => array(),
 );
+
+$config['investorType'] = array(
+		'11' => '自然人',
+		'01' => '法人或其他组织',
+		'02' => '金融机构',
+		'03' => '证券公司子公司',
+		'04' => '期货公司子公司',
+		'05' => '私募基金管理人',
+		'06' => '社会保障基金',
+		'07' => '企业年金等养老基金',
+		'08' => '慈善基金等社会公益基金',
+		'09' => '合格境外机构投资者（QFII）',
+		'10' => '人民币合格境外机构投资者（RQFII）',
+);
+
+$config['investorProfession'] = array(0=>'未从事相关职业',1=>'专业投资者的高级管理人员、从事金融相关业务的注册会计师或律师');

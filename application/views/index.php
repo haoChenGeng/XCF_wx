@@ -17,29 +17,40 @@
 		<div class="indslide swiper-container pos-re">
 		    <div class="slide swiper-wrapper">
 	        <div class="item swiper-slide">
-	        	<a href="javascript:;" class="dib">
-							<img src="/data/img/banner-1.jpg" alt="活动1">
+	        	<a href="/data/img/banner/banner1.html" class="dib">
+							<img src="/data/img/banner/banner-1.jpg" alt="活动1">
 						</a>
 					</div>
 					<div class="item swiper-slide">
-	        	<a href="javascript:;" class="dib">
-							<img src="/data/img/banner-2.jpg" alt="活动2">
+	        	<a href="/data/img/banner/banner2.html" class="dib">
+							<img src="/data/img/banner/banner-2.jpg" alt="活动2">
 						</a>
 					</div>
 					<div class="item swiper-slide">
-	        	<a href="javascript:;" class="dib">
-							<img src="/data/img/banner-3.jpg" alt="活动3">
+	        	<a href="/data/img/banner/banner3.html" class="dib">
+							<img src="/data/img/banner/banner-3.jpg" alt="活动3">
 						</a>
 					</div>
 		    </div>
 		    <div class="ctrl"></div>
 			<?php
 				if (isset($_SESSION['customer_id'])){
+					$headUrl = "/application/views/user/personalCenter.html";
+					$headHtml = '我的';
+				}else{
+					$headUrl = "/user/login/1";
+					$headHtml = '登录';
+				}
+				echo '<div><div class="pos-ab"></div><a href='.$headUrl.' style=" ';
+				if (isset($_SESSION['headimgurl'])){
+					echo 'background:url('.$_SESSION['headimgurl'].') no-repeat;background-size:100%;';
+				}
+				echo '" class="dib login-btn pos-ab">'.$headHtml.'</a></div>';
+/* 				if (isset($_SESSION['customer_id'])){
 					if(ISTESTING)
 						echo '<a href="/application/views/user/personalCenter.html" class="info-link dib pos-ab" ><img src="/data/img/personal-center.png" alt="个人中心" width="130" height="130"></a>';
-					else
-						echo '<a href="/application/views/user/personalCenter.html" style="left:25px;top:25px;width:130px;height:130px;background-color:yellow;background:url('.$_SESSION['headimgurl'].') no-repeat;background-size:100%;" class="info-link dib login-btn pos-ab" >我的</a>';
-						
+						else
+							echo '<a href="/application/views/user/personalCenter.html" style="left:25px;top:25px;width:130px;height:130px;background-color:yellow;background:url('.$_SESSION['headimgurl'].') no-repeat;background-size:100%;" class="info-link dib login-btn pos-ab" >我的</a>';
 				}else{
 					if(ISTESTING)
 						echo '<div>
@@ -47,9 +58,13 @@
 							<a href="/user/login/1" class="dib login-btn pos-ab">登录</a>
 							</div>';
 					else
-						echo '<div><div class="pos-ab"></div><a href="/user/login/1" style="background-color:yellow;background:url('.$_SESSION['headimgurl'].') no-repeat;background-size:100%;" class="dib login-btn pos-ab">登录</a>
+						echo '<div><div class="pos-ab"></div><a href="/user/login/1" style="background-color:;';
+						if (isset($_SESSION['headimgurl'])){
+							echo 'background:url('.$_SESSION['headimgurl'].') no-repeat;background-size:100%;';
+						}
+						echo '" class="dib login-btn pos-ab">登录</a>
 						  </div>'; 
-				}
+				} */
 			?>		
 		</div>
     	
@@ -58,7 +73,12 @@
             	<a href="/jijin/Jz_account/entrance" id="fund_access" class="span01">公募</a>
             </li>
             <li class="li01 li02">
-            	<a href="/application/views/privateFund/private.html" id="" class="span01">私募</a>
+				<?php 
+            	if (isset($_SESSION['customer_id']))
+	            	echo '<a href="/Pf_assessment/userpfa" id="" class="span01">私募</a>';
+            	else
+    	        	echo '<a href="/user/login/1" id="" class="span01">私募</a>';
+    	       	?>
             </li>
             <li class="li01 li03">
             	<a href="/FindPaper" id="sign_in" class="span01">发现</a>

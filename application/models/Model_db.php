@@ -66,22 +66,19 @@ class Model_db extends CI_Model {
 	}
 	
 	public function incremenUpdate($tableName, &$newData, $majorKey){                  //增量更新函数，可插入新记录
-// 		$dbFields = $this->db->list_fields($tableName);
 		$dbData = $this->db->get($tableName)->result_array();
-		if (empty($dbData)){
-			$dbInfo = $res = $this->db->field_data($tableName);
-			foreach ($dbInfo as $val){
-				$dbFields[] = $val->name;
+		if (!strstr($tableName,$this->db->dbprefix)){
+			$tableName = $this->db->dbprefix($tableName);
+		}
+		$tableInfo = $this->db->query("SHOW FULL COLUMNS FROM ".$tableName)->result_array();
+		if (!empty($tableInfo)){
+			$dbFields = array_column($tableInfo,'Field');
+			foreach ($tableInfo as $val){
+				$dbFieldDefault[$val['Field']] = $val['Default'];
 			}
 		}else{
-			$dbFields = array_keys(current($dbData));
+			return false;
 		}
-/* 		$singleData = end($newData);
-		foreach ($dbFields as $key=>$val){
-			if (!array_key_exists($val,$singleData)){
-				unset($dbFields[$key]);
-			}
-		} */
 		if (is_array($majorKey)){
 			$dbData = setMutliKey($dbData,$majorKey);
 			$newData = setMutliKey($newData,$majorKey);
@@ -116,7 +113,7 @@ class Model_db extends CI_Model {
 					if (isset($val[$v])){
 						$insertData[$i][$v] = $val[$v];
 					}else{
-						$insertData[$i][$v] = null;
+						$insertData[$i][$v] = $dbFieldDefault[$v];
 					}
 				}
 				if ($i >= $this->maxOperitem) {

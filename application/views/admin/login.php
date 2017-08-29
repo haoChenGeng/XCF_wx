@@ -36,7 +36,7 @@
               <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
             <?php } ?>
-            <form action="<?php echo $base.'/admin/account/login';?>" id="login_form" method="post" enctype="multipart/form-data">
+            <form action="<?php echo $this->unifyEntrance;?>" id="login_form" method="post" enctype="multipart/form-data">
               <div class="form-group">
                 <label for="input-username">用户名</label>
                 <div class="input-group"><span class="input-group-addon"><i class="fa fa-user"></i></span>

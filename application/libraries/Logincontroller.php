@@ -22,6 +22,9 @@ class Logincontroller
     			$this->CI->load->library(array('Fund_interface'));
     			$res = $this->CI->fund_interface->AccountInfo();
     			if (key_exists('code', $res) && $res["code"] == '0000'){
+    				if (!empty($res['data']['custrisk'])){
+    					$_SESSION['riskLevel'] = $res['data']['custrisk'];
+    				}
     				$_SESSION['JZ_user_id'] = $res["data"]['JZ_account'];	//$_SESSION['JZ_user_id'] = -1表示未登录微信账号，0表示已登录微信账号但未开通基金交易， 1表示已开通基金交易
     			}else{
     				$_SESSION['JZ_user_id'] = 0;

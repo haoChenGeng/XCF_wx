@@ -14,7 +14,7 @@ class CancelApplyController extends MY_Controller {
 		parent::__construct();
 		$this->load->library(array('Fund_interface','Logincontroller'));
 		$this->load->database();
-		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
+		$this->logfile_suffix = date('Ym',time()).'.txt';
 	}
 	
 	//撤单

@@ -19,7 +19,7 @@
 			<span class="mui-tab-label">基金首页</span>
 		</a>
 -->
-		<a class="mui-tab-item" href="#tabbar-with-chat" id="buy_fund">
+		<a class="mui-tab-item" href="#tabbar-with-contact" id="buy_fund">
 			<span class="mui-icon icon-email iconfont"></span></span>
 			<span class="mui-tab-label">购买基金</span>
 		</a>
@@ -36,7 +36,10 @@
 		<header class="person-info clear" id="header">			
 			<img src="<?php echo $base.'/data/jijin/img/person-info.png';?>" alt="个人信息" class="person-info-img">
 			<p class="person-info-item">hi:<span><?php echo isset($_SESSION ['customer_name'])?$_SESSION ['customer_name']:'未登录';?></span></p>				
-			<p class="person-info-item">总资产：<span id="totalBalance">0</span>&nbsp;&nbsp;&nbsp;昨日收益：<span id="yesterDayIncome">0</span>&nbsp;&nbsp;&nbsp;累计收益：<span id="totalIncome">0</span></p>
+			<p class="person-info-item">
+				总资产：<span id="totalBalance">0</span><br>
+				昨日收益：<span id="yesterDayIncome">0</span><br>
+				累计收益：<span id="totalIncome">0</span></p>
 					
 		</header>
 		<div id="slider" class="mui-slider">
@@ -50,7 +53,6 @@
 					<i class="iconfont Cicon bonus-change">&#xe607;</i>
 					<p>修改分红</p>
 				</a>
-			
 				<a class="mui-control-item <?php echo ($pageOper == 'account')? 'mui-active' : '';?>" href="#item3mobile">
 					<i class="risk-test Cicon"></i>
 					<p>账户管理</p>
@@ -97,6 +99,7 @@
 -->							
 								<li class="my-logpwd-mod"><a href="<?php echo '/jijin/Jz_account/revise_passward/0';?>" class="dpb">交易密码修改</a></li>
 								<li class="my-risk-test"><a id="risk_result" href="<?php echo '/jijin/Risk_assessment';?>" class="dpb">风险测试[你还未进行测试]</a></li>			
+								<li class="my-risk-test"><a id="risk_result" href="<?php echo '/jijin/Jz_my/investorManagement';?>" class="dpb">投资者信息管理</a></li>			
 							</ul>
 						</div>
 					</div>
@@ -123,7 +126,18 @@
 	    	id:'exit'
 	  	});
 	});
-			 
+	pushHistory(); 
+    window.addEventListener("popstate", function(e) { 
+        // alert("我监听到了浏览器的返回按钮事件啦");
+        window.location.href = '<?php echo $base;?>'+'/jijin/Jz_fund';
+    }, false); 
+    function pushHistory() { 
+        var state = { 
+          title: "my",
+          url: "#"
+        };
+        window.history.pushState(state, "title", "#");
+    } 
 </script>
 </body>
 </html>

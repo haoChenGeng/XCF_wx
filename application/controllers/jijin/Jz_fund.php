@@ -12,7 +12,7 @@ class Jz_fund extends MY_Controller
         $this->load->database();
         $this->load->helper(array("comfunction"));   
         $this->load->library(array('Fund_interface','Logincontroller'));
-        $this->logfile_suffix = '('.date('Y-m',time()).').txt';
+        $this->logfile_suffix = date('Ym',time()).'.txt';
     }
     
 	//购买基金页面入口
@@ -25,7 +25,6 @@ class Jz_fund extends MY_Controller
 		} else {
 			$_SESSION['fund_active_page'] = $activePage;
 		}
-// 		$data = $this->getFundPageData($activePage);
 		$data['base'] = $this->base;
 		if (isset($_SESSION['fundPageOper'])){
 			$data['pageOper'] = $_SESSION['fundPageOper'];
@@ -33,7 +32,7 @@ class Jz_fund extends MY_Controller
 		}else{
 			$data['pageOper'] = 'apply';
 		}
-		$this->load->view('jijin/buy_fund.html', $data);
+		$this->load->view('jijin/buy_fund.php', $data);
 	}
 	
 	//获取“购买基金”页面的内容
@@ -75,22 +74,29 @@ class Jz_fund extends MY_Controller
 	function getFundList($type) {
 		//调用接口
 		$fund_list = array();
-		if ($this->getAllFundInfo()){
-			$res = $this->db->get('fundlist')->result_array();
-			$this->load->config('jz_dict');
-			$i = 0;
-			foreach ($res as $key => $val)
-			{
-				if (!empty($val) && $this->config->item('fund_status')[$val['status']][$type] == 'Y'){
-					$fund_list['data'][$i]['fundcode'] = $val['fundcode'];
-					$fund_list['data'][$i]['fundname'] = $val['fundname'];
-					$tmp = $this->config->item('fundtype')[$val['fundtype']];
-					$fund_list['data'][$i]['fundtypename'] = is_null($tmp)?'-':$tmp;
-					$fund_list['data'][$i]['nav'] = $val['nav'];
-					$fund_list['data'][$i]['tano'] = $val['tano'];
-					$fund_list['data'][$i]['taname'] = $val['taname'];
-					$i++;
-				}
+		$this->fund_interface->fund_list();
+		if (!isset($_SESSION['qryallfund'])){
+			$_SESSION['qryallfund'] = 0;
+		}
+		if ( 0 == $_SESSION['qryallfund'] && isset($_SESSION['riskLevel'])){
+			$this->db->where(array('risklevel <='=>$_SESSION['riskLevel']));
+		}
+		$res = $this->db->select('status,fundcode,fundname,fundtype,nav,tano,taname,risklevel')->get('fundlist')->result_array();
+		$this->load->config('jz_dict');
+		$i = 0;
+		foreach ($res as $key => $val)
+		{
+			if (!empty($val) && $this->config->item('fund_status')[$val['status']][$type] == 'Y'){
+				$fund_list['data'][$i]['fundcode'] = $val['fundcode'];
+				$fund_list['data'][$i]['fundname'] = $val['fundname'];
+				$tmp = $this->config->item('fundtype')[$val['fundtype']];
+				$fund_list['data'][$i]['fundtypename'] = is_null($tmp)?'-':$tmp;
+				$fund_list['data'][$i]['nav'] = $val['nav'];
+				$fund_list['data'][$i]['tano'] = $val['tano'];
+				$fund_list['data'][$i]['taname'] = $val['taname'];
+				$risklevel = intval($val['risklevel']);
+				$fund_list['data'][$i]['risklevel'] = isset($this->config->item('productrisk')[$risklevel])?'['.$this->config->item('productrisk')[$risklevel].']':'';
+				$i++;
 			}
 		}
 		return $fund_list;
@@ -119,7 +125,18 @@ class Jz_fund extends MY_Controller
 	public function showprodetail()
 	{
 		$get = $this->input->get();
-		$fund_list = $this->db->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
+		$fund_list = $this->db->select('fundtype,fundname,fundcode,shareclasses,nav,navdate,growth_day,growthrate,fundincomeunit,status,risklevel,first_per_min_22,first_per_min_20')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
+		if (2 == $fund_list['fundtype']){
+			$fund_list['growth_day'] = round($fund_list['growthrate'],3);
+			$fund_list['nav'] = $fund_list['fundincomeunit'];
+			$data['field1'] = '七日年化收益率';
+			$data['field2'] = '万份收益';
+			$data['field3'] = '七日年化收益率走势(%)';
+		}else{
+			$data['field1'] = '日涨跌幅';
+			$data['field2'] = '最新净值(元)';
+			$data['field3'] = '净值走势(%)';
+		}
 		$this->load->config('jz_dict');
 		$tmp = isset($this->config->item('fundtype')[$fund_list['fundtype']])?$this->config->item('fundtype')[$fund_list['fundtype']]:null;
 		$fund_list['fundtype'] = is_null($tmp)?'-':$tmp;
@@ -127,15 +144,18 @@ class Jz_fund extends MY_Controller
 		$fund_list['sharetype'] = is_null($tmp)?'-':$tmp;
 		$tmp = isset($this->config->item('fund_status')[$fund_list['status']])?$this->config->item('fund_status')[$fund_list['status']]['status']:null;
 		$fund_list['status'] = is_null($tmp)?'-':$tmp;
-		$tmp = isset($this->config->item('custrisk')[intval($fund_list['risklevel'])])?$this->config->item('custrisk')[intval($fund_list['risklevel'])]:null;
-		$fund_list['risklevel'] = $fund_list['risklevel'].'('.$tmp.')';
-		$data['fundlist'] = $fund_list;
+		$productrisk = $fund_list['risklevel'];
+		$tmp = isset($this->config->item('productrisk')[$productrisk])?$this->config->item('productrisk')[$productrisk]:null;
+		$fund_list['risklevel'] = 'R'.$productrisk.'('.$tmp.')';
 		$data['purchasetype'] = $get['purchasetype'];
 		if ($get['purchasetype'] == '申购'){
 			$_SESSION['fundPageOper'] = 'apply';
+			$fund_list['firstMin'] = $fund_list['first_per_min_22'];
 		}elseif($get['purchasetype'] == '认购'){
 			$_SESSION['fundPageOper'] = 'buy';
+			$fund_list['firstMin'] = $fund_list['first_per_min_20'];
 		}
+		$data['fundlist'] = $fund_list;
 		$data['base'] = $this->base;
 		$data['next_url'] = isset($get['next_url']) ? $get['next_url'] : '/jijin/Jz_fund/index/fund';
 		$this->load->view('/jijin/trade/prodetail', $data);
@@ -158,74 +178,19 @@ class Jz_fund extends MY_Controller
 		}
 		return $applyList;
 	}
-
-	private function getAllFundInfo(){
-		$needtime = strtotime(date('Y-m-d',time()-32390).' 09:00:00');                //32400 = 3600*9-10  即8小时59分50秒  自动更新的时间点设为9:00所以提前10秒允许更新
-		$updatetime = $this->db->where(array('dealitem' => 'fundlist'))->get('dealitems')->row_array()['updatetime'];
-		if ($updatetime < $needtime){
-			$res = $this->fund_interface->fund_list();
-			var_dump($res);
-			file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'进行基金列表查询，返回信息：'.serialize($res)."\r\n\r\n",FILE_APPEND);
-			$flag = TRUE;
-			if (isset($res['code']) && $res['code'] == '0000' && isset($res['data'][0]) && !empty($res['data'][0])){
-				$this->load->config('jz_dict');
-				$dbFields = $this->db->list_fields('fundlist');
-				$singleFund = $res['data'][0];
-				foreach ($dbFields as $key=>$val){
-					if (!isset($singleFund[$val])){
-						unset($dbFields[$key]);
-					}
-				}
-				$dbFields[] = 'fundincomeunit';
-				$dbFunds = $this->db->get('fundlist')->result_array();
-				$dbFunds = setkey($dbFunds,'fundcode');
-				$insertFund = array();
-				$i = 0;
-				foreach ($res['data'] as $key => $val)
-				{
-					$fundinfo = $this->fund_interface->fund($val['tano'], $val['fundcode']);
-					file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'查询基金'.$val['fundcode']."返回信息为:".serialize($fundinfo)."\r\n\r\n",FILE_APPEND);
-					if (isset($fundinfo['code']) && $fundinfo['code'] == '0000' && isset($fundinfo['data'][0]['fundincomeunit'])){
-						$val['fundincomeunit'] = $fundinfo['data'][0]['fundincomeunit'];
-					}
-					$updateFund = array();
-					if (isset($dbFunds[$val['fundcode']])){
-						foreach ($dbFields as $v){
-							if (isset($val[$v]) && $dbFunds[$val['fundcode']][$v] != $val[$v]){
-								$updateFund[$v] = $val[$v];
-							}
-						}
-						if (!empty($updateFund)){
-							$flag =  $flag && $this->db->set($updateFund)->where(array('fundcode'=>$val['fundcode']))->update('fundlist');
-						}
-					}else{
-						foreach ($dbFields as $v){
-							$insertFund[$i][$v] = $val[$v];
-						}
-						$i++;
-					}
-				}
-				if (!empty($insertFund)){
-					$flag =  $flag && $this->db->insert_batch('fundlist',$insertFund);
-				}
-			}else{
-				$flag = FALSE;
-			}
-			if ($flag){
-				$this->db->set(array('updateTime' => time()))->where(array('dealitem' => 'fundlist'))->update('dealitems');
-			}
-			return $flag;
-		}else{
-			return TRUE;
-		}
-	}
 	
 	function getFundCurve(){
 		$get = $this->input->get();
 		$tableName = 'p2_netvalue_'.$get['fundCode'];
 		$startDate = date('Y-m-d',time());
 		$startDate = (substr($startDate,0,4)-1).substr($startDate,4);
-		$fundCure = $this->db->select('net_date,net_day_growth')->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
+		$fundtype = $this->db->select('fundtype')->where(array('fundCode'=>$get['fundCode']))->get('p2_fundlist')->row_array()['fundtype'];
+		if (2 == $fundtype){
+			$select = 'net_date,round(growthrate*100,3) as net_day_growth';
+		}else{
+			$select = 'net_date,net_day_growth';
+		}
+		$fundCure = $this->db->select($select)->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
 		if (!empty($fundCure) && is_array($fundCure)){
 			$return = array('code'=>0,'data'=>&$fundCure);
 		}else{
@@ -233,4 +198,42 @@ class Jz_fund extends MY_Controller
 		}
 		echo json_encode($return);
 	}
+	
+	public function viewAllFund(){
+		$post = $this->input->post();
+		if (isset($_SESSION ['customer_id'])){
+			if (isset($post['allow'])){
+				$res = $this->fund_interface->SDQryAllFund($post['allow']);	//$post['allow']
+				if (isset($res['code']) && '0000'==$res['code']){
+					$flag = $this->db->set(array('qryallfund'=>$post['allow']))->where(array('id'=>$_SESSION ['customer_id']))->update('p2_customer');
+					if ($flag){
+						$message = '修改成功';
+						$flag = 'sucess';
+						$_SESSION['qryallfund'] = $post['allow'];
+					}else{
+						$message = '修改失败';
+						$flag = 'fail';
+					}
+				}else{
+					$message = '修改失败';
+					$flag = 'fail';
+				}
+			}else{
+				$this->load->view('jijin/trade/viewAllFund');
+			}
+		}else{
+			$flag = 'fail';
+			$message = '您尚未登录，不能做相关修改';
+		}
+		if (isset($message)){
+			$this->load->helper(array("output"));
+			Message(Array(
+					'msgTy' => $flag,
+					'msgContent' => $message,
+					'msgUrl' => '/jijin/jz_fund',                           //调用my界面
+					'base' => $this->base
+					));
+		}
+	}
+	
 }

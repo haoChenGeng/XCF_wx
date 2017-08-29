@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <?php echo file_get_contents('../Public/head.html'); ?> 
+        <?php echo file_get_contents('head.html'); ?> 
         <title>写评论</title>
     </head>
     <body>

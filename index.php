@@ -55,7 +55,7 @@
  */
 // 	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');
 	define('ENVIRONMENT', 'development');
-	define('ISTESTING',FALSE);
+	define('ISTESTING',TRUE);
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -99,8 +99,9 @@ switch (ENVIRONMENT)
  * Include the path if the folder is not in the same directory
  * as this file.
  */
+	define('WXCODEPATH', '/fundwx/');	
 	if(ENVIRONMENT=='production')
-		$system_path = '/fundwx/system'; //运维定义安全目录,用于存放运行代码,请修改fundwx为对应的安全目录名字
+		$system_path = WXCODEPATH.'system'; //运维定义安全目录,用于存放运行代码,请修改fundwx为对应的安全目录名字
 	else
 		$system_path = 'system';
 
@@ -118,7 +119,7 @@ switch (ENVIRONMENT)
  * NO TRAILING SLASH!
  */
 	if(ENVIRONMENT=='production')
-		$application_folder = '/fundwx/application'; //运维定义安全目录,用于存放运行代码,请修改fundwx为对应的安全目录名字
+		$application_folder =WXCODEPATH. 'application'; //运维定义安全目录,用于存放运行代码,请修改fundwx为对应的安全目录名字
 	else
 		$application_folder = 'application';
 
@@ -135,6 +136,7 @@ switch (ENVIRONMENT)
  *
  * NO TRAILING SLASH!
  */
+
 	$view_folder = '';
 
 
@@ -260,6 +262,10 @@ switch (ENVIRONMENT)
 	}
 
 	// The path to the "views" folder
+	if(ENVIRONMENT=='production'){
+		$view_folder = FCPATH. 'application/views'; //生产环境下将views直接放在web目录下的application/views中
+	}
+		
 	if ( ! is_dir($view_folder))
 	{
 		if ( ! empty($view_folder) && is_dir(APPPATH.$view_folder.DIRECTORY_SEPARATOR))
@@ -286,7 +292,7 @@ switch (ENVIRONMENT)
 	{
 		$view_folder = rtrim($view_folder, '/\\').DIRECTORY_SEPARATOR;
 	}
-
+	
 	define('VIEWPATH', $view_folder);
 
 /*

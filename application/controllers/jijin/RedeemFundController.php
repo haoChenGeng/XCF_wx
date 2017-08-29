@@ -14,7 +14,7 @@ class RedeemFundController extends MY_Controller {
 		parent::__construct();
 		$this->load->library(array('Fund_interface','Logincontroller'));
 		$this->load->model(array("Model_db"));
-		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
+		$this->logfile_suffix = date('Ym',time()).'.txt';
 		$_SESSION['myPageOper'] = 'asset';
 	}
 	
@@ -63,7 +63,7 @@ class RedeemFundController extends MY_Controller {
 						$data['ret_code'] = $res['code'];
 						if ($res['code'] == '0000'){
 							$data['ret_msg'] = '基金赎回申请已受理';
-						}elseif (in_array($res['code'], array('0016','0020','0021'))){
+						}elseif (in_array($res['code'], array('0016','0020'))){
 							$data['ret_msg'] = $res['msg'];
 						}
 					}else{

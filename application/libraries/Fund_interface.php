@@ -41,14 +41,18 @@ class Fund_interface
 		return array('data'=>$submitData);
 	}
 	
-	/* private  */function getReturnData($inputData){
-		$AES = new Crypt_AES(CRYPT_AES_MODE_ECB);
-		$AES->setKey($this->AESKey);
-		return json_decode($AES->decrypt(base64_decode($inputData)),true);
+	private function getReturnData($inputData){
+		if(!empty($inputData)){
+			$AES = new Crypt_AES(CRYPT_AES_MODE_ECB);
+			$AES->setKey($this->AESKey);
+			return json_decode($AES->decrypt(base64_decode($inputData)),true);
+		}else{
+			return FALSE;
+		}
 	}
 	
 	function RenewFundAESKey($fundUrl,$newKey) {
-		$public_key = $this->CI->config->item('fund_RSA_privatekey'); //获取RSA_加密公钥
+		$public_key = $this->CI->config->item('fund_RSA_publickey'); //获取RSA_加密公钥
 		if (!class_exists('Math_BigInteger')){
 			include 'data/encrpty/BigInteger.php';
 		}
@@ -66,13 +70,12 @@ class Fund_interface
 // var_dump($AESKey,$fundUrl.'/jijin/XCFinterface/renewCryptKey');
 		if (!empty($AESKey)){
 			$res = comm_curl($fundUrl.'/jijin/XCFinterface/renewCryptKey',$AESKey);
-// var_dump($res,strstr($res,'SUCESS'));
 			if (strstr($res,'SUCESS')){
-				$XCFkey = $this->CI->db->where(array('platformName'=>'Fund'))->get('communctionkey')->row_array();
+				$XCFkey = $this->CI->db->where(array('name'=>'FundInterface'))->get('interface')->row_array();
 				if(empty($XCFkey)){
-					$flag = $this->CI->db->set(array('platformName'=>'Fund','AESkey'=>$newKey))->insert('communctionkey');
+					$flag = $this->CI->db->set(array('name'=>'FundInterface','password'=>$newKey))->insert('interface');
 				}else{
-					$flag = $this->CI->db->set(array('AESkey'=>$newKey))->where(array('platformName'=>'Fund'))->update('communctionkey');
+					$flag = $this->CI->db->set(array('password'=>$newKey))->where(array('name'=>'FundInterface'))->update('interface');
 				}
 				if ($flag){
 					return true;
@@ -83,12 +86,13 @@ class Fund_interface
 	}
 
 	function fund_list(){
-		$startTime = strtotime(date('Y-m-d',time()).' 09:00:00');						//从9:00到10:00每隔5分钟自动更新基金列表
+		$invalidTime = strtotime(date('Y-m-d',time()))-50400;			//设置基金列表失效时间，即昨天10点之前获得的基金信息必须进行更新。
+		$startTime = strtotime(date('Y-m-d',time()).' 09:20:00');		//设置自动更新时间段[$startTime,$endTime](从9:20到10:00)每隔5分钟自动更新基金列表
 		$endTime = strtotime(date('Y-m-d',time()).' 10:00:00');
 		$currentTime = time();
 		$this->CI->load->model("Model_db");
 		$updatetime = $this->CI->db->where(array('dealitem' => 'fundlist'))->get('dealitems')->row_array()['updatetime'];
-		if ($updatetime<$startTime || ($updatetime<$endTime && ($currentTime-$updatetime)>1800)){
+		if ($updatetime<$invalidTime || ($currentTime > $startTime && $updatetime<$endTime && ($currentTime-$updatetime)>300)){
 			$submitData = $this->getSubmitData(array("code"=>'fundlist'));
 			$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 			$funddata = $this->getReturnData($returnData)['data']['fundList'];
@@ -117,8 +121,10 @@ class Fund_interface
 						$val['navdate'] = date('Y-m-d',strtotime($val['navdate']));
 						$updateNav = array('net_date' => $val['navdate'],
 								'net_unit' => $val['nav'],
-								'net_sum' => $val['totalnav'],
+								'net_sum' => empty($val['totalnav']) ? 0 : $val['totalnav'],
 								'net_day_growth' => ($val['nav']-$preFundInfo[$val['fundcode']]['nav'])/$preFundInfo[$val['fundcode']]['nav'],
+								'fundincomeunit' => $val['fundincomeunit'],
+								'growthrate' => $val['growthrate']/100,
 								'XGRQ' => $currentdate,
 						);
 						$this->CI->db->replace('p2_netvalue_'.$val['fundcode'],$updateNav);
@@ -143,12 +149,13 @@ class Fund_interface
 					unset ($updateData[$key]);
 				}else{
 					$updateData[$key]['net_day_growth'] = empty($val['net_day_growth']) ? 0 : $val['net_day_growth'];
+					$updateData[$key]['growthrate'] = empty($val['growthrate']) ? 0 : $val['growthrate'];
 					$updateData[$key]['XGRQ'] = $currentdate;
 				}
 			}
 			$flag = $this->CI->Model_db->incremenUpdate('p2_netvalue_'.$fundcode, $fundNetvalue['data'], 'net_date');
 		}else{
-			$flag = FALSAE;
+			$flag = FALSE;
 		}
 		return $flag;
 	}
@@ -159,6 +166,8 @@ class Fund_interface
 				`net_unit` varchar(24) DEFAULT '0',
 				`net_sum` varchar(24) DEFAULT '0',
 				`net_day_growth` varchar(24) NOT NULL DEFAULT '0',
+				`fundincomeunit` varchar(24) DEFAULT NULL,
+				`growthrate` varchar(24) NOT NULL DEFAULT '0',
 				`XGRQ` datetime DEFAULT NULL COMMENT '更新日期',
 				PRIMARY KEY (`net_date`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
@@ -175,7 +184,7 @@ class Fund_interface
 			$this->CI->db->set(array('dealitem' => 'channelInfo','updatetime' => time()))->insert('dealitems');
 		}
 		if ($currentTime - $updatetime > 86400){
-			$logfile_suffix = '('.date('Y-m',time()).').txt';
+			$logfile_suffix = date('Ym',time()).'.txt';
 			$submitData = $this->getSubmitData(array('code'=>'channel'));
 			$channel = $this->getReturnData(comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData));
 			if ($channel['code'] == '0000'){
@@ -203,8 +212,8 @@ class Fund_interface
 			$updatetime = 0;
 			$this->CI->db->set(array('dealitem' => 'paymentChannel','updatetime' => time()))->insert('dealitems');
 		}
-		if ($currentTime - $updatetime > 86400){
-			$logfile_suffix = '('.date('Y-m',time()).').txt';
+		if ($currentTime - $updatetime > 8640000){
+			$logfile_suffix = date('Ym',time()).'.txt';
 			$submitData = $this->getSubmitData(array('code'=>'paymentChannel'));
 			$paymentChannel = $this->getReturnData(comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData));
 			if ($paymentChannel['code'] == '0000'){
@@ -236,7 +245,7 @@ class Fund_interface
 			$this->CI->db->set(array('dealitem' => 'provCity','updatetime' => time()))->insert('dealitems');
 		}
 		if ($currentTime - $updatetime > 86400){
-			$logfile_suffix = '('.date('Y-m',time()).').txt';
+			$logfile_suffix = date('Ym',time()).'.txt';
 			$provCity['code'] = 'provCity';
 			$provCity['customerNo'] = $_SESSION['customer_name'];
 			$submitData = $this->getSubmitData($provCity);
@@ -433,7 +442,6 @@ class Fund_interface
 		$revoke['code'] = 'revoke';
 		$revoke['customerNo'] = $_SESSION['customer_name'];
 		$submitData = $this->getSubmitData($revoke);
-// return $submitData;
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
@@ -442,7 +450,34 @@ class Fund_interface
 		$feeQuery['code'] = 'feeQuery';
 		$feeQuery['customerNo'] = $_SESSION['customer_name'];
 		$submitData = $this->getSubmitData($feeQuery);
-		// return $submitData;
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function SDQryAllFund($qryallfund = 1){
+		$SDQryAllFund['code'] = 'SDQryAllFund';
+		$SDQryAllFund['customerNo'] = $_SESSION['customer_name'];
+		$SDQryAllFund['qryallfund'] = $qryallfund;
+		$submitData = $this->getSubmitData($SDQryAllFund);
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function SDCustomAssetInfo($SDCustomAssetInfo){
+		$SDCustomAssetInfo['code'] = 'SDCustomAssetInfo';
+		$SDCustomAssetInfo['customerNo'] = $_SESSION['customer_name'];
+		$submitData = $this->getSubmitData($SDCustomAssetInfo);
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
+	function SDAccess($mobileno=''){
+		$SDAccess['code'] = 'SDAccess';
+		if (!empty($mobileno)){
+			$SDAccess['mobileno'] = $mobileno;
+		}
+		$SDAccess['customerNo'] = $_SESSION['customer_name'];
+		$submitData = $this->getSubmitData($SDAccess);
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}

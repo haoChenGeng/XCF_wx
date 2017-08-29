@@ -11,7 +11,7 @@ class FindPaper extends MY_Controller {
     
     function index() {
     	$data['papers'] = $this->db->order_by('id','DESC')->get('p2_paper')->result_array();
-    	$this->load->view('Public/head.html');
+    	$this->load->view('find/head.html');
     	$this->load->view('find/findPaper',$data);
     }
     
@@ -19,8 +19,8 @@ class FindPaper extends MY_Controller {
     	$paperInfo = $this->db->where(array('id'=>$paperId))->get('p2_paper')->row_array();
     	$paperInfo['readTimes'] ++;
     	$this->db->set(array('readTimes'=>$paperInfo['readTimes']))->where(array('id'=>$paperId))->update('p2_paper');
-    	$this->load->view('Public/head.html');
-    	$data['filePath'] = $this->base.'/application/views/find/'.$paperId.'/';
+    	$this->load->view('find/head.html');
+    	$data['filePath'] = $this->base.'/data/find/'.$paperId.'/';
     	$this->load->view('find/'.$paperId.'/'.$paperInfo['url'],$data);
     	$data = array('id'=>$paperInfo['id'],'readTimes'=>$paperInfo['readTimes']);
     	$this->load->view('find/foot.php',$data);

@@ -3,7 +3,6 @@ window.onload = function () {
 	var seeHeight = document.documentElement.clientHeight,
 		sliderHeight = document.getElementById('sliderSegmentedControl').clientHeight,
 		navHeight = document.querySelector('.mui-bar-tab').clientHeight,
-//		topHeight = document.getElementById('header').clientHeight,
 		topHeight = 0;
 		control = document.querySelectorAll('.mui-control-content');
 
@@ -35,7 +34,7 @@ window.onload = function () {
 			 				var oLi =document.createElement('li');
 			 				oLi.setAttribute('class','mui-table-view-cell');
 			 				oLi.innerHTML = '<div class="mui-media-body clear">'+
-																'<p>名称：<span>'+data.buy.data[i].fundname+'</span></p>'+
+																'<p>名称：<span>'+data.buy.data[i].fundname+'</span><span style="float:right;margin-right:20px;color:red;">'+data.buy.data[i].risklevel+'</span></p>'+
 																'<p>代码：<span>'+data.buy.data[i].fundcode+'</span></p>'+
 																'<p>净值：<span>'+data.buy.data[i].nav+'</span></p>'+
 																'<p>类型：<span>'+data.buy.data[i].fundtypename+'</span></p>'+
@@ -72,17 +71,18 @@ window.onload = function () {
 			 		}else {
 			 			var nodeWrap = item2.querySelector('.mui-scroll'),
 			 				nodeChlid = item2.querySelector('.mui-scroll').childNodes;				 						 				
-			 			nodeWrap.removeChild(nodeChlid[1]);
+			 			// nodeWrap.removeChild(nodeChlid[1]);
 			 			var listWrap = document.getElementById('apply');
 			 			var fragment = document.createDocumentFragment();
 			 			if (0 === data.apply.length) {
 				 			listWrap.innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';														 	
 				 		} else {
+				 			listWrap.innerHTML = '';
 				 			for (var i = data.apply.data.length - 1; i >= 0; i--) {
 				 				var oLi = document.createElement('li');
 				 				oLi.setAttribute('class','mui-table-view-cell');
 				 				oLi.innerHTML = '<div class="mui-media-body clear">'+
-																	'<p>名称：<span>'+data.apply.data[i].fundname+'</span></p>'+
+																	'<p>名称：<span>'+data.apply.data[i].fundname+'</span><span style="float:right;margin-right:20px;color:red;">'+data.apply.data[i].risklevel+'</span></p>'+
 																	'<p>代码：<span>'+data.apply.data[i].fundcode+'</span></p>'+
 																	'<p>净值：<span>'+data.apply.data[i].nav+'</span></p>'+
 																	'<p>类型：<span>'+data.apply.data[i].fundtypename+'</span></p>'+

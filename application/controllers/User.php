@@ -10,7 +10,7 @@ class User extends MY_Controller {
 		parent::__construct ();
 		$this->load->helper ( array("output","url",'comfunction'));
 		$this->load->model("Model_db");
-		$this->logfile_suffix = '('.date('Y-m',time()).').txt';
+		$this->logfile_suffix = date('Ym',time()).'.txt';
 	}
 
 	private function userinfo(){
@@ -41,11 +41,11 @@ class User extends MY_Controller {
 						$T_pwd = MD5 ( MD5 ( $passkey ) . substr ( $T_pwd, 5, 20 ) );
 						$trytimes = (time()-$user_info['logintime']>3600) ? 0 : $user_info['trytimes'];
 						if ($trytimes < 3){
-							var_dump($T_name);
-							var_dump($T_pwd);
 							if ($user_info ['Customername'] == $T_name && $user_info ['Password'] == $T_pwd) {
 								$_SESSION ['customer_id'] = $user_info ['id'];
 								$_SESSION ['customer_name'] = $user_info ['Customername'];
+								$_SESSION['qryallfund'] = $user_info ['qryallfund'];
+// 								$_SESSION['fundadmittance'] = $user_info ['fundadmittance'];
 								$this->db->set(array('trytimes'=>0,'logintime'=>time()))->where(array('id'=>$user_info['id']))->update('customer');
 								if (isset($_SESSION['next_url'])){
 									$next_url = $_SESSION['next_url'];
@@ -103,6 +103,7 @@ class User extends MY_Controller {
   		$this->getRecommendFunds($data);
   		$this->load->view('index',$data);
 	}
+	
 	function register() {
 		if (isset ( $_SESSION ['customer_id'] )) {
 			redirect ( $this->base . "/User/home");
@@ -208,14 +209,11 @@ class User extends MY_Controller {
 	function logout() {
 		if (isset ( $_SESSION ['customer_id'] )) {
 			unset ( $_SESSION ['customer_id'] );
-		}
-		if (isset ( $_SESSION ['customer_name'] )) {
 			unset ( $_SESSION ['customer_name'] );
+			unset($_SESSION['qryallfund']);
+// 			unset($_SESSION['fundadmittance']);
 		}
-		if (isset($_SESSION['JZ_user_id'])) {
-			unset($_SESSION['JZ_user_id']);
-		}
-		session_destroy ();
+		session_destroy();
 		redirect ( $this->base . "/user/login");
 	}
 	
@@ -392,9 +390,9 @@ class User extends MY_Controller {
 			}
 		}
 		if (ISTESTING) {
-			$_SESSION ['telcode'] = $telcode = '1234';
+			$_SESSION ['telcode'] = $telcode = '123456';
 			$_SESSION ['T_name'] = $post ['tel'];
-			echo '您的验证码为:1234';
+			echo '您的验证码为:123456';
 		}else{
 			$_SESSION ['telcode'] = $telcode = $this->TelCode();
 			$_SESSION ['T_name'] = $post ['tel'];
@@ -435,26 +433,39 @@ class User extends MY_Controller {
 		$this->load->library('Fund_interface');
 		$res = $this->fund_interface->fund_list();
 		$this->load->config('jz_dict');
+		$qryallfund = isset($_SESSION['qryallfund']) ? $_SESSION['qryallfund'] : 0;
+		if (0 == $qryallfund && isset($_SESSION['riskLevel'])){
+			$custrisk = $_SESSION['riskLevel'];
+		}else{
+			$custrisk = '05';
+		}
 		$select = array('fundcode','tano','fundname','fundtype','nav','growthrate',/* 'fundincomeunit', */'status','growth_year');
-		$candidateFunds = $this->db->select($select)->where(array('recommend >'=>0))->get('fundlist')->result_array();//->get_compiled_select('fundlist');
+		$candidateFunds = $this->db->select($select)->where(array('recommend >'=>0,'risklevel <='=>$custrisk))->get('fundlist')->result_array();//->get_compiled_select('fundlist');
 		$candidateNum = count($candidateFunds);
 		$selectNum = 0;
 		if ($candidateNum <3){
 			$data['Recommend'] = $candidateFunds;
 			$selectNum = $candidateNum;
-			$candidateFunds = $this->db->select($select)->where(array('recommend =' => 0))->get('fundlist')->result_array();
+			$candidateFunds = $this->db->select($select)->where(array('recommend =' => 0,'risklevel <='=>$custrisk))->get('fundlist')->result_array();
 			$candidateNum = count($candidateFunds);
 		}
-		if ($candidateNum > 0){
-			$randSeq = array_rand(range(0,$candidateNum-1),3-$selectNum);
-			if (is_array($randSeq)){
-				foreach ($randSeq as $val){
-					$data['Recommend'][] = $candidateFunds[$val];
+		if ($candidateNum > (3-$selectNum)){
+			if ($candidateNum > 0){
+				$randSeq = array_rand(range(0,$candidateNum-1),3-$selectNum);
+				if (is_array($randSeq)){
+					foreach ($randSeq as $val){
+						$data['Recommend'][] = $candidateFunds[$val];
+					}
+				}else{
+					$data['Recommend'][] = $candidateFunds[$randSeq];
 				}
-			}else{
-				$data['Recommend'][] = $candidateFunds[$randSeq];
 			}
-
+		}else{
+			if ($candidateNum > 0){
+				foreach ($candidateFunds as $val){
+					$data['Recommend'][] = $val;
+				}
+			}
 		}
 		foreach ($data['Recommend'] as $key => $val){
 			$data['Recommend'][$key]['fundtype'] = $this->config->item('fundtype')[$val['fundtype']];
@@ -466,7 +477,7 @@ class User extends MY_Controller {
 				$data['Recommend'][$key]['purchasetype'] = '申购';
 			}
 			if ($val['fundtype'] == 2){
-				$data['Recommend'][$key]['growthrate'] = ($val['growthrate']*100).'%';
+				$data['Recommend'][$key]['growthrate'] = $val['growthrate'].'%';
 				$data['Recommend'][$key]['growthDes'] = '七日年化收益率';
 			}else{
 				$data['Recommend'][$key]['growthDes'] = '近一年收益率';
@@ -492,7 +503,7 @@ class User extends MY_Controller {
 				9
 				);
 		$randNum = "";
-		for ($i = 0; $i < 4; $i++) {
+		for ($i = 0; $i < 6; $i++) {
 			$randKey = mt_rand(0, 7);
 			$randNum .= $arr[$randKey];
 		}

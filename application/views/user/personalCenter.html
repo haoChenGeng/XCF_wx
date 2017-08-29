@@ -1,182 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<meta name="Keywords" content="小牛新财富" />
-	<meta name="Description" content="小牛新财富" />
-	<meta name="robots" content="index,follow,noodp,noydir" />
-	<meta name="viewport" content="width=640px, maximum-scale=1.0, user-scalable=no, target-densitydpi=320" />
-	<title>个人中心</title>
-	<link rel="stylesheet" href="../../../data/css/style.css" />
+  <meta charset="UTF-8">
+  <meta name="Keywords" content="小牛新财富" />
+  <meta name="Description" content="小牛新财富" />
+  <meta name="robots" content="index,follow,noodp,noydir" />
+  <meta name="viewport" content="width=640px, maximum-scale=1.0, user-scalable=no, target-densitydpi=320" />
+  <title>个人中心</title>
+  <link rel="stylesheet" href="../../../data/css/style.css" />
 </head>
-<body style="background-color: #f5f5f5;">	
-<header class="head">
-  <div class="head-back">
-    <span class="head-back-icon" onclick="window.history.go(-1)">返回</span>
+
+<body style="background-color: #f5f5f5;">
+  <header class="head">
+    <div class="head-back">
+      <span class="head-back-icon" onclick="window.location.href = '/index.php'">返回</span>
+    </div>
+  </header>
+  <ul class="my-ul">
+    <li><a href="/User/updatepass" class="dib">修改密码</a></li>
+    <li><a href="/application/views/onlineService.html" class="dib">帮助中心</a></li>
+    <!-- helpCenter.html -->
+    <li class="dib" onClick="toshare()"><a href="javascript:;">分享好友</a></li>
+    <li><a href="/FindPaper/articleManagement" class="dib">文章管理</a></li>
+    <li><a href="../privateFund/testResult.html?test=0" class="dib">私募风险评测</a></li>
+  </ul>
+  <div class="my-exit"><a href="/User/logout" class="dib">安全退出</a></div>
+  <div class="am-share">
+    <ul class="am-share-sns">
+      <h3 class="am-share-title">分享小牛财富到</h3>
+      <li><a href="javascript:;" class="toFriends"><span>微信好友</span> </a> </li>
+      <li><a href="javascript:;" class="toMoment"><span>朋友圈</span> </a> </li>
+      <li><a href="javascript:;" target="_blank" class="toSina"><span>新浪微博</span> </a> </li>
+    </ul>
+    <div class="am-share-footer"><button class="share_btn">取消</button></div>
   </div>
-</header>
-	<ul class="my-ul">
-		<li><a href="/User/updatepass" class="dib">修改密码</a></li>
-		<li><a href="/application/views/onlineService.html" class="dib">帮助中心</a></li> <!-- helpCenter.html -->
-		<li class="dib"  onClick="toshare()">
-		    <a href="javascript:;">分享好友</a>
-		</li>
-		<li><a href="/FindPaper/articleManagement" class="dib">文章管理</a></li>
-	</ul>	
-	<div class="my-exit"><a href="/User/logout" class="dib">安全退出</a></div>
-	<div class="am-share">
-	    <ul class="am-share-sns">
-	        <h3 class="am-share-title">分享小牛财富到</h3>
-	        <li><a href="javascript:;"class="toFriends"><span>微信好友</span> </a> </li>
-	        <li><a href="javascript:;" class="toMoment"><span>朋友圈</span> </a> </li>
-	        <li><a href="javascript:;" target="_blank" class="toSina"><span>新浪微博</span> </a> </li>
-	    </ul>
-	    <div class="am-share-footer"><button class="share_btn">取消</button></div>
-	</div>
-	<div class="share-prompt">
-		<img src="/data/img/share-prompt1.png" alt="分享">
-	</div>
-<script src="/data/js/jquery.min.js"></script>
-<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js "></script>
-<script>
-	function toshare() {
-		setTimeout(function() {
-			$('.share-prompt').css('display','block');			
-		}, 100);
-	    if ($(".sharebg").length > 0) {
-	        $(".sharebg").addClass("sharebg-active");
-	    } else {
-	        $("body").append('<div class="sharebg"></div>');
-	        $(".sharebg").addClass("sharebg-active");
-	    }
-	    $(".sharebg-active").click(function () {
-	        $('.share-prompt').css('display','none');
-	        setTimeout(function () {
-	            $(".sharebg-active").removeClass("sharebg-active");
-	            $(".sharebg").remove();
-	        }, 100);
-	    });
-	}
-	var totalSignature ;
-	var totalNonceStr;
-	var totalAppId ;
-	var totalTimestamp;
-	var json2;
-    var ajaxurl= "http://xcfwx.xiaoniu66.com/weixin/api/jsupdate?url=" + "http://xcfwx.xiaoniu66.com/application/views/user/personalCenter.html";
+  <div class="share-prompt">
+    <img src="/data/img/share-prompt1.png" alt="分享">
+  </div>
+  <script src="/data/js/jquery.min.js"></script>
+  <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js "></script>
+  <script>
+    function toshare() {
+      setTimeout(function() {
+        $('.share-prompt').css('display', 'block');
+      }, 100);
+      if ($(".sharebg").length > 0) {
+        $(".sharebg").addClass("sharebg-active");
+      } else {
+        $("body").append('<div class="sharebg"></div>');
+        $(".sharebg").addClass("sharebg-active");
+      }
+      $(".sharebg-active").click(function() {
+        $('.share-prompt').css('display', 'none');
+        setTimeout(function() {
+          $(".sharebg-active").removeClass("sharebg-active");
+          $(".sharebg").remove();
+        }, 100);
+      });
+    }
+    var totalSignature;
+    var totalNonceStr;
+    var totalAppId;
+    var totalTimestamp;
+    var json2;
+    var ajaxurl = "http://xcfwx.xiaoniu66.com/weixin/api/jsupdate?url=" + "http://xcfwx.xiaoniu66.com/application/views/user/personalCenter.html";
     $.ajax({
-        type:"GET",
-        dataType:"json",
-        async: false,
-        data:{},
-        success:function(data){
-            getParameter(data);
-        },
-		complete:function()
-		{
-		   console.log(location.href.split('#')[0]);
-		}
+      type: "GET",
+      dataType: "json",
+      async: false,
+      data: {},
+      success: function(data) {
+        getParameter(data);
+      },
+      complete: function() {
+        console.log(location.href.split('#')[0]);
+      }
     });
 
     function getParameter(data) {
-        wx.config({
-            debug: true, // ??????ģʽ,???????api?ķ??????ڿͻ???lert???????Ҫ?鿴????Ĳ????????c?˴򿪣?????Ϣ?????log???????pc????Ż?ӡ??
-            appId: data.appId, // ??????ŵ??һ???
-            timestamp: data.timestamp, // ????????????
-            nonceStr: data.nonceStr, // ????????????
-            signature: data.signature, // ??ǩ???????¼1
-            jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone', ] // ???Ҫʹ???S?ӿ?б?
-        });
+      wx.config({
+        debug: true, // ??????ģʽ,???????api?ķ??????ڿͻ???lert???????Ҫ?鿴????Ĳ????????c?˴򿪣?????Ϣ?????log???????pc????Ż?ӡ??
+        appId: data.appId, // ??????ŵ??һ???
+        timestamp: data.timestamp, // ????????????
+        nonceStr: data.nonceStr, // ????????????
+        signature: data.signature, // ??ǩ???????¼1
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone', ] // ???Ҫʹ???S?ӿ?б?
+      });
 
-        var shareInfo = "测试小牛投资咨询"; //?????
-        var shareDesc = "我的测试分享,详细风险内容"; //????
-        var link = "http://xcfwx.xiaoniu66.com"; //????????
-        var imgLink = "http://xcfwx.xiaoniu66.com/3-1611191G352260.jpg"; //????Ƭ???
+      var shareInfo = "测试小牛投资咨询"; //?????
+      var shareDesc = "我的测试分享,详细风险内容"; //????
+      var link = "http://xcfwx.xiaoniu66.com"; //????????
+      var imgLink = "http://xcfwx.xiaoniu66.com/3-1611191G352260.jpg"; //????Ƭ???
 
-        wx.ready(function() {
-            // alert("It is ready, good!");
-            wx.onMenuShareTimeline({
-                title: shareInfo, // ؖЭҪ͢
-                desc: shareDesc,
-                link: link, // ؖЭtޓ
-                imgUrl: imgLink, // ؖЭͼҪ
-                success: function() {
-                    // 用户确认分享后执行的回调函数
-                    alert('已分享');
-                    $('.share-prompt').css('display','none');
-                    setTimeout(function () {
-                        $(".sharebg-active").removeClass("sharebg-active");
-                        $(".sharebg").remove();
-                    }, 100);
-                },
-                cancel: function() {
-                    // 用户取消分享后执行的回调函数
-                    alert('已取消');
-                }
-            });
-            wx.onMenuShareAppMessage({
-                title: shareInfo, // 分享标题
-                desc: shareDesc, // 分享描述
-                link: link, // 分享链接
-                imgUrl: imgLink, // 分享图标
-                type: 'link', // 分享类型,music、video或link，不填默认为link
-                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-                success: function() {
-                    // 用户确认分享后执行的回调函数
-                    alert('已分享');
-                    $('.share-prompt').css('display','none');
-                    setTimeout(function () {
-                        $(".sharebg-active").removeClass("sharebg-active");
-                        $(".sharebg").remove();
-                    }, 100);
-                },
-                cancel: function() {
-                    // 用户取消分享后执行的回调函数
-                    alert('已取消');
-                }
-            });
-            wx.onMenuShareQQ({
-                title: shareInfo, // ?????
-                desc: shareDesc,
-                link: link, // ??????
-                imgUrl: imgLink, // ??????
-                success: function() {
-                    // 用户确认分享后执行的回调函数
-                    alert('已分享');
-                    $('.share-prompt').css('display','none');
-                    setTimeout(function () {
-                        $(".sharebg-active").removeClass("sharebg-active");
-                        $(".sharebg").remove();
-                    }, 100);
-                },
-                cancel: function() {
-                    // 用户取消分享后执行的回调函数
-                    alert('已取消');
-                }
-            });
-            // ????qq?ռ?
-            wx.onMenuShareQZone({
-                title: shareInfo, // ?????
-                desc: shareDesc,
-                link: link, // ??????
-                imgUrl: imgLink, // ??????
-                success: function() {
-                    // 用户确认分享后执行的回调函数
-                    alert('已分享');
-                    $('.share-prompt').css('display','none');
-                    setTimeout(function () {
-                        $(".sharebg-active").removeClass("sharebg-active");
-                        $(".sharebg").remove();
-                    }, 100);
-                },
-                cancel: function() {
-                    // 用户取消分享后执行的回调函数
-                    alert('已取消');
-                }
-            });
+      wx.ready(function() {
+        // alert("It is ready, good!");
+        wx.onMenuShareTimeline({
+          title: shareInfo, // ؖЭҪ͢
+          desc: shareDesc,
+          link: link, // ؖЭtޓ
+          imgUrl: imgLink, // ؖЭͼҪ
+          success: function() {
+            // 用户确认分享后执行的回调函数
+            alert('已分享');
+            $('.share-prompt').css('display', 'none');
+            setTimeout(function() {
+              $(".sharebg-active").removeClass("sharebg-active");
+              $(".sharebg").remove();
+            }, 100);
+          },
+          cancel: function() {
+            // 用户取消分享后执行的回调函数
+            alert('已取消');
+          }
         });
-        
+        wx.onMenuShareAppMessage({
+          title: shareInfo, // 分享标题
+          desc: shareDesc, // 分享描述
+          link: link, // 分享链接
+          imgUrl: imgLink, // 分享图标
+          type: 'link', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+          success: function() {
+            // 用户确认分享后执行的回调函数
+            alert('已分享');
+            $('.share-prompt').css('display', 'none');
+            setTimeout(function() {
+              $(".sharebg-active").removeClass("sharebg-active");
+              $(".sharebg").remove();
+            }, 100);
+          },
+          cancel: function() {
+            // 用户取消分享后执行的回调函数
+            alert('已取消');
+          }
+        });
+        wx.onMenuShareQQ({
+          title: shareInfo, // ?????
+          desc: shareDesc,
+          link: link, // ??????
+          imgUrl: imgLink, // ??????
+          success: function() {
+            // 用户确认分享后执行的回调函数
+            alert('已分享');
+            $('.share-prompt').css('display', 'none');
+            setTimeout(function() {
+              $(".sharebg-active").removeClass("sharebg-active");
+              $(".sharebg").remove();
+            }, 100);
+          },
+          cancel: function() {
+            // 用户取消分享后执行的回调函数
+            alert('已取消');
+          }
+        });
+        // ????qq?ռ?
+        wx.onMenuShareQZone({
+          title: shareInfo, // ?????
+          desc: shareDesc,
+          link: link, // ??????
+          imgUrl: imgLink, // ??????
+          success: function() {
+            // 用户确认分享后执行的回调函数
+            alert('已分享');
+            $('.share-prompt').css('display', 'none');
+            setTimeout(function() {
+              $(".sharebg-active").removeClass("sharebg-active");
+              $(".sharebg").remove();
+            }, 100);
+          },
+          cancel: function() {
+            // 用户取消分享后执行的回调函数
+            alert('已取消');
+          }
+        });
+      });
+
     }
-
-</script>
+  </script>
 </body>
+
 </html>
