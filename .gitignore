@@ -16,3 +16,5 @@ Oauth.txt
 /application/config/config.php
 /application/controllers/Test.php
 /.settings
+
+/node_modules
