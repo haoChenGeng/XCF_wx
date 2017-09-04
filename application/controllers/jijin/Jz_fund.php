@@ -185,7 +185,6 @@ class Jz_fund extends MY_Controller
 		$startDate = date('Y-m-d',time());
 		$startDate = (substr($startDate,0,4)-1).substr($startDate,4);
 		$fundtype = $this->db->select('fundtype')->where(array('fundCode'=>$get['fundCode']))->get('p2_fundlist')->row_array()['fundtype'];
-		$return['fundtype'] = $fundtype;
 		if (2 == $fundtype){
 			$select = 'net_date,round(growthrate,3) as net_day_growth';
 		}else{
@@ -197,6 +196,7 @@ class Jz_fund extends MY_Controller
 		}else{
 			$return = array('code'=>1,'msg'=>'数据不存在');
 		}
+		$return['fundtype'] = $fundtype;
 		echo json_encode($return);
 	}
 	
