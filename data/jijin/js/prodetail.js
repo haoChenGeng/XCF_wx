@@ -35,7 +35,7 @@ $(document).ready(function() {
         // n1.showLoading();
       },
       success: function(res) {
-        renderChart(res.data);
+        renderChart(res.data,res.fundtype);
       },
       error: function() {
         n1.hideLoading();
@@ -63,7 +63,7 @@ function clone(e) {
     return t }
   throw new Error("Unable to copy obj! Its type isn't supported.") }
 
-function renderChart(data) {
+function renderChart(data,type) {
   var _echart_width = $(document.body).width() - 20;  
   var oneData = [];
   var threeData = [];
@@ -155,54 +155,74 @@ function renderChart(data) {
   var opSix = clone(Options);
   var opYear = clone(Options);
 
-  opOne.legend.data.push('1个月净值走势');
-  opThree.legend.data.push('3个月净值走势');
-  opSix.legend.data.push('6个月净值走势');
-  opYear.legend.data.push('1年净值走势');
-
   var a = {
-    name: '6个月净值走势',
+    // name: '6个月净值走势',
     type: 'line',
     data: []
   };
   var b = {
-    name: '1年净值走势',
+    // name: '1年净值走势',
     type: 'line',
     data: []
   };
   var c = {
-    name: '1个月净值走势',
+    // name: '1个月净值走势',
     type: 'line',
     data: []
   };
   var d = {
-    name: '3个月净值走势',
+    // name: '3个月净值走势',
     type: 'line',
     data: []
   };
+console.log(type);
+  if (type == 2) {
+    opOne.legend.data.push('1个月七日年化收益率走势');
+    opThree.legend.data.push('3个月七日年化收益率走势');
+    opSix.legend.data.push('6个月七日年化收益率走势');
+    opYear.legend.data.push('1年七日年化收益率走势');
+    a.name = '6个月七日年化收益率走势';
+    b.name = '1年七日年化收益率走势';
+    c.name = '1个月七日年化收益率走势';
+    d.name = '3个月七日年化收益率走势';
+  }else {
+    opOne.legend.data.push('1个月净值走势');
+    opThree.legend.data.push('3个月净值走势');
+    opSix.legend.data.push('6个月净值走势');
+    opYear.legend.data.push('1年净值走势');    
+    a.name = '6个月净值走势';
+    b.name = '1年净值走势';
+    c.name = '1个月净值走势';
+    d.name = '3个月净值走势';    
+  }
+
   for (var i = 0; i < oneData.length; i++) {
     opOne.xAxis.data[i] = oneData[i].net_date.replace(/-/g, '');
     c.data[i] = oneData[i].net_day_growth;
   }
   opOne.xAxis.data.reverse();
+  c.data.reverse();
   opOne.series.push(c);
   for (var i = 0; i < threeData.length; i++) {
     opThree.xAxis.data[i] = threeData[i].net_date.replace(/-/g, '');
     d.data[i] = threeData[i].net_day_growth;
   }
   opThree.xAxis.data.reverse();
+  d.data.reverse();
   opThree.series.push(d);
   for (var i = 0; i < halfData.length; i++) {
     opSix.xAxis.data[i] = halfData[i].net_date.replace(/-/g, '');
     a.data[i] = halfData[i].net_day_growth;
   }
   opSix.xAxis.data.reverse();
+  a.data.reverse();
   opSix.series.push(a);
   for (var i = 0; i < data.length; i++) {
     opYear.xAxis.data[i] = data[i].net_date.replace(/-/g, '');
     b.data[i] = data[i].net_day_growth;
   }
   opYear.xAxis.data.reverse();
+  b.data.reverse();
   opYear.series.push(b);
 
 
