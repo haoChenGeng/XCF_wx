@@ -103,7 +103,18 @@ class Fund_interface
 				if ($flag){
 					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'fundlist'))->update('dealitems');
 				}
-				$fundcodes = array_column($funddata, 'fundcode');
+				foreach ($funddata as $val){
+					$tableName = 'p2_netvalue_'.$val['fundcode'];
+					if ($this->CI->db->table_exists($tableName)){
+						$preDate = $this->CI->db->select_max('net_date')->get($tableName)->row_array()['net_date'];
+						if ($preDate < $val['navdate']){
+							$this->getFundNetvalue($val['fundcode'],$preDate);
+						}
+					}else{
+						$this->getFundNetvalue($val['fundcode']);
+					}
+				}
+/* 				$fundcodes = array_column($funddata, 'fundcode');
 				$tables = $this->CI->db->list_tables();
 				foreach ($fundcodes as $key=>$val){
 					if (in_array('p2_netvalue_'.$val, $tables)){
@@ -124,18 +135,22 @@ class Fund_interface
 								'net_sum' => empty($val['totalnav']) ? 0 : $val['totalnav'],
 								'net_day_growth' => ($val['nav']-$preFundInfo[$val['fundcode']]['nav'])/$preFundInfo[$val['fundcode']]['nav'],
 								'fundincomeunit' => $val['fundincomeunit'],
-								'growthrate' => $val['growthrate']/100,
+								'growthrate' => $val['growthrate'],
 								'XGRQ' => $currentdate,
 						);
 						$this->CI->db->replace('p2_netvalue_'.$val['fundcode'],$updateNav);
 					}
-				}
+				} */
 			}
 		}
 	}
 	
-	function getFundNetvalue($fundcode){
-		$submitData = $this->getSubmitData(array("code"=>'fundNetvalue','fund_code'=>$fundcode));
+	function getFundNetvalue($fundcode,$startDate=''){
+		$submitData = array("code"=>'fundNetvalue','fund_code'=>$fundcode);
+		if (!empty($startDate)){
+			$submitData['startDate'] = $startDate;
+		}
+		$submitData = $this->getSubmitData($submitData);
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		$fundNetvalue = $this->getReturnData($returnData);
 		if ($fundNetvalue['code'] == '0000' && is_array($fundNetvalue['data'])){
