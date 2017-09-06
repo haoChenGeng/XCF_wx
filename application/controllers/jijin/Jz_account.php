@@ -5,14 +5,12 @@ if (!defined('BASEPATH')){
     
 class Jz_account extends MY_Controller
 {
-    private $logfile_suffix;
     function __construct()
     {
         parent::__construct();
         $this->load->database();
         $this->load->helper(array("url","output","comfunction"));   
         $this->load->library(array('Fund_interface','Logincontroller'));
-        $this->logfile_suffix = date('Ym',time()).'.txt';
     }
     
 	function register()

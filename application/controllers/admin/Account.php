@@ -3,12 +3,10 @@ if (! defined ( 'BASEPATH' ))
 	exit ( 'No direct script access allowed' );
 
 class Account extends MY_Controller {
-	private $logfile_suffix;
 	function __construct() {
 		parent::__construct ();
 		$this->load->database();
 		$this->load->model ( "Model_pageDeal" );
-		$this->logfile_suffix = date('Ym',time()).'.txt';
 	}
 	
 	public function login() {

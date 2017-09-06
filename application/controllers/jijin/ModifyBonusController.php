@@ -8,14 +8,12 @@ if (!defined('BASEPATH')){
 }
 
 class ModifyBonusController extends MY_Controller {
-	private $logfile_suffix;
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->library('Fund_interface');
 		$this->base = $this->config->item("base_url");
 		$this->load->database();
-		$this->logfile_suffix = date('Ym',time()).'.txt';
 	}
 	
 	//修改
