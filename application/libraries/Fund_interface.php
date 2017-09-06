@@ -199,13 +199,13 @@ class Fund_interface
 			$this->CI->db->set(array('dealitem' => 'channelInfo','updatetime' => time()))->insert('dealitems');
 		}
 		if ($currentTime - $updatetime > 86400){
-			$logfile_suffix = '-'.date('Ymd',time()).'.log';
+// 			$logfile_suffix = '-'.date('Ymd',time()).'.log';
 			$submitData = $this->getSubmitData(array('code'=>'channel'));
 			$channel = $this->getReturnData(comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData));
 			if ($channel['code'] == '0000'){
 				$updateData = &$channel['data'];
 			}else{
-				file_put_contents('log/trade/channel'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用channel接口失败,返回数据为".serialize($channel)."\r\n\r\n",FILE_APPEND);
+				file_put_contents('log/trade/channel'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用channel接口失败,返回数据为".serialize($channel)."\r\n\r\n",FILE_APPEND);
 			}
 			if (!empty($updateData)){
 				$this->CI->load->model("Model_db");
@@ -228,13 +228,13 @@ class Fund_interface
 			$this->CI->db->set(array('dealitem' => 'paymentChannel','updatetime' => time()))->insert('dealitems');
 		}
 		if ($currentTime - $updatetime > 8640000){
-			$logfile_suffix = '-'.date('Ymd',time()).'.log';
+// 			$logfile_suffix = '-'.date('Ymd',time()).'.log';
 			$submitData = $this->getSubmitData(array('code'=>'paymentChannel'));
 			$paymentChannel = $this->getReturnData(comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData));
 			if ($paymentChannel['code'] == '0000'){
 				$updateData = &$paymentChannel['data'];
 			}else{
-				file_put_contents('log/trade/paymentChannel'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用paymentChannel接口失败,返回数据为".serialize($paymentChannel)."\r\n\r\n",FILE_APPEND);
+				file_put_contents('log/trade/paymentChannel'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用paymentChannel接口失败,返回数据为".serialize($paymentChannel)."\r\n\r\n",FILE_APPEND);
 			}
 			if (!empty($updateData)){
 				$this->CI->load->model("Model_db");
@@ -260,7 +260,7 @@ class Fund_interface
 			$this->CI->db->set(array('dealitem' => 'provCity','updatetime' => time()))->insert('dealitems');
 		}
 		if ($currentTime - $updatetime > 86400){
-			$logfile_suffix = '-'.date('Ymd',time()).'.log';
+// 			$logfile_suffix = '-'.date('Ymd',time()).'.log';
 			$provCity['code'] = 'provCity';
 			$provCity['customerNo'] = $_SESSION['customer_name'];
 			$submitData = $this->getSubmitData($provCity);
@@ -275,11 +275,11 @@ class Fund_interface
 							$updateData[] = array('province'=>$val,'city'=>$v);
 						}
 					}else{
-						file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity(参数".$val.")接口失败,返回数据为".serialize($city)."\r\n\r\n",FILE_APPEND);
+						file_put_contents('log/trade/provCity'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity(参数".$val.")接口失败,返回数据为".serialize($city)."\r\n\r\n",FILE_APPEND);
 					}
 				}
 			}else{
-				file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity接口失败,返回数据为".serialize($province)."\r\n\r\n",FILE_APPEND);
+				file_put_contents('log/trade/provCity'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity接口失败,返回数据为".serialize($province)."\r\n\r\n",FILE_APPEND);
 			}
 			if (!empty($updateData)){
 				$this->CI->load->model("Model_db");
