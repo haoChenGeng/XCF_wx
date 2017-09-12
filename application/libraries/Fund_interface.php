@@ -85,17 +85,19 @@ class Fund_interface
 		return false;
 	}
 
-	function fund_list(){
+	function fund_list($type = 0){
 		$invalidTime = strtotime(date('Y-m-d',time()))-50400;			//设置基金列表失效时间，即昨天10点之前获得的基金信息必须进行更新。
 		$startTime = strtotime(date('Y-m-d',time()).' 09:20:00');		//设置自动更新时间段[$startTime,$endTime](从9:20到10:00)每隔5分钟自动更新基金列表
 		$endTime = strtotime(date('Y-m-d',time()).' 10:00:00');
 		$currentTime = time();
 		$this->CI->load->model("Model_db");
 		$updatetime = $this->CI->db->where(array('dealitem' => 'fundlist'))->get('dealitems')->row_array()['updatetime'];
-		if ($updatetime<$invalidTime || ($currentTime > $startTime && $updatetime<$endTime && ($currentTime-$updatetime)>300)){
+		$flag = TRUE;
+		if ($type || $updatetime<$invalidTime || ($currentTime > $startTime && $updatetime<$endTime && ($currentTime-$updatetime)>300)){
 			$submitData = $this->getSubmitData(array("code"=>'fundlist'));
 			$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 			$funddata = $this->getReturnData($returnData)['data']['fundList'];
+			$flag = FALSE;
 			if (is_array($funddata) && !empty($funddata)){
 				$preFundInfo = $this->CI->db->select('fundcode,nav,navdate')->get('p2_fundlist')->result_array();
 				$preFundInfo = setkey($preFundInfo, 'fundcode');
@@ -143,6 +145,7 @@ class Fund_interface
 				} */
 			}
 		}
+		return $flag;
 	}
 	
 	function getFundNetvalue($fundcode,$startDate=''){
@@ -495,5 +498,21 @@ class Fund_interface
 		$submitData = $this->getSubmitData($SDAccess);
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
+	}
+	
+	function autoUpdateJZInfo(){
+		$autoUpdateJZInfo['code'] = 'autoUpdateJZInfo';
+		$submitData = $this->getSubmitData($autoUpdateJZInfo);
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		$returnData = $this->getReturnData($returnData);
+		if ('0000' == $returnData['code']){
+			if ($this->fund_list(1)){
+				return array('code'=>'0000','msg'=>'从金证平台更新基金信息成功');
+			}else{
+				return array('code'=>'9997','msg'=>'从金证平台更新基金信息失败，请重试');
+			}
+		}else{
+			return ($returnData);
+		}
 	}
 }

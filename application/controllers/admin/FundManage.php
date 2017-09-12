@@ -21,7 +21,7 @@ class FundManage extends MY_Controller {
 		$data['breadcrumbs'][] = array(	'text' => '首页', 'href' => $this->config->item('home_page'));
 		$data['breadcrumbs'][] = array(	'text' => $data['heading_title'], 'href' => $this->base.$data['accessUrl']);
 		//设置页面所提供的操作
-		$oper_arr = array('oper_add' => 'operadd', 'oper_delete' => 'operdelete','oper_download' => 'operdownload');
+		$oper_arr = array('oper_add' => 'operadd', 'oper_delete' => 'operdelete','oper_download' => 'operdownload','oper_renew' => 'operrenew');
 		//设置数据库表名
 		$data['tableName'] = 'fundlist';
 		//设置选择记录时，获取哪个字段的值
@@ -149,6 +149,17 @@ class FundManage extends MY_Controller {
 			$data['error_warning'] = '您没选中任何记录';
 		}
 		return $this->operdefault($input, $data);
+	}
+	
+	private function operrenew(&$input, &$data){
+		$this->load->library(array('Fund_interface'));
+		$ret = $this->fund_interface->autoUpdateJZInfo();
+		if ('0000' == $ret['code']){
+			$data['success'] = $ret['msg'];                //设置操作成功提示
+		}else{
+			$data['error_warning'] = $ret['msg'];          //设置操作失败提示
+		}
+		return $this->operdefault($input,$data);
 	}
 	
 }
