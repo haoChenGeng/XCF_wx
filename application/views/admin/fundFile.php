@@ -80,7 +80,6 @@ var ie = !!window.ActiveXObject;
  }
 
 function renderList(arr) {
-console.log(arr);
 	var res = document.getElementById('fundList');
 	var dataList = document.createDocumentFragment();
 	for (var i = 0; i < arr.length; i++) {
@@ -110,11 +109,11 @@ console.log(fundListData);
 			if (fundListData[i].hasOwnProperty(key)) {
 				if (!regType.test(data)) {
 					if (reg.test(key)) {
-						ret.push(key + fundListData[i][key]);
+						ret.push(key + '(' + fundListData[i][key] + ')');
 					}
 				}else {
 					if (reg.test(fundListData[i][key])) {
-						ret.push(key + fundListData[i][key]);
+						ret.push(key + '(' + fundListData[i][key] + ')');
 					}					
 				}
 			}
