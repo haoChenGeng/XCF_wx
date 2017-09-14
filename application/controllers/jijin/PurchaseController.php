@@ -6,13 +6,11 @@ if (!defined('BASEPATH')){
 }
 
 class PurchaseController extends MY_Controller {
-    private $logfile_suffix;
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->library(array('Fund_interface','Logincontroller'));
 		$this->load->helper(array("url"));
-		$this->logfile_suffix = date('Ym',time()).'.txt';
 	}
 	
 	//申购 认购前准备

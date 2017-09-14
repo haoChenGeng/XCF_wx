@@ -3,11 +3,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class PrivateFund extends MY_Controller {
-	private $logfile_suffix;
 	function __construct() {
 		parent::__construct ();
 		$this->load->model(array("Model_pageDeal") );
-		$this->logfile_suffix = date('Ym',time()).'.txt';
 	}
 	
 	public function fund_list($type)

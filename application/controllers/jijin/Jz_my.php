@@ -5,13 +5,11 @@ if (!defined('BASEPATH')){
     
 class Jz_my extends MY_Controller
 {
-    private $logfile_suffix;
     function __construct()
     {
         parent::__construct();
         $this->load->database();
         $this->load->library(array('Fund_interface','Logincontroller'));
-        $this->logfile_suffix = date('Ym',time()).'.txt';
     }
 
 	//我的基金页面入口

@@ -4,11 +4,9 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 class Model_excelOper extends CI_Model {
-	private $logfile_suffix;
 	public function __construct()
 	{
 		parent::__construct();
-		$this->logfile_suffix = date('Ym',time()).'.txt';
 		set_time_limit(1800);
 		ini_set('memory_limit', '1024M');
 		require_once( FCPATH.'data/PHPExcel/Classes/PHPExcel.php' );

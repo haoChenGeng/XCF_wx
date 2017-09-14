@@ -5,12 +5,10 @@ header ( "Content-type: text/html; charset=utf-8" );
 include_once 'weixin/Api.php';
 
 class User extends MY_Controller {
-	private $logfile_suffix;
 	function __construct() {
 		parent::__construct ();
 		$this->load->helper ( array("output","url",'comfunction'));
 		$this->load->model("Model_db");
-		$this->logfile_suffix = date('Ym',time()).'.txt';
 	}
 
 	private function userinfo(){

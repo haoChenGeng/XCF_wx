@@ -5,14 +5,12 @@ if (!defined('BASEPATH')){
     
 class Jz_fund extends MY_Controller
 {
-    private $logfile_suffix;
     function __construct()
     {
         parent::__construct();
         $this->load->database();
         $this->load->helper(array("comfunction"));   
         $this->load->library(array('Fund_interface','Logincontroller'));
-        $this->logfile_suffix = date('Ym',time()).'.txt';
     }
     
 	//购买基金页面入口

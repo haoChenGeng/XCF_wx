@@ -85,17 +85,19 @@ class Fund_interface
 		return false;
 	}
 
-	function fund_list(){
+	function fund_list($type = 0){
 		$invalidTime = strtotime(date('Y-m-d',time()))-50400;			//设置基金列表失效时间，即昨天10点之前获得的基金信息必须进行更新。
 		$startTime = strtotime(date('Y-m-d',time()).' 09:20:00');		//设置自动更新时间段[$startTime,$endTime](从9:20到10:00)每隔5分钟自动更新基金列表
 		$endTime = strtotime(date('Y-m-d',time()).' 10:00:00');
 		$currentTime = time();
 		$this->CI->load->model("Model_db");
 		$updatetime = $this->CI->db->where(array('dealitem' => 'fundlist'))->get('dealitems')->row_array()['updatetime'];
-		if ($updatetime<$invalidTime || ($currentTime > $startTime && $updatetime<$endTime && ($currentTime-$updatetime)>300)){
+		$flag = TRUE;
+		if ($type || $updatetime<$invalidTime || ($currentTime > $startTime && $updatetime<$endTime && ($currentTime-$updatetime)>300)){
 			$submitData = $this->getSubmitData(array("code"=>'fundlist'));
 			$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 			$funddata = $this->getReturnData($returnData)['data']['fundList'];
+			$flag = FALSE;
 			if (is_array($funddata) && !empty($funddata)){
 				$preFundInfo = $this->CI->db->select('fundcode,nav,navdate')->get('p2_fundlist')->result_array();
 				$preFundInfo = setkey($preFundInfo, 'fundcode');
@@ -103,7 +105,18 @@ class Fund_interface
 				if ($flag){
 					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'fundlist'))->update('dealitems');
 				}
-				$fundcodes = array_column($funddata, 'fundcode');
+				foreach ($funddata as $val){
+					$tableName = 'p2_netvalue_'.$val['fundcode'];
+					if ($this->CI->db->table_exists($tableName)){
+						$preDate = $this->CI->db->select_max('net_date')->get($tableName)->row_array()['net_date'];
+						if ($preDate < $val['navdate']){
+							$this->getFundNetvalue($val['fundcode'],$preDate);
+						}
+					}else{
+						$this->getFundNetvalue($val['fundcode']);
+					}
+				}
+/* 				$fundcodes = array_column($funddata, 'fundcode');
 				$tables = $this->CI->db->list_tables();
 				foreach ($fundcodes as $key=>$val){
 					if (in_array('p2_netvalue_'.$val, $tables)){
@@ -124,18 +137,23 @@ class Fund_interface
 								'net_sum' => empty($val['totalnav']) ? 0 : $val['totalnav'],
 								'net_day_growth' => ($val['nav']-$preFundInfo[$val['fundcode']]['nav'])/$preFundInfo[$val['fundcode']]['nav'],
 								'fundincomeunit' => $val['fundincomeunit'],
-								'growthrate' => $val['growthrate']/100,
+								'growthrate' => $val['growthrate'],
 								'XGRQ' => $currentdate,
 						);
 						$this->CI->db->replace('p2_netvalue_'.$val['fundcode'],$updateNav);
 					}
-				}
+				} */
 			}
 		}
+		return $flag;
 	}
 	
-	function getFundNetvalue($fundcode){
-		$submitData = $this->getSubmitData(array("code"=>'fundNetvalue','fund_code'=>$fundcode));
+	function getFundNetvalue($fundcode,$startDate=''){
+		$submitData = array("code"=>'fundNetvalue','fund_code'=>$fundcode);
+		if (!empty($startDate)){
+			$submitData['startDate'] = $startDate;
+		}
+		$submitData = $this->getSubmitData($submitData);
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		$fundNetvalue = $this->getReturnData($returnData);
 		if ($fundNetvalue['code'] == '0000' && is_array($fundNetvalue['data'])){
@@ -184,13 +202,13 @@ class Fund_interface
 			$this->CI->db->set(array('dealitem' => 'channelInfo','updatetime' => time()))->insert('dealitems');
 		}
 		if ($currentTime - $updatetime > 86400){
-			$logfile_suffix = date('Ym',time()).'.txt';
+// 			$logfile_suffix = '-'.date('Ymd',time()).'.log';
 			$submitData = $this->getSubmitData(array('code'=>'channel'));
 			$channel = $this->getReturnData(comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData));
 			if ($channel['code'] == '0000'){
 				$updateData = &$channel['data'];
 			}else{
-				file_put_contents('log/trade/channel'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用channel接口失败,返回数据为".serialize($channel)."\r\n\r\n",FILE_APPEND);
+				file_put_contents('log/trade/channel'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用channel接口失败,返回数据为".serialize($channel)."\r\n\r\n",FILE_APPEND);
 			}
 			if (!empty($updateData)){
 				$this->CI->load->model("Model_db");
@@ -213,13 +231,13 @@ class Fund_interface
 			$this->CI->db->set(array('dealitem' => 'paymentChannel','updatetime' => time()))->insert('dealitems');
 		}
 		if ($currentTime - $updatetime > 8640000){
-			$logfile_suffix = date('Ym',time()).'.txt';
+// 			$logfile_suffix = '-'.date('Ymd',time()).'.log';
 			$submitData = $this->getSubmitData(array('code'=>'paymentChannel'));
 			$paymentChannel = $this->getReturnData(comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData));
 			if ($paymentChannel['code'] == '0000'){
 				$updateData = &$paymentChannel['data'];
 			}else{
-				file_put_contents('log/trade/paymentChannel'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用paymentChannel接口失败,返回数据为".serialize($paymentChannel)."\r\n\r\n",FILE_APPEND);
+				file_put_contents('log/trade/paymentChannel'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用paymentChannel接口失败,返回数据为".serialize($paymentChannel)."\r\n\r\n",FILE_APPEND);
 			}
 			if (!empty($updateData)){
 				$this->CI->load->model("Model_db");
@@ -245,7 +263,7 @@ class Fund_interface
 			$this->CI->db->set(array('dealitem' => 'provCity','updatetime' => time()))->insert('dealitems');
 		}
 		if ($currentTime - $updatetime > 86400){
-			$logfile_suffix = date('Ym',time()).'.txt';
+// 			$logfile_suffix = '-'.date('Ymd',time()).'.log';
 			$provCity['code'] = 'provCity';
 			$provCity['customerNo'] = $_SESSION['customer_name'];
 			$submitData = $this->getSubmitData($provCity);
@@ -260,11 +278,11 @@ class Fund_interface
 							$updateData[] = array('province'=>$val,'city'=>$v);
 						}
 					}else{
-						file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity(参数".$val.")接口失败,返回数据为".serialize($city)."\r\n\r\n",FILE_APPEND);
+						file_put_contents('log/trade/provCity'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity(参数".$val.")接口失败,返回数据为".serialize($city)."\r\n\r\n",FILE_APPEND);
 					}
 				}
 			}else{
-				file_put_contents('log/trade/provCity'.$logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity接口失败,返回数据为".serialize($province)."\r\n\r\n",FILE_APPEND);
+				file_put_contents('log/trade/provCity'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity接口失败,返回数据为".serialize($province)."\r\n\r\n",FILE_APPEND);
 			}
 			if (!empty($updateData)){
 				$this->CI->load->model("Model_db");
@@ -480,5 +498,21 @@ class Fund_interface
 		$submitData = $this->getSubmitData($SDAccess);
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
+	}
+	
+	function autoUpdateJZInfo(){
+		$autoUpdateJZInfo['code'] = 'autoUpdateJZInfo';
+		$submitData = $this->getSubmitData($autoUpdateJZInfo);
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		$returnData = $this->getReturnData($returnData);
+		if ('0000' == $returnData['code']){
+			if ($this->fund_list(1)){
+				return array('code'=>'0000','msg'=>'从金证平台更新基金信息成功');
+			}else{
+				return array('code'=>'9997','msg'=>'从金证平台更新基金信息失败，请重试');
+			}
+		}else{
+			return ($returnData);
+		}
 	}
 }
