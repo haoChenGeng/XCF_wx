@@ -74,6 +74,7 @@
                 <input class="btn btn-fix-right" id="nextBtn" type="button" style="display:block;" value="下一步"/>
                 <input class="btn btn-fix-right" id="commit" type="button" style="display:none;" value="确定购买"/>
             </section>
+            <p style="color: #333;padding: 20px 30px;font-size: 14px;">备注：请避免临近15点下单，以免网络延迟造成交易日顺延。</p>
             <input type="hidden" id="json" name="json" value='<?php echo $json;?>' />
             <input type="hidden" id="purchasetype" name="purchasetype" value='<?php echo $purchasetype;?>' />
         </form>
