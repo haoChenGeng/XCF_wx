@@ -113,6 +113,7 @@ class FundFile extends MY_Controller {
 			}
 			unset($_SESSION[$data['Model'].'_randCode']);
 			if  (!isset($data['error_warning'])){
+				$input['fundcode'] = explode('(', $input['fundcode'])[0];
 				$fundname = $this->db->where(array('fundcode'=>$input['fundcode']))->get('p2_fundlist')->row_array()['fundname'];
 				$filePath = FCPATH."data\\jijin\\fundFiles\\".$input['fundcode']."\\";
 				if (!empty($fundname)){

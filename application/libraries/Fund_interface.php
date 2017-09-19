@@ -31,7 +31,7 @@ class Fund_interface
 			$this->fundUrl = $fundInterface['url'];
 			$this->AESKey = $fundInterface['password'];
 		}
-		$this->CI->load->helper("comfunction");
+		$this->CI->load->helper(array("comfunction","logFuncs"));
 	}
 	
 	private function getSubmitData($inputData){
@@ -195,7 +195,6 @@ class Fund_interface
 	
 	function channel(){
 		$currentTime = time();
-		$this->CI->load->model("Model_db");
 		$updatetime = $this->CI->db->where(array('dealitem' => 'channelInfo'))->get('dealitems')->row_array()['updatetime'];
 		if ($updatetime === null){
 			$updatetime = 0;
@@ -208,7 +207,8 @@ class Fund_interface
 			if ($channel['code'] == '0000'){
 				$updateData = &$channel['data'];
 			}else{
-				file_put_contents('log/trade/channel'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用channel接口失败,返回数据为".serialize($channel)."\r\n\r\n",FILE_APPEND);
+// 				file_put_contents('log/trade/channel'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用channel接口失败,返回数据为".serialize($channel)."\r\n\r\n",FILE_APPEND);
+				myLog('trade/channel',"调用channel接口失败,返回数据为:".serialize($channel));
 			}
 			if (!empty($updateData)){
 				$this->CI->load->model("Model_db");
@@ -237,7 +237,8 @@ class Fund_interface
 			if ($paymentChannel['code'] == '0000'){
 				$updateData = &$paymentChannel['data'];
 			}else{
-				file_put_contents('log/trade/paymentChannel'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用paymentChannel接口失败,返回数据为".serialize($paymentChannel)."\r\n\r\n",FILE_APPEND);
+// 				file_put_contents('log/trade/paymentChannel'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用paymentChannel接口失败,返回数据为".serialize($paymentChannel)."\r\n\r\n",FILE_APPEND);
+				myLog('trade/paymentChannel',"调用paymentChannel接口失败,返回数据为:".serialize($paymentChannel));
 			}
 			if (!empty($updateData)){
 				$this->CI->load->model("Model_db");
@@ -278,11 +279,13 @@ class Fund_interface
 							$updateData[] = array('province'=>$val,'city'=>$v);
 						}
 					}else{
-						file_put_contents('log/trade/provCity'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity(参数".$val.")接口失败,返回数据为".serialize($city)."\r\n\r\n",FILE_APPEND);
+// 						file_put_contents('log/trade/provCity'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity(参数".$val.")接口失败,返回数据为".serialize($city)."\r\n\r\n",FILE_APPEND);
+						myLog('trade/provCity',"调用provCity(参数".$val.")接口失败,返回数据为".serialize($city));
 					}
 				}
 			}else{
-				file_put_contents('log/trade/provCity'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity接口失败,返回数据为".serialize($province)."\r\n\r\n",FILE_APPEND);
+// 				file_put_contents('log/trade/provCity'.$this->CI->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n调用provCity接口失败,返回数据为".serialize($province)."\r\n\r\n",FILE_APPEND);
+				myLog('trade/provCity',"调用provCity接口的省份数据失败,返回数据为".serialize($province));
 			}
 			if (!empty($updateData)){
 				$this->CI->load->model("Model_db");
@@ -332,9 +335,38 @@ class Fund_interface
 	}
 	
 	function risk_test_query(){
-		$submitData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'riskQuery'));
-		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
-		return ($this->getReturnData($returnData));
+		$currentTime = time();
+		$updatetime = $this->CI->db->where(array('dealitem' => 'riskQuestion'))->get('dealitems')->row_array()['updatetime'];
+		if ($updatetime === null){
+			$updatetime = 0;
+			$this->CI->db->set(array('dealitem' => 'riskQuestion','updatetime' => time()))->insert('dealitems');
+		}
+		if ($currentTime - $updatetime > 86400){
+			$submitData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'riskQuery'));
+			$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+			$JZQuestion = $this->getReturnData($returnData);
+			if ($JZQuestion['code'] == '0000'){
+				foreach ($JZQuestion['data'] as &$val){
+					$val['result'] = json_encode($val['result']);
+					unset($val['papercode'],$val['papername']);
+				}
+				$updateData = &$JZQuestion['data'];
+			}else{
+				myLog('trade/risk_test_query',"调用riskQuery接口失败,返回数据为".serialize($JZQuestion));
+			}
+			if (!empty($updateData)){
+				$flag = $this->CI->db->truncate('p2_riskquestion');
+				$flag = $this->CI->db->insert_batch('p2_riskquestion',$updateData);
+				if ($flag){
+					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'riskQuestion'))->update('dealitems');
+				}
+			}
+		}
+		$riskQuestions = $this->CI->db->get('p2_riskquestion')->result_array();
+		foreach ($riskQuestions as &$val){
+			$val['result'] = json_decode($val['result'],true);
+		}
+		return $riskQuestions;
 	}
 	
 	function risk_test_result($answerList,$pointList){

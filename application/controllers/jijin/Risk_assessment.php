@@ -27,9 +27,11 @@ class Risk_assessment extends MY_Controller {
 			}
 		}
 		//获取题目	
-		$ret = $this->fund_interface->risk_test_query('13','001','','','1','1');
+		$ret = $this->fund_interface->risk_test_query();
+		$data['data'] = $ret;
 		$data['base'] = $this->base;
-		if (key_exists('code',$ret) && $ret['code'] == '0000'){
+		$this->load->view('jijin/account/view_risk_assessment',$data);
+/* 		if (key_exists('code',$ret) && $ret['code'] == '0000'){
 			$data['data'] = $ret['data'];
 			$this->load->view('jijin/account/view_risk_assessment',$data);
 		}else{
@@ -39,7 +41,20 @@ class Risk_assessment extends MY_Controller {
 			$arr['back_url'] = '/jijin/Jz_my';
 			$arr['base'] = $this->base;
 			$this->load->view('ui/view_operate_result',$arr);
+		} */
+	}
+	
+	function getRiskQuestion(){
+		$fundadmittance = $this->db->select('fundadmittance')->where(array('id'=>$_SESSION ['customer_id']))->get('p2_customer')->row_array()['fundadmittance'];
+		if(!$fundadmittance){
+			// 			redirect('/jijin/jz_my/investorManagement/Risk_assessment');
+			$accessRes = $this->fund_interface->SDAccess();
+			if (isset($accessRes['code']) && '0000' == $accessRes['code']){
+				$this->db->set(array('fundadmittance'=>1))->where(array('id'=>$_SESSION['customer_id']))->update('p2_customer');
+			}
 		}
+		$ret = $this->fund_interface->risk_test_query();
+		echo json_encode($ret);
 	}
 	
 	//提交测试结果
@@ -89,6 +104,7 @@ class Risk_assessment extends MY_Controller {
 						case 5:$data['custrisk']='进取型 ';break;
 						default:$data['custrisk']='安全型 ';break;
 					}
+					$this->db->set(array('riskAnswer'=>$answerList))->where(array('id'=>$_SESSION['customer_id']))->update('p2_customer');
 				} else {
 					$data['ret_code'] = $ret['code'];
 					$data['ret_msg'] = '风险测试失败';
