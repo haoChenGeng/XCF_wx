@@ -185,3 +185,5 @@ $config['investorType'] = array(
 );
 
 $config['investorProfession'] = array(0=>'未从事相关职业',1=>'专业投资者的高级管理人员、从事金融相关业务的注册会计师或律师');
+
+$config['XN_company'] = array('all'=>'小牛集团','XCF'=>'小牛新财富','XNZX'=>'小牛在线');

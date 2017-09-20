@@ -64,7 +64,7 @@ class UserManage extends MY_Controller {
 									'fullname' => array('sort' => 1, 'description' => '用户姓名'),
 									'user_group_id' => array('sort' => 1, 'description' => '所在群组id'),
 									'user_group_name' => array('description' => '所在群组名称'),
-									'dept' => array('description' => '部门'),);
+									'dept' => array('description' => '所属公司'),);
 		//设置页面右上角导航条按钮(函数中已进行权限检查)
 		$data['buttons'] = $this->Model_pageDeal->getButtonList($data['accessCommand']);
 		//设置form提交的url
@@ -83,6 +83,8 @@ class UserManage extends MY_Controller {
 		}
 		//对页面需要显示的内容进行处理
 		$i = 0;
+		$this->load->config('jz_dict');
+		$companyInfo = $this->config->item('XN_company');
 		foreach ($db_content as $val){
 			$userGroup = $this->db->get('usergroup')->result_array();
 			$userGroup = setkey($userGroup,'id');
@@ -92,6 +94,7 @@ class UserManage extends MY_Controller {
 			}else{
 				$data['table_content'][$i]['user_group_name'] = '';
 			}
+			$data['table_content'][$i]['dept'] = $companyInfo[$val['dept']];
 			if (!empty($data['operButton'])){
 				foreach ($data['operButton'] as $v){
 					$data['table_content'][$i]['operButton'][$v['operation']]['description'] = $v['description'];
@@ -247,7 +250,11 @@ class UserManage extends MY_Controller {
 		$groups = $this->db->select("id val,name")->get('usergroup')->result_array();
 		$data['forms'][] = array('type'=>'select','description'=>'所在群组', 'required'=>1, 'name'=>"user_group_id", 'val'=>$user['user_group_id'],
 				'items'=> $groups);
-		$data['forms'][] = array('type'=>'normal','description'=>'所在部门', 'required'=> 1, 'content'=> 'type="text" name="dept" value="'.$user['dept'].'" placeholder="所在部门"');
+		$this->load->config('jz_dict');
+		foreach ( $this->config->item('XN_company') as $key=>$val){
+			$compayItems[] = array('val'=>$key,'name'=>$val);
+		}
+		$data['forms'][] = array('type'=>'select','description'=>'所在公司', 'required'=> 1, 'name'=>"dept", 'val'=>$user['dept'], 'items'=>$compayItems);
 		$_SESSION[$data['Model'].'_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);
 		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
 		$data['public_key'] = str_replace(array("\r","\n"),'', $data['public_key']);
@@ -265,5 +272,5 @@ class UserManage extends MY_Controller {
 		}
 		return $arr;
 	}
-	
+
 }
