@@ -45,25 +45,30 @@ class Risk_assessment extends MY_Controller {
 	}
 	
 	function getRiskQuestion(){
-		$fundadmittance = $this->db->select('fundadmittance')->where(array('id'=>$_SESSION ['customer_id']))->get('p2_customer')->row_array()['fundadmittance'];
-		if(!$fundadmittance){
-			// 			redirect('/jijin/jz_my/investorManagement/Risk_assessment');
-			$accessRes = $this->fund_interface->SDAccess();
-			if (isset($accessRes['code']) && '0000' == $accessRes['code']){
-				$this->db->set(array('fundadmittance'=>1))->where(array('id'=>$_SESSION['customer_id']))->update('p2_customer');
+		if (isset($_SESSION['customer_id'])){
+			$fundadmittance = $this->db->select('fundadmittance')->where(array('id'=>$_SESSION ['customer_id']))->get('p2_customer')->row_array()['fundadmittance'];
+			if(!$fundadmittance){
+				// 			redirect('/jijin/jz_my/investorManagement/Risk_assessment');
+				$accessRes = $this->fund_interface->SDAccess();
+				if (isset($accessRes['code']) && '0000' == $accessRes['code']){
+					$this->db->set(array('fundadmittance'=>1))->where(array('id'=>$_SESSION['customer_id']))->update('p2_customer');
+				}
 			}
+			$ret = $this->fund_interface->risk_test_query();
+			echo json_encode(array('code'=>'0000','data'=>&$ret));
+		}else{
+			echo json_encode(array('code'=>'R001','msg'=>'您尚未登录'));
 		}
-		$ret = $this->fund_interface->risk_test_query();
-		echo json_encode($ret);
 	}
 	
-	//提交测试结果
+	//向金证系统提交测试结果
 	function submit() {		
 		$answerList = '';
 		$pointList = '';
 		$resultArray;
 		
 		$post = $this->input->post();
+		$data = array();
 		if (!empty($post['cout'])) {
 			$cout = (int)$post['cout'];
 			for ($i=0;$i<$cout;$i++) {
@@ -86,33 +91,53 @@ class Risk_assessment extends MY_Controller {
 			}
 		}
 		if (empty($data['ret_code'])){
-			$ret = $this->fund_interface->risk_test_result($answerList,$pointList);
-			if (empty($ret)) {
-				$data['ret_code'] = 'xxxx1';
-				$data['ret_msg'] = '风险测试失败';
-				$data['custrisk']='-';
-			} else {
-				if ($ret['code'] == '0000') {
-					$data['ret_code'] = '0000';
-					$data['ret_msg'] = '风险测试成功';
-					$_SESSION['riskLevel'] = $ret['data']['custrisk'];
-					switch ($ret['data']['custrisk']) {////风险承受能力(1:安全型 2:保守型 3:稳健型 4:积极型 5:进取型)
-						case 1:$data['custrisk']='安全型 ';break;
-						case 2:$data['custrisk']='保守型 ';break;
-						case 3:$data['custrisk']='稳健型 ';break;
-						case 4:$data['custrisk']='积极型 ';break;
-						case 5:$data['custrisk']='进取型 ';break;
-						default:$data['custrisk']='安全型 ';break;
-					}
-					$this->db->set(array('riskAnswer'=>$answerList))->where(array('id'=>$_SESSION['customer_id']))->update('p2_customer');
-				} else {
-					$data['ret_code'] = $ret['code'];
-					$data['ret_msg'] = '风险测试失败';
-					$data['custrisk']='-';
-				}
-			}
+			$this->JZsubmit($answerList, $pointList, $data);
 		}
 		$data['base'] = $this->base;
    		$this->load->view('jijin/account/view_risk_test_result',$data);
 	}
+	
+	function JZsubmit($answerList,$pointList,&$data){
+		$ret = $this->fund_interface->risk_test_result($answerList,$pointList);
+		if (empty($ret)) {
+			$data['ret_code'] = 'xxxx1';
+			$data['ret_msg'] = '风险测试失败';
+			$data['custrisk']='-';
+		}else{
+			if ($ret['code'] == '0000') {
+				$data['ret_code'] = '0000';
+				$data['ret_msg'] = '风险测试成功';
+				$_SESSION['riskLevel'] = $ret['data']['custrisk'];
+				switch ($ret['data']['custrisk']) {////风险承受能力(1:安全型 2:保守型 3:稳健型 4:积极型 5:进取型)
+					case 1:$data['custrisk']='安全型 ';break;
+					case 2:$data['custrisk']='保守型 ';break;
+					case 3:$data['custrisk']='稳健型 ';break;
+					case 4:$data['custrisk']='积极型 ';break;
+					case 5:$data['custrisk']='进取型 ';break;
+					default:$data['custrisk']='安全型 ';break;
+				}
+				$paperCode = $this->db->select('paperCode')->get('p2_riskquestion')->row_array()['paperCode'];
+				$riskData = array('customerId'=>$_SESSION['customer_id'],'paperCode'=>$paperCode,'answer'=>$answerList,'point'=>$pointList);
+				$riskData['riskLevel'] = empty($_SESSION['riskLevel']) ? '' : $_SESSION['riskLevel'];
+				$this->db->replace('p2_riskanswer',$riskData);
+			} else {
+				$data['ret_code'] = $ret['code'];
+				$data['ret_msg'] = '风险测试失败';
+				$data['custrisk']='-';
+			}
+		}
+	}
+	
+	//智能投顾端提交测试结果，保存用户提交答案到本地数据库，如用户已开基金账户则提交给金证系统，否则自动判定风险等级
+	function ZNTGsubmit() {
+		$data = array();
+		$post = $this->input->post();
+		//计算获得$answerList，$pointList
+		if (isset($_SESSION['JZ_user_id']) && 1==$_SESSION['JZ_user_id']){
+			$this->JZsubmit($answerList, $pointList, $data);
+		}else{
+			//进行评分
+		}
+	}
+	
 }

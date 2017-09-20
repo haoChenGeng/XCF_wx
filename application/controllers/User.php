@@ -43,6 +43,8 @@ class User extends MY_Controller {
 								$_SESSION ['customer_id'] = $user_info ['id'];
 								$_SESSION ['customer_name'] = $user_info ['Customername'];
 								$_SESSION['qryallfund'] = $user_info ['qryallfund'];
+								$this->load->library(array('Logincontroller'));
+								$this->logincontroller->isLogin();
 // 								$_SESSION['fundadmittance'] = $user_info ['fundadmittance'];
 								$this->db->set(array('trytimes'=>0,'logintime'=>time()))->where(array('id'=>$user_info['id']))->update('customer');
 								if (isset($_SESSION['next_url'])){
@@ -193,15 +195,10 @@ class User extends MY_Controller {
 						) );
 			}
 		}else{
-// 			if (ISTESTING) {
-				$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
-				$_SESSION['rand_code'] = $data['rand_code'] = "\t".mt_rand(100000,999999);                                     //随机生成验证码
-				$this->load->view ( 'user/register' , $data);
-// 			}
-/* 			else {
-				redirect ( '/weixin/oauth/register/');
-			}
- */		}
+			$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
+			$_SESSION['rand_code'] = $data['rand_code'] = "\t".mt_rand(100000,999999);                                     //随机生成验证码
+			$this->load->view ( 'user/register' , $data);
+		}
 	}
 
 	function logout() {
@@ -367,6 +364,7 @@ class User extends MY_Controller {
 			}
 		}
 		$sendSms = $this->db->where(array('dealitem'=>'sendSms'))->get('p2_dealitems')->row_array();
+		$this->load->helper(array("logFuncs"));
 		if (empty($sendSms)){
 			$this->db->set(array('dealitem'=>'sendSms','updatetime'=>time(),'times'=>1))->insert('p2_dealitems');
 		}else{
@@ -380,7 +378,8 @@ class User extends MY_Controller {
 				$allowtime = empty($smsSetting['partnerId']) ? 300 : $smsSetting['partnerId'];
 				if ($sendSms['times'] > $allowtime){
 					echo '短信验证码发送失败，请稍后重试';
-					file_put_contents(FCPATH.'/log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证被拒绝,短信接口可能遭受攻击，1小时内超过300条短信未返回正确验证码\r\n\r\n",FILE_APPEND);
+// 					file_put_contents(FCPATH.'/log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证被拒绝,短信接口可能遭受攻击，1小时内超过300条短信未返回正确验证码\r\n\r\n",FILE_APPEND);
+					myLog('sendSms',"手机(".$post ['tel'].")申请短信验证被拒绝,短信接口可能遭受攻击，1小时内超过".$allowtime."条短信未返回正确验证码");
 					exit;
 				}else{
 					$this->db->set(array('times'=>$sendSms['times']+1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
@@ -397,7 +396,8 @@ class User extends MY_Controller {
 			$content = "您的验证码是:" . $telcode;
 			$res2 = $this->NDFsendSms ( $post ['tel'], $content );
 			$res = json_decode ( $res2, TRUE );
-			file_put_contents('log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证码,返回数据:".serialize($res2)."\r\n\r\n",FILE_APPEND);
+// 			file_put_contents('log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证码,返回数据:".serialize($res2)."\r\n\r\n",FILE_APPEND);
+			myLog('sendSms',"手机(".$post ['tel'].")申请短信验证码,返回数据:".serialize($res2));
 			if (isset($res['returnCode']) && $res['returnCode'] == 0){
 				$result = '验证码已发送！';
 				$_SESSION['send_sms'] = time();

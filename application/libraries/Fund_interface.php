@@ -348,7 +348,7 @@ class Fund_interface
 			if ($JZQuestion['code'] == '0000'){
 				foreach ($JZQuestion['data'] as &$val){
 					$val['result'] = json_encode($val['result']);
-					unset($val['papercode'],$val['papername']);
+					unset($val['papername']);
 				}
 				$updateData = &$JZQuestion['data'];
 			}else{

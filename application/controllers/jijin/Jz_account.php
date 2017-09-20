@@ -9,7 +9,7 @@ class Jz_account extends MY_Controller
     {
         parent::__construct();
         $this->load->database();
-        $this->load->helper(array("url","output","comfunction"));   
+        $this->load->helper(array("url","output","comfunction","logFuncs"));
         $this->load->library(array('Fund_interface','Logincontroller'));
     }
     
@@ -104,7 +104,8 @@ class Jz_account extends MY_Controller
 						$logData = $post;
 						$logData['certificateno'] = substr($post['certificateno'],0,6).'***'.substr($post['certificateno'],-3);
 						$logData['depositacct'] = substr($post['depositacct'],0,3).'***'.substr($post['depositacct'],-3);
-						file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend数据为:".serialize($logData)."\r\n调用bgMsgSend返回信息".serialize($res_bMS)."\r\n\r\n",FILE_APPEND);
+// 						file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend数据为:".serialize($logData)."\r\n调用bgMsgSend返回信息".serialize($res_bMS)."\r\n\r\n",FILE_APPEND);
+						myLog('user/register',"用户:".$_SESSION ['customer_name']."调用bgMsgSend数据为:".serialize($logData)."\t调用bgMsgSend返回信息".serialize($res_bMS));
 						if ( !isset($res_bMS['code']) || $res_bMS['code'] != '0000' )        //鉴权失败  $res_bMS['data'][0]['comtype']表示该卡已经鉴权过
 						{
 							$err_msg = '银行鉴权失败';
@@ -147,7 +148,8 @@ class Jz_account extends MY_Controller
 		if (isset($err_msg))
 		{
 			$str = isset($log_msg)?$log_msg:$err_msg;
-			file_put_contents('log/user/register'.$this->logfile_suffix, date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开户失败,原因为：".$str."\r\n\r\n",FILE_APPEND);
+// 			file_put_contents('log/user/register'.$this->logfile_suffix, date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开户失败,原因为：".$str."\r\n\r\n",FILE_APPEND);
+			myLog('user/register',"用户:".$_SESSION ['customer_name']."开户失败,原因为：".$str);
 			Message(Array(
 					'msgTy' => 'fail',
 					'msgContent' => $err_msg.'<br/>鉴权失败，系统正在返回...',
@@ -157,7 +159,8 @@ class Jz_account extends MY_Controller
 		}
 		if (isset($info_msg)){
 			$str = isset($log_msg)?$log_msg:$info_msg;
-			file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开户失败,原因为：".$str."\r\n\r\n",FILE_APPEND);
+// 			file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开户失败,原因为：".$str."\r\n\r\n",FILE_APPEND);
+			myLog('user/register',"用户:".$_SESSION ['customer_name']."开户失败,原因为：".$str);
 			$arr = Array(
 					'msgTy' => 'fail',
 					'msgContent' => $info_msg,
@@ -177,7 +180,7 @@ class Jz_account extends MY_Controller
 		//记录开户时提交数据，裁减密码敏感信息。
 		$tmp =$post;
 		$tmp['lpasswd'] = substr($tmp['lpasswd'], 6,6);
-		file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开户输入数据为:".serialize($tmp)."\r\n\r\n",FILE_APPEND);
+		myLog('user/register',"用户:".$_SESSION ['customer_name']."开户输入数据为:".serialize($tmp));
 		//-----------RSA解密----------------------------
 		$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
 		$decryptData ='';
@@ -205,13 +208,10 @@ class Jz_account extends MY_Controller
 			$this->form_validation->set_rules('email','电子邮箱地址','valid_email');
 			$this->form_validation->set_rules('postcode','邮编','numeric');
 			$this->form_validation->set_rules('address','地址','max_length[100]');
-			
 			if ($this->form_validation->run() == TRUE)								//post数据合法性检查
 			{
 				$this->load->config('jz_dict');
-// 				$this->load->library('fund_interface');
 				//准备开户数据，并清除相关SESSION
-// var_dump($post);
 				$registerData = array_merge($_SESSION['register_data'],$post);
 /* 				if (empty($registerData['email'])){
 					unset($registerData['email'],$registerData['postcode'],$registerData['address']);
@@ -226,16 +226,27 @@ class Jz_account extends MY_Controller
 				$logData['certificateno'] = substr($logData['certificateno'],0,6).'***'.substr($logData['certificateno'],-3);
 				$logData['depositacct'] = substr($logData['depositacct'],0,3).'***'.substr($logData['depositacct'],-3);
 				//调用金证开户接口,并记录调用金证接口数据及返回结果(去除密码部分)
-				file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用金证bgMsgCheck数据为:".serialize($logData),FILE_APPEND);
+				myLog('user/register',"用户:".$_SESSION ['customer_name']."调用金证bgMsgCheck数据为:".serialize($logData));
 				$res_bMC = $this->fund_interface->bgMsgCheck($registerData);
-				file_put_contents('log/user/register'.$this->logfile_suffix,"\r\n调用bgMsgCheck接口返回数据为：".serialize($res_bMC)."\r\n\r\n",FILE_APPEND);
+				myLog('user/register',"调用bgMsgCheck接口返回数据为：".serialize($res_bMC));
 				if (isset($res_bMC['code']) && $res_bMC['code'] == '0000')        //判断调用金证接口开户是否成功    isset($res_bMC['code']) && $res_bMC['code'] == '0000'
 				{
 					$_SESSION['JZ_user_id'] = 1;
-					file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."用户基金开户成功\r\n\r\n",FILE_APPEND);
+					myLog('user/register',"用户:".$_SESSION ['customer_name']."用户基金开户成功");
 					$accessRes = $this->fund_interface->SDAccess($registerData['mobileno']);
 					if (isset($accessRes['code']) && '0000' == $accessRes['code']){
 						$this->db->set(array('fundadmittance'=>1))->where(array('id'=>$_SESSION['customer_id']))->update('p2_customer');
+					}
+					$riskAnswer = $this->db->where(array('customerId'=>$_SESSION['customer_id']))->get('p2_riskanswer')->row_array();
+					if (!empty($riskAnswer['answer']) && !empty($riskAnswer['point'])){
+						$paperCode = $this->db->select('paperCode')->get('p2_riskquestion')->row_array()['paperCode'];
+						if ($paperCode == $riskAnswer['paperCode']){
+							$riskReturn = $this->fund_interface->risk_test_result($riskAnswer['answer'],$riskAnswer['point']);
+							myLog('user/register',"系统使用用户(".$_SESSION ['customer_name'].")之前测评答案调用风险等级测试接口，返回数据为：".serialize($riskReturn));
+							if (isset($riskReturn['code'])  && $riskReturn['code'] == '0000') {
+								$_SESSION['riskLevel'] = $riskReturn['data']['custrisk'];
+							}
+						}
 					}
 					ob_start();
 					$arr = Array(
@@ -266,7 +277,8 @@ class Jz_account extends MY_Controller
 		if (!empty($err_msg))
 		{
 			$str = isset($log_msg)?$log_msg:$err_msg;
-			file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开户失败，原因为：".$str."\r\n\r\n",FILE_APPEND);
+// 			file_put_contents('log/user/register'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开户失败，原因为：".$str."\r\n\r\n",FILE_APPEND);
+			myLog('user/register',"用户:".$_SESSION ['customer_name']."开户失败，原因为：".$str);
 			Message(Array(
 					'msgTy' => 'fail',
 					'msgContent' => $err_msg.'<br/>基金开户失败，系统正在返回...',
@@ -297,7 +309,7 @@ class Jz_account extends MY_Controller
     	//查询客户是否有已鉴权的银行卡，有的话记录相关信息
     	$bank_info = $this->fund_interface->auth_bankcard(0, $arr['JZ_account'],1);
     	//log查询客户是否有已鉴权的银行卡返回信息
-    	file_put_contents($logfile,date('Y-m-d H:i:s',time()).":\r\n 用户:".$_SESSION ['customer_name']."客户号为".$arr['JZ_account']."的用户查询个人及银行卡(auth_bankcard接口)信息返回数据".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
+//     	file_put_contents($logfile,date('Y-m-d H:i:s',time()).":\r\n 用户:".$_SESSION ['customer_name']."客户号为".$arr['JZ_account']."的用户查询个人及银行卡(auth_bankcard接口)信息返回数据".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
     	if ($bank_info['code'] == '0000' && isset($bank_info['data'][0]['custno'])){
     		$arr['depositacctname'] = $bank_info['data'][0]['depositacctname'];
     		$arr['depositacct'] = $bank_info['data'][0]['depositacct'];
@@ -313,7 +325,8 @@ class Jz_account extends MY_Controller
     		//----------- 记录post输入数据(其对包含密码的部分进行裁减)---------------------
     		$tmp = $post;
     		$tmp['lpasswd'] = '裁减后:'.substr($post['lpasswd'], 3,6);
-    		file_put_contents('log/user/OpenPhoneTtrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']." post数据".serialize($tmp)."\r\n\r\n",FILE_APPEND);
+//     		file_put_contents('log/user/OpenPhoneTtrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']." post数据".serialize($tmp)."\r\n\r\n",FILE_APPEND);
+    		myLog('user/OpenPhoneTtrans',"用户:".$_SESSION ['customer_name']." post数据".serialize($tmp));
     		//-----------RSA解密----------------------------
     		$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
     		$decryptData ='';
@@ -324,12 +337,14 @@ class Jz_account extends MY_Controller
     		unset($_SESSION['rand_code']);
     		if ($div_bit !== false){                      //找到一次性验证码
     			//----------- 记录解密后post数据 ---------------------
-    			file_put_contents('log/user/OpenPhoneTtrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']." 解密后数据：".serialize($post)."\r\n\r\n",FILE_APPEND);
+//     			file_put_contents('log/user/OpenPhoneTtrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']." 解密后数据：".serialize($post)."\r\n\r\n",FILE_APPEND);
+    			myLog('user/OpenPhoneTtrans',"用户:".$_SESSION ['customer_name']." 解密后数据：".serialize($post));
     			$openPhoneTrans['lpasswd'] = substr($decryptData, 0, $div_bit);
     			//开通用户手机交易功能
     			$res = $this->fund_interface->openPhoneTrans($openPhoneTrans);
     			//log开通用户手机交易返回信息
-    			file_put_contents('log/user/OpenPhoneTrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()). ":\r\n用户:".$_SESSION ['customer_name']."开通用户手机交易功能(open_phone_trans接口)返回数据".serialize($res)."\r\n\r\n",FILE_APPEND);
+//     			file_put_contents('log/user/OpenPhoneTrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()). ":\r\n用户:".$_SESSION ['customer_name']."开通用户手机交易功能(open_phone_trans接口)返回数据".serialize($res)."\r\n\r\n",FILE_APPEND);
+    			myLog('user/OpenPhoneTtrans',"用户:".$_SESSION ['customer_name']."开通用户手机交易功能(open_phone_trans接口)返回数据".serialize($res));
     			if ($res['code'] == '0000'){
     				unset($_SESSION['data_OPT']);
     				$_SESSION['JZ_user_id'] = 1;
@@ -349,7 +364,8 @@ class Jz_account extends MY_Controller
     			$log_message = '一次性随机验证码未找到';
     		}
     		if (isset($log_message)){
-    			file_put_contents('log/user/OpenPhoneTrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开通手机交易失败，失败原因：".$log_message."\r\n\r\n",FILE_APPEND);
+//     			file_put_contents('log/user/OpenPhoneTrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."开通手机交易失败，失败原因：".$log_message."\r\n\r\n",FILE_APPEND);
+    			myLog('user/OpenPhoneTtrans',"用户:".$_SESSION ['customer_name']."开通手机交易失败，失败原因：".$log_message);
     		}
     		if (!isset($message)){
     			$message = '开通手机交易失败，系统正在返回';
@@ -394,7 +410,8 @@ class Jz_account extends MY_Controller
     			$oldpwd = substr($decryptData, 0, $div_bit);
     			$newpwd = substr($decryptData, $div_bit+7);
     			$res = $this->fund_interface->revisePassward($oldpwd, $newpwd, $post['pwdtype']);
-    			file_put_contents('log/user/revise_passward'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."修改".$str_info.'密码，调用接口返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
+//     			file_put_contents('log/user/revise_passward'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."修改".$str_info.'密码，调用接口返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
+    			myLog('user/revise_passward',"用户:".$_SESSION ['customer_name']."修改".$str_info.'密码，调用接口返回数据为'.serialize($res));
     			if (isset($res['code']) && $res['code'] == '0000')
     			{
     				Message(Array(
@@ -410,7 +427,8 @@ class Jz_account extends MY_Controller
     			$log_message = '一次性随机验证码错误';
     		}
     		if (isset($log_message)){
-    			file_put_contents('log/user/revise_passward'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."修改".$str_info.'密码失败，原因为'.$log_message."\r\n\r\n",FILE_APPEND);
+//     			file_put_contents('log/user/revise_passward'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."修改".$str_info.'密码失败，原因为'.$log_message."\r\n\r\n",FILE_APPEND);
+    			myLog('user/revise_passward',"用户:".$_SESSION ['customer_name']."修改".$str_info.'密码失败，原因为'.$log_message);
     			if (strpos($log_message,'密码错误') !== false){
     				$message = '旧密码输入错误，请重试！';
     			}else{
