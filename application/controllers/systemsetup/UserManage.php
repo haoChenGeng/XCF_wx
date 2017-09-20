@@ -57,14 +57,16 @@ class UserManage extends MY_Controller {
 		//设置搜索栏选项   例如('name'搜索项的数据库字段名,'filterType'搜索方式 =where =like 分别对应数据库查询的where和like, 'description'页面显示的搜索项名称)
 		$data['query'] = array('name' => array('filterType' => 'like', 'description' => '群组名称'));
 		//设置页面需要查询的数据库字段名
-		$data['dbFields'] = array('id','username', 'fullname','user_group_id','dept');
+		$data['dbFields'] = array('id','username', 'fullname','user_group_id','dept','company');
 		//设置页面显示的字段名称
 		$data['table_field']=array( 'id' => array('sort' => 1, 'description' => 'ID'),
 									'username' => array('sort' => 1, 'description' => '用户帐号'),
 									'fullname' => array('sort' => 1, 'description' => '用户姓名'),
 									'user_group_id' => array('sort' => 1, 'description' => '所在群组id'),
 									'user_group_name' => array('description' => '所在群组名称'),
-									'dept' => array('description' => '所属公司'),);
+									'company' => array('description' => '所属公司'),
+									'dept' => array('description' => '部门'),
+		);
 		//设置页面右上角导航条按钮(函数中已进行权限检查)
 		$data['buttons'] = $this->Model_pageDeal->getButtonList($data['accessCommand']);
 		//设置form提交的url
@@ -94,7 +96,7 @@ class UserManage extends MY_Controller {
 			}else{
 				$data['table_content'][$i]['user_group_name'] = '';
 			}
-			$data['table_content'][$i]['dept'] = $companyInfo[$val['dept']];
+			$data['table_content'][$i]['company'] = isset($companyInfo[$val['company']]) ? $companyInfo[$val['company']] : '';
 			if (!empty($data['operButton'])){
 				foreach ($data['operButton'] as $v){
 					$data['table_content'][$i]['operButton'][$v['operation']]['description'] = $v['description'];
@@ -254,7 +256,8 @@ class UserManage extends MY_Controller {
 		foreach ( $this->config->item('XN_company') as $key=>$val){
 			$compayItems[] = array('val'=>$key,'name'=>$val);
 		}
-		$data['forms'][] = array('type'=>'select','description'=>'所在公司', 'required'=> 1, 'name'=>"dept", 'val'=>$user['dept'], 'items'=>$compayItems);
+		$data['forms'][] = array('type'=>'select','description'=>'所在公司', 'required'=> 1, 'name'=>"company", 'val'=>$user['company'], 'items'=>$compayItems);
+		$data['forms'][] = array('type'=>'normal','description'=>'所在部门', 'required'=> 1, 'content'=> 'type="text" name="dept" value="'.$user['dept'].'" placeholder="所在部门"');
 		$_SESSION[$data['Model'].'_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);
 		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
 		$data['public_key'] = str_replace(array("\r","\n"),'', $data['public_key']);
@@ -266,6 +269,7 @@ class UserManage extends MY_Controller {
 				'fullname' => $input['fullname'],
 				'user_group_id' => $input['user_group_id'],
 				'dept' => $input['dept'],
+				'company' => $input['company'],
 		);
 		if ($input['password'] != ''){
 			$arr['password'] = $input['password'];
