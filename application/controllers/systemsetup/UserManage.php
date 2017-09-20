@@ -256,7 +256,7 @@ class UserManage extends MY_Controller {
 		foreach ( $this->config->item('XN_company') as $key=>$val){
 			$compayItems[] = array('val'=>$key,'name'=>$val);
 		}
-		$data['forms'][] = array('type'=>'select','description'=>'所在公司', 'required'=> 1, 'name'=>"company", 'val'=>$user['company'], 'items'=>$compayItems);
+		$data['forms'][] = array('type'=>'select','description'=>'所在公司', 'required'=> 1, 'name'=>"company", 'val'=>'', 'items'=>$compayItems);
 		$data['forms'][] = array('type'=>'normal','description'=>'所在部门', 'required'=> 1, 'content'=> 'type="text" name="dept" value="'.$user['dept'].'" placeholder="所在部门"');
 		$_SESSION[$data['Model'].'_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);
 		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));   //获取RSA_加密公钥
