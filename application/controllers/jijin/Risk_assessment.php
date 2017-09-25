@@ -147,7 +147,7 @@ class Risk_assessment extends MY_Controller {
 			if (!empty($riskInfo['riskLevel'])){
 				$ZNTGResult['riskLevel'] = $riskInfo['riskLevel'];
 			}else{
-				$ZNTGResult['riskLevel'] = null;
+				$ZNTGResult['riskLevel'] = '';
 			}
 		}else{
 			$ZNTGResult['login'] = 1;
