@@ -526,6 +526,7 @@ class User extends MY_Controller {
 			$planner_id = $this->db->where(array('EmployeeID'=> $post['planner_id']))->get('p2_planner')->row_array();
 			if (!empty($planner_id)){
 				$flag = $this->db->set(array('planner_id'=>$post['planner_id']))->where(array("id"=>$_SESSION['customer_id']))->update('p2_customer');
+				$flag = $flag && $this->db->set(array('customerId'=>$_SESSION['customer_id'],'updateTime'=>time(),'planner_id'=>$post['planner_id']))->insert('p2_plannerupdate');
 				if ($flag){
 					$msgTy = 'success';
 					$msgContent = '理财师更新成功，系统正在返回...';
