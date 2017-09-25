@@ -143,7 +143,7 @@ class Risk_assessment extends MY_Controller {
 	function getZNTGResult() {
 		$ZNTGResult = array('code' => '0000', 'login'=>0);							//,'msg'=>'系统错误，请稍后重试')
 		if (isset($_SESSION['customer_id'])){
-			$riskInfo = $this->db->select('answer,riskLevel')->where(array('customerId'=>$_SESSION[customer_id]))->get('p2_riskanswer')->row_array();
+			$riskInfo = $this->db->select('answer,riskLevel')->where(array('customerId'=>$_SESSION['customer_id']))->get('p2_riskanswer')->row_array();
 			if (!empty($riskInfo['riskLevel'])){
 				$ZNTGResult['riskLevel'] = $riskInfo['riskLevel'];
 			}else{
