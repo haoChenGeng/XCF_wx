@@ -519,4 +519,41 @@ class User extends MY_Controller {
 		}
 		echo '您输入的理财师工号不存在';
 	}
+	
+	function myPlanner(){
+		$post = $this->input->post ();
+		if (!empty($post['planner_id'])){
+			$planner_id = $this->db->where(array('EmployeeID'=> $post['planner_id']))->get('p2_planner')->row_array();
+			if (!empty($planner_id)){
+				$flag = $this->db->set(array('planner_id'=>$post['planner_id']))->where(array("id"=>$_SESSION['customer_id']))->update('p2_customer');
+				if ($flag){
+					$msgTy = 'success';
+					$msgContent = '理财师更新成功，系统正在返回...';
+				}else{
+					$msgContent = '理财师更新失败，请稍后重试';
+				}
+			}else{
+				$msgContent = '您输入的理财师不存在';
+			}
+			Message ( Array (
+					'msgTy' => isset($msgTy) ? $msgTy : 'fail',
+					'msgContent' => $msgContent,
+					'msgUrl' => $this->base . '/user/myPlanner',
+					'base' => $this->base
+					) );
+		}else{
+			$plannerInfo = $this->db->select("c.planner_id,p.FName")->where(array("c.id"=>$_SESSION['customer_id']))->from("p2_customer c")->join("p2_planner p","c.planner_id=p.EmployeeID","left")->get()->row_array();
+			if (empty($plannerInfo['FName'])){
+				$data['plannerInfo'] = '您尚未有专属的理财师';
+				$data['inputInfo'] = '输入您的理财师工号';
+				$data['buttonInfo'] = '增加';
+			}else{
+				$data['plannerInfo'] = '您的理财师是'.$plannerInfo['FName']."(".$plannerInfo['planner_id'].")";
+				$data['inputInfo'] = '输入您新的理财师工号';
+				$data['buttonInfo'] = '变更';
+			}
+			$this->load->view ( 'user/myPlanner' , $data);
+		}
+		
+	}
 }
