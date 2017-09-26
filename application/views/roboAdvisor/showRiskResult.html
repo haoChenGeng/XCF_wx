@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,initial-scale=1">
+  <meta name="format-detection" content="telephone=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>测评结果</title>
+  <link rel="stylesheet" href="../../../data/jijin/css/roboAdvisor.css">
+</head>
+
+<body>
+  <script>
+    var Dpr = 1,
+      uAgent = window.navigator.userAgent;
+    var isIOS = uAgent.match(/iphone/i);
+    var isYIXIN = uAgent.match(/yixin/i);
+    var is2345 = uAgent.match(/Mb2345/i);
+    var ishaosou = uAgent.match(/mso_app/i);
+    var isSogou = uAgent.match(/sogoumobilebrowser/ig);
+    var isLiebao = uAgent.match(/liebaofast/i);
+    var isGnbr = uAgent.match(/GNBR/i);
+
+    function resizeRoot() {
+      var wWidth = (screen.width > 0) ? (window.innerWidth >= screen.width || window.innerWidth == 0) ? screen.width :
+        window.innerWidth : window.innerWidth,
+        wDpr, wFsize;
+      var wHeight = (screen.height > 0) ? (window.innerHeight >= screen.height || window.innerHeight == 0) ?
+        screen.height : window.innerHeight : window.innerHeight;
+      if (window.devicePixelRatio) {
+        wDpr = window.devicePixelRatio;
+      } else {
+        wDpr = isIOS ? wWidth > 818 ? 3 : wWidth > 480 ? 2 : 1 : 1;
+      }
+      if (isIOS) {
+        wWidth = screen.width;
+        wHeight = screen.height;
+      }
+      // if(window.orientation==90||window.orientation==-90){
+      //     wWidth = wHeight;
+      // }else if((window.orientation==180||window.orientation==0)){
+      // }
+      if (wWidth > wHeight) {
+        wWidth = wHeight;
+      }
+      wFsize = wWidth > 1080 ? 144 : wWidth / 7.5;
+      wFsize = wFsize > 32 ? wFsize : 32;
+      window.screenWidth_ = wWidth;
+      if (isYIXIN || is2345 || ishaosou || isSogou || isLiebao || isGnbr) { //YIXIN 和 2345 这里有个刚调用系统浏览器时候的bug，需要一点延迟来获取
+        setTimeout(function() {
+          wWidth = (screen.width > 0) ? (window.innerWidth >= screen.width || window.innerWidth == 0) ?
+            screen.width : window.innerWidth : window.innerWidth;
+          wHeight = (screen.height > 0) ? (window.innerHeight >= screen.height || window.innerHeight ==
+            0) ? screen.height : window.innerHeight : window.innerHeight;
+          wFsize = wWidth > 1080 ? 144 : wWidth / 7.5;
+          wFsize = wFsize > 32 ? wFsize : 32;
+          // document.getElementsByTagName('html')[0].dataset.dpr = wDpr;
+          document.getElementsByTagName('html')[0].style.fontSize = wFsize + 'px';
+          // document.getElementById("fixed").style.display = "none";
+        }, 500);
+      } else {
+        // document.getElementsByTagName('html')[0].dataset.dpr = wDpr;
+        document.getElementsByTagName('html')[0].style.fontSize = wFsize + 'px';
+        // document.getElementsByTagName('html')[0].dataset.dpr = wDpr;
+        // document.getElementById("fixed").style.display = "none";
+      }
+      // alert("fz="+wFsize+";dpr="+window.devicePixelRatio+";UA="+uAgent+";width="+wWidth+";sw="+screen.width+";wiw="+window.innerWidth+";wsw="+window.screen.width+window.screen.availWidth);
+    }
+    resizeRoot();
+    // if (location.protocol === "https:") {
+    //   location.href = location.href.replace("https:", "http:")
+    // }
+  </script>
+  <div class="loading">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <div class="ra-wrap" style="display: none;">
+    <section class="ra-result-content">
+      <div id="testResult" style="height: 4.0rem;width: 7rem;" class="test-chart">
+
+      </div>
+      <p id="totalAssets">您的家庭总资产为：</p>
+      <small class="result-annotation"><span class="line"></span>注：上述图表为加权展示，仅供参考<span class="line"></span></small>
+      <p class="result-desc">您的投资类型为：<span id="investType"></span></p>
+      <p class="result-desc">风险描述：<span id="riskDesc"></span></p>
+      <p class="result-desc">风险承受能力：<span id="riskBearingCapacity"></span></p>
+      <p class="result-desc">获利期待：<span id="profitExpect"></span></p>
+      <p class="result-desc">推荐金融产品类型：<span id="recommendFinancialProductsType"></span></p>
+      <a href="next.html" class="start-btn result-confirm">
+        确认
+      </a>
+      <p class="reevaluation">如果您对测评结果有疑虑，可以选择<a href="riskTest.html">重新测试</a></p>
+    </section>
+  </div>
+  <script src="../../../data/jijin/js/mui.min.js"></script>
+  <script src="../../../data/jijin/js/echarts.min.js"></script>
+  <!-- <script src="../../../data/jijin/js/roboAdvisor.js"></script> -->
+  <script>
+    var option = {
+      title: {
+
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+      },
+      legend: {
+
+      },
+      toolbox: {
+
+      },
+      calculable: true,
+      series: [{
+        name: '面积模式',
+        type: 'pie',
+        radius: [30, 110],
+        // center: ['75%', '50%'],
+        roseType: 'area',
+        data: [{
+          value: 10,
+          name: 'rose1'
+        }, {
+          value: 5,
+          name: 'rose2'
+        }, {
+          value: 15,
+          name: 'rose3'
+        }, {
+          value: 25,
+          name: 'rose4'
+        }, {
+          value: 20,
+          name: 'rose5'
+        }, {
+          value: 35,
+          name: 'rose6'
+        }, {
+          value: 30,
+          name: 'rose7'
+        }, {
+          value: 40,
+          name: 'rose8'
+        }]
+      }]
+    };
+
+    mui.ajax('/jijin/Risk_assessment/getZNTGResult', {
+      data: {
+
+      },
+      dataType: 'json',
+      type: 'GET',
+      timeout: 10000,
+      success: function(res) {
+        console.log(res);
+        renderResult(res);
+      },
+      error: function(xhr, type, errorThrown) {
+        console.log(type);
+      }
+    })
+
+    function renderResult(data) {
+      if (data.login !== 0) {
+        // window.location.href = '/user/login';
+      } else if (data.riskLevel !== '') {
+        // window.location.href = '/application/views/roboAdvisor/showRiskResult.html';
+      } else {
+        document.getElementsByClassName('ra-wrap')[0].style.display = 'block';
+        document.getElementsByClassName('loading')[0].style.display = 'none';
+
+        var riskChart = echarts.init(document.getElementById('testResult'));
+        riskChart.setOption(option);
+      }
+    }
+  </script>
+</body>
+
+</html>

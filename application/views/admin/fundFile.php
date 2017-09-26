@@ -99,7 +99,6 @@ console.log(searchInput.value);
  */
 function getList(data) {
 	var fundListData = JSON.parse(document.getElementById('fundInfo').value);
-console.log(fundListData);
 	var ret = [];
 	// var reg = new RegExp('^' + data);			//开头匹配
 	var reg = new RegExp(data);
@@ -119,7 +118,6 @@ console.log(fundListData);
 			}
 		}
 	}
-console.log(ret);
 	if (ret.length > 20) {
 		ret.splice(0, ret.length-20);
 	}
@@ -137,6 +135,13 @@ function getSearchListValue() {
 	};
 }
 
+/**
+ * 搜索间隔
+ * @param  {any}   name 标识
+ * @param  {function} fn   执行函数
+ * @param  {number}   time 搜索间隔时间
+ * @return {fn}        定时器
+ */
 function delaySearch(name,fn,time) {
 	if (searchTime[name]) {
 		window.clearTimeout(searchTime[name]);

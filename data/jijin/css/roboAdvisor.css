@@ -1,0 +1,383 @@
+body {
+  background-color: #f2f2f2;
+  font-size: .32rem;
+  line-height: .32rem;
+  max-width: 1080px;
+  margin: 0 auto;
+  width: 7.5rem;
+  font-family: 'Microsoft YaHei', Helvetica, Arial, sans-serif;
+}
+
+
+/* 投顾首页 */
+
+.ra-content {
+  padding-top: 1.68rem;
+}
+
+.ra-content img {
+  display: block;
+  margin: 0 auto;
+  width: 3.46rem;
+  height: 2.64rem;
+  padding-right: .1rem;
+}
+
+.start-tips {
+  width: 3.24rem;
+  word-break: break-all;
+  margin: .84rem auto .64rem auto;
+  font-size: .32rem;
+  color: #5d5d5d;
+}
+
+.start-btn {
+  margin: 0 auto;
+  width: 6.48rem;
+  height: .8rem;
+  display: block;
+  text-decoration: none;
+  border-radius: 3px;
+  text-align: center;
+  line-height: .8rem;
+  color: #fff;
+  background: -webkit-linear-gradient(top, #019cd6, #01578e);
+}
+
+.loading {
+  width: 150px;
+  height: 15px;
+  margin: 0 auto;
+  margin-top: 100px;
+}
+
+.loading span {
+  display: inline-block;
+  width: 15px;
+  height: 100%;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: #019cd6;
+  -webkit-animation: load 1.04s ease infinite;
+}
+
+.loading span:last-child {
+  margin-right: 0px;
+}
+
+@-webkit-keyframes load {
+  0% {
+    opacity: 1;
+    -webkit-transform: scale(1.3);
+  }
+  100% {
+    opacity: 0.2;
+    -webkit-transform: scale(.3);
+  }
+}
+
+.loading span:nth-child(1) {
+  -webkit-animation-delay: 0.13s;
+}
+
+.loading span:nth-child(2) {
+  -webkit-animation-delay: 0.26s;
+}
+
+.loading span:nth-child(3) {
+  -webkit-animation-delay: 0.39s;
+}
+
+.loading span:nth-child(4) {
+  -webkit-animation-delay: 0.52s;
+}
+
+.loading span:nth-child(5) {
+  -webkit-animation-delay: 0.65s;
+}
+
+
+/* 测评结果 */
+
+.next-tips {
+  width: 5.2rem;
+  font-size: .32rem;
+  word-break: break-all;
+  margin: .84rem auto 0 auto;
+  padding-left: .12rem;
+}
+
+.next-contact {
+  width: 5.0rem;
+  font-size: .24rem;
+  color: #a7adb7;
+  word-break: break-all;
+  margin: .1rem auto .64rem auto;
+}
+
+
+/* 风险测评 */
+
+.mui-views,
+.mui-view,
+.mui-pages,
+.mui-page,
+.mui-page-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #efeff4;
+}
+
+.mui-scroll {
+  width: 6.99rem;
+  margin: 0 .255rem;
+  background-color: #fff;
+  border-radius: 3px;
+}
+
+.mui-table-view {
+  margin: 0 .255rem;
+  border: 1px solid #eef2f8;
+  border-bottom: 0;
+  border-top: 0;
+}
+
+.mui-table-view-cell:after {
+  left: 0;
+}
+
+.mui-scroll {
+  top: .62rem;
+  height: auto;
+}
+
+.mui-page.mui-transitioning {
+  -webkit-transition: -webkit-transform 300ms ease;
+  transition: transform 300ms ease;
+}
+
+.mui-page-left {
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+.mui-ios .mui-page-left {
+  -webkit-transform: translate3d(-20%, 0, 0);
+  transform: translate3d(-20%, 0, 0);
+}
+
+.mui-navbar {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  height: 44px;
+  background-color: #f7f7f8;
+}
+
+.mui-navbar .mui-bar {
+  position: absolute;
+  background: transparent;
+  text-align: center;
+}
+
+.mui-android .mui-navbar-inner.mui-navbar-left {
+  opacity: 0;
+}
+
+.mui-ios .mui-navbar-left .mui-left,
+.mui-ios .mui-navbar-left .mui-center,
+.mui-ios .mui-navbar-left .mui-right {
+  opacity: 0;
+}
+
+.mui-navbar .mui-btn-nav {
+  -webkit-transition: none;
+  transition: none;
+  -webkit-transition-duration: .0s;
+  transition-duration: .0s;
+}
+
+.mui-navbar .mui-bar .mui-title {
+  display: inline-block;
+  width: auto;
+}
+
+.mui-page-shadow {
+  position: absolute;
+  right: 100%;
+  top: 0;
+  width: 16px;
+  height: 100%;
+  z-index: -1;
+  content: '';
+}
+
+.mui-page-shadow {
+  background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+}
+
+.mui-navbar-inner.mui-transitioning,
+.mui-navbar-inner .mui-transitioning {
+  -webkit-transition: opacity 300ms ease, -webkit-transform 300ms ease;
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.mui-page {
+  display: none;
+}
+
+.mui-pages .mui-page {
+  display: block;
+}
+
+.mui-page .mui-table-view:first-child {
+  margin-top: 15px;
+}
+
+.mui-page .mui-table-view:last-child {
+  margin-bottom: 30px;
+}
+
+.mui-table-view {
+  margin-top: 20px;
+}
+
+.head-img {
+  width: 40px;
+  height: 40px;
+}
+
+.mui-fullscreen {
+  position: fixed;
+  /*z-index: 20;*/
+  /*background-color: #000;*/
+}
+
+.mui-ios .mui-navbar .mui-bar .mui-title {
+  position: static;
+}
+
+.test-active {
+  color: #0076c0;
+}
+
+.test-num {
+  width: 90%;
+  margin: .2rem auto;
+  font-size: .28rem;
+  color: #8f949c;
+}
+
+.test-num span {
+  color: #0076c0;
+}
+
+.test-ques {
+  width: 6.48rem;
+  word-break: break-all;
+  margin: .4rem auto .3rem auto;
+  font-size: .28rem;
+  color: #53606e;
+  padding-left: 0 .1rem;
+}
+
+.test-li.mui-table-view-cell>a:not(.mui-btn) {
+  padding: .32rem .3rem;
+}
+
+.test-label {
+  font-size: .26rem;
+  display: inline-block;
+  width: 90%;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.test-label+input {
+  float: right;
+  margin-top: .04rem;
+}
+
+.start-btn.mui-action-back,
+#testSubmit {
+  margin: 1.3rem auto .5rem auto;
+}
+
+.last-btn {
+  position: absolute;
+  top: 10.4rem;
+  left: 50%;
+  margin-left: -24px;
+}
+
+
+/* 测评结果 */
+
+.ra-result-content {
+  width: 7rem;
+  margin: .2rem auto 0 auto;
+  background-color: #fff;
+  box-shadow: 0 0 10px #ccc;
+  border-radius: 3px;
+  padding-bottom: .5rem;
+}
+
+#totalAssets {
+  font-size: .28rem;
+  margin-top: .4rem;
+  text-align: center;
+}
+
+.result-annotation {
+  font-size: .22rem;
+  color: #8f949c;
+  display: block;
+  text-align: center;
+  margin-bottom: .4rem;
+}
+
+.line {
+  border-top: 1px solid #e5e5e5;
+  vertical-align: middle;
+  width: 1.32rem;
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.result-desc {
+  font-size: .3rem;
+  margin: .25rem auto 0 auto;
+  width: 6.48rem;
+}
+
+.result-desc span {
+  font-size: .26rem;
+  color: #8f949c;
+  white-space: pre-wrap;
+}
+
+#investType {
+  font-size: .38rem;
+  color: #0074c3;
+}
+
+.result-confirm {
+  margin-top: .4rem;
+}
+
+.reevaluation {
+  text-align: center;
+  font-size: .24rem;
+  margin-top: .3rem;
+}
+
+.reevaluation a {
+  color: #0074c3;
+}

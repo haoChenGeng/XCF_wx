@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta name="format-detection" content="telephone=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>风险测评</title>
+  <link rel="stylesheet" href="../../../data/jijin/css/mui.min.css">
+  <link rel="stylesheet" href="../../../data/jijin/css/roboAdvisor.css">
+</head>
+
+<body>
+  <script>
+    var Dpr = 1,
+      uAgent = window.navigator.userAgent;
+    var isIOS = uAgent.match(/iphone/i);
+    var isYIXIN = uAgent.match(/yixin/i);
+    var is2345 = uAgent.match(/Mb2345/i);
+    var ishaosou = uAgent.match(/mso_app/i);
+    var isSogou = uAgent.match(/sogoumobilebrowser/ig);
+    var isLiebao = uAgent.match(/liebaofast/i);
+    var isGnbr = uAgent.match(/GNBR/i);
+
+    function resizeRoot() {
+      var wWidth = (screen.width > 0) ? (window.innerWidth >= screen.width || window.innerWidth == 0) ? screen.width :
+        window.innerWidth : window.innerWidth,
+        wDpr, wFsize;
+      var wHeight = (screen.height > 0) ? (window.innerHeight >= screen.height || window.innerHeight == 0) ?
+        screen.height : window.innerHeight : window.innerHeight;
+      if (window.devicePixelRatio) {
+        wDpr = window.devicePixelRatio;
+      } else {
+        wDpr = isIOS ? wWidth > 818 ? 3 : wWidth > 480 ? 2 : 1 : 1;
+      }
+      if (isIOS) {
+        wWidth = screen.width;
+        wHeight = screen.height;
+      }
+      // if(window.orientation==90||window.orientation==-90){
+      //     wWidth = wHeight;
+      // }else if((window.orientation==180||window.orientation==0)){
+      // }
+      if (wWidth > wHeight) {
+        wWidth = wHeight;
+      }
+      wFsize = wWidth > 1080 ? 144 : wWidth / 7.5;
+      wFsize = wFsize > 32 ? wFsize : 32;
+      window.screenWidth_ = wWidth;
+      if (isYIXIN || is2345 || ishaosou || isSogou || isLiebao || isGnbr) { //YIXIN 和 2345 这里有个刚调用系统浏览器时候的bug，需要一点延迟来获取
+        setTimeout(function() {
+          wWidth = (screen.width > 0) ? (window.innerWidth >= screen.width || window.innerWidth == 0) ?
+            screen.width : window.innerWidth : window.innerWidth;
+          wHeight = (screen.height > 0) ? (window.innerHeight >= screen.height || window.innerHeight ==
+            0) ? screen.height : window.innerHeight : window.innerHeight;
+          wFsize = wWidth > 1080 ? 144 : wWidth / 7.5;
+          wFsize = wFsize > 32 ? wFsize : 32;
+          // document.getElementsByTagName('html')[0].dataset.dpr = wDpr;
+          document.getElementsByTagName('html')[0].style.fontSize = wFsize + 'px';
+          // document.getElementById("fixed").style.display = "none";
+        }, 500);
+      } else {
+        // document.getElementsByTagName('html')[0].dataset.dpr = wDpr;
+        document.getElementsByTagName('html')[0].style.fontSize = wFsize + 'px';
+        // document.getElementsByTagName('html')[0].dataset.dpr = wDpr;
+        // document.getElementById("fixed").style.display = "none";
+      }
+      // alert("fz="+wFsize+";dpr="+window.devicePixelRatio+";UA="+uAgent+";width="+wWidth+";sw="+screen.width+";wiw="+window.innerWidth+";wsw="+window.screen.width+window.screen.availWidth);
+    }
+    resizeRoot();
+    // if (location.protocol === "https:") {
+    //   location.href = location.href.replace("https:", "http:")
+    // }
+  </script>
+  <!--页面主结构开始-->
+  <div id="app" class="mui-views mui-fullscreen mui-control-content mui-active">
+    <div class="mui-view">
+      <!-- <div class="mui-navbar"></div> -->
+      <div class="mui-pages">
+      </div>
+    </div>
+  </div>
+  <!--页面主结构结束-->
+  <!-- 单页面开始 -->
+  <!-- <div id="ques-1" class="mui-page">
+    <div class="mui-page-content">
+      <div class="mui-scroll-wrapper">
+        <p class="test-num"><span>1</span>/16</p>
+        <div class="mui-scroll">
+          <p class="test-ques">您目前的个人及家庭财务状况属于下列哪一种？</p>
+          <ul class="mui-table-view">
+            <li class="mui-table-view-cell test-li">
+              <a href="#ques-2" class="test-item">
+                <label class="test-label">比较大额未到期负债<input type="radio" name="1-1" id=""></label>
+              </a>
+            </li>
+            <li class="mui-table-view-cell test-li">
+              <a href="#ques-2" class="test-item">
+                <label class="test-label">收入和支出相抵<input type="radio" name="1-1" id=""></label>
+              </a>
+            </li>
+            <li class="mui-table-view-cell test-li">
+              <a href="#ques-2" class="test-item">
+                <label class="test-label">有一定积蓄<input type="radio" name="1-1" id=""></label>
+              </a>
+            </li>
+            <li class="mui-table-view-cell test-li">
+              <a href="#ques-2" class="test-item">
+                <label class="test-label">有较为丰厚的积蓄并有一定的投资<input type="radio" name="1-1" id=""></label>
+              </a>
+            </li>
+            <li class="mui-table-view-cell test-li">
+              <a href="#ques-2">
+                <label class="test-label">比较富裕且有相当的投资<input type="radio" name="1-1" id=""></label>
+              </a>
+            </li>
+          </ul>
+          <a href="javascript:;" class="start-btn mui-action-back">
+              上一题
+            </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="ques-2" class="mui-page">
+    <div class="mui-page-content">
+      <div class="mui-scroll-wrapper">
+        <p class="test-num"><span>2</span>/16</p>
+        <div class="mui-scroll">
+          <p class="test-ques">您目前的个人及家庭财务状况属于下列哪一种？</p>
+          <ul class="mui-table-view">
+            <li class="mui-table-view-cell test-li">
+              <a href="#ques-3">
+                <label class="test-label">比较大额未到期负债<input type="radio" name="2-1" id=""></label>
+              </a>
+            </li>
+            <li class="mui-table-view-cell test-li">
+              <a href="#ques-3">
+                <label class="test-label">收入和支出相抵<input type="radio" name="2-2" id=""></label>
+              </a>
+            </li>
+            <li class="mui-table-view-cell test-li">
+              <a href="#ques-3">
+                <label class="test-label">有一定积蓄<input type="radio" name="2-3" id=""></label>
+              </a>
+            </li>
+            <li class="mui-table-view-cell test-li">
+              <a href="#ques-3">
+                <label class="test-label">有较为丰厚的积蓄并有一定的投资<input type="radio" name="2-4" id=""></label>
+              </a>
+            </li>
+            <li class="mui-table-view-cell test-li">
+              <a href="#ques-3">
+                <label class="test-label">比较富裕且有相当的投资<input type="radio" name="2-5" id=""></label>
+              </a>
+            </li>
+          </ul>
+          <a href="javascript:;" class="start-btn mui-action-back">
+            上一题
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="ques-3" class="mui-page">
+    <div class="mui-page-content">
+      <div class="mui-scroll-wrapper">
+        <p class="test-num"><span>3</span>/16</p>
+        <div class="mui-scroll">
+          <p class="test-ques">您目前的个人及家庭财务状况属于下列哪一种？</p>
+          <ul class="mui-table-view">
+            <li class="mui-table-view-cell test-li">
+              <a href="#num2">
+                <label class="test-label">比较大额未到期负债<input type="radio" name="3-1" id=""></label>
+              </a>
+            </li>
+            <li class="mui-table-view-cell test-li">
+              <a href="#num2" class="test-item">
+                <label class="test-label">收入和支出相抵<input type="radio" name="3-2" id=""></label>
+              </a>
+            </li>
+            <li class="mui-table-view-cell test-li">
+              <a href="#num2">
+                <label class="test-label">有一定积蓄<input type="radio" name="3-3" id=""></label>
+              </a>
+            </li>
+            <li class="mui-table-view-cell test-li">
+              <a href="#num2">
+                <label class="test-label">有较为丰厚的积蓄并有一定的投资<input type="radio" name="3-4" id=""></label>
+              </a>
+            </li>
+            <li class="mui-table-view-cell test-li">
+              <a href="#num2">
+                <label class="test-label">比较富裕且有相当的投资<input type="radio" name="3-5" id=""></label>
+              </a>
+            </li>
+          </ul>
+          <a href="javascript:;" class="start-btn mui-action-back">
+            上一题
+          </a>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <!--单页面结束-->
+
+  <script src="../../../data/jijin/js/mui.min.js"></script>
+  <script src="../../../data/jijin/js/mui.view.js"></script>
+  <!-- <script src="../../../data/jijin/js/roboAdvisor.js"></script> -->
+  <script>
+    window.onload = function() {
+      mui.ajax('/jijin/Risk_assessment/getRiskQuestion', {
+        data: {
+
+        },
+        dataType: 'json',
+        type: 'GET',
+        timeout: 10000,
+        async: false,
+        success: function(res) {
+          console.log(res);
+          if (!res || res.code !== '0000') {
+            alert('获取题目出错，请稍后再试！')
+          } else {
+            renderTest(res.data);
+          }
+        },
+        error: function(xhr) {
+          console.log('error');
+        }
+      })
+    }
+
+    function renderTest(data) {
+      if (!data) {
+        alert('无题目！')
+        return false;
+      }
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < data.length; i++) {
+        var element = document.createElement('div');
+        element.id = 'ques-' + data[i].id;
+        element.classList.add('mui-page');
+        var oLi = [];
+        for (var j = 0; j < data[i].result.length; j++) {
+          oLi.push('<li class="mui-table-view-cell test-li">' +
+            '<a href="#ques-' + (i + 2) + '" class="test-item">' +
+            '<label class="test-label">' + data[i].result[j].resultcontent + '</label><input type="radio" name="q-' + (i + 1) + '" data-num="' + data[i].questioncode + '" value="' + data[i].result[j].result + '" data-point="' + data[i].result[j].resultpoint + '">' +
+            '</a>' +
+            '</li>');
+
+        }
+        // oLi.reverse();
+        var item = '<div class="mui-page-content">' +
+          '<div class="mui-scroll-wrapper">' +
+          '<p class="test-num"><span>' + (i + 1) + '</span>/' + data.length + '</p>' +
+          '<div class="mui-scroll">' +
+          '<p class="test-ques">' + data[i].questionname + '</p>' +
+          '<ul class="mui-table-view">' + oLi.join('') + '</ul>' +
+          '<a href="javascript:;" class="start-btn mui-action-back">上一题</a>' +
+          '</div>' +
+          '</div>' +
+          '</div>';
+        console.log(i);
+        if (i == 0) {
+          item = '<div class="mui-page-content">' +
+            '<div class="mui-scroll-wrapper">' +
+            '<p class="test-num"><span>' + (i + 1) + '</span>/' + data.length + '</p>' +
+            '<div class="mui-scroll">' +
+            '<p class="test-ques">' + data[i].questionname + '</p>' +
+            '<ul class="mui-table-view">' + oLi.join('') + '</ul>' +
+            '<a href="javascript:;" onclick="history.go(-1)" class="start-btn mui-action-back">返回</a>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+        }
+        if (i == (data.length - 1)) {
+          item = '<div class="mui-page-content">' +
+            '<div class="mui-scroll-wrapper">' +
+            '<p class="test-num"><span>' + (i + 1) + '</span>/' + data.length + '</p>' +
+            '<div class="mui-scroll">' +
+            '<p class="test-ques">' + data[i].questionname + '</p>' +
+            '<ul class="mui-table-view">' + oLi.join('') + '</ul>' +
+            '<a href="javascript:;" class="start-btn" id="testSubmit">提交</a>' +
+            '</div>' +
+            '<a href="javascript:;" class="mui-action-back last-btn">上一题</a>'
+          '</div>' +
+          '</div>';
+        }
+        element.innerHTML = item;
+        // console.log(item);
+        frag.appendChild(element);
+      }
+      console.log(frag);
+      var app = document.getElementById('app');
+      app.parentNode.insertBefore(frag, app.nextSibling);
+      initView();
+    }
+
+    function initView() {
+      console.log(mui);
+      //初始化单页view
+      var viewApi = mui('#app').view({
+        defaultPage: '#ques-1'
+      });
+
+      var res = [];
+
+      document.getElementById('app').addEventListener('tap', function(e) {
+        console.log(e.target);
+        var self = e.target;
+
+        if (self.classList.contains('test-item')) {
+          var ret = self.parentNode.parentNode.querySelector('.test-active');
+          if (ret) {
+            ret.classList.remove('test-active');
+          }
+          self.parentNode.classList.add('test-active');
+          var targetInput = self.firstElementChild.nextSibling;
+          targetInput.checked = 'checked';
+
+          res.push({
+            num: targetInput.dataset.num,
+            result: targetInput.value,
+            point: targetInput.dataset.point
+          });
+        } else if (self.parentNode.classList.contains('test-item')) {
+          var ret2 = self.parentNode.parentNode.parentNode.querySelector('.test-active');
+          if (ret2) {
+            ret2.classList.remove('test-active');
+          }
+          self.parentNode.parentNode.classList.add('test-active');
+          var targetInput2 = self.nextSibling;
+          targetInput2.checked = 'checked';
+
+          res.push({
+            num: targetInput2.dataset.num,
+            result: targetInput2.value,
+            point: targetInput2.dataset.point
+          });
+        }
+      })
+      console.log(res);
+
+      document.getElementById('testSubmit').addEventListener('tap', function(e) {
+        getTestResult(res);
+      })
+
+      mui('.mui-scroll-wrapper').scroll({
+        deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+      });
+
+      var view = viewApi.view;
+      (function($) {
+        //处理view的后退与webview后退
+        var oldBack = $.back;
+        $.back = function() {
+          if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+            viewApi.back();
+          } else { //执行webview后退
+            oldBack();
+          }
+        };
+        //监听页面切换事件方案1,通过view元素监听所有页面切换事件，目前提供pageBeforeShow|pageShow|pageBeforeBack|pageBack四种事件(before事件为动画开始前触发)
+        //第一个参数为事件名称，第二个参数为事件回调，其中e.detail.page为当前页面的html对象
+        view.addEventListener('pageBeforeShow', function(e) {
+          console.log(e.detail.page.id + ' beforeShow');
+          console.log(e);
+        });
+        view.addEventListener('pageShow', function(e) {
+          console.log(e.detail.page.id + ' show');
+        });
+        view.addEventListener('pageBeforeBack', function(e) {
+          console.log(e.detail.page.id + ' beforeBack');
+        });
+        view.addEventListener('pageBack', function(e) {
+          console.log(e.detail.page.id + ' back');
+        });
+      })(mui);
+    }
+
+    function getTestResult(data) {
+      if (!data) {
+        return false;
+      }
+      mui.ajax('', {
+        data: {
+          res: JSON.stringify(data)
+        },
+        type: 'POST',
+        dataType: 'json',
+        timeout: 1000,
+        success: function(res) {
+          console.log(res);
+          if (res.code == '0000') {
+            window.location.href = '/application/views/roboAdvisor/showRiskResult.html';
+          } else {
+            alert(res.msg);
+          }
+        },
+        error: function(xhr) {
+          alert('网络错误');
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>
