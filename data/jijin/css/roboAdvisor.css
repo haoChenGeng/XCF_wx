@@ -138,6 +138,7 @@ body {
   margin: 0 .255rem;
   background-color: #fff;
   border-radius: 3px;
+  box-shadow: 0 0 10px #ccc;
 }
 
 .mui-table-view {
