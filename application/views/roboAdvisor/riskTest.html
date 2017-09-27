@@ -82,128 +82,6 @@
     </div>
   </div>
   <!--页面主结构结束-->
-  <!-- 单页面开始 -->
-  <!-- <div id="ques-1" class="mui-page">
-    <div class="mui-page-content">
-      <div class="mui-scroll-wrapper">
-        <p class="test-num"><span>1</span>/16</p>
-        <div class="mui-scroll">
-          <p class="test-ques">您目前的个人及家庭财务状况属于下列哪一种？</p>
-          <ul class="mui-table-view">
-            <li class="mui-table-view-cell test-li">
-              <a href="#ques-2" class="test-item">
-                <label class="test-label">比较大额未到期负债<input type="radio" name="1-1" id=""></label>
-              </a>
-            </li>
-            <li class="mui-table-view-cell test-li">
-              <a href="#ques-2" class="test-item">
-                <label class="test-label">收入和支出相抵<input type="radio" name="1-1" id=""></label>
-              </a>
-            </li>
-            <li class="mui-table-view-cell test-li">
-              <a href="#ques-2" class="test-item">
-                <label class="test-label">有一定积蓄<input type="radio" name="1-1" id=""></label>
-              </a>
-            </li>
-            <li class="mui-table-view-cell test-li">
-              <a href="#ques-2" class="test-item">
-                <label class="test-label">有较为丰厚的积蓄并有一定的投资<input type="radio" name="1-1" id=""></label>
-              </a>
-            </li>
-            <li class="mui-table-view-cell test-li">
-              <a href="#ques-2">
-                <label class="test-label">比较富裕且有相当的投资<input type="radio" name="1-1" id=""></label>
-              </a>
-            </li>
-          </ul>
-          <a href="javascript:;" class="start-btn mui-action-back">
-              上一题
-            </a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="ques-2" class="mui-page">
-    <div class="mui-page-content">
-      <div class="mui-scroll-wrapper">
-        <p class="test-num"><span>2</span>/16</p>
-        <div class="mui-scroll">
-          <p class="test-ques">您目前的个人及家庭财务状况属于下列哪一种？</p>
-          <ul class="mui-table-view">
-            <li class="mui-table-view-cell test-li">
-              <a href="#ques-3">
-                <label class="test-label">比较大额未到期负债<input type="radio" name="2-1" id=""></label>
-              </a>
-            </li>
-            <li class="mui-table-view-cell test-li">
-              <a href="#ques-3">
-                <label class="test-label">收入和支出相抵<input type="radio" name="2-2" id=""></label>
-              </a>
-            </li>
-            <li class="mui-table-view-cell test-li">
-              <a href="#ques-3">
-                <label class="test-label">有一定积蓄<input type="radio" name="2-3" id=""></label>
-              </a>
-            </li>
-            <li class="mui-table-view-cell test-li">
-              <a href="#ques-3">
-                <label class="test-label">有较为丰厚的积蓄并有一定的投资<input type="radio" name="2-4" id=""></label>
-              </a>
-            </li>
-            <li class="mui-table-view-cell test-li">
-              <a href="#ques-3">
-                <label class="test-label">比较富裕且有相当的投资<input type="radio" name="2-5" id=""></label>
-              </a>
-            </li>
-          </ul>
-          <a href="javascript:;" class="start-btn mui-action-back">
-            上一题
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="ques-3" class="mui-page">
-    <div class="mui-page-content">
-      <div class="mui-scroll-wrapper">
-        <p class="test-num"><span>3</span>/16</p>
-        <div class="mui-scroll">
-          <p class="test-ques">您目前的个人及家庭财务状况属于下列哪一种？</p>
-          <ul class="mui-table-view">
-            <li class="mui-table-view-cell test-li">
-              <a href="#num2">
-                <label class="test-label">比较大额未到期负债<input type="radio" name="3-1" id=""></label>
-              </a>
-            </li>
-            <li class="mui-table-view-cell test-li">
-              <a href="#num2" class="test-item">
-                <label class="test-label">收入和支出相抵<input type="radio" name="3-2" id=""></label>
-              </a>
-            </li>
-            <li class="mui-table-view-cell test-li">
-              <a href="#num2">
-                <label class="test-label">有一定积蓄<input type="radio" name="3-3" id=""></label>
-              </a>
-            </li>
-            <li class="mui-table-view-cell test-li">
-              <a href="#num2">
-                <label class="test-label">有较为丰厚的积蓄并有一定的投资<input type="radio" name="3-4" id=""></label>
-              </a>
-            </li>
-            <li class="mui-table-view-cell test-li">
-              <a href="#num2">
-                <label class="test-label">比较富裕且有相当的投资<input type="radio" name="3-5" id=""></label>
-              </a>
-            </li>
-          </ul>
-          <a href="javascript:;" class="start-btn mui-action-back">
-            上一题
-          </a>
-        </div>
-      </div>
-    </div>
-  </div> -->
-  <!--单页面结束-->
 
   <script src="../../../data/jijin/js/mui.min.js"></script>
   <script src="../../../data/jijin/js/mui.view.js"></script>
@@ -219,7 +97,7 @@
         timeout: 10000,
         async: false,
         success: function(res) {
-          console.log(res);
+          // console.log(res);
           if (!res || res.code !== '0000') {
             alert('获取题目出错，请稍后再试！')
           } else {
@@ -262,7 +140,7 @@
           '</div>' +
           '</div>' +
           '</div>';
-        console.log(i);
+        // console.log(i);
         if (i == 0) {
           item = '<div class="mui-page-content">' +
             '<div class="mui-scroll-wrapper">' +
@@ -292,21 +170,19 @@
         // console.log(item);
         frag.appendChild(element);
       }
-      console.log(frag);
+      // console.log(frag);
       var app = document.getElementById('app');
       app.parentNode.insertBefore(frag, app.nextSibling);
       initView();
     }
 
     function initView() {
-      console.log(mui);
       //初始化单页view
       var viewApi = mui('#app').view({
         defaultPage: '#ques-1'
       });
 
       var res = [];
-
       document.getElementById('app').addEventListener('tap', function(e) {
         console.log(e.target);
         var self = e.target;
@@ -320,28 +196,57 @@
           var targetInput = self.firstElementChild.nextSibling;
           targetInput.checked = 'checked';
 
+          for (var i = 0; i < res.length; i++) {
+            if (res[i].num === targetInput.dataset.num) {
+              res[i].num = targetInput.dataset.num;
+              res[i].result = targetInput.value;
+              res[i].point = targetInput.dataset.point;
+            }
+          }
           res.push({
             num: targetInput.dataset.num,
             result: targetInput.value,
-            point: targetInput.dataset.point
+            point: targetInput.dataset.pointq
           });
-        } else if (self.parentNode.classList.contains('test-item')) {
+        } else if (self.parentNode.classList.contains('test-item') && self.nodeName == 'LABEL') {
           var ret2 = self.parentNode.parentNode.parentNode.querySelector('.test-active');
           if (ret2) {
             ret2.classList.remove('test-active');
           }
           self.parentNode.parentNode.classList.add('test-active');
-          var targetInput2 = self.nextSibling;
-          targetInput2.checked = 'checked';
+          if (self.nodeName == 'LABEL') {
+            self.nextSibling.checked = 'checked';
 
-          res.push({
-            num: targetInput2.dataset.num,
-            result: targetInput2.value,
-            point: targetInput2.dataset.point
-          });
+            for (var i = 0; i < res.length; i++) {
+              if (res[i].num === self.nextSibling.dataset.num) {
+                res[i].num = self.nextSibling.dataset.num;
+                res[i].result = self.nextSibling.value;
+                res[i].point = self.nextSibling.dataset.point;
+              }
+            }
+            res.push({
+              num: self.nextSibling.dataset.num,
+              result: self.nextSibling.value,
+              point: self.nextSibling.dataset.point
+            });
+          } else if (self.nodeName == 'INPUT') {
+            self.checked = 'checked';
+
+            for (var i = 0; i < res.length; i++) {
+              if (res[i].num === self.dataset.num) {
+                res[i].num = self.dataset.num;
+                res[i].result = self.value;
+                res[i].point = self.dataset.point;
+              }
+            }
+            res.push({
+              num: self.dataset.num,
+              result: self.value,
+              point: self.dataset.point
+            });
+          }
         }
       })
-      console.log(res);
 
       document.getElementById('testSubmit').addEventListener('tap', function(e) {
         getTestResult(res);
@@ -365,26 +270,32 @@
         //监听页面切换事件方案1,通过view元素监听所有页面切换事件，目前提供pageBeforeShow|pageShow|pageBeforeBack|pageBack四种事件(before事件为动画开始前触发)
         //第一个参数为事件名称，第二个参数为事件回调，其中e.detail.page为当前页面的html对象
         view.addEventListener('pageBeforeShow', function(e) {
-          console.log(e.detail.page.id + ' beforeShow');
-          console.log(e);
+          // console.log(e.detail.page.id + ' beforeShow');
+          // console.log(e);
         });
         view.addEventListener('pageShow', function(e) {
-          console.log(e.detail.page.id + ' show');
+          // console.log(e.detail.page.id + ' show');
         });
         view.addEventListener('pageBeforeBack', function(e) {
-          console.log(e.detail.page.id + ' beforeBack');
+          // console.log(e.detail.page.id + ' beforeBack');
         });
         view.addEventListener('pageBack', function(e) {
-          console.log(e.detail.page.id + ' back');
+          // console.log(e.detail.page.id + ' back');
         });
       })(mui);
     }
 
     function getTestResult(data) {
+      var totalQues = document.getElementsByClassName('mui-page').length;
+      console.log(totalQues);
+      console.log(data);
       if (!data) {
         return false;
+      } else if (data.length !== totalQues) {
+        alert('您还有题没做，请完成后提交！');
+        return false;
       }
-      mui.ajax('/jijin/Risk_assessment/ZNTGsubmit', {
+      mui.ajax('', {
         data: {
           res: JSON.stringify(data)
         },
@@ -392,7 +303,7 @@
         dataType: 'json',
         timeout: 1000,
         success: function(res) {
-          console.log(res);
+          // console.log(res);
           if (res.code == '0000') {
             window.location.href = '/application/views/roboAdvisor/showRiskResult.html';
           } else {
