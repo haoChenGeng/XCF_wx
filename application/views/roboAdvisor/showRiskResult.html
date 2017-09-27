@@ -87,8 +87,8 @@
       <p id="totalAssets">您的家庭总资产为：</p>
       <small class="result-annotation"><span class="line"></span>注：上述图表为加权展示，仅供参考<span class="line"></span></small>
       <p class="result-desc">您的投资类型为：<span id="investType"></span></p>
-      <p class="result-desc">风险描述：<span id="riskDesc"></span></p>
-      <p class="result-desc">风险承受能力：<span id="riskBearingCapacity"></span></p>
+      <p class="result-desc">风险描述：<span id="description"></span></p>
+      <p class="result-desc">风险承受能力：<span id="bearingCapacity"></span></p>
       <p class="result-desc">获利期待：<span id="profitExpect"></span></p>
       <p class="result-desc">推荐金融产品类型：<span id="recommendFinancialProductsType"></span></p>
       <a href="next.html" class="start-btn result-confirm">
@@ -167,17 +167,66 @@
     })
 
     function renderResult(data) {
+      var risk = {};
+      switch (data.riskLevel) {
+        case '01':
+          risk['name'] = '保守型';
+          risk['description'] = '在投资中，保证本金不受损失和保持资产的流动性是您的首要目标。您对投资的态度是希望投资收益极度稳定，不愿承担高风险以换取高收益，不愿意承受投资波动对心理的煎熬，追求稳定。';
+          risk['bearingCapacity'] = '极低';
+          risk['profitExpect'] = '稳定收益';
+          risk['recommendFinancialProductsType'] = '存款、货币市场基金及保本理财商品';
+          break;
+        case '02':
+          risk['name'] = '';
+          risk['description'] = '在任何投资中，稳定是您的首要考虑的因素。您希望在保证本金安全的基础上能有一些增值收入。追求较低的风险，对投资回报的要求不高';
+          risk['bearingCapacity'] = '低';
+          risk['profitExpect'] = '稳定收益';
+          risk['recommendFinancialProductsType'] = '高评等债券型基金及保守型商品';
+          break;
+        case '03':
+          risk['name'] = '';
+          risk['description'] = '任何投资中，在风险较小的情况下获得一定的收益是您主要的投资目的。您通常愿意面临一定的风险，但在做投资决定时，会仔细地对将要面临的风险进行认真的分析。您对风险总是客观存在有清楚的认识。';
+          risk['bearingCapacity'] = '中';
+          risk['profitExpect'] = '中等收益';
+          risk['recommendFinancialProductsType'] = '股票型基金、混合基金、可转债基金、分级基金A份额及安稳型商品';
+          break;
+        case '04':
+          risk['name'] = '';
+          risk['description'] = '在任何投资中，您渴望有较高的投资收益，但又不愿承受较大的风险；可以承受一定的投资波动，但是希望自己的投资风险小于市场的整体风险。您有较高的收益目标，且对风险有清醒的认识。';
+          risk['bearingCapacity'] = '中高';
+          risk['profitExpect'] = '中高收益';
+          risk['recommendFinancialProductsType'] = '可转债基金分级B份及平衡型商品';
+          break;
+        case '05':
+          risk['name'] = '';
+          risk['description'] = '在任何投资中，您通常专注于投资的长期增值，并愿意为此承受较大的风险。短期的投资波动并不会对您造成大的影响，追求超高的回报才是客户关注的目标。';
+          risk['bearingCapacity'] = '高';
+          risk['profitExpect'] = '高收益';
+          risk['recommendFinancialProductsType'] = '债券基金分级B份额、股票基金分级B份额、大宗商品基金、私募股权基金、私募创投基金及成长型商品';
+          break;
+        default:
+          break;
+      }
       if (data.login !== 0) {
-        // window.location.href = '/user/login';
-      } else if (data.riskLevel !== '') {
-        // window.location.href = '/application/views/roboAdvisor/showRiskResult.html';
+        window.location.href = '/user/login';
+      } else if (data.riskLevel == '') {
+        window.location.href = 'roboAdvisor.html'
       } else {
         document.getElementsByClassName('ra-wrap')[0].style.display = 'block';
         document.getElementsByClassName('loading')[0].style.display = 'none';
 
-        var riskChart = echarts.init(document.getElementById('testResult'));
-        riskChart.setOption(option);
       }
+
+      var riskChart = echarts.init(document.getElementById('testResult'));
+      riskChart.setOption(option);
+
+      // document.getElementById('totalAssets').innerHTML = '您的家庭总资产为：' + data.;
+      // document.getElementById('investType').innerHTML = data.;
+      // document.getElementById('description').innerHTML = risk.description;
+      // document.getElementById('bearingCapacity').innerHTML = risk.bearingCapacity;
+      // document.getElementById('profitExpect').innerHTML = risk.profitExpect;
+      // document.getElementById('recommendFinancialProductsType').innerHTML = risk.recommendFinancialProductsType;
+
     }
   </script>
 </body>
