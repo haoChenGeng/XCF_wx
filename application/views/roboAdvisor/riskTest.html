@@ -97,7 +97,7 @@
         timeout: 10000,
         async: false,
         success: function(res) {
-          console.log(res);
+          // console.log(res);
           if (!res || res.code !== '0000') {
             alert('获取题目出错，请稍后再试！')
           } else {
@@ -177,48 +177,76 @@
     }
 
     function initView() {
-      console.log(mui);
       //初始化单页view
       var viewApi = mui('#app').view({
         defaultPage: '#ques-1'
       });
 
       var res = [];
-
       document.getElementById('app').addEventListener('tap', function(e) {
-          // console.log(e.target);
-          var self = e.target;
+        console.log(e.target);
+        var self = e.target;
 
-          if (self.classList.contains('test-item')) {
-            var ret = self.parentNode.parentNode.querySelector('.test-active');
-            if (ret) {
-              ret.classList.remove('test-active');
+        if (self.classList.contains('test-item')) {
+          var ret = self.parentNode.parentNode.querySelector('.test-active');
+          if (ret) {
+            ret.classList.remove('test-active');
+          }
+          self.parentNode.classList.add('test-active');
+          var targetInput = self.firstElementChild.nextSibling;
+          targetInput.checked = 'checked';
+
+          for (var i = 0; i < res.length; i++) {
+            if (res[i].num === targetInput.dataset.num) {
+              res[i].num = targetInput.dataset.num;
+              res[i].result = targetInput.value;
+              res[i].point = targetInput.dataset.point;
             }
-            self.parentNode.classList.add('test-active');
-            var targetInput = self.firstElementChild.nextSibling;
-            targetInput.checked = 'checked';
+          }
+          res.push({
+            num: targetInput.dataset.num,
+            result: targetInput.value,
+            point: targetInput.dataset.point
+          });
+        } else if (self.parentNode.classList.contains('test-item') && self.nodeName == 'LABEL') {
+          var ret2 = self.parentNode.parentNode.parentNode.querySelector('.test-active');
+          if (ret2) {
+            ret2.classList.remove('test-active');
+          }
+          self.parentNode.parentNode.classList.add('test-active');
+          if (self.nodeName == 'LABEL') {
+            self.nextSibling.checked = 'checked';
 
+            for (var i = 0; i < res.length; i++) {
+              if (res[i].num === self.nextSibling.dataset.num) {
+                res[i].num = self.nextSibling.dataset.num;
+                res[i].result = self.nextSibling.value;
+                res[i].point = self.nextSibling.dataset.point;
+              }
+            }
             res.push({
-              num: targetInput.dataset.num,
-              result: targetInput.value,
-              point: targetInput.dataset.point
+              num: self.nextSibling.dataset.num,
+              result: self.nextSibling.value,
+              point: self.nextSibling.dataset.point
             });
-          } else if (self.parentNode.classList.contains('test-item')) {
-            var ret2 = self.parentNode.parentNode.parentNode.querySelector('.test-active');
-            if (ret2) {
-              ret2.classList.remove('test-active');
-            }
-            self.parentNode.parentNode.classList.add('test-active');
+          } else if (self.nodeName == 'INPUT') {
             self.checked = 'checked';
 
+            for (var i = 0; i < res.length; i++) {
+              if (res[i].num === self.dataset.num) {
+                res[i].num = self.dataset.num;
+                res[i].result = self.value;
+                res[i].point = self.dataset.point;
+              }
+            }
             res.push({
-              num: targetInput2.dataset.num,
-              result: targetInput2.value,
-              point: targetInput2.dataset.point
+              num: self.dataset.num,
+              result: self.value,
+              point: self.dataset.point
             });
           }
-        })
-        // console.log(res);
+        }
+      })
 
       document.getElementById('testSubmit').addEventListener('tap', function(e) {
         getTestResult(res);
@@ -258,7 +286,13 @@
     }
 
     function getTestResult(data) {
+      var totalQues = document.getElementsByClassName('mui-page').length;
+      console.log(totalQues);
+      console.log(data);
       if (!data) {
+        return false;
+      } else if (data.length !== totalQues) {
+        alert('您还有题没做，请完成后提交！');
         return false;
       }
       mui.ajax('', {
