@@ -72,7 +72,7 @@
           <li class="li01">
               <a href="/jijin/Jz_account/entrance" id="fund_access" class="span01">公募</a>
             </li>
-            <li class="li01 li02">
+            <li class="li02">
             <?php 
               if (isset($_SESSION['customer_id']))
                 echo '<a href="/Pf_assessment/userpfa" id="" class="span01">私募</a>';
@@ -80,13 +80,13 @@
                 echo '<a href="/user/login/1" id="" class="span01">私募</a>';
               ?>
             </li>
-            <li class="li01 li05">
+            <li class="li05">
               <a href="/application/views/roboAdvisor/roboAdvisor.html" class="span01">智投</a>
             </li>
-            <li class="li01 li03">
+            <li class="li03">
               <a href="/FindPaper" id="sign_in" class="span01">发现</a>
             </li>
-            <li class="li01 li04">
+            <li class="li04">
               <a href="https://neoclub.xiaoniuxcf.com/wap.php" class="span01">会员专区</a>
             </li>
         </ul>
