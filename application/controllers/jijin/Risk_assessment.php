@@ -135,7 +135,8 @@ class Risk_assessment extends MY_Controller {
 	function ZNTGsubmit() {
 		$data = array();
 		$post = $this->input->post();
-/* file_put_contents('log/debug.txt', serialize($post));
+// file_put_contents('log/debug.txt', serialize($post));
+/* 
 $str = 'a:1:{s:3:"res";s:475:"[{"num":"3002","result":"A","point":"0.00"},{"num":"3003","result":"A","point":"0.00"},{"num":"3006","result":"A","point":"0.00"},{"num":"3007","result":"A","point":"2.00"},{"num":"3008","result":"A","point":"10.00"},{"num":"3009","result":"A","point":"8.00"},{"num":"3011","result":"A","point":"2.00"},{"num":"3012","result":"A","point":"2.00"},{"num":"3013","result":"A","point":"2.00"},{"num":"3014","result":"A","point":"2.00"},{"num":"3015","result":"A","point":"2.00"}]";}';
 $str = 'a:1:{s:3:"res";s:690:"[{"num":"3001","result":"A","point":"0.00"},{"num":"3002","result":"A","point":"0.00"},{"num":"3003","result":"A","point":"0.00"},{"num":"3004","result":"A","point":"0.00"},{"num":"3005","result":"A","point":"0.00"},{"num":"3006","result":"A","point":"0.00"},{"num":"3007","result":"A","point":"2.00"},{"num":"3008","result":"A","point":"10.00"},{"num":"3009","result":"A","point":"8.00"},{"num":"3010","result":"A","point":"2.00"},{"num":"3011","result":"A","point":"2.00"},{"num":"3012","result":"A","point":"2.00"},{"num":"3013","result":"A","point":"2.00"},{"num":"3014","result":"A","point":"2.00"},{"num":"3015","result":"A","point":"2.00"},{"num":"3016","result":"A","point":"2.00"}]";}';
 $post = unserialize($str); */
@@ -187,7 +188,43 @@ $post = unserialize($str); */
 		if (isset($_SESSION['customer_id'])){
 			$riskInfo = $this->db->select('answer,riskLevel')->where(array('customerId'=>$_SESSION['customer_id']))->get('p2_riskanswer')->row_array();
 			if (!empty($riskInfo['riskLevel'])){
+				$this->load->config('jz_dict');
 				$ZNTGResult['riskLevel'] = $riskInfo['riskLevel'];
+				$ZNTGResult['riskName'] = $this->config->item('custrisk')[$riskInfo['riskLevel']];
+				$answer = array_slice(explode('|', $riskInfo['answer']),0,6);
+				foreach ($answer as $val){
+					$cutVal = explode(':', $val);
+					$riskAnswer[$cutVal[0]] = $cutVal[1];
+				}
+				$ret = $this->fund_interface->risk_test_query();
+				$ret = array_slice($ret,0,6);
+				foreach ($ret as &$val){
+					foreach ($val['result'] as $v){
+						$ZNTGQuestion[$val['questioncode']][$v['result']] = $v['resultcontent'];
+					}
+				}
+				$chartDes = array('3002'=>'房地产资产', '3003'=>'股权投资资产', '3004'=>'固定收益资产', '3005'=>'现金类资产', '3006'=>'境外资产',);
+				foreach ($riskAnswer as $key=>$val){
+					if ('3001'==$key){
+						$ZNTGResult['totalAsset'] = $ZNTGQuestion[$key][$val];
+					}else{
+						if (strstr($ZNTGQuestion[$key][$val],'以下')){
+							$value =20;
+						}else{
+							if (strstr($ZNTGQuestion[$key][$val],'以上')){
+								$value =35;
+							}else{
+								$tmp = explode('%', $ZNTGQuestion[$key][$val]);
+								if ($tmp[0]<40){
+									$value =25;
+								}else{
+									$value =30;
+								}
+							}
+						}
+						$ZNTGResult['chartData'][] = array('name' => $chartDes[$key], 'value'=>$value,'des' => $ZNTGQuestion[$key][$val]);
+					}
+				}
 			}else{
 				$ZNTGResult['riskLevel'] = '';
 			}
