@@ -196,19 +196,23 @@
           var targetInput = self.firstElementChild.nextSibling;
           targetInput.checked = 'checked';
 
+          var repeat = false;
           for (var i = 0; i < res.length; i++) {
             if (res[i].num === targetInput.dataset.num) {
               res[i].num = targetInput.dataset.num;
               res[i].result = targetInput.value;
               res[i].point = targetInput.dataset.point;
+              repeat = true;
             }
           }
-          res.push({
-            num: targetInput.dataset.num,
-            result: targetInput.value,
-            point: targetInput.dataset.pointq
-          });
-        } else if (self.parentNode.classList.contains('test-item') && self.nodeName == 'LABEL') {
+          if (!repeat) {
+            res.push({
+              num: targetInput.dataset.num,
+              result: targetInput.value,
+              point: targetInput.dataset.point
+            });
+          }
+        } else if (self.parentNode.classList.contains('test-item')) {
           var ret2 = self.parentNode.parentNode.parentNode.querySelector('.test-active');
           if (ret2) {
             ret2.classList.remove('test-active');
@@ -217,33 +221,41 @@
           if (self.nodeName == 'LABEL') {
             self.nextSibling.checked = 'checked';
 
+            var repeat2 = false;
             for (var i = 0; i < res.length; i++) {
               if (res[i].num === self.nextSibling.dataset.num) {
                 res[i].num = self.nextSibling.dataset.num;
                 res[i].result = self.nextSibling.value;
                 res[i].point = self.nextSibling.dataset.point;
+                repeat2 = true;
               }
             }
-            res.push({
-              num: self.nextSibling.dataset.num,
-              result: self.nextSibling.value,
-              point: self.nextSibling.dataset.point
-            });
+            if (!repeat2) {
+              res.push({
+                num: self.nextSibling.dataset.num,
+                result: self.nextSibling.value,
+                point: self.nextSibling.dataset.point
+              });
+            }
           } else if (self.nodeName == 'INPUT') {
             self.checked = 'checked';
 
+            var repeat3 = false;
             for (var i = 0; i < res.length; i++) {
               if (res[i].num === self.dataset.num) {
                 res[i].num = self.dataset.num;
                 res[i].result = self.value;
                 res[i].point = self.dataset.point;
+                repeat3 = true;
               }
             }
-            res.push({
-              num: self.dataset.num,
-              result: self.value,
-              point: self.dataset.point
-            });
+            if (!repeat3) {
+              res.push({
+                num: self.dataset.num,
+                result: self.value,
+                point: self.dataset.point
+              });
+            }
           }
         }
       })
