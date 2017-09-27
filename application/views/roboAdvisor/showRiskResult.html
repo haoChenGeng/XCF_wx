@@ -107,6 +107,10 @@
         title: {
 
         },
+        grid: {
+          x: 20,
+          y: 30
+        },
         tooltip: {
           trigger: 'item',
           formatter: "{a} <br/>{b} : {c} "
@@ -121,8 +125,7 @@
         series: [{
           name: '面积模式',
           type: 'pie',
-          radius: [50, 100],
-          // center: ['75%', '50%'],
+          radius: [30, 70],
           roseType: 'area',
           data: [{
             value: 20,
@@ -227,20 +230,8 @@
           })
           console.log(seriesData);
           option.series[0].data = seriesData;
-          var chartContainer = document.getElementById('testResult');
-          // var myChartContainer = function() {
-          // var fz = document.getElementsByTagName('html')[0].style.fontSize;
-          // var cFz = fz.match(/\d*/)[0];
-          // chartContainer.style.width = parseInt(cFz * 7) + 'px';
-          // chartContainer.style.height = parseInt(cFz * 4) + 'px';
-          // };
-          // myChartContainer();
-          var riskChart = echarts.init(chartContainer);
+          var riskChart = echarts.init(document.getElementById('testResult'));
           riskChart.setOption(option);
-          window.onresize = function() {
-            // myChartContainer();
-            riskChart.resize();
-          };
         }
       }
     }
