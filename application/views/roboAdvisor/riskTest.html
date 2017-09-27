@@ -208,7 +208,7 @@
             result: targetInput.value,
             point: targetInput.dataset.pointq
           });
-        } else if (self.parentNode.classList.contains('test-item') && self.nodeName == 'LABEL') {
+        } else if (self.parentNode.classList.contains('test-item')) {
           var ret2 = self.parentNode.parentNode.parentNode.querySelector('.test-active');
           if (ret2) {
             ret2.classList.remove('test-active');
