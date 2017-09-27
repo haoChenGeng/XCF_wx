@@ -57,6 +57,7 @@
           wFsize = wFsize > 32 ? wFsize : 32;
           // document.getElementsByTagName('html')[0].dataset.dpr = wDpr;
           document.getElementsByTagName('html')[0].style.fontSize = wFsize + 'px';
+
           // document.getElementById("fixed").style.display = "none";
         }, 500);
       } else {
@@ -81,7 +82,7 @@
   </div>
   <div class="ra-wrap" style="display: none;">
     <section class="ra-result-content">
-      <div id="testResult" style="height: 4.0rem;width: 7rem;" class="test-chart">
+      <div id="testResult" style="width:7rem;height:4rem;" class="test-chart">
 
       </div>
       <p id="totalAssets">您的家庭总资产为：</p>
@@ -101,132 +102,147 @@
   <script src="../../../data/jijin/js/echarts.min.js"></script>
   <!-- <script src="../../../data/jijin/js/roboAdvisor.js"></script> -->
   <script>
-    var option = {
-      title: {
+    window.onload = function() {
+      var option = {
+        title: {
 
-      },
-      tooltip: {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
-      },
-      legend: {
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: "{a} <br/>{b} : {c} "
+        },
+        legend: {
 
-      },
-      toolbox: {
+        },
+        toolbox: {
 
-      },
-      calculable: true,
-      series: [{
-        name: '面积模式',
-        type: 'pie',
-        radius: [30, 110],
-        // center: ['75%', '50%'],
-        roseType: 'area',
-        data: [{
-          value: 10,
-          name: 'rose1'
-        }, {
-          value: 5,
-          name: 'rose2'
-        }, {
-          value: 15,
-          name: 'rose3'
-        }, {
-          value: 25,
-          name: 'rose4'
-        }, {
-          value: 20,
-          name: 'rose5'
-        }, {
-          value: 35,
-          name: 'rose6'
-        }, {
-          value: 30,
-          name: 'rose7'
-        }, {
-          value: 40,
-          name: 'rose8'
+        },
+        calculable: true,
+        series: [{
+          name: '面积模式',
+          type: 'pie',
+          radius: [50, 100],
+          // center: ['75%', '50%'],
+          roseType: 'area',
+          data: [{
+            value: 20,
+            name: 'rose1'
+          }, {
+            value: 20,
+            name: 'rose2'
+          }, {
+            value: 25,
+            name: 'rose3'
+          }, {
+            value: 25,
+            name: 'rose4'
+          }, {
+            value: 20,
+            name: 'rose5'
+          }, {
+            value: 35,
+            name: 'rose6'
+          }, {
+            value: 30,
+            name: 'rose7'
+          }, {
+            value: 40,
+            name: 'rose8'
+          }]
         }]
-      }]
-    };
+      };
 
-    mui.ajax('/jijin/Risk_assessment/getZNTGResult', {
-      data: {
+      mui.ajax('/jijin/Risk_assessment/getZNTGResult', {
+        data: {
 
-      },
-      dataType: 'json',
-      type: 'GET',
-      timeout: 10000,
-      success: function(res) {
-        console.log(res);
-        renderResult(res);
-      },
-      error: function(xhr, type, errorThrown) {
-        console.log(type);
+        },
+        dataType: 'json',
+        type: 'GET',
+        timeout: 10000,
+        success: function(res) {
+          console.log(res);
+          renderResult(res);
+        },
+        error: function(xhr, type, errorThrown) {
+          console.log(type);
+        }
+      })
+
+      function renderResult(data) {
+        var risk = {};
+        switch (data.riskLevel) {
+          case '01':
+            risk['description'] = '在投资中，保证本金不受损失和保持资产的流动性是您的首要目标。您对投资的态度是希望投资收益极度稳定，不愿承担高风险以换取高收益，不愿意承受投资波动对心理的煎熬，追求稳定。';
+            risk['bearingCapacity'] = '极低';
+            risk['profitExpect'] = '稳定收益';
+            risk['recommendFinancialProductsType'] = '存款、货币市场基金及保本理财商品';
+            break;
+          case '02':
+            risk['description'] = '在任何投资中，稳定是您的首要考虑的因素。您希望在保证本金安全的基础上能有一些增值收入。追求较低的风险，对投资回报的要求不高';
+            risk['bearingCapacity'] = '低';
+            risk['profitExpect'] = '稳定收益';
+            risk['recommendFinancialProductsType'] = '高评等债券型基金及保守型商品';
+            break;
+          case '03':
+            risk['description'] = '任何投资中，在风险较小的情况下获得一定的收益是您主要的投资目的。您通常愿意面临一定的风险，但在做投资决定时，会仔细地对将要面临的风险进行认真的分析。您对风险总是客观存在有清楚的认识。';
+            risk['bearingCapacity'] = '中';
+            risk['profitExpect'] = '中等收益';
+            risk['recommendFinancialProductsType'] = '股票型基金、混合基金、可转债基金、分级基金A份额及安稳型商品';
+            break;
+          case '04':
+            risk['description'] = '在任何投资中，您渴望有较高的投资收益，但又不愿承受较大的风险；可以承受一定的投资波动，但是希望自己的投资风险小于市场的整体风险。您有较高的收益目标，且对风险有清醒的认识。';
+            risk['bearingCapacity'] = '中高';
+            risk['profitExpect'] = '中高收益';
+            risk['recommendFinancialProductsType'] = '可转债基金分级B份及平衡型商品';
+            break;
+          case '05':
+            risk['description'] = '在任何投资中，您通常专注于投资的长期增值，并愿意为此承受较大的风险。短期的投资波动并不会对您造成大的影响，追求超高的回报才是客户关注的目标。';
+            risk['bearingCapacity'] = '高';
+            risk['profitExpect'] = '高收益';
+            risk['recommendFinancialProductsType'] = '债券基金分级B份额、股票基金分级B份额、大宗商品基金、私募股权基金、私募创投基金及成长型商品';
+            break;
+          default:
+            break;
+        }
+        if (data.login !== 0) {
+          window.location.href = '/user/login';
+        } else if (data.riskLevel == '') {
+          window.location.href = 'roboAdvisor.html'
+        } else {
+          document.getElementsByClassName('ra-wrap')[0].style.display = 'block';
+          document.getElementsByClassName('loading')[0].style.display = 'none';
+
+          document.getElementById('totalAssets').innerHTML = '您的家庭总资产为：' + data.totalAsset;
+          document.getElementById('investType').innerHTML = data.riskName;
+          document.getElementById('description').innerHTML = risk.description;
+          document.getElementById('bearingCapacity').innerHTML = risk.bearingCapacity;
+          document.getElementById('profitExpect').innerHTML = risk.profitExpect;
+          document.getElementById('recommendFinancialProductsType').innerHTML = risk.recommendFinancialProductsType;
+
+          var seriesData = data.chartData.map(function(item) {
+            return {
+              name: item.name + '\n' + item.des,
+              value: item.value
+            }
+          })
+          console.log(seriesData);
+          option.series[0].data = seriesData;
+          var chartContainer = document.getElementById('testResult');
+          // var myChartContainer = function() {
+          // var fz = document.getElementsByTagName('html')[0].style.fontSize;
+          // var cFz = fz.match(/\d*/)[0];
+          // chartContainer.style.width = parseInt(cFz * 7) + 'px';
+          // chartContainer.style.height = parseInt(cFz * 4) + 'px';
+          // };
+          // myChartContainer();
+          var riskChart = echarts.init(chartContainer);
+          riskChart.setOption(option);
+          window.onresize = function() {
+            // myChartContainer();
+            riskChart.resize();
+          };
+        }
       }
-    })
-
-    function renderResult(data) {
-      var risk = {};
-      switch (data.riskLevel) {
-        case '01':
-          risk['name'] = '保守型';
-          risk['description'] = '在投资中，保证本金不受损失和保持资产的流动性是您的首要目标。您对投资的态度是希望投资收益极度稳定，不愿承担高风险以换取高收益，不愿意承受投资波动对心理的煎熬，追求稳定。';
-          risk['bearingCapacity'] = '极低';
-          risk['profitExpect'] = '稳定收益';
-          risk['recommendFinancialProductsType'] = '存款、货币市场基金及保本理财商品';
-          break;
-        case '02':
-          risk['name'] = '';
-          risk['description'] = '在任何投资中，稳定是您的首要考虑的因素。您希望在保证本金安全的基础上能有一些增值收入。追求较低的风险，对投资回报的要求不高';
-          risk['bearingCapacity'] = '低';
-          risk['profitExpect'] = '稳定收益';
-          risk['recommendFinancialProductsType'] = '高评等债券型基金及保守型商品';
-          break;
-        case '03':
-          risk['name'] = '';
-          risk['description'] = '任何投资中，在风险较小的情况下获得一定的收益是您主要的投资目的。您通常愿意面临一定的风险，但在做投资决定时，会仔细地对将要面临的风险进行认真的分析。您对风险总是客观存在有清楚的认识。';
-          risk['bearingCapacity'] = '中';
-          risk['profitExpect'] = '中等收益';
-          risk['recommendFinancialProductsType'] = '股票型基金、混合基金、可转债基金、分级基金A份额及安稳型商品';
-          break;
-        case '04':
-          risk['name'] = '';
-          risk['description'] = '在任何投资中，您渴望有较高的投资收益，但又不愿承受较大的风险；可以承受一定的投资波动，但是希望自己的投资风险小于市场的整体风险。您有较高的收益目标，且对风险有清醒的认识。';
-          risk['bearingCapacity'] = '中高';
-          risk['profitExpect'] = '中高收益';
-          risk['recommendFinancialProductsType'] = '可转债基金分级B份及平衡型商品';
-          break;
-        case '05':
-          risk['name'] = '';
-          risk['description'] = '在任何投资中，您通常专注于投资的长期增值，并愿意为此承受较大的风险。短期的投资波动并不会对您造成大的影响，追求超高的回报才是客户关注的目标。';
-          risk['bearingCapacity'] = '高';
-          risk['profitExpect'] = '高收益';
-          risk['recommendFinancialProductsType'] = '债券基金分级B份额、股票基金分级B份额、大宗商品基金、私募股权基金、私募创投基金及成长型商品';
-          break;
-        default:
-          break;
-      }
-      if (data.login !== 0) {
-        window.location.href = '/user/login';
-      } else if (data.riskLevel == '') {
-        window.location.href = 'roboAdvisor.html'
-      } else {
-        document.getElementsByClassName('ra-wrap')[0].style.display = 'block';
-        document.getElementsByClassName('loading')[0].style.display = 'none';
-
-      }
-
-      var riskChart = echarts.init(document.getElementById('testResult'));
-      riskChart.setOption(option);
-
-      // document.getElementById('totalAssets').innerHTML = '您的家庭总资产为：' + data.;
-      // document.getElementById('investType').innerHTML = data.;
-      // document.getElementById('description').innerHTML = risk.description;
-      // document.getElementById('bearingCapacity').innerHTML = risk.bearingCapacity;
-      // document.getElementById('profitExpect').innerHTML = risk.profitExpect;
-      // document.getElementById('recommendFinancialProductsType').innerHTML = risk.recommendFinancialProductsType;
-
     }
   </script>
 </body>
