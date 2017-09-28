@@ -121,13 +121,44 @@
         },
         calculable: true,
         series: [{
+          name: '资产现状',
+          type: 'pie',
+          radius: [0, 30],
+
+          label: {
+            normal: {
+              position: 'center',
+              color: '#333',
+              fontSize: 14,
+              lineHeight: 280,
+              padding: [0, 0, 15, 0]
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#fff'
+            }
+          },
+          labelLine: {
+            normal: {
+              show: false
+            }
+          },
+          data: [{
+              value: 0,
+              name: '资产\n现状',
+              selected: true
+            }
+
+          ]
+        }, {
           name: '资产类型',
           type: 'pie',
-          radius: [30, 70],
+          radius: [40, 70],
           roseType: 'area',
           data: [{
             value: 20,
-            name: 'rose1'
+            name: 'rose1',
           }, {
             value: 20,
             name: 'rose2'
@@ -220,14 +251,62 @@
           document.getElementById('profitExpect').innerHTML = risk.profitExpect;
           document.getElementById('recommendFinancialProductsType').innerHTML = risk.recommendFinancialProductsType;
 
+          data.chartData.map(function(item) {
+            switch (item.name) {
+              case '房地产资产':
+                item['itemStyle'] = {
+                  normal: {
+                    color: ''
+                  }
+                }
+                item['itemStyle']['normal']['color'] = '#58a7ae';
+                break;
+              case '股权投资资产':
+                item['itemStyle'] = {
+                  normal: {
+                    color: ''
+                  }
+                }
+                item['itemStyle']['normal']['color'] = '#b03081';
+                break;
+              case '固定收益资产':
+                item['itemStyle'] = {
+                  normal: {
+                    color: ''
+                  }
+                }
+                item['itemStyle']['normal']['color'] = '#458fd7';
+                break;
+              case '现金类资产':
+                item['itemStyle'] = {
+                  normal: {
+                    color: ''
+                  }
+                }
+                item['itemStyle']['normal']['color'] = '#94b83f';
+                break;
+              case '境外资产':
+                item['itemStyle'] = {
+                  normal: {
+                    color: ''
+                  }
+                }
+                item['itemStyle']['normal']['color'] = '#d6934a';
+                break;
+              default:
+                break;
+            }
+          })
+          console.log(data);
           var seriesData = data.chartData.map(function(item) {
             return {
               name: item.name + '\n' + item.des,
-              value: item.value
+              value: item.value,
+              itemStyle: item.itemStyle
             }
           })
           console.log(seriesData);
-          option.series[0].data = seriesData;
+          option.series[1].data = seriesData;
           var riskChart = echarts.init(document.getElementById('testResult'));
           riskChart.setOption(option);
         }
