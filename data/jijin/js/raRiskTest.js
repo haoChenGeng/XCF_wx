@@ -224,7 +224,7 @@ function getTestResult(data) {
     },
     type: 'POST',
     dataType: 'json',
-    timeout: 1000,
+    timeout: 10000,
     success: function(res) {
       // console.log(res);
       if (res.code == '0000') {
