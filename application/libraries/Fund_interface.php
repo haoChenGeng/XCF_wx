@@ -31,7 +31,7 @@ class Fund_interface
 			$this->fundUrl = $fundInterface['url'];
 			$this->AESKey = $fundInterface['password'];
 		}
-		$this->CI->load->helper(array("comfunction","logFuncs"));
+		$this->CI->load->helper(array("comfunction","logfuncs"));
 	}
 	
 	private function getSubmitData($inputData){

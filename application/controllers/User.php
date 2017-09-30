@@ -364,7 +364,7 @@ class User extends MY_Controller {
 			}
 		}
 		$sendSms = $this->db->where(array('dealitem'=>'sendSms'))->get('p2_dealitems')->row_array();
-		$this->load->helper(array("logFuncs"));
+		$this->load->helper(array("logfuncs"));
 		if (empty($sendSms)){
 			$this->db->set(array('dealitem'=>'sendSms','updatetime'=>time(),'times'=>1))->insert('p2_dealitems');
 		}else{
