@@ -37,7 +37,7 @@ body {
   height: .8rem;
   display: block;
   text-decoration: none;
-  border-radius: 3px;
+  border-radius: 2px;
   text-align: center;
   line-height: .8rem;
   color: #fff;
@@ -104,11 +104,10 @@ body {
   font-size: .32rem;
   word-break: break-all;
   margin: .84rem auto 0 auto;
-  padding-left: .12rem;
 }
 
 .next-contact {
-  width: 5.0rem;
+  width: 5.1rem;
   font-size: .24rem;
   color: #a7adb7;
   word-break: break-all;
@@ -138,6 +137,7 @@ body {
   margin: 0 .255rem;
   background-color: #fff;
   border-radius: 3px;
+  box-shadow: 0 3px 6px #ccc;
 }
 
 .mui-table-view {
@@ -312,7 +312,7 @@ body {
 
 .last-btn {
   position: absolute;
-  top: 10.4rem;
+  top: 10rem;
   left: 50%;
   margin-left: -24px;
 }
@@ -324,7 +324,7 @@ body {
   width: 7rem;
   margin: .2rem auto 0 auto;
   background-color: #fff;
-  box-shadow: 0 0 10px #ccc;
+  box-shadow: 0 3px 6px #ccc;
   border-radius: 3px;
   padding-bottom: .5rem;
 }
@@ -332,6 +332,7 @@ body {
 #totalAssets {
   font-size: .28rem;
   margin-top: .4rem;
+  margin-bottom: .22rem;
   text-align: center;
 }
 
@@ -352,13 +353,16 @@ body {
 }
 
 .result-desc {
-  font-size: .3rem;
-  margin: .25rem auto 0 auto;
+  font-size: .26rem;
+  margin: .2rem auto 0 auto;
   width: 6.48rem;
 }
 
+.result-investtype {
+  font-size: .3rem;
+}
+
 .result-desc span {
-  font-size: .26rem;
   color: #8f949c;
   white-space: pre-wrap;
 }
@@ -366,6 +370,10 @@ body {
 #investType {
   font-size: .38rem;
   color: #0074c3;
+}
+
+#description {
+  line-height: .36rem;
 }
 
 .result-confirm {
@@ -376,6 +384,7 @@ body {
   text-align: center;
   font-size: .24rem;
   margin-top: .3rem;
+  color: #8f949c;
 }
 
 .reevaluation a {

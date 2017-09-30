@@ -210,7 +210,6 @@ function initView() {
 
 function getTestResult(data) {
   var totalQues = document.getElementsByClassName('mui-page').length;
-  console.log(totalQues);
   console.log(data);
   if (!data) {
     alert('无数据!');
@@ -219,16 +218,17 @@ function getTestResult(data) {
     alert('您还有题没做，请完成后提交！');
     return false;
   }
-  mui.ajax('/jijin/Risk_assessment/getZNTGResult', {
+  mui.ajax('/jijin/Risk_assessment/ZNTGsubmit', {
     data: {
       res: JSON.stringify(data)
     },
     type: 'POST',
     dataType: 'json',
-    timeout: 1000,
+    timeout: 10000,
     success: function(res) {
       // console.log(res);
       if (res.code == '0000') {
+        // alert('测评成功');
         window.location.href = '/application/views/roboAdvisor/showRiskResult.html';
       } else {
         alert(res.msg);

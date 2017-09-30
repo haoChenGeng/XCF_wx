@@ -82,12 +82,10 @@
   </div>
   <div class="ra-wrap" style="display: none;">
     <section class="ra-result-content">
-      <div id="testResult" style="width:7rem;height:4rem;" class="test-chart">
-
-      </div>
+      <div id="testResult" style="width:7rem;height:4rem;" class="test-chart"></div>
       <p id="totalAssets">您的家庭总资产为：</p>
       <small class="result-annotation"><span class="line"></span>注：上述图表为加权展示，仅供参考<span class="line"></span></small>
-      <p class="result-desc">您的投资类型为：<span id="investType"></span></p>
+      <p class="result-desc result-investtype">您的投资类型为：<span id="investType"></span></p>
       <p class="result-desc">风险描述：<span id="description"></span></p>
       <p class="result-desc">风险承受能力：<span id="bearingCapacity"></span></p>
       <p class="result-desc">获利期待：<span id="profitExpect"></span></p>
@@ -113,7 +111,7 @@
         },
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b} : {c} "
+          formatter: "{a} <br/>{b} "
         },
         legend: {
 
@@ -123,13 +121,44 @@
         },
         calculable: true,
         series: [{
-          name: '面积模式',
+          name: '资产现状',
           type: 'pie',
-          radius: [30, 70],
+          radius: [0, 30],
+
+          label: {
+            normal: {
+              position: 'center',
+              color: '#333',
+              fontSize: 14,
+              lineHeight: 280,
+              padding: [0, 0, 15, 0]
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#fff'
+            }
+          },
+          labelLine: {
+            normal: {
+              show: false
+            }
+          },
+          data: [{
+              value: 0,
+              name: '资产\n现状',
+              selected: true
+            }
+
+          ]
+        }, {
+          name: '资产类型',
+          type: 'pie',
+          radius: [40, 70],
           roseType: 'area',
           data: [{
             value: 20,
-            name: 'rose1'
+            name: 'rose1',
           }, {
             value: 20,
             name: 'rose2'
@@ -181,7 +210,7 @@
             risk['recommendFinancialProductsType'] = '存款、货币市场基金及保本理财商品';
             break;
           case '02':
-            risk['description'] = '在任何投资中，稳定是您的首要考虑的因素。您希望在保证本金安全的基础上能有一些增值收入。追求较低的风险，对投资回报的要求不高';
+            risk['description'] = '在任何投资中，稳定是您的首要考虑的因素。您希望在保证本金安全的基础上能有一些增值收入。追求较低的风险，对投资回报的要求不高。';
             risk['bearingCapacity'] = '低';
             risk['profitExpect'] = '稳定收益';
             risk['recommendFinancialProductsType'] = '高评等债券型基金及保守型商品';
@@ -222,14 +251,62 @@
           document.getElementById('profitExpect').innerHTML = risk.profitExpect;
           document.getElementById('recommendFinancialProductsType').innerHTML = risk.recommendFinancialProductsType;
 
+          data.chartData.map(function(item) {
+            switch (item.name) {
+              case '房地产资产':
+                item['itemStyle'] = {
+                  normal: {
+                    color: ''
+                  }
+                }
+                item['itemStyle']['normal']['color'] = '#58a7ae';
+                break;
+              case '股权投资资产':
+                item['itemStyle'] = {
+                  normal: {
+                    color: ''
+                  }
+                }
+                item['itemStyle']['normal']['color'] = '#b03081';
+                break;
+              case '固定收益资产':
+                item['itemStyle'] = {
+                  normal: {
+                    color: ''
+                  }
+                }
+                item['itemStyle']['normal']['color'] = '#458fd7';
+                break;
+              case '现金类资产':
+                item['itemStyle'] = {
+                  normal: {
+                    color: ''
+                  }
+                }
+                item['itemStyle']['normal']['color'] = '#94b83f';
+                break;
+              case '境外资产':
+                item['itemStyle'] = {
+                  normal: {
+                    color: ''
+                  }
+                }
+                item['itemStyle']['normal']['color'] = '#d6934a';
+                break;
+              default:
+                break;
+            }
+          })
+          console.log(data);
           var seriesData = data.chartData.map(function(item) {
             return {
               name: item.name + '\n' + item.des,
-              value: item.value
+              value: item.value,
+              itemStyle: item.itemStyle
             }
           })
           console.log(seriesData);
-          option.series[0].data = seriesData;
+          option.series[1].data = seriesData;
           var riskChart = echarts.init(document.getElementById('testResult'));
           riskChart.setOption(option);
         }
