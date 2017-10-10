@@ -92,7 +92,7 @@ class Jz_fund extends MY_Controller
 				$fund_list['data'][$i]['nav'] = $val['nav'];
 				$fund_list['data'][$i]['tano'] = $val['tano'];
 				$fund_list['data'][$i]['taname'] = $val['taname'];
-				$risklevel = intval($val['risklevel']);
+				$risklevel = $val['risklevel'];
 				$fund_list['data'][$i]['risklevel'] = isset($this->config->item('productrisk')[$risklevel])?'['.$this->config->item('productrisk')[$risklevel].']':'';
 				$i++;
 			}
@@ -232,6 +232,33 @@ class Jz_fund extends MY_Controller
 					'msgUrl' => '/jijin/jz_fund',                           //调用my界面
 					'base' => $this->base
 					));
+		}
+	}
+	
+	//获取“购买基金”页面的内容,按基金类型分类
+	public function getFundData($activePage = 'apply') {
+		$_SESSION['fund_active_page'] =  $activePage;
+		switch ($activePage){
+			case 'buy':                                                   //认购
+				$this->fundClassify($data['buy'],$this->getFundList('pre_purchase'));
+				break;
+			case 'apply':                                                 //申购
+				$this->fundClassify($data['apply'],$this->getFundList('purchase'));
+				break;
+		}
+		$data['code'] = '0000';
+		echo json_encode($data);
+	}
+	
+	//对获取到的基金数据按类型进行分类
+	private function fundClassify(&$classifyFund,$fundData){
+		$classifyFund = array();
+		$this->load->config('jz_dict');
+		$fundtype = $this->config->item('fundtype');
+		foreach ($fundData['data'] as &$val){
+			$fundtype = $val['fundtypename'];
+			unset($val['fundtypename']);
+			$classifyFund[$fundtype][] = $val;
 		}
 	}
 	

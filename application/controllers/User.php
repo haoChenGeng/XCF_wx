@@ -479,7 +479,7 @@ class User extends MY_Controller {
 				$data['Recommend'][$key]['growthDes'] = '七日年化收益率';
 			}else{
 				$data['Recommend'][$key]['growthDes'] = '近一年收益率';
-				$data['Recommend'][$key]['growthrate'] = $val['growth_year'].'%';
+				$data['Recommend'][$key]['growthrate'] = empty($val['growth_year']) ? '--%' : $val['growth_year'].'%';
 			}
 		}
 	}
