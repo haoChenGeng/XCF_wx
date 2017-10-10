@@ -9,7 +9,7 @@ class Jz_account extends MY_Controller
     {
         parent::__construct();
         $this->load->database();
-        $this->load->helper(array("url","output","comfunction","logFuncs"));
+        $this->load->helper(array("url","output","comfunction","logfuncs"));
         $this->load->library(array('Fund_interface','Logincontroller'));
     }
     
