@@ -50,6 +50,7 @@ a.prototype.ajax = function(params) {
     data: params.data || {}, //参数
     jsonp: 'callback',
     jsonpCallback: ('jsonp_' + Math.random()).replace('.', ''),
+    beforeSend: params.beforeSend || function() {}, //
     error: params.error || function() {},
     success: params.success || function() {},
     complete: params.complete || function() {}
@@ -93,11 +94,13 @@ a.prototype.ajax = function(params) {
     options.data = formatParams(options.data);
     if (options.type == 'POST') {
       xhr.open(options.type, options.url, options.async);
+      options.beforeSend();
       xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
     } else {
       options.url += options.url.indexOf('?') > -1 ? '&' + options.data : '?' + options.data;
       options.data = null;
       xhr.open(options.type, options.url + '?' + options.data, options.async);
+      options.beforeSend();
     }
     if (options.xhrFields) {
       for (var field in options.xhrFields) {
@@ -127,7 +130,7 @@ a.prototype.ajax = function(params) {
           }
           options.success(data);
         } else {
-          options.error();
+          options.error(xhr);
         }
         options.complete();
       }
