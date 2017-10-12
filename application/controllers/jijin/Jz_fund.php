@@ -236,29 +236,44 @@ class Jz_fund extends MY_Controller
 	}
 	
 	//获取“购买基金”页面的内容,按基金类型分类
-	public function getFundData($activePage = 'apply') {
-		$_SESSION['fund_active_page'] =  $activePage;
-		switch ($activePage){
-			case 'buy':                                                   //认购
-				$this->fundClassify($data['buy'],$this->getFundList('pre_purchase'));
-				break;
-			case 'apply':                                                 //申购
-				$this->fundClassify($data['apply'],$this->getFundList('purchase'));
-				break;
-		}
+	public function getFundData() {
+		$post = $this->input->post();
+		$buyType = empty($post['buyType']) || $post['buyType']!= 'buy' ? 'apply' : 'buy';
+		$fundtype = empty($post['fundtype']) ? '2' : $post['fundtype'];
+		$_SESSION['fund_active_page'] =  $buyType;
+		$this->fundClassify($data,$fundtype,$buyType);
 		$data['code'] = '0000';
 		echo json_encode($data);
 	}
 	
 	//对获取到的基金数据按类型进行分类
-	private function fundClassify(&$classifyFund,$fundData){
+	private function fundClassify(&$classifyFund,$fundtype,$buyType){
 		$classifyFund = array();
 		$this->load->config('jz_dict');
-		$fundtype = $this->config->item('fundtype');
-		foreach ($fundData['data'] as &$val){
-			$fundtype = $val['fundtypename'];
-			unset($val['fundtypename']);
-			$classifyFund[$fundtype][] = $val;
+		$fundClass = $this->config->item('fundtype');
+		$buyType = $buyType == 'buy' ? 'pre_purchase' : 'purchase';
+		$classifyFund['fundTypes'] = $fundClass;
+		$this->fund_interface->fund_list();
+		if (!isset($_SESSION['qryallfund'])){
+			$_SESSION['qryallfund'] = 0;
+		}
+		if ( 0 == $_SESSION['qryallfund'] && isset($_SESSION['riskLevel'])){
+			$this->db->where(array('risklevel <='=>$_SESSION['riskLevel']));
+		}
+		if ( 2 == $fundtype ){
+			$this->db->select('status,fundcode,fundname,fundincomeunit,growthrate')->order_by('growthrate',"DESC");
+		}else{
+			$this->db->select('status,fundcode,fundname,nav,growth_day,growth_week,growth_onemonth,growth_threemonth,growth_sixmonth,growth_year')->order_by('growth_year',"DESC");
+		}
+		$res = $this->db->where(array('fundtype'=>$fundtype))->get('fundlist')->result_array();
+		$this->load->config('jz_dict');
+		$productrisk = $this->config->item('productrisk');
+		foreach ($res as $key => &$val)
+		{
+			if (!empty($val) && $this->config->item('fund_status')[$val['status']][$buyType] == 'Y'){
+				unset($val['status']);
+				$classifyFund[$buyType][$fundtype][] = $val;
+			}
 		}
 	}
 	

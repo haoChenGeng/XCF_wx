@@ -189,3 +189,5 @@ $config['investorProfession'] = array(0=>'未从事相关职业',1=>'专业投�
 $config['XN_company'] = array('all'=>'小牛集团','XCF'=>'小牛新财富','XNZX'=>'小牛在线');
 
 $config['riskSetting'] = array(0=>'01',20=>'02',40=>'03',60=>'04','80'=>'05');
+
+$config['XNPlannerUrl'] = 'http://10.10.17.91:8070/xnconvert/XNHrInterfaceServlet';

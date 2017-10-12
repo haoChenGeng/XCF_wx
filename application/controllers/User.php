@@ -511,7 +511,7 @@ class User extends MY_Controller {
 	function queryPlanner(){
 		$post = $this->input->post ();
 		if (!empty($post['planner_id'])){
-			$plannerInfo = $this->db->where(array('EmployeeID'=> $post['planner_id']))->get('p2_planner')->row_array();
+			$plannerInfo = $this->db->where(array('EmployeeID'=> $post['planner_id'],'status'=>1))->get('p2_planner')->row_array();
 			if (!empty($plannerInfo['FName'])){
 				echo '您选择了'.$plannerInfo['FName'].'理财师';
 				exit;
@@ -557,4 +557,5 @@ class User extends MY_Controller {
 		}
 		
 	}
+	
 }
