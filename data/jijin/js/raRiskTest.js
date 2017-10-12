@@ -35,7 +35,7 @@ function renderTest(data) {
     for (var j = 0; j < data[i].result.length; j++) {
       oLi.push('<li class="mui-table-view-cell test-li">' +
         '<a href="#ques-' + (i + 2) + '" class="test-item">' +
-        '<label class="test-label">' + data[i].result[j].resultcontent + '</label><input type="radio" name="q-' + (i + 1) + '" data-num="' + data[i].questioncode + '" value="' + data[i].result[j].result + '" data-point="' + data[i].result[j].resultpoint + '">' +
+        '<label class="test-label">' + data[i].result[j].result + '.' + data[i].result[j].resultcontent + '</label><input type="radio" name="q-' + (i + 1) + '" data-num="' + data[i].questioncode + '" value="' + data[i].result[j].result + '" data-point="' + data[i].result[j].resultpoint + '">' +
         '</a>' +
         '</li>');
 
