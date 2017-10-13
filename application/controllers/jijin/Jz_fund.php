@@ -240,21 +240,25 @@ class Jz_fund extends MY_Controller
 	//获取“购买基金”页面的内容,按基金类型分类
 	public function getFundData() {
 		$post = $this->input->post();
-		$buyType = empty($post['buyType']) || $post['buyType']!= 'buy' ? 'apply' : 'buy';
 		$fundtype = empty($post['fundtype']) ? '2' : $post['fundtype'];
-		$_SESSION['fund_active_page'] =  $buyType;
-		$this->fundClassify($data,$fundtype,$buyType);
 		$data['code'] = '0000';
+		if (isset($_SESSION['customer_name'])){
+			if (isset($_SESSION['qryallfund'])){
+				$data['qryallfund'] = $_SESSION['qryallfund'];
+			}
+		}
+		else {
+			$data['qryallfund'] = -1;
+		}
+		$this->load->config('jz_dict');
+		$data['fundTypes'] = $this->config->item('fundtype');
+		$this->fundClassify($data['data'],$fundtype);
 		echo json_encode($data);
 	}
 	
 	//对获取到的基金数据按类型进行分类
-	private function fundClassify(&$classifyFund,$fundtype,$buyType){
+	private function fundClassify(&$classifyFund,$fundtype){
 		$classifyFund = array();
-		$this->load->config('jz_dict');
-		$fundClass = $this->config->item('fundtype');
-		$buyType = $buyType == 'buy' ? 'pre_purchase' : 'purchase';
-		$classifyFund['fundTypes'] = $fundClass;
 		$this->fund_interface->fund_list();
 		if (!isset($_SESSION['qryallfund'])){
 			$_SESSION['qryallfund'] = 0;
@@ -272,9 +276,9 @@ class Jz_fund extends MY_Controller
 		$productrisk = $this->config->item('productrisk');
 		foreach ($res as $key => &$val)
 		{
-			if (!empty($val) && $this->config->item('fund_status')[$val['status']][$buyType] == 'Y'){
+			if (!empty($val)){
 				unset($val['status']);
-				$classifyFund[$buyType][$fundtype][] = $val;
+				$classifyFund[$fundtype][] = $val;
 			}
 		}
 	}
