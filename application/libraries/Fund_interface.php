@@ -308,7 +308,7 @@ class Fund_interface
 			$submitData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'transQuery','startDate'=>$startDate,'endDate'=>$endDate));
 			$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 			$returnData = $this->getReturnData($returnData);
-			if ($returnData['code'] == '0001'){
+			if (isset($returnData['code']) && $returnData['code'] == '0001'){
 				$returnData['msg'] = '您尚未开通基金账户,不能进行相关查询';
 			}
 			return ($returnData);

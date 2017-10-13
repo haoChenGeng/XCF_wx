@@ -160,8 +160,51 @@ class Jz_my extends MY_Controller
 		return $bonusChangeList;
 	}
 	
-
+	//获取历史申请（委托）
+	function getHistoryApply() {
+		$post = $this->input->post();
+		if (isset($_SESSION['JZ_user_id'])){
+		 if (empty($post['startDate'])){
+		 	$startDate = date('Ymd',time());
+		 }
+		 if (empty($post['endDate']) || $post['endDate'] == date('Ymd',time())){                      //如果结束时间为当天或空
+		 	$endDate = date('Ymd',time()+86400);                  					 				 //因当天收市后下的单会归到下一天，因此结束时间加1天
+		 }
+		 $fund_list = $this->fund_interface->Trans_applied($startDate, $endDate);
+		 file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['customer_name'].'进行历史交易申请查询('.$startDate.'-'.$endDate.')'.serialize($fund_list)."\r\n\r\n",FILE_APPEND);
+		 if (isset($fund_list['code']) && '0000'==$fund_list['code']){
+		 	if(isset($fund_list['data'])){
+		 		foreach ($fund_list['data'] as &$val){
+		 			unset($val['bankname'],$val['depositacct']);
+		 			if (floatval($val['applicationamount']) == 0){
+		 				$val['applicationamount'] = '--';
+		 			}
+		 			if (floatval($val['applicationvol']) == 0){
+		 				$val['applicationvol'] = '--';
+		 			}
+		 		}
+		 	}
+		 	foreach ($fund_list['data'] as $val){
+		 		if ( 1 == $val['cancelable'] ){
+		 			$_SESSION['cancelableApply'][$val['appsheetserialno']] = $val;
+		 		}
+		 	}
+		 	if (!empty($_SESSION['cancelableApply'])){
+		 		foreach ($_SESSION['cancelableApply'] as &$val){
+		 			unset($val['opertime'],$val['transactiondate'],$val['status'],$val['paystatus'],$val['cancelable']);
+		 		}
+		 	}
+		 	$data = &$fund_list;
+		 }else{
+		 	$data = array('code'=>'9999','msg'=>'系统错误，请稍后重试');
+		 }
+		}else{
+		 $data['msg'] = array('code'=>'0001','msg'=>"您还未登录，不能进行相关查询");
+		}
+		echo json_encode($data);
+	}
 	
+/* 	
 	//获取当天交易
 	private function getTodayTran() {
 		$startDate = date('ymd',time());
@@ -206,7 +249,7 @@ class Jz_my extends MY_Controller
 		
 		// return $res;
 		echo json_encode($res);
-	}
+	} */
 	
 	function investorManagement($nexturl=''){
 		$_SESSION['myPageOper'] = 'account';

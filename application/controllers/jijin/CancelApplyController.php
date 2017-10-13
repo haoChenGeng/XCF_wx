@@ -20,9 +20,12 @@ class CancelApplyController extends MY_Controller {
 		if (!$this->logincontroller->isLogin()) {
 			exit;
 		}
-		$_SESSION['fundPageOper'] = 'today';
+		$_SESSION['myPageOper'] = 'history';
 		$get = $this->input->get();
-		if(isset($_SESSION['todayTrade'])){
+		if (isset($_SESSION['cancelableApply'][$get['appsheetserialno']])){
+			$data = $_SESSION['cancelableApply'][$get['appsheetserialno']];
+		}
+/* 		if(isset($_SESSION['todayTrade'])){
 			foreach ($_SESSION['todayTrade'] as $val){
 				if ($val['appsheetserialno'] == $get['appsheetserialno']){
 					$data['appsheetserialno'] = $val['appsheetserialno'];
@@ -36,10 +39,10 @@ class CancelApplyController extends MY_Controller {
 				}
 			}
 			unset($_SESSION['todayTrade']);
-		}else{
+		} */
+		else{
 			$this->load->helper(array("url"));
-			$_SESSION['jz_fundPageOper'] = 'today';
-			redirect($this->base . "/jijin/Jz_fund");
+			redirect($this->base . "/jijin/Jz_my");
 		}
 		$data['base'] = $this->base;
 		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
@@ -56,7 +59,7 @@ class CancelApplyController extends MY_Controller {
 		$post = $this->input->post();
 		if (!isset($_SESSION['cancel_rand_code'])){
 			$this->load->helper(array("url"));
-			redirect($this->base . "/jijin/Jz_fund");
+			redirect($this->base . "/jijin/Jz_my");
 		}else{
 			$post = $this->input->post();
 			$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
@@ -97,7 +100,7 @@ class CancelApplyController extends MY_Controller {
 				file_put_contents('log/trade/cancelApply'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行撤单交易失败，失败原因为:".$log_msg."\r\n\r\n",FILE_APPEND);
 			}
 			$data['head_title'] = '撤单结果';
-			$data['back_url'] = '/jijin/Jz_fund';
+			$data['back_url'] = '/jijin/Jz_my';
 			$data['base'] = $this->base;
 			$this->load->view('ui/view_operate_result',$data);
 		}
