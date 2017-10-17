@@ -274,9 +274,9 @@ class PurchaseController extends MY_Controller {
 			$fundfile = $this->db->select('filename,url')->where(array('fundcode'=>$input['fundcode']))->get('p2_fundfile')->result_array();
 			if (!empty($fundfile)){
 				//删除文件
-				$filePath = "/data/jijin/fundFiles/".$input['fundcode']."/";
+// 				$filePath = "/data/jijin/fundFiles/".$input['fundcode']."/";
 				foreach ($fundfile as &$val){
-					$data['fundfile'][$val['filename']] = $filePath.$val['url'];
+					$data['fundfile'][$val['filename']] = $val['url'];					//$filePath.
 				}
 			}
 		}

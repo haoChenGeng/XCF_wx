@@ -240,7 +240,7 @@ class Jz_fund extends MY_Controller
 	//获取“购买基金”页面的内容,按基金类型分类
 	public function getFundData() {
 		$post = $this->input->post();
-		$fundtype = empty($post['fundtype']) ? '2' : $post['fundtype'];
+		$fundtype = isset($post['fundtype']) ? $post['fundtype'] : '2';
 		$data['code'] = '0000';
 		if (isset($_SESSION['customer_name'])){
 			if (isset($_SESSION['qryallfund'])){
