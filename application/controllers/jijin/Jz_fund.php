@@ -140,11 +140,11 @@ class Jz_fund extends MY_Controller
 		$fund_list['fundtype'] = is_null($tmp)?'-':$tmp;
 		$tmp = isset($this->config->item('sharetype')[$fund_list['shareclasses']])?$this->config->item('sharetype')[$fund_list['shareclasses']]:null;
 		$fund_status = $this->config->item('fund_status');
-		if ($fund_status[$val['status']]['purchase'] == 'Y'){
+		if ($fund_status[$fund_list['status']]['purchase'] == 'Y'){
 			$data['purchasetype'] = '申购';
 			$fund_list['firstMin'] = $fund_list['first_per_min_22'];
 		}else{
-			if ($fund_status[$val['status']]['pre_purchase'] == 'Y'){
+			if ($fund_status[$fund_list['status']]['pre_purchase'] == 'Y'){
 				$data['purchasetype'] = '认购';
 				$fund_list['firstMin'] = $fund_list['first_per_min_20'];
 			}
