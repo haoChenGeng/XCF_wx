@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>基金购买</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta name="keywords" content="小牛资本">
+  <meta name="description" content="小牛资本管理集团公募基金代销系统">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="stylesheet" href="/data/jijin/css/mui.min.css">
+  <link rel="stylesheet" href="/data/jijin/css/style.css">
+  <link rel="stylesheet" href="/data/jijin/css/mui.picker.min.css">
+</head>
+
+<body>
+  <p style="color: #333;padding:5px 10px;margin-bottom:0;" id="screenFund">
+  </p>
+  <nav class="mui-bar mui-bar-tab">
+    <a class="mui-tab-item mui-active" href="#tabbar-with-chat">
+      <span class="mui-icon icon-email iconfont"></span></span>
+      <span class="mui-tab-label">购买基金</span>
+    </a>
+    <a class="mui-tab-item" href="#tabbar-with-contact" id="my">
+      <span class="mui-icon icon-contact iconfont"></span>
+      <span class="mui-tab-label">我的基金</span>
+    </a>
+    <a class="mui-tab-item" href="#tabbar-with-contact" id="exit">
+      <span class="mui-icon icon-exit iconfont"></span>
+      <span class="mui-tab-label">返回首页</span>
+    </a>
+  </nav>
+  <div class="mui-content">
+    <div id="slider" class="mui-slider">
+      <div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+
+      </div>
+      <!-- <div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-3"></div> -->
+
+      <div class="mui-slider-group">
+
+      </div>
+    </div>
+  </div>
+  <script src="/data/jijin/js/mui.min.js"></script>
+  <script src="/data/jijin/js/buy_fund.js"></script>
+  <script type="text/javascript">
+    document.getElementById('my').addEventListener('tap', function() {
+      //打开我的基金页
+      mui.openWindow({
+        url: 'my.html',
+        id: 'my'
+      });
+    });
+    document.getElementById('exit').addEventListener('tap', function() {
+      //退出基金		
+      mui.openWindow({
+        url: '/jijin/Jz_account/logout',
+        id: 'exit'
+      });
+    });
+
+    // pushHistory(); 
+    window.addEventListener("popstate", function(e) {
+      // alert("我监听到了浏览器的返回按钮事件啦");
+      window.location.href = '/jijin/Jz_account/logout';
+    }, false);
+
+    function pushHistory() {
+      var state = {
+        title: "buy_fund",
+        url: "#"
+      };
+      window.history.pushState(state, "title", "#");
+    }
+  </script>
+</body>
+
+</html>
