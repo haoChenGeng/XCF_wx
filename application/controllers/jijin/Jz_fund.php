@@ -14,7 +14,7 @@ class Jz_fund extends MY_Controller
     }
     
 	//购买基金页面入口
-/* 	function index($activePage = 'fund')
+	function index($activePage = 'fund')
 	{
 		$this->logincontroller->isLogin();
 		$data = array();
@@ -31,7 +31,7 @@ class Jz_fund extends MY_Controller
 			$data['pageOper'] = 'apply';
 		}
 		$this->load->view('jijin/buy_fund.php', $data);
-	} */
+	}
 	
 /* 	//获取“购买基金”页面的内容
 	public function getFundPageData($activePage = 'buy', $startdate='', $enddate='') {

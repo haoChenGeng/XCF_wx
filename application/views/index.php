@@ -46,31 +46,12 @@
           echo 'background:url('.$_SESSION['headimgurl'].') no-repeat;background-size:100%;';
         }
         echo '" class="dib login-btn pos-ab">'.$headHtml.'</a></div>';
-/* 				if (isset($_SESSION['customer_id'])){
-          if(ISTESTING)
-            echo '<a href="/application/views/user/personalCenter.html" class="info-link dib pos-ab" ><img src="/data/img/personal-center.png" alt="个人中心" width="130" height="130"></a>';
-            else
-              echo '<a href="/application/views/user/personalCenter.html" style="left:25px;top:25px;width:130px;height:130px;background-color:yellow;background:url('.$_SESSION['headimgurl'].') no-repeat;background-size:100%;" class="info-link dib login-btn pos-ab" >我的</a>';
-        }else{
-          if(ISTESTING)
-            echo '<div>
-                <div class="pos-ab"></div>
-              <a href="/user/login/1" class="dib login-btn pos-ab">登录</a>
-              </div>';
-          else
-            echo '<div><div class="pos-ab"></div><a href="/user/login/1" style="background-color:;';
-            if (isset($_SESSION['headimgurl'])){
-              echo 'background:url('.$_SESSION['headimgurl'].') no-repeat;background-size:100%;';
-            }
-            echo '" class="dib login-btn pos-ab">登录</a>
-              </div>'; 
-        } */
       ?>		
     </div>
       
         <ul class="title_listul">
           <li class="li01">
-              <a href="/jijin/Jz_account/entrance" id="fund_access" class="span01">公募</a>
+              <a href="/application/views/jijin/buy_fund.html" id="fund_access" class="span01">公募</a>
             </li>
             <li class="li02">
             <?php 
