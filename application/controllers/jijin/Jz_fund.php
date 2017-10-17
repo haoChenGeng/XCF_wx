@@ -252,6 +252,7 @@ class Jz_fund extends MY_Controller
 		}
 		$this->load->config('jz_dict');
 		$data['fundTypes'] = $this->config->item('fundtype');
+		$data['customerName'] = $_SESSION['customer_name'];
 		$this->fundClassify($data['data'],$fundtype);
 		echo json_encode($data);
 	}
