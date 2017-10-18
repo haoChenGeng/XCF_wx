@@ -47,6 +47,6 @@ class Logincontroller
     
     function logout()
     {
-    	redirect ($this->CI->base . "/User/home/".$type);
+    	redirect ($this->CI->base . "/User/home/");
     }
 }

@@ -10,14 +10,15 @@ class Jz_fund extends MY_Controller
         parent::__construct();
         $this->load->database();
         $this->load->helper(array("comfunction"));   
-        $this->load->library(array('Fund_interface','Logincontroller'));
+        $this->load->library(array('Fund_interface'));	//,'Logincontroller'
     }
     
 	//购买基金页面入口
 	function index($activePage = 'fund')
 	{
+/*		
 		$this->logincontroller->isLogin();
-		$data = array();
+ 		$data = array();
 		if ($activePage != 'buy' && $activePage != 'apply' && $activePage != 'today' && $activePage != 'history') {
 			$activePage = isset($_SESSION['my_active_page'])? $_SESSION['my_active_page'] : 'buy';
 		} else {
@@ -29,8 +30,10 @@ class Jz_fund extends MY_Controller
 			unset($_SESSION['fundPageOper']);
 		}else{
 			$data['pageOper'] = 'apply';
-		}
-		$this->load->view('jijin/buy_fund.php', $data);
+		} 
+		$this->load->view('jijin/buy_fund.html', $data);
+*/
+		$this->load->view('jijin/buy_fund.html');
 	}
 	
 /* 	//获取“购买基金”页面的内容
@@ -161,6 +164,45 @@ class Jz_fund extends MY_Controller
 		$this->load->view('/jijin/trade/prodetail', $data);
 	}
 	
+	public function fundDetail()
+	{
+		$get = $this->input->get();
+		$fund_list = $this->db->select('fundtype,fundname,fundcode,shareclasses,nav,navdate,growth_day,growthrate,fundincomeunit,status,risklevel,first_per_min_22,first_per_min_20')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
+		if (2 == $fund_list['fundtype']){
+			$fund_list['growth_day'] = round($fund_list['growthrate'],3);
+			$fund_list['nav'] = $fund_list['fundincomeunit'];
+			$data['field1'] = '七日年化收益率';
+			$data['field2'] = '万份收益';
+			$data['field3'] = '七日年化收益率走势(%)';
+		}else{
+			$data['field1'] = '日涨跌幅';
+			$data['field2'] = '最新净值(元)';
+			$data['field3'] = '净值走势(%)';
+		}
+		$this->load->config('jz_dict');
+		$tmp = isset($this->config->item('fundtype')[$fund_list['fundtype']])?$this->config->item('fundtype')[$fund_list['fundtype']]:null;
+		$fund_list['fundtype'] = is_null($tmp)?'-':$tmp;
+		$tmp = isset($this->config->item('sharetype')[$fund_list['shareclasses']])?$this->config->item('sharetype')[$fund_list['shareclasses']]:null;
+		$fund_status = $this->config->item('fund_status');
+		if ($fund_status[$fund_list['status']]['purchase'] == 'Y'){
+			$data['purchasetype'] = '申购';
+			$fund_list['firstMin'] = $fund_list['first_per_min_22'];
+		}else{
+			if ($fund_status[$fund_list['status']]['pre_purchase'] == 'Y'){
+				$data['purchasetype'] = '认购';
+				$fund_list['firstMin'] = $fund_list['first_per_min_20'];
+			}
+		}
+		$fund_list['sharetype'] = is_null($tmp)?'-':$tmp;
+		$tmp = isset($this->config->item('fund_status')[$fund_list['status']])?$this->config->item('fund_status')[$fund_list['status']]['status']:null;
+		$fund_list['status'] = is_null($tmp)?'-':$tmp;
+		$productrisk = $fund_list['risklevel'];
+		$tmp = isset($this->config->item('productrisk')[$productrisk])?$this->config->item('productrisk')[$productrisk]:null;
+		$fund_list['risklevel'] = 'R'.$productrisk.'('.$tmp.')';
+		$data['fundlist'] = $fund_list;
+		echo json_encode($data);
+	}
+	
 /* 	private function getCancelableList(){
 		$cancelable_list = $this->fund_interface->cancelable($_SESSION['JZ_account']);
 		if (isset($cancelable_list['code']) && $cancelable_list['code'] = '0000') {
@@ -231,7 +273,7 @@ class Jz_fund extends MY_Controller
 			Message(Array(
 					'msgTy' => $flag,
 					'msgContent' => $message,
-					'msgUrl' => '/jijin/jz_fund',                           //调用my界面
+					'msgUrl' => '/application/views/jijin/buy_fund.html',                           //调用fund界面
 					'base' => $this->base
 					));
 		}
@@ -252,7 +294,7 @@ class Jz_fund extends MY_Controller
 		}
 		$this->load->config('jz_dict');
 		$data['fundTypes'] = $this->config->item('fundtype');
-		$data['customerName'] = $_SESSION['customer_name'];
+// 		$data['customerName'] = isset($_SESSION['customer_name']) ? $_SESSION['customer_name'] : '';
 		$this->fundClassify($data['data'],$fundtype);
 		echo json_encode($data);
 	}

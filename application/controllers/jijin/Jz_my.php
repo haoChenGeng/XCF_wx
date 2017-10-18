@@ -30,9 +30,21 @@ class Jz_my extends MY_Controller
 		$this->load->view('jijin/my.html', $data);
 	}
 	
+	public function myFundInfo(){
+		$activePage = isset($_SESSION['myPageOper']) ? $_SESSION['myPageOper'] : 'asset';
+		$data['activePage'] = $activePage;
+		if (!isset($_SESSION['customer_id'])) {
+			echo(json_encode(array('code'=>'9999','msg'=>'您尚未登录,请先登录')));
+			exit;
+		}
+		$data['code'] = '0000';
+		$data['customerName'] = $_SESSION ['customer_name'];
+var_dump($data);
+		echo json_encode($data);
+	}
+	
 	//获取“我的基金”页面的内容
-	public function getMyPageData($activePage = 'fund') {
-		
+	public function getMyPageData($activePage = '') {
 		if (!isset($_SESSION['customer_id'])) {
 			echo(json_encode(array('error'=>true,'errorMsg'=>'您尚未登录,请先登录')));
 			exit;
@@ -41,7 +53,9 @@ class Jz_my extends MY_Controller
 			echo(json_encode(array('error'=>true,'errorMsg'=>'您尚未开通基金账户,请先开户')));
 			exit;
 		}
-		
+		if (empty($activePage)){
+			$activePage = isset($_SESSION['myPageOper']) ? $_SESSION['myPageOper'] : 'fund';
+		}
 		if (isset($_SESSION['JZ_user_id'])) {
 			switch ($activePage) {
 				case 'fund' :
@@ -80,9 +94,8 @@ class Jz_my extends MY_Controller
 						}
 					}
 					break;
-					
 				default:
-					$data['errorMsg'] = '未登录';
+					$data['errorMsg'] = '不存在该页面';
 			}
 		}else {
 			$data['errorMsg'] = '未登录';

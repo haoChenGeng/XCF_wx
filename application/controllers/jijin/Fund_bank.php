@@ -38,22 +38,22 @@ class Fund_bank extends MY_Controller
     		file_put_contents('log/user/'.$operation.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."信息失败,返回数据:".serialize($user_info)."\r\n\r\n",FILE_APPEND);
     	}
     	$this->load->config('jz_dict');
-    	$needPCBank = $this->config->item('needProvCity')[$this->config->item('selectChannel')];
+//     	$needPCBank = $this->config->item('needProvCity')[$this->config->item('selectChannel')];
     	if ($operation == 'bankcard_add'){
     		$data['payment_channel'] = $this->void_paymentchannel();
-    		foreach ($data['payment_channel'] as $key => $val){
-    			if (in_array($val['channelname'],$needPCBank)){
-    				$data['payment_channel'][$key]['needProvCity'] = 1;
-    				if (!isset($data['provCity'])){
-    					$data['provCity'] = json_encode($this->fund_interface->provCity());
-    				}
-    			}
-    		}
+//     		foreach ($data['payment_channel'] as $key => $val){
+//     			if (in_array($val['channelname'],$needPCBank)){
+//     				$data['payment_channel'][$key]['needProvCity'] = 1;
+//     				if (!isset($data['provCity'])){
+//     					$data['provCity'] = json_encode($this->fund_interface->provCity());
+//     				}
+//     			}
+//     		}
     	}elseif ($operation == 'bankcard_change'){
     		$paymentChannel = $this->db->where(array('channelid'=>$channelid))->get('p2_paymentchannel')->row_array();
-    		if (in_array($paymentChannel['channelname'],$needPCBank)){
-    			$data['provCity'] = json_encode($this->fund_interface->provCity());
-    		}
+//     		if (in_array($paymentChannel['channelname'],$needPCBank)){
+//     			$data['provCity'] = json_encode($this->fund_interface->provCity());
+//     		}
     		$bankCardInfo = $this->getBankCardInfo($channelid);
     		if (empty($bankCardInfo)){
     			$log_msg = '查询用户银行卡信息失败';
@@ -409,10 +409,15 @@ class Fund_bank extends MY_Controller
  									'base' => $this->base
  									));
  						}else{
- 							if ($oper_res['code']== '-409999999'){
- 								$err_msg = '密码输入错误';
- 							}else{
- 								$err_msg = '系统故障, 银行卡注销失败!';
+ 							switch ($oper_res['code']){
+ 								case '-409999999':
+ 									$err_msg = '密码输入错误';
+ 									break;
+ 								case '-440117034':
+ 									$err_msg = $oper_res['msg'];
+ 									break;
+ 								default:
+ 									$err_msg = '系统故障, 银行卡注销失败!';
  							}
  							$log_msg = $oper_res['msg'];
  							/*  						if ($oper_res['code'] == ''){
