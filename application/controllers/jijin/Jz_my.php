@@ -39,7 +39,16 @@ class Jz_my extends MY_Controller
 		}
 		$data['code'] = '0000';
 		$data['customerName'] = $_SESSION ['customer_name'];
-var_dump($data);
+		if (!isset($_SESSION['totalfundvolbalance'])){
+			$fundlist = $this->getMyFundList();
+			$data['totalfundvolbalance'] = $_SESSION['totalfundvolbalance'] = $fundlist['totalfundvolbalance'];
+			$data['yestincomesum'] = $_SESSION['yestincomesum'] = $fundlist['yestincomesum'];
+			$data['addincomesum'] = $_SESSION['addincomesum'] = $fundlist['addincomesum'];
+		}else{
+			$data['totalfundvolbalance'] = $_SESSION['totalfundvolbalance'];
+			$data['yestincomesum'] = $_SESSION['yestincomesum'];
+			$data['addincomesum'] = $_SESSION['addincomesum'];
+		}
 		echo json_encode($data);
 	}
 	
@@ -101,6 +110,7 @@ var_dump($data);
 			$data['errorMsg'] = '未登录';
 		}
 // file_put_contents('log/debug'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'获取“我的基金”页面的内容'.serialize($data)."\r\n\r\n",FILE_APPEND);
+// var_dump($data);
 		echo json_encode($data);
 	}
 	

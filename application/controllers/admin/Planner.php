@@ -150,7 +150,7 @@ class Planner extends MY_Controller {
 		if (!empty($_FILES['upload']['tmp_name'])){
 			$this->load->model(array("Model_excelOper","Model_db"));
 			$importDataDes = array(	'content' => array( 'sheet'=>0, 'limit'=>0, 'row'=>2,
-					'fieldKey' => array(2=>'EmployeeID', 3=>'Fname',))
+					'fieldKey' => array(2=>'EmployeeID', 3=>'FName',))
 			);
 			$importData = $this->Model_excelOper->getExcelContent($_FILES['upload']['tmp_name'],$importDataDes)['content'];
 			$this->db->set(array('status'=>0))->update($data['tableName']);			//首先将所有理财师设置为离职
