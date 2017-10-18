@@ -231,53 +231,6 @@ class Jz_my extends MY_Controller
 		echo json_encode($data);
 	}
 	
-/* 	
-	//获取当天交易
-	private function getTodayTran() {
-		$startDate = date('ymd',time());
-		$res = $this->getHistoryTran($startDate,$startDate);
-		return $res;
-	}
-
-
-	//获取历史交易
-	function getHistoryTran($startDate = '',$endDate = '') {
-		
-		if (!$this->logincontroller->isLogin()) {
-			echo(json_encode(array('errorMsg'=>true)));
-			exit;
-		}
-		
-		if (empty($startDate)) {
-			$res['errorMsg'] = '请输入开始时间';
-		}
-	
-		if (strtotime($startDate) === false) {
-			$res['errorMsg'] = '开始日期格式有误';
-		}
-	
-		if (empty($endDate)) {
-			$res['errorMsg'] = '请输入结束时间';
-		}
-	
-		if (strtotime($endDate) === false) {
-			$res['errorMsg'] = '结束日期格式有误';
-		}
-	
-		//调用接口
-		$res = $this->fund_interface->Trans_confirmed($_SESSION['JZ_account'], $startDate, $endDate, 25 ,700001, 1000);
-		
-		$this->load->config('jz_dict');
-		for ($i=0;$i<count($res['data']);$i++) {
-			if (!empty($res['data'][$i])) {
-				$res['data'][$i]['businessnote'] = $this->config->item('businesscode')[$res['data'][$i]['businesscode']];
-			}
-		}
-		
-		// return $res;
-		echo json_encode($res);
-	} */
-	
 	function investorManagement($nexturl=''){
 		$_SESSION['myPageOper'] = 'account';
 		$post = $this->input->post();
