@@ -62,9 +62,9 @@
       type: 'post',
       timeout: 30 * 1000,
       success: function(data) {
-        if (data.error) {
+        if (data.code == '8888') {
           var fundList = document.getElementById('scroll1');
-          fundList.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register?next_url=jz_my&myPageOper=asset" id="errorMsg">' + data.errorMsg + '</a>';
+          fundList.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register?next_url=jz_my&myPageOper=asset" id="errorMsg">' + data.msg + '</a>';
         } else {
           var listWrap = document.getElementById('buyFundList');
           var fragment = document.createDocumentFragment();
@@ -111,9 +111,9 @@
       type: 'post',
       timeout: 30 * 1000,
       success: function(data) {
-        if (data.error) {
+        if (data.code == '8888') {
           var fundList = document.getElementById('scroll2');
-          fundList.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register?next_url=jz_my&myPageOper=bonus" id="errorMsg">' + data.errorMsg + '</a>';
+          fundList.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register?next_url=jz_my&myPageOper=bonus" id="errorMsg">' + data.msg + '</a>';
         } else {
           var listWrap = document.getElementById('bonus-mod');
           var fragment = document.createDocumentFragment();
@@ -155,9 +155,9 @@
         var nodeWrap = item3.querySelector('.mui-scroll'),
           nodeChlid = item3.querySelector('.mui-scroll').childNodes;
         nodeWrap.removeChild(nodeChlid[1]);
-        if (data.error) {
+        if (data.code == '8888') {
           var fundList = document.getElementById('scroll3');
-          fundList.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register?next_url=jz_my&myPageOper=account" id="errorMsg">' + data.errorMsg + '</a>';
+          fundList.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register?next_url=jz_my&myPageOper=account" id="errorMsg">' + data.msg + '</a>';
         } else {
           var risk = document.getElementById('risk_result');
           risk.innerHTML = '风险测试[' + data.custrisk + ':' + data.custriskname + ']';
@@ -178,16 +178,14 @@
       dataType: 'json',
       type: 'post',
       timeout: 10 * 1000,
-      beforeSend: function() {
-        // document.getElementById('scroll4').querySelector('.mui-loading').style.display = "block";
-      },
+      beforeSend: function() {},
       success: function(res) {
         // res = mockData;
         console.log(res);
         document.getElementById('scroll4').querySelector('.mui-loading').style.display = "none";
         var listWrap = document.getElementById('history');
         var fragment = document.createDocumentFragment();
-        if (res.code !== '0000') {
+        if (res.code == '8888') {
           listWrap.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register" id="errorMsg">' + res.msg + '</a>';
         } else {
           if (!res.data.length) {
@@ -198,28 +196,19 @@
               oLi.setAttribute('class', 'mui-table-view-cell query-padding mui-collapse');
               oLi.innerHTML = '<a class="mui-navigate-right history-arrow" href="###">' +
                 '<div class="mui-media-body clear history-detail-title">' +
-                // '<div class="delegate-date">' + res.data[i].operdate + '</div>' +
                 '<div class="delegate-name">' + res.data[i].fundname + '<br>' + res.data[i].operdate + ' ' + res.data[i].opertime + '</div>' +
-                '<div class="delegate-oprate">' + res.data[i].businesscode + '<br><span class="cancel-order">可撤单</span></div>' +
+                '<div class="delegate-oprate">' + res.data[i].businesscode + '<br><span class="cancel-status">可撤单</span></div>' +
                 '<div class="delegate-amount">' + res.data[i].applicationamount + '/' + res.data[i].applicationvol + '</div>' +
-                // '<div class="delegate-more "></div>' +
                 '</div>' +
                 '</a>' +
                 '<div class="mui-collapse-content history-detail-content">' +
                 '<p class="trade-num">申请单号：' + res.data[i].appsheetserialno + '</p>' +
                 '<p class="trade-date">交易日期/状态：' + res.data[i].transactiondate + '/' + res.data[i].status + '/<a type="button" class="cancel-order" href="' + '/jijin/CancelApplyController/cancel?appsheetserialno=' + res.data[i].appsheetserialno + '">撤单</a></p>' +
                 '<p class="trade-other">基金代码：</p>' +
-                // '<div class="delegate-more history"></div>' +
                 '</div>';
               if (res.data[i].cancelable !== 1) {
-                // var cancel = document.createElement('a');
-                // cancel.type = 'button';
-                // cancel.classList.add('cancel-order');
-                // cancel.href = '/jijin/CancelApplyController/cancel?appsheetserialno=' + res.data[i].appsheetserialno;
-                // cancel.innerHTML = '撤单';
-                oLi.querySelector('.cancel-order').innerHTML = "";
-                // oLi.querySelector('.delegate-oprate').appendChild(cancel);
-                // var a= <a type="button" class="cancel-order" href="' + '/jijin/CancelApplyController/cancel?appsheetserialno=' + res.data[i].appsheetserialno + '">撤单</a>;
+                oLi.querySelector('.cancel-status').style.display = 'none';
+                oLi.querySelector('.cancel-order').style.display = 'none';
               }
               var tradeOther = oLi.querySelector('.trade-other');
               if (res.data[i].paystatus) {
