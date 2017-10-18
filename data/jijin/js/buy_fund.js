@@ -77,6 +77,8 @@ function renderFundType(data) {
   initScroll(mui);
 }
 
+
+
 function renderFundList(fundtype) {
   mui.ajax('/jijin/Jz_fund/getFundData', {
     dataType: 'json',
@@ -88,7 +90,7 @@ function renderFundList(fundtype) {
     timeout: 10 * 1000,
     success: function(res) {
       var fundListData = res.data[fundtype];
-      var listWrap = document.getElementById('fund' + fundtype).querySelector('.mui-table-view');
+      var listWrap = document.getElementById('fund' + fundtype).querySelector('.mui-scroll');
       var listTitle = document.createElement('div');
       if (!listWrap.parentElement.firstElementChild.classList.contains('fundlist-title')) {
         listTitle.classList.add('fundlist-title');
@@ -101,15 +103,11 @@ function renderFundList(fundtype) {
 
         listWrap.innerHTML = '';
         var fundListData = res.data[fundtype];
-        var fragDay = document.createDocumentFragment();
-        var fragOnemonth = document.createDocumentFragment();
-        var fragThreemonth = document.createDocumentFragment();
-        var fragSixmonth = document.createDocumentFragment();
-        var fragYear = document.createDocumentFragment();
 
         if (fundtype == 2) {
           listTitle.innerHTML = '<div class="fundlist-name">基金名称</div><div class="fundlist-networth">万分收益(元)</div><div class="fundlist-return">七日年化</div>';
-          var frag = document.createDocumentFragment();
+          var frag = document.createElement('ul');
+          frag.classList.add('mui-table-view');
           for (var i = 0; i < fundListData.length; i++) {
             var oLi = document.createElement('li');
             oLi.setAttribute('class', 'mui-table-view-cell');
@@ -118,6 +116,18 @@ function renderFundList(fundtype) {
           }
           listWrap.appendChild(frag);
         } else {
+
+          var fragDay = document.createElement('ul');
+          fragDay.classList.add('mui-table-view');
+          var fragOnemonth = document.createElement('ul');
+          fragOnemonth.classList.add('mui-table-view');
+          var fragThreemonth = document.createElement('ul');
+          fragThreemonth.classList.add('mui-table-view');
+          var fragSixmonth = document.createElement('ul');
+          fragSixmonth.classList.add('mui-table-view');
+          var fragYear = document.createElement('ul');
+          fragYear.classList.add('mui-table-view');
+
           for (var i = 0; i < fundListData.length; i++) {
             var oLiDay = document.createElement('li');
             oLiDay.classList.add('mui-table-view-cell');
@@ -146,39 +156,45 @@ function renderFundList(fundtype) {
           }
           listWrap.innerHTML = '';
           listWrap.appendChild(fragDay);
-          var sel = document.getElementById('fund' + fundtype).querySelector('.fundlist-chg');
-          sel.addEventListener('change', function(e) {
-            console.log(e.target.value);
-            switch (e.target.value) {
-              case '1':
-                listWrap.innerHTML = '';
-                listWrap.appendChild(fragDay);
-                break;
-              case '2':
-                listWrap.innerHTML = '';
-                listWrap.appendChild(fragOnemonth);
-                break;
-              case '3':
-                listWrap.innerHTML = '';
-                listWrap.appendChild(fragThreemonth);
-                break;
-              case '4':
-                listWrap.innerHTML = '';
-                listWrap.appendChild(fragSixmonth);
-                break;
-              case '5':
-                listWrap.innerHTML = '';
-                listWrap.appendChild(fragYear);
-                break;
-              default:
-                break;
-            }
-          })
+          chgIncrease(fundtype, fragDay, fragOnemonth, fragThreemonth, fragSixmonth, fragYear);
         }
       }
     },
     error: function(res) {
+      alert('请求错误，请稍候重试');
+    }
+  })
+}
 
+function chgIncrease(type, day, one, three, six, year) {
+  var wrap = document.getElementById('fund' + type).querySelector('.mui-scroll');
+  var select = document.getElementById('fund' + type).querySelector('.fundlist-chg');
+  select.addEventListener('change', function(e) {
+    console.log(e.target.value);
+    console.log(one);
+    switch (e.target.value) {
+      case '1':
+        wrap.innerHTML = '';
+        wrap.appendChild(day);
+        break;
+      case '2':
+        wrap.innerHTML = '';
+        wrap.appendChild(one);
+        break;
+      case '3':
+        wrap.innerHTML = '';
+        wrap.appendChild(three);
+        break;
+      case '4':
+        wrap.innerHTML = '';
+        wrap.appendChild(six);
+        break;
+      case '5':
+        wrap.innerHTML = '';
+        wrap.appendChild(year);
+        break;
+      default:
+        break;
     }
   })
 }
