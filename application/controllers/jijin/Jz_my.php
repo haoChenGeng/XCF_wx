@@ -36,6 +36,11 @@ class Jz_my extends MY_Controller
 		if (!isset($_SESSION['customer_id'])) {
 			echo(json_encode(array('code'=>'9999','msg'=>'您尚未登录,请先登录')));
 			exit;
+		}else{
+			if (0==$_SESSION['JZ_user_id']){
+				echo(json_encode(array('code'=>'8888','msg'=>'您尚未开通基金账户')));
+				exit;
+			}
 		}
 		$data['code'] = '0000';
 		$data['customerName'] = $_SESSION ['customer_name'];
