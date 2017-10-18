@@ -31,8 +31,13 @@ class Jz_my extends MY_Controller
 	}
 	
 	public function myFundInfo(){
-		$activePage = isset($_SESSION['myPageOper']) ? $_SESSION['myPageOper'] : 'asset';
+		if (isset($_SESSION['myPageOper'])){
+			$activePage = $_SESSION['myPageOper'];
+		}else{
+			$activePage = $_SESSION['myPageOper'] = 'asset';
+		}
 		$data['activePage'] = $activePage;
+		$_SESSION['next_url'] = $this->base.'/jijin/Jz_my';
 		if (!isset($_SESSION['customer_id'])) {
 			$data['code'] = '9999';
 			$data['msg'] = '您尚未登录,请先登录';
@@ -224,17 +229,17 @@ class Jz_my extends MY_Controller
 					}
 					$data = &$fund_list;
 				}else{
-					$data = array('code'=>'9999','msg'=>'系统错误，请稍后重试');
+					$data = array('code'=>'9000','msg'=>'系统错误，请稍后重试');
 				}
 			}else{
 				if ( 0 == $_SESSION['JZ_user_id']){
-					$data= array('code'=>'0002','msg'=>"您还未开通基金账户，不能进行相关查询");
+					$data= array('code'=>'8888','msg'=>"您还未开通基金账户，不能进行相关查询");
 				}else{
-					$data = array('code'=>'0001','msg'=>"您还未登录，不能进行相关查询");
+					$data = array('code'=>'9999','msg'=>"您还未登录，不能进行相关查询");
 				}
 			}
 		}else{
-			$data = array('code'=>'0001','msg'=>"您还未登录，不能进行相关查询");
+			$data = array('code'=>'9999','msg'=>"您还未登录，不能进行相关查询");
 		}
 		echo json_encode($data);
 	}
