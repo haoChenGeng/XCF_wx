@@ -9,8 +9,51 @@
   for (var i = control.length - 1; i >= 0; i--) {
     control[i].style.height = h + 'px';
   }
-  page1();
 
+  getUserInfo();
+
+  function getUserInfo() {
+    mui.ajax('/jijin/jz_my/myFundInfo', {
+      data: {
+
+      },
+      dataType: 'json',
+      type: 'get',
+      timeout: 10 * 1000,
+      success: function(res) {
+        if (res.code == '9999') {
+          window.location.href = '/user/login';
+        } else if (!res.code) {
+          alert('获取数据错误');
+        } else {
+          document.getElementById('totalBalance').innerHTML = res.totalfundvolbalance || 0;
+          document.getElementById('yesterDayIncome').innerHTML = res.yestincomesum || 0;
+          document.getElementById('totalIncome').innerHTML = res.addincomesum || 0;
+          document.getElementById('customerName').innerHTML = res.customerName || 0;
+
+          switch (res.activePage) {
+            case 'asset':
+              page1();
+              break;
+            case 'bonus':
+              page2();
+              break;
+            case 'account':
+              page3();
+              break;
+            case 'history':
+              page4();
+              break;
+            default:
+              break;
+          }
+        }
+      },
+      error: function(xhr) {
+        alert('请求错误，请稍后重试');
+      }
+    })
+  }
 
   function page1() {
     mui.ajax('/jijin/Jz_my/getMyPageData/fund', {
@@ -23,9 +66,6 @@
           var fundList = document.getElementById('scroll1');
           fundList.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register?next_url=jz_my&myPageOper=asset" id="errorMsg">' + data.errorMsg + '</a>';
         } else {
-          document.getElementById('totalBalance').innerHTML = data.totalfundvolbalance || 0;
-          document.getElementById('yesterDayIncome').innerHTML = data.yestincomesum || 0;
-          document.getElementById('totalIncome').innerHTML = data.addincomesum || 0;
           var listWrap = document.getElementById('buyFundList');
           var fragment = document.createDocumentFragment();
           if (!data.fund_list.data.length) {
@@ -62,8 +102,7 @@
     });
   }
 
-  var item2 = document.getElementById('item2mobile');
-  var item3 = document.getElementById('item3mobile');
+
 
   function page2() {
     mui.ajax('/jijin/Jz_my/getMyPageData/bonus_change', {
@@ -221,7 +260,8 @@
     });
   }
 
-
+  var item2 = document.getElementById('item2mobile');
+  var item3 = document.getElementById('item3mobile');
   (function($) {
     document.getElementById('slider').addEventListener('slide', function(e) {
       switch (e.detail.slideNumber) {
