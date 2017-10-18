@@ -34,16 +34,19 @@ class Jz_my extends MY_Controller
 		$activePage = isset($_SESSION['myPageOper']) ? $_SESSION['myPageOper'] : 'asset';
 		$data['activePage'] = $activePage;
 		if (!isset($_SESSION['customer_id'])) {
-			echo(json_encode(array('code'=>'9999','msg'=>'您尚未登录,请先登录')));
+			$data['code'] = '9999';
+			$data['msg'] = '您尚未登录,请先登录';
+			echo(json_encode($data));
 			exit;
-		}else{
-			if (0==$_SESSION['JZ_user_id']){
-				echo(json_encode(array('code'=>'8888','msg'=>'您尚未开通基金账户')));
-				exit;
-			}
+		}
+		$data['customerName'] = $_SESSION ['customer_name'];
+		if (0==$_SESSION['JZ_user_id']){
+			$data['code'] = '8888';
+			$data['msg'] = '您尚未开通基金账户';
+			echo(json_encode($data));
+			exit;
 		}
 		$data['code'] = '0000';
-		$data['customerName'] = $_SESSION ['customer_name'];
 		if (!isset($_SESSION['totalfundvolbalance'])){
 			$fundlist = $this->getMyFundList();
 			$data['totalfundvolbalance'] = $_SESSION['totalfundvolbalance'] = $fundlist['totalfundvolbalance'];
