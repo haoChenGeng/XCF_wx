@@ -31,15 +31,23 @@
 
           switch (res.activePage) {
             case 'asset':
+              document.getElementsByClassName('mui-control-item')[0].classList.add('mui-active');
+              document.getElementById('item1mobile').classList.add('mui-active');
               page1();
               break;
             case 'bonus':
+              document.getElementById('item2mobile').classList.add('mui-active');
+              document.getElementsByClassName('mui-control-item')[1].classList.add('mui-active');
               page2();
               break;
             case 'account':
+              document.getElementById('item3mobile').classList.add('mui-active');
+              document.getElementsByClassName('mui-control-item')[2].classList.add('mui-active');
               page3();
               break;
             case 'history':
+              document.getElementById('item4mobile').classList.add('mui-active');
+              document.getElementsByClassName('mui-control-item')[3].classList.add('mui-active');
               page4();
               break;
             default:
@@ -185,7 +193,7 @@
       },
       success: function(res) {
         // res = mockData;
-        console.log(res);
+        // console.log(res);
         document.getElementById('scroll4').querySelector('.mui-loading').style.display = "none";
         var listWrap = document.getElementById('history');
         var fragment = document.createDocumentFragment();
