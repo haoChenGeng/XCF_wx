@@ -126,17 +126,17 @@ class Jz_fund extends MY_Controller
 	public function showprodetail()
 	{
 		$get = $this->input->get();
-		$fund_list = $this->db->select('fundtype,fundname,fundcode,shareclasses,nav,navdate,growth_day,growthrate,fundincomeunit,status,risklevel,first_per_min_22,first_per_min_20')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
+		$fund_list = $this->db->select('fundtype,fundname,fundcode,shareclasses,nav,navdate,growth_day,growthrate,fundincomeunit,status,risklevel,first_per_min_22,first_per_min_20,star')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
 		if (2 == $fund_list['fundtype']){
 			$fund_list['growth_day'] = round($fund_list['growthrate'],3);
 			$fund_list['nav'] = $fund_list['fundincomeunit'];
 			$data['field1'] = '七日年化收益率';
 			$data['field2'] = '万份收益';
-			$data['field3'] = '七日年化收益率走势(%)';
+			$data['field3'] = '历史七日年化收益率(%)';
 		}else{
 			$data['field1'] = '日涨跌幅';
 			$data['field2'] = '最新净值(元)';
-			$data['field3'] = '净值走势(%)';
+			$data['field3'] = '历史净值';
 		}
 		$this->load->config('jz_dict');
 		$tmp = isset($this->config->item('fundtype')[$fund_list['fundtype']])?$this->config->item('fundtype')[$fund_list['fundtype']]:null;
@@ -157,11 +157,13 @@ class Jz_fund extends MY_Controller
 		$fund_list['status'] = is_null($tmp)?'-':$tmp;
 		$productrisk = $fund_list['risklevel'];
 		$tmp = isset($this->config->item('productrisk')[$productrisk])?$this->config->item('productrisk')[$productrisk]:null;
-		$fund_list['risklevel'] = 'R'.$productrisk.'('.$tmp.')';
+		//$fund_list['risklevel'] = 'R'.$productrisk.'('.$tmp.')';
+		$fund_list['risklevel'] = $tmp;
 		$data['fundlist'] = $fund_list;
 		$data['base'] = $this->base;
 		$data['next_url'] = isset($get['next_url']) ? $get['next_url'] : '/jijin/Jz_fund/index/fund';
-		$this->load->view('/jijin/trade/prodetail', $data);
+		echo json_encode($data);
+		//$this->load->view('/jijin/trade/prodetail', $data);
 	}
 	
 	public function fundDetail()
@@ -233,8 +235,9 @@ class Jz_fund extends MY_Controller
 			$select = 'net_date,net_day_growth';
 		}
 		$fundCure = $this->db->select($select)->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
-		if (!empty($fundCure) && is_array($fundCure)){
-			$return = array('code'=>0,'data'=>&$fundCure);
+		$hs300 = $this->db->where('TradingDay >',$startDate)->order_by('TradingDay','DESC')->get('p2_hsindexvalue')->result_array();
+		if (!empty($fundCure) && is_array($fundCure) && !empty($hs300) && is_array($hs300)){
+			$return = array('code'=>0,'data'=>&$fundCure, 'hs_data'=>&$hs300);
 		}else{
 			$return = array('code'=>1,'msg'=>'数据不存在');
 		}
