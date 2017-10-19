@@ -27,7 +27,7 @@
           document.getElementById('totalBalance').innerHTML = res.totalfundvolbalance || 0;
           document.getElementById('yesterDayIncome').innerHTML = res.yestincomesum || 0;
           document.getElementById('totalIncome').innerHTML = res.addincomesum || 0;
-          document.getElementById('customerName').innerHTML = res.customerName || 0;
+          document.getElementById('customerName').innerHTML = res.customerName || '未登录';
 
           switch (res.activePage) {
             case 'asset':
@@ -190,7 +190,7 @@
         var listWrap = document.getElementById('history');
         var fragment = document.createDocumentFragment();
         if (res.code == '9999') {
-          listWrap.innerHTML = '<a class="fund-list-error" href="/user/login" id="errorMsg">' + data.msg + '</a>';
+          listWrap.innerHTML = '<a class="fund-list-error" href="/user/login" id="errorMsg">' + res.msg + '</a>';
         } else if (res.code == '8888') {
           listWrap.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register" id="errorMsg">' + res.msg + '</a>';
         } else {
@@ -294,7 +294,6 @@
               alert('日期选择错误，请重新选择');
             } else {
               document.getElementById('scroll4').querySelector('.mui-loading').style.display = "block";
-
               page4(startDate.innerHTML, endDate.innerHTML);
             }
           });
@@ -316,7 +315,6 @@
 
 (function($) {
   $.init();
-  // console.log(picker.getSelected().value);
   var btns = $('.btn');
   btns.each(function(i, btn) {
     btn.addEventListener('tap', function() {
@@ -330,7 +328,7 @@
        * 也可以直接通过代码声明 optinos 用于实例化 DtPicker
        */
       var picker = new $.DtPicker(options);
-      console.log(picker.getSelected())
+      // console.log(picker.getSelected())
       picker.show(function(rs) {
         /*
          * rs.value 拼合后的 value
