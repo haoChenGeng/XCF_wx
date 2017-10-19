@@ -294,11 +294,7 @@
           page4(now, now);
           var search = document.getElementById('search');
           search.addEventListener('tap', function() {
-            if (startDate == '开始日期') {
-              alert('请选择开始日期');
-            } else if (endDate == '结束日期') {
-              alert('请选择结束日期');
-            } else if (parseInt(endDate.innerHTML.replace(/\-/g, ""), 10) - parseInt(startDate.innerHTML.replace(/\-/g, ""), 10) < 0) {
+            if (parseInt(endDate.innerHTML.replace(/\-/g, ""), 10) - parseInt(startDate.innerHTML.replace(/\-/g, ""), 10) < 0) {
               alert('日期选择错误，请重新选择');
             } else {
               document.getElementById('scroll4').querySelector('.mui-loading').style.display = "block";
