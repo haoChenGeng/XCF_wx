@@ -164,49 +164,71 @@ class Jz_fund extends MY_Controller
 		$this->load->view('/jijin/trade/prodetail', $data);
 	}
 	
-	public function fundDetail()
-	{
+	public function fundDetail(){
 		$get = $this->input->get();
 		$fund_list = $this->db->select('fundtype,fundname,fundcode,shareclasses,nav,navdate,growth_day,growthrate,fundincomeunit,status,risklevel,first_per_min_22,first_per_min_20,star')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
-		if (2 == $fund_list['fundtype']){
-			$fund_list['growth_day'] = round($fund_list['growthrate'],3);
-			$fund_list['nav'] = $fund_list['fundincomeunit'];
-			$data['field1'] = '七日年化收益率';
-			$data['field2'] = '万份收益';
-			$data['field3'] = '历史七日年化收益率(%)';
-		}else{
-			$data['field1'] = '日涨跌幅';
-			$data['field2'] = '最新净值(元)';
-			$data['field3'] = '历史净值';
-		}
-		unset($fund_list['growthrate'],$fund_list['fundincomeunit']);
-		$this->load->config('jz_dict');
-		$tmp = isset($this->config->item('fundtype')[$fund_list['fundtype']])?$this->config->item('fundtype')[$fund_list['fundtype']]:null;
-		$fund_list['fundtype'] = is_null($tmp)?'-':$tmp;
-		$tmp = isset($this->config->item('sharetype')[$fund_list['shareclasses']])?$this->config->item('sharetype')[$fund_list['shareclasses']]:null;
-		$fund_status = $this->config->item('fund_status');
-		if ($fund_status[$fund_list['status']]['purchase'] == 'Y'){
-			$data['purchasetype'] = '申购';
-			$fund_list['firstMin'] = $fund_list['first_per_min_22'];
-		}else{
-			if ($fund_status[$fund_list['status']]['pre_purchase'] == 'Y'){
-				$data['purchasetype'] = '认购';
-				$fund_list['firstMin'] = $fund_list['first_per_min_20'];
+		if(!empty($fund_list)){
+			if (2 == $fund_list['fundtype']){
+				$fund_list['growth_day'] = round($fund_list['growthrate'],3);
+				$fund_list['nav'] = $fund_list['fundincomeunit'];
+				$data['field1'] = '七日年化收益率';
+				$data['field2'] = '万份收益';
+				$data['field3'] = '历史七日年化收益率(%)';
+			}else{
+				$data['field1'] = '日涨跌幅';
+				$data['field2'] = '最新净值(元)';
+				$data['field3'] = '历史净值';
 			}
-		}
-		$fund_list['navdate']=date('Y-m-d',strtotime($fund_list['navdate']));
-		$fund_list['growth_day'] = (string)round($fund_list['growth_day'],2);
-		$fund_list['sharetype'] = is_null($tmp)?'-':$tmp;
-		$tmp = isset($this->config->item('fund_status')[$fund_list['status']])?$this->config->item('fund_status')[$fund_list['status']]['status']:null;
-		$fund_list['status'] = is_null($tmp)?'-':$tmp;
-		$productrisk = $fund_list['risklevel'];
-		$tmp = isset($this->config->item('productrisk')[$productrisk])?$this->config->item('productrisk')[$productrisk]:null;
-		//$fund_list['risklevel'] = 'R'.$productrisk.'('.$tmp.')';
-		$fund_list['risklevel'] = $tmp;
-		$data['fundlist'] = $fund_list;
+			unset($fund_list['growthrate'],$fund_list['fundincomeunit']);
+			$this->load->config('jz_dict');
+			$tmp = isset($this->config->item('fundtype')[$fund_list['fundtype']])?$this->config->item('fundtype')[$fund_list['fundtype']]:null;
+			$fund_list['fundtype'] = is_null($tmp)?'-':$tmp;
+			$tmp = isset($this->config->item('sharetype')[$fund_list['shareclasses']])?$this->config->item('sharetype')[$fund_list['shareclasses']]:null;
+			$fund_status = $this->config->item('fund_status');
+			if ($fund_status[$fund_list['status']]['purchase'] == 'Y'){
+				$data['purchasetype'] = '申购';
+				$fund_list['firstMin'] = $fund_list['first_per_min_22'];
+			}else{
+				if ($fund_status[$fund_list['status']]['pre_purchase'] == 'Y'){
+					$data['purchasetype'] = '认购';
+					$fund_list['firstMin'] = $fund_list['first_per_min_20'];
+				}
+			}
+			$fund_list['navdate']=date('Y-m-d',strtotime($fund_list['navdate']));
+			$fund_list['growth_day'] = (string)round($fund_list['growth_day'],2);
+			$fund_list['sharetype'] = is_null($tmp)?'-':$tmp;
+			$tmp = isset($this->config->item('fund_status')[$fund_list['status']])?$this->config->item('fund_status')[$fund_list['status']]['status']:null;
+			$fund_list['status'] = is_null($tmp)?'-':$tmp;
+			$productrisk = $fund_list['risklevel'];
+			$tmp = isset($this->config->item('productrisk')[$productrisk])?$this->config->item('productrisk')[$productrisk]:null;
+			//$fund_list['risklevel'] = 'R'.$productrisk.'('.$tmp.')';
+			$fund_list['risklevel'] = $tmp;
+			$data['fundlist'] = $fund_list;
+			$data['code'] = 0;
+		}else
+			$data['code'] = 1;
+		
 		echo json_encode($data);
 	}
 	
+	/*
+	 * [基金概况]
+	 * @return [type] [description]
+	 */
+	public function fundinfo(){
+		$get = $this->input->get();
+		$this->load->config('jz_dict');
+		$fund_list = $this->db->select('fundtype,fundname,fundcode,risklevel,trustee,investadvisor,total_scale,total_assets,build_date')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
+		$fund_list['risklevel'] =isset($this->config->item('productrisk')[$fund_list['risklevel']])?$this->config->item('productrisk')[$fund_list['risklevel']]:null;
+		$manager = $this->db->select('mi.MangerName , mi.MangerResume')->where(array('m.fund_code' => $get['fundcode'],'m.Incumbent'=>1))->from('p2_fundmanager as m')->join('p2_fundmanagerinfo as mi', 'm.MangerName = mi.MangerName')->get()->result_array();
+		
+		if(!empty($fund_list)&&!empty($manager))
+			$return = array('code'=>0,'data'=>array('basic_info' => $fund_list , 'manager'=>$manager));
+		else
+			$return = array('code'=>1,'msg'=>'数据不存在');
+		echo json_encode($return);
+	}
+
 /* 	private function getCancelableList(){
 		$cancelable_list = $this->fund_interface->cancelable($_SESSION['JZ_account']);
 		if (isset($cancelable_list['code']) && $cancelable_list['code'] = '0000') {
