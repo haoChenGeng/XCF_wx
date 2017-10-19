@@ -21,9 +21,7 @@
       type: 'get',
       timeout: 10 * 1000,
       success: function(res) {
-        if (res.code == '9999') {
-          window.location.href = '/user/login';
-        } else if (!res.code) {
+        if (!res.code) {
           alert('获取数据错误');
         } else {
           document.getElementById('totalBalance').innerHTML = res.totalfundvolbalance || 0;
@@ -62,9 +60,11 @@
       type: 'post',
       timeout: 30 * 1000,
       success: function(data) {
-        if (data.code == '8888') {
+        if (data.code == '9999') {
+          document.getElementById('scroll1').innerHTML = '<a class="fund-list-error" href="/user/login" id="errorMsg">' + data.msg + '</a>';
+        } else if (data.code == '8888') {
           var fundList = document.getElementById('scroll1');
-          fundList.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register?next_url=jz_my&myPageOper=asset" id="errorMsg">' + data.msg + '</a>';
+          fundList.innerHTML = '<a class="fund-list-error" href="/jijin/Jz_account/register?next_url=jz_my&myPageOper=asset" id="errorMsg">' + data.msg + '</a>';
         } else {
           var listWrap = document.getElementById('buyFundList');
           var fragment = document.createDocumentFragment();
@@ -102,8 +102,6 @@
     });
   }
 
-
-
   function page2() {
     mui.ajax('/jijin/Jz_my/getMyPageData/bonus_change', {
       data: {},
@@ -111,7 +109,9 @@
       type: 'post',
       timeout: 30 * 1000,
       success: function(data) {
-        if (data.code == '8888') {
+        if (data.code == '9999') {
+          document.getElementById('scroll2').innerHTML = '<a class="fund-list-error" href="/user/login" id="errorMsg">' + data.msg + '</a>';
+        } else if (data.code == '8888') {
           var fundList = document.getElementById('scroll2');
           fundList.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register?next_url=jz_my&myPageOper=bonus" id="errorMsg">' + data.msg + '</a>';
         } else {
@@ -155,7 +155,9 @@
         var nodeWrap = item3.querySelector('.mui-scroll'),
           nodeChlid = item3.querySelector('.mui-scroll').childNodes;
         nodeWrap.removeChild(nodeChlid[1]);
-        if (data.code == '8888') {
+        if (data.code == '9999') {
+          document.getElementById('scroll3').innerHTML = '<a class="fund-list-error" href="/user/login" id="errorMsg">' + data.msg + '</a>';
+        } else if (data.code == '8888') {
           var fundList = document.getElementById('scroll3');
           fundList.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register?next_url=jz_my&myPageOper=account" id="errorMsg">' + data.msg + '</a>';
         } else {
@@ -178,14 +180,18 @@
       dataType: 'json',
       type: 'post',
       timeout: 10 * 1000,
-      beforeSend: function() {},
+      beforeSend: function() {
+        document.getElementById('scroll4').querySelector('.mui-loading').style.display = "block";
+      },
       success: function(res) {
         // res = mockData;
         console.log(res);
         document.getElementById('scroll4').querySelector('.mui-loading').style.display = "none";
         var listWrap = document.getElementById('history');
         var fragment = document.createDocumentFragment();
-        if (res.code == '8888') {
+        if (res.code == '9999') {
+          listWrap.innerHTML = '<a class="fund-list-error" href="/user/login" id="errorMsg">' + data.msg + '</a>';
+        } else if (res.code == '8888') {
           listWrap.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register" id="errorMsg">' + res.msg + '</a>';
         } else {
           if (!res.data.length) {
@@ -249,13 +255,16 @@
     });
   }
 
+  var item1 = document.getElementById('item1mobile');
   var item2 = document.getElementById('item2mobile');
   var item3 = document.getElementById('item3mobile');
   (function($) {
     document.getElementById('slider').addEventListener('slide', function(e) {
       switch (e.detail.slideNumber) {
         case 0:
-          page1();
+          if (item1.querySelector('.mui-loading')) {
+            page1();
+          }
           break;
         case 1:
           if (item2.querySelector('.mui-loading')) {
