@@ -47,14 +47,15 @@ function renderFundType(data) {
   for (var i = 0; i < data.length; i++) {
     var ele = document.createElement('a');
     ele.classList.add('mui-control-item');
-    ele.innerHTML = '<span>' + data[i].replace(/基金/, '') + '</span>';
+    ele.innerHTML = '<span>' + data[i].name.replace(/基金/, '') + '</span>';
     ele.href = '#fund' + i;
+    ele.dataset.type = data[i].type;
     wrapNav.appendChild(ele);
 
     var con = document.createElement('div');
     con.classList.add('mui-slider-item', 'mui-control-content');
-    con.id = 'fund' + i;
-    con.innerHTML = '<div class="mui-scroll-wrapper" id="scroll' + (i + 1) + '">' +
+    con.id = 'fund' + data[i].type;
+    con.innerHTML = '<div class="mui-scroll-wrapper" id="scroll' + data[i].type + '">' +
       '<div class="mui-scroll">' +
       '<ul class="mui-table-view">' +
       '<div class="mui-loading">' +
@@ -97,6 +98,7 @@ function renderFundList(fundtype) {
         listTitle.innerHTML = '<div class="fundlist-name">基金名称</div><div class="fundlist-networth">单位净值(元)</div><select class="fundlist-chg"><option value="1">日涨幅</option><option value="2">近一月</option><option value="3">近三月</option><option value="4">近六月</option><option value="5">近一年</option></select><span></span>';
         listWrap.parentNode.insertBefore(listTitle, listWrap);
       }
+      console.log(fundtype);
       if (!res.data[fundtype]) {
         listWrap.innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';
       } else {
@@ -204,8 +206,14 @@ function initScroll($) {
   var gallery = mui('.mui-slider');
   gallery.slider();
   document.getElementById('slider').addEventListener('slide', function(e) {
-    console.log(e.detail.slideNumber);
-    switch (e.detail.slideNumber) {
+    var con = e.target.querySelector('#sliderSegmentedControl');
+    var tar = con.querySelector('.mui-active');
+    console.log(tar.dataset.type);
+    var load = e.target.querySelector('.mui-slider-group');
+    if (load.querySelector('.mui-loading')) {
+      renderFundList(tar.dataset.type);
+    }
+    /* switch (e.detail.slideNumber) {
       case 0:
         break;
       case 1:
@@ -231,7 +239,7 @@ function initScroll($) {
         break;
       default:
         break;
-    }
+    } */
   });
   var sliderSegmentedControl = document.getElementById('sliderSegmentedControl');
   $('.mui-input-group').on('change', 'input', function() {

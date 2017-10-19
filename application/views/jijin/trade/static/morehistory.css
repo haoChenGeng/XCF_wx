@@ -1,0 +1,18 @@
+.mui-content{
+	background: #fff;
+}
+.text-center{
+	text-align: center;
+}
+.text-right{
+	text-align: right;
+}
+.text-success{
+	color: green;
+}
+.text-warning{
+	color: orangered;
+}
+.mui-row{
+	padding: 0 10px;
+}

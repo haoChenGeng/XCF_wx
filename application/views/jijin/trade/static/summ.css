@@ -1,0 +1,59 @@
+ul li{
+	list-style: none;
+}
+.detail-info{
+	width: 100%;
+	height: 100px;
+	background: red;
+}
+.fund-info {
+	padding: 0 15px;
+    height: 290px;
+}
+.fund-info li{
+	width: 50%;
+	float: left;
+	line-height: 30px;
+}
+.mui-content-padded{
+	background: #fff;
+    margin: 15px;
+}
+.info-cont{
+	padding: 0 15px;
+	height: auto;
+}
+.info-cont li {
+	width: 100%;
+    padding-top: 10px;
+}
+.more{
+	font-size: 14px;
+	text-align: right;
+	padding-bottom: 5px;
+}
+.fund-news .article{
+	font-size: 14px;
+}
+.asset-set li{
+	width: 50%;
+	float: left;
+}
+.ul-title{
+	height: 30px;
+}
+.ul-title li{
+	width: 50%;
+	height: 30px;
+    line-height: 30px;
+    float: left;
+    overflow: hidden;
+    padding: 0 15px;
+}
+.ul-info li{
+    width: 50%;
+    float: left;
+    /*padding: 0 15px;*/
+    overflow: hidden;
+    line-height: 30px;
+}
