@@ -78,7 +78,7 @@
                 foreach ($Recommend as $val){
                   echo '<li class="clearfix">';
                   if(isset($val['url'])){
-                    echo '<a href="'.'application/views/jijin/trade/prodetail.html'.'?fundcode='.$val['fundcode'].'&purchasetype='.$val['purchasetype'].'&next_url=">';
+                    echo '<a href="'.'/application/views/jijin/trade/prodetail.html'.'?fundcode='.$val['fundcode'].'&purchasetype='.$val['purchasetype'].'&next_url=">';
                   }
           echo   '<p class="product-bottom">'.$val['fundname'].'('.$val['fundtype'].')</p>
               <div class="product-item1">
