@@ -293,7 +293,14 @@ class Jz_fund extends MY_Controller
 			$data['qryallfund'] = -1;
 		}
 		$this->load->config('jz_dict');
-		$data['fundTypes'] = $this->config->item('fundtype');
+		$fundTypes = $this->config->item('fundtype');
+		unset($fundTypes['4']);
+		foreach ($fundTypes as $key=>$val){
+			$data['fundTypes'][] = array('type'=>$key,'name'=>$val);
+		}
+// $json = json_encode($data);
+// var_dump(json_decode($json,true));
+// var_dump($data);
 // 		$data['customerName'] = isset($_SESSION['customer_name']) ? $_SESSION['customer_name'] : '';
 		$this->fundClassify($data['data'],$fundtype);
 		echo json_encode($data);
