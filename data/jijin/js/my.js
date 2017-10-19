@@ -21,27 +21,33 @@
       type: 'get',
       timeout: 10 * 1000,
       success: function(res) {
-        if (res.code == '9999') {
-          window.location.href = '/user/login';
-        } else if (!res.code) {
+        if (!res.code) {
           alert('获取数据错误');
         } else {
           document.getElementById('totalBalance').innerHTML = res.totalfundvolbalance || 0;
           document.getElementById('yesterDayIncome').innerHTML = res.yestincomesum || 0;
           document.getElementById('totalIncome').innerHTML = res.addincomesum || 0;
-          document.getElementById('customerName').innerHTML = res.customerName || 0;
+          document.getElementById('customerName').innerHTML = res.customerName || '未登录';
 
           switch (res.activePage) {
             case 'asset':
+              document.getElementsByClassName('mui-control-item')[0].classList.add('mui-active');
+              document.getElementById('item1mobile').classList.add('mui-active');
               page1();
               break;
             case 'bonus':
+              document.getElementById('item2mobile').classList.add('mui-active');
+              document.getElementsByClassName('mui-control-item')[1].classList.add('mui-active');
               page2();
               break;
             case 'account':
+              document.getElementById('item3mobile').classList.add('mui-active');
+              document.getElementsByClassName('mui-control-item')[2].classList.add('mui-active');
               page3();
               break;
             case 'history':
+              document.getElementById('item4mobile').classList.add('mui-active');
+              document.getElementsByClassName('mui-control-item')[3].classList.add('mui-active');
               page4();
               break;
             default:
@@ -62,9 +68,11 @@
       type: 'post',
       timeout: 30 * 1000,
       success: function(data) {
-        if (data.code == '8888') {
+        if (data.code == '9999') {
+          document.getElementById('scroll1').innerHTML = '<a class="fund-list-error" href="/user/login" id="errorMsg">' + data.msg + '</a>';
+        } else if (data.code == '8888') {
           var fundList = document.getElementById('scroll1');
-          fundList.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register?next_url=jz_my&myPageOper=asset" id="errorMsg">' + data.msg + '</a>';
+          fundList.innerHTML = '<a class="fund-list-error" href="/jijin/Jz_account/register?next_url=jz_my&myPageOper=asset" id="errorMsg">' + data.msg + '</a>';
         } else {
           var listWrap = document.getElementById('buyFundList');
           var fragment = document.createDocumentFragment();
@@ -102,8 +110,6 @@
     });
   }
 
-
-
   function page2() {
     mui.ajax('/jijin/Jz_my/getMyPageData/bonus_change', {
       data: {},
@@ -111,7 +117,9 @@
       type: 'post',
       timeout: 30 * 1000,
       success: function(data) {
-        if (data.code == '8888') {
+        if (data.code == '9999') {
+          document.getElementById('scroll2').innerHTML = '<a class="fund-list-error" href="/user/login" id="errorMsg">' + data.msg + '</a>';
+        } else if (data.code == '8888') {
           var fundList = document.getElementById('scroll2');
           fundList.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register?next_url=jz_my&myPageOper=bonus" id="errorMsg">' + data.msg + '</a>';
         } else {
@@ -155,7 +163,9 @@
         var nodeWrap = item3.querySelector('.mui-scroll'),
           nodeChlid = item3.querySelector('.mui-scroll').childNodes;
         nodeWrap.removeChild(nodeChlid[1]);
-        if (data.code == '8888') {
+        if (data.code == '9999') {
+          document.getElementById('scroll3').innerHTML = '<a class="fund-list-error" href="/user/login" id="errorMsg">' + data.msg + '</a>';
+        } else if (data.code == '8888') {
           var fundList = document.getElementById('scroll3');
           fundList.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register?next_url=jz_my&myPageOper=account" id="errorMsg">' + data.msg + '</a>';
         } else {
@@ -178,14 +188,18 @@
       dataType: 'json',
       type: 'post',
       timeout: 10 * 1000,
-      beforeSend: function() {},
+      beforeSend: function() {
+        document.getElementById('scroll4').querySelector('.mui-loading').style.display = "block";
+      },
       success: function(res) {
         // res = mockData;
-        console.log(res);
+        // console.log(res);
         document.getElementById('scroll4').querySelector('.mui-loading').style.display = "none";
         var listWrap = document.getElementById('history');
         var fragment = document.createDocumentFragment();
-        if (res.code == '8888') {
+        if (res.code == '9999') {
+          listWrap.innerHTML = '<a class="fund-list-error" href="/user/login" id="errorMsg">' + res.msg + '</a>';
+        } else if (res.code == '8888') {
           listWrap.innerHTML = '<a class="fund-list-error" href="' + '/jijin/Jz_account/register" id="errorMsg">' + res.msg + '</a>';
         } else {
           if (!res.data.length) {
@@ -249,13 +263,16 @@
     });
   }
 
+  var item1 = document.getElementById('item1mobile');
   var item2 = document.getElementById('item2mobile');
   var item3 = document.getElementById('item3mobile');
   (function($) {
     document.getElementById('slider').addEventListener('slide', function(e) {
       switch (e.detail.slideNumber) {
         case 0:
-          page1();
+          if (item1.querySelector('.mui-loading')) {
+            page1();
+          }
           break;
         case 1:
           if (item2.querySelector('.mui-loading')) {
@@ -277,15 +294,10 @@
           page4(now, now);
           var search = document.getElementById('search');
           search.addEventListener('tap', function() {
-            if (startDate == '开始日期') {
-              alert('请选择开始日期');
-            } else if (endDate == '结束日期') {
-              alert('请选择结束日期');
-            } else if (parseInt(endDate.innerHTML.replace(/\-/g, ""), 10) - parseInt(startDate.innerHTML.replace(/\-/g, ""), 10) < 0) {
+            if (parseInt(endDate.innerHTML.replace(/\-/g, ""), 10) - parseInt(startDate.innerHTML.replace(/\-/g, ""), 10) < 0) {
               alert('日期选择错误，请重新选择');
             } else {
               document.getElementById('scroll4').querySelector('.mui-loading').style.display = "block";
-
               page4(startDate.innerHTML, endDate.innerHTML);
             }
           });
@@ -307,7 +319,6 @@
 
 (function($) {
   $.init();
-  // console.log(picker.getSelected().value);
   var btns = $('.btn');
   btns.each(function(i, btn) {
     btn.addEventListener('tap', function() {
@@ -321,7 +332,7 @@
        * 也可以直接通过代码声明 optinos 用于实例化 DtPicker
        */
       var picker = new $.DtPicker(options);
-      console.log(picker.getSelected())
+      // console.log(picker.getSelected())
       picker.show(function(rs) {
         /*
          * rs.value 拼合后的 value

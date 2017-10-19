@@ -68,59 +68,55 @@ class Jz_my extends MY_Controller
 	//获取“我的基金”页面的内容
 	public function getMyPageData($activePage = '') {
 		if (!isset($_SESSION['customer_id'])) {
-			echo(json_encode(array('error'=>true,'errorMsg'=>'您尚未登录,请先登录')));
+			echo(json_encode(array('code'=>'9999','msg'=>'您尚未登录,请先登录')));
 			exit;
 		}
 		if (!isset($_SESSION['JZ_user_id']) || $_SESSION['JZ_user_id'] == 0) {
-			echo(json_encode(array('error'=>true,'errorMsg'=>'您尚未开通基金账户,请先开户')));
+			echo(json_encode(array('code'=>'8888','msg'=>'您尚未开通基金账户,请先开户')));
 			exit;
 		}
 		if (empty($activePage)){
 			$activePage = isset($_SESSION['myPageOper']) ? $_SESSION['myPageOper'] : 'fund';
 		}
-		if (isset($_SESSION['JZ_user_id'])) {
-			switch ($activePage) {
-				case 'fund' :
-					$data = $this->getMyFundList();
-					break;
-				case 'bonus_change':
-					$res = $this->bonusChangeAbleList();
-					$data['bonus_change'] = $res;
-					break;
-				case 'bank_card':
-					//获取银行卡
-					$res = $this->bank_info();
-					//对res进行验证
-					$data['bank_info'] = $this->bank_info();
-					break;
-				case 'risk_test':
-					//获取风险测试
-					$res = $this->getRiskLevel();
+		switch ($activePage) {
+			case 'fund' :
+				$data = $this->getMyFundList();
+				break;
+			case 'bonus_change':
+				$res = $this->bonusChangeAbleList();
+				$data['bonus_change'] = $res;
+				break;
+			case 'bank_card':
+				//获取银行卡
+				$res = $this->bank_info();
+				//对res进行验证
+				$data['bank_info'] = $this->bank_info();
+				break;
+			case 'risk_test':
+				//获取风险测试
+				$res = $this->getRiskLevel();
+				if (isset($res['code']) && isset($res['msg']) && isset($res['data']) && !empty($res['data'])) {
+					$data['custrisk'] = $res['data']['custrisk'] ;
+					$data['custriskname'] = $res['data']['custriskname'] ;
+				} else {
+					$data['custrisk'] = '查询失败';
+				}
+				break;
+			case 'history':
+				//获取历史记录
+				$res = $this->getTodayTran();
+				if (isset($res['errorMsg'])) {
+					$data['hisErrorMsg'] = $res['errorMsg'];
+				} else {
 					if (isset($res['code']) && isset($res['msg']) && isset($res['data']) && !empty($res['data'])) {
-						$data['custrisk'] = $res['data']['custrisk'] ;
-						$data['custriskname'] = $res['data']['custriskname'] ;
+						$data['history_tran'] = $res;
 					} else {
-						$data['custrisk'] = '查询失败';
+						$data['hisErrorMsg'] = '查询失败';
 					}
-					break;
-				case 'history':
-					//获取历史记录
-					$res = $this->getTodayTran();
-					if (isset($res['errorMsg'])) {
-						$data['hisErrorMsg'] = $res['errorMsg'];
-					} else {
-						if (isset($res['code']) && isset($res['msg']) && isset($res['data']) && !empty($res['data'])) {
-							$data['history_tran'] = $res;
-						} else {
-							$data['hisErrorMsg'] = '查询失败';
-						}
-					}
-					break;
-				default:
-					$data['errorMsg'] = '不存在该页面';
-			}
-		}else {
-			$data['errorMsg'] = '未登录';
+				}
+				break;
+			default:
+				$data['errorMsg'] = '不存在该页面';
 		}
 // file_put_contents('log/debug'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'获取“我的基金”页面的内容'.serialize($data)."\r\n\r\n",FILE_APPEND);
 // var_dump($data);

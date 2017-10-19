@@ -311,7 +311,7 @@ class Jz_fund extends MY_Controller
 		$post = $this->input->post();
 		$fundtype = isset($post['fundtype']) ? $post['fundtype'] : '2';
 		$data['code'] = '0000';
-		if (isset($_SESSION['customer_name'])){
+		if (isset($_SESSION['customer_name']) && !empty($_SESSION['JZ_user_id'])){
 			if (isset($_SESSION['qryallfund'])){
 				$data['qryallfund'] = $_SESSION['qryallfund'];
 			}
