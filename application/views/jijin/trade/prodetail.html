@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="format-detection" content="telephone=no" />
+		<title>产品详情</title>
+		<link rel="stylesheet" type="text/css" href="../../../../data/jijin/css/mui.min.css"/>
+		<link rel="stylesheet" href="../../../../data/jijin/css/style.css">
+		<script src="../../../../aboutus/js/mui.min.js"></script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">产品详情</h1>
+		</header>
+		<div class="mui-content" style="margin-bottom: 60px;">
+			<section class="m-content">
+				<div class="m-content-t1">
+					<div class="fund-data">
+						<div class="m-content-t1-detail">
+							<p style="text-align: left;">货币名称</p>
+							<p class="day-num">1.2%</p>
+							<p>日涨跌幅</p>
+						</div>
+						<div class="m-content-t1-detail">
+							<p style="text-align: right;">06-29</p>
+							<p class="day-num">1.086</p>
+							<p>最新净值（元）</p>
+							
+						</div>	
+					</div>
+					<div class="fund-index">
+						<div class="fund-index-cont">
+							指数型基金 |<span class="fund-msg">高风险</span>|
+						</div>	
+						<div class="fund-index-cont" style="text-align: right;">
+							评级 
+							<span class="mui-icon mui-icon-star active-star"></span>
+							<span class="mui-icon mui-icon-star active-star"></span>
+							<span class="mui-icon mui-icon-star active-star"></span>
+							<span class="mui-icon mui-icon-star"></span>
+							<span class="mui-icon mui-icon-star"></span>
+						</div>
+						
+					</div>
+				</div>
+			</section>	
+			<div class="tab-view">
+				<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+					<a class="mui-control-item mui-active" href="#achiev-tab">业绩走势</a>
+					<a class="mui-control-item" href="#histroy-tab">历史净值</a>					
+				</div>
+			</div>
+			<div class="subtab-viw">
+				<div id="achiev-tab" class="mui-control-content mui-active">					
+					<div class="m-content-t3">
+						<div id="chartContent" style="width: 100%; height: 300px; background: red; margin-top: 1px;"></div>
+						<div class="m-content-t3-tab" id="worthChart">
+							<button class="mui-btn mui-btn-primary mui-btn-outlined time-btn">11月</button>
+							<button class="mui-btn mui-btn-primary mui-btn-outlined time-btn">3月</button>
+							<button class="mui-btn mui-btn-primary mui-btn-outlined time-btn">6月</button>
+							<button class="mui-btn mui-btn-primary mui-btn-outlined time-btn">1年</button>
+						</div>
+					</div>
+				</div>
+				<div id="histroy-tab" class="mui-control-content">
+					<div class="mui-content-padded">
+						<div class="mui-row history-title">								
+							<div class="mui-col-xs-4 text-left">日期</div>
+							<div class="mui-col-xs-4 text-center">单位净值(元)</div>
+							<div class="mui-col-xs-4 text-right">日涨跌幅(%)</div>
+						</div>
+						<div class="mui-row">								
+							<div class="mui-col-xs-4 text-left"><p>2017-10-18</p></div>
+							<div class="mui-col-xs-4 text-center"><p>31750</p></div>
+							<div class="mui-col-xs-4 text-right"><p>0.16</p> </div>
+						</div>
+						<div class="mui-row">								
+							<div class="mui-col-xs-4 text-left"><p>2017-10-18</p></div>
+							<div class="mui-col-xs-4 text-center"><p>31750</p></div>
+							<div class="mui-col-xs-4 text-right"><p>0.16</p> </div>
+						</div>	
+						<p class="text-center query-more" id="queryMore">查看更多</p>
+					</div>
+					
+				</div>
+			</div>
+			<ul class="mui-table-view fund-charge" id="fund-list">
+		        <li class="mui-table-view-cell">
+		            <a class="mui-navigate-right" >基金概括</a>		<!--href="summ/index.html"-->
+		        </li>
+		        <li class="mui-table-view-cell">
+		            <a class="mui-navigate-right">交易须知</a>		<!--href="tradelist/index.html"-->
+		        </li>			        
+		    </ul>
+		    <ul class="mui-table-view">
+		    	<li class="mui-table-view-cell">
+		            <p class="text-warning">基金过往业绩不预示其未来表现，市场有风险，投资需谨慎。</p>
+		        </li>
+		    </ul>
+			<section class="m-footer">
+      			<p class="m-footer-content">立即申购</p>
+    		</section>
+		</div>
+		
+		<script type="text/javascript">
+			var oBtnP =document.getElementById("worthChart");
+			var oBtn =oBtnP.children;
+			for (var i=0; i<oBtn.length; i++) {
+				oBtn[i].addEventListener("tap", function(){
+					this.setAttribute("class","btn-active").nextElementSibling.removeAttribute("class","btn-active");
+				});
+			}
+			
+			
+			function loadPages(url){		//用于页面跳转
+				mui.openWindow({
+					url: url,
+					id:	url,
+					extras: {
+						name: "111"
+					}
+				});
+			}
+			
+			var oP = document.getElementById("queryMore");		//历史净值查看更多
+		    oP.addEventListener("tap", function(){
+			    var url ="history/"		
+				loadPages(url);				    
+	  		});
+			var oLi =document.getElementById("fund-list");     //获取绑定事件对象
+			var oLiChlid = oLi.children;
+			for (var i=0; i<oLiChlid.length; i++) {
+				oLiChlid[i].addEventListener("tap", function(){
+					var strA =this.children[0].innerHTML;
+					if(strA =="基金概括"){			//跳转到基金概括
+						var url ="summ/"		
+						loadPages(url);
+					}
+					else if(strA =="交易须知"){	//跳转到交易须知							
+						var url ="tradelist/"		
+						loadPages(url);
+					}
+				});
+			}
+			
+			
+		</script>
+	</body>
+
+</html>
