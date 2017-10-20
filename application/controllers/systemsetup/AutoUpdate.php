@@ -7,10 +7,18 @@ class AutoUpdate extends MY_Controller {
 	function __construct() {
 		parent::__construct ();
 		$this->load->helper ( array('comfunction'));
+		$this->load->library(array('Fund_interface'));
 	}
 	
 	public function index() {
-		$this->updatePlannerInfo();
+		$tableNames = array('hsindexvalue'=>'fund_hsindexvalue','fundmanager'=>'fund_manager','fundmanagerinfo'=>'fund_managerinfo');
+		foreach ($tableNames as $key => $val){
+			$returnData = $this->fund_interface->autoUpdateJZInfo($val);
+			if (!empty($returnData['data'])){
+				$this->db->truncate($key);
+				$this->db->insert_batch($key,$returnData['data']);
+			}
+		}
 	}
 
 	function updatePlannerInfo(){
@@ -24,6 +32,10 @@ class AutoUpdate extends MY_Controller {
 			$this->db->set(array('status'=>0))->update('p2_planner');
 			$this->Model_db->incremenUpdate('p2_planner',$newData,'EmployeeID');
 		}
+	}
+	
+	function updateFundData(){
+				
 	}
 	
 }
