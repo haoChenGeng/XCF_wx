@@ -532,16 +532,21 @@ class Fund_interface
 		return ($this->getReturnData($returnData));
 	}
 	
-	function autoUpdateJZInfo(){
+	function autoUpdateJZInfo($tableName = ''){
 		$autoUpdateJZInfo['code'] = 'autoUpdateJZInfo';
+		$autoUpdateJZInfo['tableName'] = $tableName;
 		$submitData = $this->getSubmitData($autoUpdateJZInfo);
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		$returnData = $this->getReturnData($returnData);
 		if ('0000' == $returnData['code']){
-			if ($this->fund_list(1)){
-				return array('code'=>'0000','msg'=>'从金证平台更新基金信息成功');
+			if (empty($tableName)){
+				if ($this->fund_list(1)){
+					return array('code'=>'0000','msg'=>'从金证平台更新基金信息成功');
+				}else{
+					return array('code'=>'9997','msg'=>'从金证平台更新基金信息失败，请重试');
+				}
 			}else{
-				return array('code'=>'9997','msg'=>'从金证平台更新基金信息失败，请重试');
+				return $returnData;
 			}
 		}else{
 			return ($returnData);
