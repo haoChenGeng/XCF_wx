@@ -215,19 +215,32 @@ class Jz_fund extends MY_Controller
 	 * [基金概况]
 	 * @return [type] [description]
 	 */
-	public function fundinfo(){
+	public function fundInfo(){
 		$get = $this->input->get();
 		$this->load->config('jz_dict');
 		$fund_list = $this->db->select('fundtype,fundname,fundcode,risklevel,trustee,investadvisor,total_scale,total_assets,build_date')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
 		$fund_list['risklevel'] =isset($this->config->item('productrisk')[$fund_list['risklevel']])?$this->config->item('productrisk')[$fund_list['risklevel']]:null;
 		$manager = $this->db->select('mi.MangerName , mi.MangerResume')->where(array('m.fund_code' => $get['fundcode'],'m.Incumbent'=>1))->from('p2_fundmanager as m')->join('p2_fundmanagerinfo as mi', 'm.MangerName = mi.MangerName')->get()->result_array();
-		
-		if(!empty($fund_list)&&!empty($manager))
-			$return = array('code'=>0,'data'=>array('basic_info' => $fund_list , 'manager'=>$manager));
+		$file = $this->db->select('filename,url')->where('fundcode',$get['fundcode'])->get('p2_fundfile')->result_array();
+		$asset_allocation = $this->db->select('bond , cash , other , stock , total_assets')->where('fund_code',$get['fundcode'])->get('p2_funddistribution')->row_array();
+		$position_allocation = $this->db->select('security_name , security_scale')->where('fund_code',$get['fundcode'])->get('p2_fundposition')->result_array();
+		if(!empty($fund_list)&&!empty($manager)&&!empty($file))
+			$return = array('code'=>0,'data'=>array('basic_info' => $fund_list , 'manager'=>$manager , 'file' => $file , 'asset_allocation' => $asset_allocation , 'position_allocation' => $position_allocation));
 		else
 			$return = array('code'=>1,'msg'=>'数据不存在');
 		echo json_encode($return);
 	}
+
+	public function tradeNote(){
+		$get = $this->input->get();
+		$file = $this->db->select('filename,url')->where('fundcode',$get['fundcode'])->get('p2_fundfile')->result_array();
+		if(!empty($file))
+			$return = array('code'=>0,'data'=>array('file' => $file));
+		else
+			$return = array('code'=>1,'msg'=>'数据不存在');
+		echo json_encode($return);
+	}
+
 
 /* 	private function getCancelableList(){
 		$cancelable_list = $this->fund_interface->cancelable($_SESSION['JZ_account']);
