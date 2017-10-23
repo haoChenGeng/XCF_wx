@@ -215,19 +215,52 @@ class Jz_fund extends MY_Controller
 	 * [基金概况]
 	 * @return [type] [description]
 	 */
-	public function fundinfo(){
+	public function fundInfo(){
 		$get = $this->input->get();
 		$this->load->config('jz_dict');
+
 		$fund_list = $this->db->select('fundtype,fundname,fundcode,risklevel,trustee,investadvisor,total_scale,total_assets,build_date')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
 		$fund_list['risklevel'] =isset($this->config->item('productrisk')[$fund_list['risklevel']])?$this->config->item('productrisk')[$fund_list['risklevel']]:null;
+		$fund_list['total_scale'] = (string)round($fund_list['total_scale']/100000000,2);
+		$fund_list['total_assets'] = (string)round($fund_list['total_assets']/100000000,2);
 		$manager = $this->db->select('mi.MangerName , mi.MangerResume')->where(array('m.fund_code' => $get['fundcode'],'m.Incumbent'=>1))->from('p2_fundmanager as m')->join('p2_fundmanagerinfo as mi', 'm.MangerName = mi.MangerName')->get()->result_array();
-		
-		if(!empty($fund_list)&&!empty($manager))
-			$return = array('code'=>0,'data'=>array('basic_info' => $fund_list , 'manager'=>$manager));
+		$file = $this->db->select('filename,url')->where('fundcode',$get['fundcode'])->get('p2_fundfile')->result_array();
+		$asset_allocation = $this->db->select('bond , cash , other , stock , total_assets')->where('fund_code',$get['fundcode'])->get('p2_funddistribution')->row_array();
+		$asset_allocation['total_assets'] = (string)round($asset_allocation['total_assets']/100000000,2);
+		$position_allocation = $this->db->select('security_name , security_scale')->where('fund_code',$get['fundcode'])->get('p2_fundposition')->result_array();
+
+		if(!empty($fund_list)&&!empty($manager)&&!empty($file))
+			$return = array('code'=>0,'data'=>array('basic_info' => $fund_list , 'manager'=>$manager , 'file' => $file , 'asset_allocation' => $asset_allocation , 'position_allocation' => $position_allocation));
+		else
+			$return = array('code'=>1,'msg'=>'数据不存在');
+
+		echo json_encode($return);
+	}
+
+	public function tradeNote(){
+		$get = $this->input->get();
+		$rate = $this->db->select('first_per_min_20,first_per_min_22,per_min_24,rate_20_22,rate_24,cost_trustee,cost_manage')->where('fundcode',$get['fundcode'])->get('p2_fundlist')->row_array();
+		if(!empty($rate)){
+			$rate_20_22 =  (array)json_decode($rate['rate_20_22']);
+			if($rate_20_22['businesscode'] == '20'){
+				$rate_20_22['first_per_min'] = $rate['first_per_min_20'];
+				$rate_20_22['businesscode'] = "认购";
+			}
+			else{
+				$rate_20_22['first_per_min'] = $rate['first_per_min_22'];
+				$rate_20_22['businesscode'] = "申购";
+			}
+			$rate_24 =  (array)json_decode($rate['rate_24']);
+			$rate_24['per_min_24'] = $rate['per_min_24'];
+			$cost['cost_trustee'] = $rate['cost_trustee'];
+			$cost['cost_manage'] = $rate['cost_manage'];
+			$return = array('code'=>0,'data'=>array('rate_20_22' => $rate_20_22 , 'rate_24' => $rate_24 , 'cost' => $cost));
+		}
 		else
 			$return = array('code'=>1,'msg'=>'数据不存在');
 		echo json_encode($return);
 	}
+
 
 /* 	private function getCancelableList(){
 		$cancelable_list = $this->fund_interface->cancelable($_SESSION['JZ_account']);
@@ -265,7 +298,7 @@ class Jz_fund extends MY_Controller
 		}else{
 			$return = array('code'=>1,'msg'=>'数据不存在');
 		}
-		$return['fundtype'] = $fundtype;
+		$return['fundtype'] = $startDate;
 		echo json_encode($return);
 	}
 	
