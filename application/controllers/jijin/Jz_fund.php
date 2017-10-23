@@ -250,8 +250,8 @@ class Jz_fund extends MY_Controller
 				$rate_20_22['first_per_min'] = $rate['first_per_min_22'];
 				$rate_20_22['businesscode'] = "申购";
 			}
-			$rate_24['per_min_24'] = $rate['per_min_24'];
 			$rate_24 =  (array)json_decode($rate['rate_24']);
+			$rate_24['per_min_24'] = $rate['per_min_24'];
 			$cost['cost_trustee'] = $rate['cost_trustee'];
 			$cost['cost_manage'] = $rate['cost_manage'];
 			$return = array('code'=>0,'data'=>array('rate_20_22' => $rate_20_22 , 'rate_24' => $rate_24 , 'cost' => $cost));
