@@ -11,7 +11,8 @@ class AutoUpdate extends MY_Controller {
 	}
 	
 	public function index() {
-		$tableNames = array('hsindexvalue'=>'fund_hsindexvalue','fundmanager'=>'fund_manager','fundmanagerinfo'=>'fund_managerinfo');
+		$tableNames = array('hsindexvalue'=>'fund_hsindexvalue','fundmanager'=>'fund_manager','fundmanagerinfo'=>'fund_managerinfo',
+							'funddistribution'=>'fund_distribution','fundposition'=>'fund_position');
 		foreach ($tableNames as $key => $val){
 			$returnData = $this->fund_interface->autoUpdateJZInfo($val);
 			if (!empty($returnData['data'])){

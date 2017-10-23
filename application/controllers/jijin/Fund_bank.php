@@ -122,6 +122,7 @@ class Fund_bank extends MY_Controller
     		$this->form_validation->set_rules('mobiletelno','银行预留电话','required|max_length[20]|numeric');
     		if ($post['operation'] == 'bankcard_add'){
     			$this->form_validation->set_rules('channelid','银行','required');
+    			$_SESSION['operation_data']['channelid'] = $post['channelid'];
     		}
     		if ($this->form_validation->run() == TRUE)
     		{
@@ -129,9 +130,9 @@ class Fund_bank extends MY_Controller
     			unset($submitData['depositacct_old'],$submitData['channelname'],$submitData['moneyaccount']);
     			$submitData['depositacct'] = $post['depositacct'];
     			$submitData['mobiletelno'] = $post['mobiletelno'];
-    			if (!isset($submitData['channelid'])){
-    				$submitData['channelid'] = $post['channelid'];
-    			}
+//     			if (!isset($submitData['channelid'])){
+//     				$submitData['channelid'] = $post['channelid'];
+//     			}
     			$submitData['addBankCard'] = 1;
     			$logData = $submitData;
     			$logData['certificateno'] = substr($logData['certificateno'],0,6).'***'.substr($logData['certificateno'],-3);
@@ -145,12 +146,12 @@ class Fund_bank extends MY_Controller
     			}else{
     				if ($post['operation'] == 'bankcard_add'){
     					$_SESSION['operation_data']['channelid'] = $post['channelid'];         //网点号(支付渠道)
-    					$paymentChannel = $this->db->where(array('channelid'=>$post['channelid']))->get('p2_paymentchannel')->row_array();
+    					$paymentChannel = $this->db->where(array('channelid'=>$submitData['channelid']))->get('p2_paymentchannel')->row_array();
     					$_SESSION['operation_data']['channelname'] = $paymentChannel['channelname'];     //网点名
     				}
+    				$_SESSION['operation_data']['bankname'] = isset($post['bankname']) ? $post['bankname'] : $_SESSION['operation_data']['channelname'];
     				$_SESSION['operation_data']['depositacct'] = $post['depositacct'];         //银行卡号
     				$_SESSION['operation_data']['mobileno'] = $post['mobiletelno'];            //银行预留电话
-    				$_SESSION['operation_data']['bankname'] = isset($post['bankname']) ? $post['bankname'] : $paymentChannel['channelname'];
     				if (isset($post['depositprov'])){
     					$_SESSION['operation_data']['depositprov'] = $post['depositprov'];
     					$_SESSION['operation_data']['depositcity'] = $post['depositcity'];
