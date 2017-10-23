@@ -241,17 +241,17 @@ class Jz_fund extends MY_Controller
 		$get = $this->input->get();
 		$rate = $this->db->select('first_per_min_20,first_per_min_22,per_min_24,rate_20_22,rate_24,cost_trustee,cost_manage')->where('fundcode',$get['fundcode'])->get('p2_fundlist')->row_array();
 		if(!empty($rate)){
-			$rate_20_22['cost'] =  (array)json_decode($rate['rate_20_22']);
-			if($rate_20_22['cost']['businesscode'] == '20'){
+			$rate_20_22 =  (array)json_decode($rate['rate_20_22']);
+			if($rate_20_22['businesscode'] == '20'){
 				$rate_20_22['first_per_min'] = $rate['first_per_min_20'];
-				$rate_20_22['cost']['businesscode'] = "认购";
+				$rate_20_22['businesscode'] = "认购";
 			}
 			else{
 				$rate_20_22['first_per_min'] = $rate['first_per_min_22'];
-				$rate_20_22['cost']['businesscode'] = "申购";
+				$rate_20_22['businesscode'] = "申购";
 			}
 			$rate_24['per_min_24'] = $rate['per_min_24'];
-			$rate_24['cost'] =  (array)json_decode($rate['rate_24']);
+			$rate_24 =  (array)json_decode($rate['rate_24']);
 			$cost['cost_trustee'] = $rate['cost_trustee'];
 			$cost['cost_manage'] = $rate['cost_manage'];
 			$return = array('code'=>0,'data'=>array('rate_20_22' => $rate_20_22 , 'rate_24' => $rate_24 , 'cost' => $cost));
