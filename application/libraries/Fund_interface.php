@@ -552,4 +552,15 @@ class Fund_interface
 			return ($returnData);
 		}
 	}
+	
+	function bankCardActive($inputData){
+		$inputData['code'] = 'bankCardActive';
+		$inputData['customerNo'] = $_SESSION['customer_name'];
+		$submitData = $this->getSubmitData($inputData);
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+var_dump($returnData);		
+		$returnData = $this->getReturnData($returnData);
+		return ($returnData);
+
+	}
 }
