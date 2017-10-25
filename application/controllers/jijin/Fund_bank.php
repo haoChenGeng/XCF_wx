@@ -342,21 +342,7 @@ class Fund_bank extends MY_Controller
     	$post = $this->input->post();
     	$oper_data = $_SESSION['bankCard_operData'];
     	unset($_SESSION['bankCard_operData']);
-    	
-$oper_data = array('paycenterid' => '0386','channelid' => 'KQ01',
-			'channelname' =>  '招商银行' ,
-   			'moneyaccount' =>  '213' ,
-   			'certificateno' =>  '500233199301011414',
-   			'certificatetype' =>  '0',
-   			'depositacctname' =>  '王丽丽',
-   			'bankname' =>  '招商银行',
-   			'depositacct' =>  '5213028800013156',
-   			'mobileno' =>  '13554719692',
-			'verificationCode' => '123456',
-);
-
-//     	$oper_data['verificationCode'] = $post['verificationCode'];
-var_dump($oper_data);
+    	$oper_data['verificationCode'] = $post['verificationCode'];
     	myLog('user/bankcard_active',"用户".$_SESSION ['customer_name']."进行银行卡激活操作,输入数据为:".serialize($oper_data));
     	$res = $this->fund_interface->bankCardActive($oper_data);
     	myLog('user/bankcard_active',"用户".$_SESSION ['customer_name']."进行银行卡激活操作,返回数据为:".serialize($res));
@@ -368,37 +354,32 @@ var_dump($oper_data);
     		}else{
     			$msgUrl = '/jijin/Fund_bank/bank_info';
     		}
-    		if ($oper_res['code']== '0000'){
+    		if ($res['code']== '0000'){
     			Message(Array(
     					'msgTy' => 'sucess',
-    					'msgContent' => $oper_des.'成功',
+    					'msgContent' => '银行卡激活成功',
     					'msgUrl' => $this->base.$msgUrl, //调用我的基金界面
     					'base' => $this->base
     					));
     			exit;
     		}else{
-    			if ($oper_res['code']== '-409999999'){
-    				$err_msg = '密码输入错误';
+    			if ('0054' == $res['code']){
+    				$err_msg = $res['msg'];
     			}else{
-    				if (in_array($oper_res['code'], array('-440117034','-440114020'))){
-    					$err_msg = $oper_res['msg'];
-    				}else{
-    					$err_msg = '系统故障';
-    				}
+    				$err_msg = '银行卡激活失败，请稍后重试！';
     			}
-    			$log_msg = '调用'.$oper_des.'返回错误信息为：'.$oper_res['msg'];
+    			$log_msg = '调用银行卡激活接口返回错误信息为：'.$res['msg'];
     		}
     	}else{                                      //调用金证接口失败
     		$err_msg = '系统故障';
-    		$log_msg = $oper_des.'接口调用失败';
+    		$log_msg = '银行卡激活接口调用失败';
     	}
-exit;
     	//失败时，给客户的提示信息，并log
     	if (!empty($err_msg))
     	{
     		$str = isset($log_msg)?$log_msg:$err_msg;
     		//     		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name'].$oper_des."操作失败，原因为：".$str."\r\n\r\n",FILE_APPEND);
-    		myLog('user/'.$post['operation'],"用户".$_SESSION ['customer_name'].$oper_des."操作失败，原因为：".$str);
+    		myLog('user/bankcard_active',"用户".$_SESSION ['customer_name']."进行银行卡激活操作失败，原因为：".$str);
     		Message(Array(
     				'msgTy' => 'fail',
     				'msgContent' => $err_msg.', 正在返回...',
@@ -449,7 +430,7 @@ exit;
 // 		$data[num_channel] = 0;
 // var_dump($channel_info); var_dump($data);exit;
 // 		return $data;
-var_dump($data);
+// var_dump($data);
 		$this->load->view('/jijin/bank/bank_info',$data);
 	}
 	
