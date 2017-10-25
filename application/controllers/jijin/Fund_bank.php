@@ -118,59 +118,63 @@ class Fund_bank extends MY_Controller
     		//将解密后数据赋值给certificateno和depositacct，并对输入数据进行处理（删除头尾空格及银行卡号中间空格）
     		$post['depositacct'] =  trim(substr($decryptData, 0, $div_bit));
     		$post['depositacct'] =  str_replace(" ",'',$post['depositacct']);
-    		$_POST['depositacct'] = $post['depositacct'];
-    		$post['mobiletelno'] = trim($post['mobiletelno']);
-    		//--------以下设置客户输入错误提示--------------------------
-    		$this->load->library('form_validation');
-    		$this->form_validation->set_message('required', '%s不能为空.');
-    		$this->form_validation->set_message('max_length', '%s长度超出限制.');
-    		$this->form_validation->set_message('numeric', '%s必须为数字.');
-    			
-    		//--------以下设置判断客户输入信息检测规则--------------------------
-    		$this->form_validation->set_rules('depositacct','银行卡号','required|max_length[30]|numeric');
-    		$this->form_validation->set_rules('mobiletelno','银行预留电话','required|max_length[20]|numeric');
-    		if ($post['operation'] == 'bankcard_add'){
-    			$this->form_validation->set_rules('channelid','银行','required');
-    			$_SESSION['bankCard_operData']['channelid'] = $post['channelid'];
-    		}
-    		if ($this->form_validation->run() == TRUE)
-    		{
-    			$submitData = $_SESSION['bankCard_operData'];
-    			unset($submitData['depositacct_old'],$submitData['channelname'],$submitData['moneyaccount']);
-    			$submitData['depositacct'] = $post['depositacct'];
-    			$submitData['mobiletelno'] = $post['mobiletelno'];
-//     			if (!isset($submitData['channelid'])){
-//     				$submitData['channelid'] = $post['channelid'];
-//     			}
-    			$submitData['addBankCard'] = 1;
-    			$logData = $submitData;
-    			$logData['certificateno'] = substr($logData['certificateno'],0,6).'***'.substr($logData['certificateno'],-3);
-    			$logData['depositacct'] = substr($logData['depositacct'],0,3).'***'.substr($logData['depositacct'],-3);
-    			$res_bMS = $this->fund_interface->bgMsgSend($submitData);
-// var_dump($res_bMS);
-//     			file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend接口\r\n调用数据:".serialize($logData)."\r\n返回数据:".serialize($res_bMS)."\r\n\r\n",FILE_APPEND);
-    			myLog('user/'.$post['operation'],"用户:".$_SESSION ['customer_name']."调用bgMsgSend接口\t调用数据:".serialize($logData)."\t返回数据:".serialize($res_bMS));
-    			if ( !isset($res_bMS['code']) || $res_bMS['code'] != '0000' )                  //鉴权失败  $res_bMS['data'][0]['comtype']表示该卡已经鉴权过
-    			{
-    				$err_msg = '银行卡鉴权失败';
-    			}else{
-    				if ($post['operation'] == 'bankcard_add'){
-    					$_SESSION['bankCard_operData']['channelid'] = $post['channelid'];         //网点号(支付渠道)
-    					$paymentChannel = $this->db->where(array('channelid'=>$submitData['channelid']))->get('p2_paymentchannel')->row_array();
-    					$_SESSION['bankCard_operData']['channelname'] = $paymentChannel['channelname'];     //网点名
-    				}
-    				$_SESSION['bankCard_operData']['bankname'] = isset($post['bankname']) ? $post['bankname'] : $_SESSION['bankCard_operData']['channelname'];
-    				$_SESSION['bankCard_operData']['depositacct'] = $post['depositacct'];         //银行卡号
-    				$_SESSION['bankCard_operData']['mobileno'] = $post['mobiletelno'];            //银行预留电话
-    				if (isset($post['depositprov'])){
-    					$_SESSION['bankCard_operData']['depositprov'] = $post['depositprov'];
-    					$_SESSION['bankCard_operData']['depositcity'] = $post['depositcity'];
-    				}
-// var_dump($_SESSION['bankCard_operData']);
-    				$this->load_bgMsgCheckOnly($post['operation']);
-    			}
+    		if ( 'bankcard_change' == $post['operation'] && $post['depositacct'] == $_SESSION['bankCard_operData']['depositacct_old']){
+    			$err_msg = $log_msg = '新银行卡和原银行卡卡号相同';
     		}else{
-    			$err_msg = validation_errors();
+    			$_POST['depositacct'] = $post['depositacct'];
+    			$post['mobiletelno'] = trim($post['mobiletelno']);
+    			//--------以下设置客户输入错误提示--------------------------
+    			$this->load->library('form_validation');
+    			$this->form_validation->set_message('required', '%s不能为空.');
+    			$this->form_validation->set_message('max_length', '%s长度超出限制.');
+    			$this->form_validation->set_message('numeric', '%s必须为数字.');
+    			 
+    			//--------以下设置判断客户输入信息检测规则--------------------------
+    			$this->form_validation->set_rules('depositacct','银行卡号','required|max_length[30]|numeric');
+    			$this->form_validation->set_rules('mobiletelno','银行预留电话','required|max_length[20]|numeric');
+    			if ($post['operation'] == 'bankcard_add'){
+    				$this->form_validation->set_rules('channelid','银行','required');
+    				$_SESSION['bankCard_operData']['channelid'] = $post['channelid'];
+    			}
+    			if ($this->form_validation->run() == TRUE)
+    			{
+    				$submitData = $_SESSION['bankCard_operData'];
+    				unset($submitData['depositacct_old'],$submitData['channelname'],$submitData['moneyaccount']);
+    				$submitData['depositacct'] = $post['depositacct'];
+    				$submitData['mobiletelno'] = $post['mobiletelno'];
+    				//     			if (!isset($submitData['channelid'])){
+    				//     				$submitData['channelid'] = $post['channelid'];
+    				//     			}
+    				$submitData['addBankCard'] = 1;
+    				$logData = $submitData;
+    				$logData['certificateno'] = substr($logData['certificateno'],0,6).'***'.substr($logData['certificateno'],-3);
+    				$logData['depositacct'] = substr($logData['depositacct'],0,3).'***'.substr($logData['depositacct'],-3);
+    				$res_bMS = $this->fund_interface->bgMsgSend($submitData);
+    				// var_dump($res_bMS);
+    				//     			file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend接口\r\n调用数据:".serialize($logData)."\r\n返回数据:".serialize($res_bMS)."\r\n\r\n",FILE_APPEND);
+    				myLog('user/'.$post['operation'],"用户:".$_SESSION ['customer_name']."调用bgMsgSend接口\t调用数据:".serialize($logData)."\t返回数据:".serialize($res_bMS));
+    				if ( !isset($res_bMS['code']) || $res_bMS['code'] != '0000' )                  //鉴权失败  $res_bMS['data'][0]['comtype']表示该卡已经鉴权过
+    				{
+    					$err_msg = '银行卡鉴权失败';
+    				}else{
+    					if ($post['operation'] == 'bankcard_add'){
+    						$_SESSION['bankCard_operData']['channelid'] = $post['channelid'];         //网点号(支付渠道)
+    						$paymentChannel = $this->db->where(array('channelid'=>$submitData['channelid']))->get('p2_paymentchannel')->row_array();
+    						$_SESSION['bankCard_operData']['channelname'] = $paymentChannel['channelname'];     //网点名
+    					}
+    					$_SESSION['bankCard_operData']['bankname'] = isset($post['bankname']) ? $post['bankname'] : $_SESSION['bankCard_operData']['channelname'];
+    					$_SESSION['bankCard_operData']['depositacct'] = $post['depositacct'];         //银行卡号
+    					$_SESSION['bankCard_operData']['mobileno'] = $post['mobiletelno'];            //银行预留电话
+    					if (isset($post['depositprov'])){
+    						$_SESSION['bankCard_operData']['depositprov'] = $post['depositprov'];
+    						$_SESSION['bankCard_operData']['depositcity'] = $post['depositcity'];
+    					}
+    					// var_dump($_SESSION['bankCard_operData']);
+    					$this->load_bgMsgCheckOnly($post['operation']);
+    				}
+    			}else{
+    				$err_msg = validation_errors();
+    			}
     		}
     	}else{
     		$err_msg = '系统故障';
