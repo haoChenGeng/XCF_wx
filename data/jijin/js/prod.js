@@ -52,9 +52,9 @@ window.onload = function() {
 			
 			var oParent = byId("buy_fund");
 			var a = document.createElement("a");
-			a.className = "m-footer-content ";
+			a.className = "mui-btn mui-btn-block buy-btn";
 			if(res.purchasetype == "申购") {				
-				a.innerHTML = "立即"+res.purchasetype;				
+				a.innerHTML = "立即"+res.purchasetype;					
 			}
 			else if(res.purchasetype == "认购"){
 				a.innerHTML = "立即"+res.purchasetype;
@@ -102,7 +102,7 @@ window.onload = function() {
 						oTab.appendChild(pEle);
 					}
 					else{
-						oTab.innerHTML ="<p class='text-center query-more'>暂无数据</p>"
+						oTab.innerHTML ="<p class='mui-text-center query-more'>暂无数据</p>"
 					}						
 				}
 				else if(res.code ==1){
