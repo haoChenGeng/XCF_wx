@@ -26,9 +26,11 @@
                 <div class="color-black">状态：<?php echo $value['status'];?></div>
             </div>
             <?php
-            	if (!isset($value['noOper'])){
+            	if (1 == $value['authenticateflag']){
             		echo '<a class="m-item-a bank-info-btn del" href="/jijin/Fund_bank/bankcard_delete/'.$value['channelid'].'">删除</a>';
             		echo '<a class="m-item-a bank-info-btn change" href="/jijin/Fund_bank/operation/bankcard_change/'.$value['channelid'].'/'.$value['moneyaccount'].'">更换</a>';
+            	}elseif (0 == $value['authenticateflag']){
+            		echo '<a class="m-item-a bank-info-btn del" href="/jijin/Fund_bank/operation/bankcard_active/'.$value['channelid'].'">激活</a>';
             	}
             ?>      
         </div>

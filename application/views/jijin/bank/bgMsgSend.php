@@ -43,7 +43,7 @@
 				<div class="m-item" style="margin-top:-1px;">
 					<i class="icon icon-phone"></i>
 					<label>
-						<input type="text" id="bankcard_no" name="depositacct"  class="w80-p" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" placeholder="请输入银行卡号"/>
+						<input type="text" id="bankcard_no" name="depositacct"  class="w80-p" data-key="<?php echo $public_key;?>"  data-code="<?php echo $rand_code;?>" <?php if(isset($depositacct)) echo 'value='.$depositacct.' readonly=true';?> placeholder="请输入银行卡号"/>
 					</label>
 				</div>
 				<div class="m-item" id="chooseCity" style="display: none;">

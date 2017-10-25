@@ -9,7 +9,7 @@ class Fund_bank extends MY_Controller
     {
         parent::__construct();
         $this->load->database();
-        $this->load->helper(array("output","comfunction"));       //"page"  "log"   "func",
+        $this->load->helper(array("output","comfunction","logfuncs"));       //"page"  "log"   "func",
         $this->load->library(array('Fund_interface','Logincontroller'));
         $_SESSION['myPageOper'] = 'account';
     }
@@ -27,15 +27,18 @@ class Fund_bank extends MY_Controller
     		case 'bankcard_change':
     			$oper_des = '更换银行卡';
     			break;
+    		case 'bankcard_active':
+    			$oper_des = '激活银行卡';
+    			break;
     		default:
     			$oper_des = '';
     	}
     	//查询获得用户姓名、证件类型、证件号码信息
     	$user_info = $this->fund_interface->AccountInfo();
-// var_dump($user_info);
     	if (!isset($user_info['code']) || $user_info['code'] != '0000' || !isset($user_info['data']['certificateno'])){
     		$log_msg = '查询用户信息(account_info<520101>)失败';
-    		file_put_contents('log/user/'.$operation.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."信息失败,返回数据:".serialize($user_info)."\r\n\r\n",FILE_APPEND);
+//     		file_put_contents(.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询用户".$_SESSION ['customer_name']."信息失败,返回数据:".serialize($user_info)."\r\n\r\n",FILE_APPEND);
+    		myLog('user/'.$operation,"查询用户".$_SESSION ['customer_name']."信息失败,返回数据:".serialize($user_info));
     	}
     	$this->load->config('jz_dict');
 //     	$needPCBank = $this->config->item('needProvCity')[$this->config->item('selectChannel')];
@@ -49,7 +52,7 @@ class Fund_bank extends MY_Controller
 //     				}
 //     			}
 //     		}
-    	}elseif ($operation == 'bankcard_change'){
+    	}elseif ('bankcard_change' == $operation || 'bankcard_active' == $operation){
     		$paymentChannel = $this->db->where(array('channelid'=>$channelid))->get('p2_paymentchannel')->row_array();
 //     		if (in_array($paymentChannel['channelname'],$needPCBank)){
 //     			$data['provCity'] = json_encode($this->fund_interface->provCity());
@@ -59,14 +62,20 @@ class Fund_bank extends MY_Controller
     			$log_msg = '查询用户银行卡信息失败';
     		}else{
     			$data['channelname'] = $paymentChannel['channelname'];
-    			$_SESSION['operation_data']['depositacct_old'] = $bankCardInfo['depositacct'];
-    			$_SESSION['operation_data']['channelid'] = $channelid;
-    			$_SESSION['operation_data']['channelname'] = $paymentChannel['channelname'];
-    			$_SESSION['operation_data']['moneyaccount'] = $bankCardInfo['moneyaccount'];
+    			if ('bankcard_active' == $operation){
+    				$data['depositacct'] = $bankCardInfo['depositacct'];
+    				$_SESSION['bankCard_operData']['paycenterid'] = $bankCardInfo['paycenterid'];
+    			}else{
+    				$_SESSION['bankCard_operData']['depositacct_old'] = $bankCardInfo['depositacct'];
+    			}
+    			$_SESSION['bankCard_operData']['channelid'] = $channelid;
+    			$_SESSION['bankCard_operData']['channelname'] = $paymentChannel['channelname'];
+    			$_SESSION['bankCard_operData']['moneyaccount'] = $bankCardInfo['moneyaccount'];
     		}
     	}
     	if (isset($log_msg)){
-    		file_put_contents('log/user/'.$operation.$this->logfile_suffix,date('Y-m-d H:i:s',time()).$oper_des."失败:".$log_msg."\r\n\r\n",FILE_APPEND);
+//     		file_put_contents('log/user/'.$operation.$this->logfile_suffix,date('Y-m-d H:i:s',time()).$oper_des."失败:".$log_msg."\r\n\r\n",FILE_APPEND);
+    		myLog('user/'.$operation,$oper_des."失败:".$log_msg);
     		Message(Array(
     				'msgTy' => 'fail',
     				'msgContent' => $oper_des.'失败，系统正在返回...',
@@ -80,11 +89,11 @@ class Fund_bank extends MY_Controller
     		$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
     		$data['operation'] = $operation;
     		$data['pag_title'] = $oper_des;
-    		$_SESSION['operation_data']['certificateno'] = $user_info['data']['certificateno'];
-    		$_SESSION['operation_data']['certificatetype'] = $user_info['data']['certificatetype'];
-    		$_SESSION['operation_data']['depositacctname'] = $user_info['data']['depositacctname'];
+    		$_SESSION['bankCard_operData']['certificateno'] = $user_info['data']['certificateno'];
+    		$_SESSION['bankCard_operData']['certificatetype'] = $user_info['data']['certificatetype'];
+    		$_SESSION['bankCard_operData']['depositacctname'] = $user_info['data']['depositacctname'];
     		$_SESSION['rand_code'] = $data['rand_code'];
-// var_dump($_SESSION['operation_data']);
+// var_dump($_SESSION['bankCard_operData']);
 // var_dump($data);
     		$this->load->view('jijin/bank/bgMsgSend',$data);
     	}
@@ -93,7 +102,7 @@ class Fund_bank extends MY_Controller
     //银行卡鉴权
     function bgMsgSend()
     {
-
+// var_dump($_SESSION['bankCard_operData']);
     	if (!$this->logincontroller->isLogin()) {
     		exit;
     	}
@@ -122,40 +131,42 @@ class Fund_bank extends MY_Controller
     		$this->form_validation->set_rules('mobiletelno','银行预留电话','required|max_length[20]|numeric');
     		if ($post['operation'] == 'bankcard_add'){
     			$this->form_validation->set_rules('channelid','银行','required');
+    			$_SESSION['bankCard_operData']['channelid'] = $post['channelid'];
     		}
     		if ($this->form_validation->run() == TRUE)
     		{
-    			$submitData = $_SESSION['operation_data'];
+    			$submitData = $_SESSION['bankCard_operData'];
     			unset($submitData['depositacct_old'],$submitData['channelname'],$submitData['moneyaccount']);
     			$submitData['depositacct'] = $post['depositacct'];
     			$submitData['mobiletelno'] = $post['mobiletelno'];
-    			if (!isset($submitData['channelid'])){
-    				$submitData['channelid'] = $post['channelid'];
-    			}
+//     			if (!isset($submitData['channelid'])){
+//     				$submitData['channelid'] = $post['channelid'];
+//     			}
     			$submitData['addBankCard'] = 1;
     			$logData = $submitData;
     			$logData['certificateno'] = substr($logData['certificateno'],0,6).'***'.substr($logData['certificateno'],-3);
     			$logData['depositacct'] = substr($logData['depositacct'],0,3).'***'.substr($logData['depositacct'],-3);
     			$res_bMS = $this->fund_interface->bgMsgSend($submitData);
 // var_dump($res_bMS);
-    			file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend接口\r\n调用数据:".serialize($logData)."\r\n返回数据:".serialize($res_bMS)."\r\n\r\n",FILE_APPEND);
+//     			file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."调用bgMsgSend接口\r\n调用数据:".serialize($logData)."\r\n返回数据:".serialize($res_bMS)."\r\n\r\n",FILE_APPEND);
+    			myLog('user/'.$post['operation'],"用户:".$_SESSION ['customer_name']."调用bgMsgSend接口\t调用数据:".serialize($logData)."\t返回数据:".serialize($res_bMS));
     			if ( !isset($res_bMS['code']) || $res_bMS['code'] != '0000' )                  //鉴权失败  $res_bMS['data'][0]['comtype']表示该卡已经鉴权过
     			{
     				$err_msg = '银行卡鉴权失败';
     			}else{
     				if ($post['operation'] == 'bankcard_add'){
-    					$_SESSION['operation_data']['channelid'] = $post['channelid'];         //网点号(支付渠道)
-    					$paymentChannel = $this->db->where(array('channelid'=>$post['channelid']))->get('p2_paymentchannel')->row_array();
-    					$_SESSION['operation_data']['channelname'] = $paymentChannel['channelname'];     //网点名
+    					$_SESSION['bankCard_operData']['channelid'] = $post['channelid'];         //网点号(支付渠道)
+    					$paymentChannel = $this->db->where(array('channelid'=>$submitData['channelid']))->get('p2_paymentchannel')->row_array();
+    					$_SESSION['bankCard_operData']['channelname'] = $paymentChannel['channelname'];     //网点名
     				}
-    				$_SESSION['operation_data']['depositacct'] = $post['depositacct'];         //银行卡号
-    				$_SESSION['operation_data']['mobileno'] = $post['mobiletelno'];            //银行预留电话
-    				$_SESSION['operation_data']['bankname'] = isset($post['bankname']) ? $post['bankname'] : $paymentChannel['channelname'];
+    				$_SESSION['bankCard_operData']['bankname'] = isset($post['bankname']) ? $post['bankname'] : $_SESSION['bankCard_operData']['channelname'];
+    				$_SESSION['bankCard_operData']['depositacct'] = $post['depositacct'];         //银行卡号
+    				$_SESSION['bankCard_operData']['mobileno'] = $post['mobiletelno'];            //银行预留电话
     				if (isset($post['depositprov'])){
-    					$_SESSION['operation_data']['depositprov'] = $post['depositprov'];
-    					$_SESSION['operation_data']['depositcity'] = $post['depositcity'];
+    					$_SESSION['bankCard_operData']['depositprov'] = $post['depositprov'];
+    					$_SESSION['bankCard_operData']['depositcity'] = $post['depositcity'];
     				}
-// var_dump($_SESSION['operation_data']);
+// var_dump($_SESSION['bankCard_operData']);
     				$this->load_bgMsgCheckOnly($post['operation']);
     			}
     		}else{
@@ -167,7 +178,8 @@ class Fund_bank extends MY_Controller
     	}
     	if (isset($err_msg)){
     		$str = isset($log_msg)?$log_msg:$err_msg;
-    		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix, date('Y-m-d H:i:s',time()).":\r\n用户(".$_SESSION ['customer_name'].")进行".$post['operation']."操作时，鉴权失败，原因为：".$str."\r\n\r\n",FILE_APPEND);
+//     		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix, date('Y-m-d H:i:s',time()).":\r\n用户(".$_SESSION ['customer_name'].")进行".$post['operation']."操作时，鉴权失败，原因为：".$str."\r\n\r\n",FILE_APPEND);
+    		myLog('user/'.$post['operation'],"用户(".$_SESSION ['customer_name'].")进行".$post['operation']."操作时，鉴权失败，原因为：".$str);
     		Message(Array(
     				'msgTy' => 'fail',
     				'msgContent' => $err_msg.'<br/>系统正在返回...',
@@ -186,13 +198,19 @@ class Fund_bank extends MY_Controller
     	switch ($operation){
     		case 'bankcard_add':
     			$data['pag_title'] = '增加银行卡';
+    			$nextView = 'jijin/bank/bgMsgCheckOnly';
     			break;
     		case 'bankcard_change':
     			$data['pag_title'] = '更换银行卡';
+    			$nextView = 'jijin/bank/bgMsgCheckOnly';
+    			break;
+    		case 'bankcard_active':
+    			$data['pag_title'] = '激活银行卡';
+    			$nextView = 'jijin/bank/bankCardActive';
     			break;
     	}
     	$_SESSION['rand_code'] = $data['rand_code'];
-    	$this->load->view('jijin/bank/bgMsgCheckOnly',$data);
+    	$this->load->view($nextView,$data);
     }
     
     function operation_submit()
@@ -204,7 +222,8 @@ class Fund_bank extends MY_Controller
     	//记录post提交数据，裁减密码敏感信息。
     	$tmp =$post;
     	$tmp['tpasswd'] = substr($tmp['tpasswd'], 6,6);
-    	file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."进行".$post['operation']."操作,输入数据为:".serialize($tmp)."\r\n\r\n",FILE_APPEND);
+//     	file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."进行".$post['operation']."操作,输入数据为:".serialize($tmp)."\r\n\r\n",FILE_APPEND);
+    	myLog('user/'.$post['operation'],"用户".$_SESSION ['customer_name']."进行".$post['operation']."操作,输入数据为:".serialize($tmp));
     	//-----------RSA解密----------------------------
     	$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
     	$decryptData ='';
@@ -222,8 +241,8 @@ class Fund_bank extends MY_Controller
 //     			$this->load->library('Fund_interface');
 //-----------------------------------------------
     		//准备数据，并清除相关SESSION
-    		$oper_data = $_SESSION['operation_data'];
-    		unset($_SESSION['operation_data']);
+    		$oper_data = $_SESSION['bankCard_operData'];
+    		unset($_SESSION['bankCard_operData']);
     		$oper_data['tpasswd'] = $post['tpasswd'];
     		$oper_data['verificationCode'] = $post['verificationCode'];
 // var_dump($oper_data);
@@ -248,6 +267,9 @@ class Fund_bank extends MY_Controller
 // return;
     				$oper_des = '更换银行卡';
     				break;
+    			case 'bankcard_active':
+//     				$data['pag_title'] = '激活银行卡';
+    			break; 
     		}
     		$logData = $oper_data;
     		$logData['certificateno'] = substr($logData['certificateno'],0,6).'***'.substr($logData['certificateno'],-3);
@@ -256,7 +278,8 @@ class Fund_bank extends MY_Controller
     		if (isset($logData['depositacct_old'])){
     			$logData['depositacct_old'] = substr($logData['depositacct_old'],0,3).'***'.substr($logData['depositacct_old'],-3);
     		}
-    		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name'].")调用金证接口进行".$oper_des.'操作，输入数据为:'.serialize($logData).'返回数据为:'.serialize($oper_res)."\r\n\r\n",FILE_APPEND);
+//     		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name'].")调用金证接口进行".$oper_des.'操作，输入数据为:'.serialize($logData).'返回数据为:'.serialize($oper_res)."\r\n\r\n",FILE_APPEND);
+    		myLog('user/'.$post['operation'],"用户:".$_SESSION ['customer_name'].")调用金证接口进行".$oper_des.'操作，输入数据为:'.serialize($logData).'返回数据为:'.serialize($oper_res));
     		 
     		if (isset($oper_res['code']))
     		{
@@ -278,7 +301,11 @@ class Fund_bank extends MY_Controller
     				if ($oper_res['code']== '-409999999'){
     					$err_msg = '密码输入错误';
     				}else{
-    					$err_msg = '系统故障';
+    					if (in_array($oper_res['code'], array('-440117034','-440114020'))){
+    						$err_msg = $oper_res['msg'];
+    					}else{
+    						$err_msg = '系统故障';
+    					}
     				}
     				$log_msg = '调用'.$oper_des.'返回错误信息为：'.$oper_res['msg'];
     			}
@@ -296,7 +323,63 @@ class Fund_bank extends MY_Controller
     	if (!empty($err_msg))
     	{
     		$str = isset($log_msg)?$log_msg:$err_msg;
-    		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name'].$oper_des."操作失败，原因为：".$str."\r\n\r\n",FILE_APPEND);
+//     		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name'].$oper_des."操作失败，原因为：".$str."\r\n\r\n",FILE_APPEND);
+    		myLog('user/'.$post['operation'],"用户".$_SESSION ['customer_name'].$oper_des."操作失败，原因为：".$str);
+    		Message(Array(
+    				'msgTy' => 'fail',
+    				'msgContent' => $err_msg.', 正在返回...',
+    				'msgUrl' => $this->base .'/jijin/Fund_bank/bank_info',
+    				'base' => $this->base
+    				));
+    	}
+    }
+    
+    function bankCardActive()
+    {
+    	if (!$this->logincontroller->isLogin()) {
+    		exit;
+    	}
+    	$post = $this->input->post();
+    	$oper_data = $_SESSION['bankCard_operData'];
+    	unset($_SESSION['bankCard_operData']);
+    	$oper_data['verificationCode'] = $post['verificationCode'];
+    	myLog('user/bankcard_active',"用户".$_SESSION ['customer_name']."进行银行卡激活操作,输入数据为:".serialize($oper_data));
+    	$res = $this->fund_interface->bankCardActive($oper_data);
+    	myLog('user/bankcard_active',"用户".$_SESSION ['customer_name']."进行银行卡激活操作,返回数据为:".serialize($res));
+    	if (isset($res['code']))
+    	{
+    		if (isset($_SESSION['next_url'])){
+    			$msgUrl = $_SESSION['next_url'];
+    			unset($_SESSION['next_url']);
+    		}else{
+    			$msgUrl = '/jijin/Fund_bank/bank_info';
+    		}
+    		if ($res['code']== '0000'){
+    			Message(Array(
+    					'msgTy' => 'sucess',
+    					'msgContent' => '银行卡激活成功',
+    					'msgUrl' => $this->base.$msgUrl, //调用我的基金界面
+    					'base' => $this->base
+    					));
+    			exit;
+    		}else{
+    			if ('0054' == $res['code']){
+    				$err_msg = $res['msg'];
+    			}else{
+    				$err_msg = '银行卡激活失败，请稍后重试！';
+    			}
+    			$log_msg = '调用银行卡激活接口返回错误信息为：'.$res['msg'];
+    		}
+    	}else{                                      //调用金证接口失败
+    		$err_msg = '系统故障';
+    		$log_msg = '银行卡激活接口调用失败';
+    	}
+    	//失败时，给客户的提示信息，并log
+    	if (!empty($err_msg))
+    	{
+    		$str = isset($log_msg)?$log_msg:$err_msg;
+    		//     		file_put_contents('log/user/'.$post['operation'].$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name'].$oper_des."操作失败，原因为：".$str."\r\n\r\n",FILE_APPEND);
+    		myLog('user/bankcard_active',"用户".$_SESSION ['customer_name']."进行银行卡激活操作失败，原因为：".$str);
     		Message(Array(
     				'msgTy' => 'fail',
     				'msgContent' => $err_msg.', 正在返回...',
@@ -316,9 +399,10 @@ class Fund_bank extends MY_Controller
 		$channel_info = setkey($channel_info,'channelid');
 // var_dump($channel_info);
 // var_dump($bank_info);
-		if (!isset($bank_info['code']) || $bank_info['code'] != '0000'){
-			file_put_contents('log/user/bank_info'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."查询银行卡失败，返回数据为:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
-		}
+// 		if (!isset($bank_info['code']) || $bank_info['code'] != '0000'){
+// 		file_put_contents('log/user/bank_info'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."查询银行卡失败，返回数据为:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
+		myLog('user/bank_info',"用户".$_SESSION ['customer_name']."查询银行卡信息，返回数据为:".serialize($bank_info));
+// 		}
 		if (isset($bank_info['code']) && $bank_info['code'] == '0000')
 		{
 			if (!empty($bank_info['data'][0]))
@@ -346,6 +430,7 @@ class Fund_bank extends MY_Controller
 // 		$data[num_channel] = 0;
 // var_dump($channel_info); var_dump($data);exit;
 // 		return $data;
+// var_dump($data);
 		$this->load->view('/jijin/bank/bank_info',$data);
 	}
 	
@@ -378,7 +463,8 @@ class Fund_bank extends MY_Controller
  			//记录时提交数据，裁减密码敏感信息。
  			$tmp =$post;
  			$tmp['tpasswd'] = substr($tmp['tpasswd'], 6,6);
- 			file_put_contents('log/user/bankcard_delete'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行删除银行卡操作,调用数据为:".serialize($tmp)."\r\n\r\n",FILE_APPEND);
+//  			file_put_contents('log/user/bankcard_delete'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行删除银行卡操作,调用数据为:".serialize($tmp)."\r\n\r\n",FILE_APPEND);
+ 			myLog('user/bankcard_delete',"用户:".$_SESSION ['customer_name']."进行删除银行卡操作,调用数据为:".serialize($tmp));
  			$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
  			$decryptData ='';
  			openssl_private_decrypt(base64_decode($post['tpasswd']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
@@ -398,7 +484,8 @@ class Fund_bank extends MY_Controller
 // $data['url'] = $this->config->item('fundUrl').'/jijin/XCFinterface';
 // $this->load->view('UrlTest',$data);
 // return;
- 					file_put_contents('log/user/bankcard_delete'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行银行卡删除操作，返回数据为:".serialize($oper_res)."\r\n\r\n",FILE_APPEND);
+//  					file_put_contents('log/user/bankcard_delete'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行银行卡删除操作，返回数据为:".serialize($oper_res)."\r\n\r\n",FILE_APPEND);
+ 					myLog('user/bankcard_delete',"用户:".$_SESSION ['customer_name']."进行银行卡删除操作，返回数据为:".serialize($oper_res));
  					if (isset($oper_res['code']))
  					{
  						if ($oper_res['code'] =='0000'){
@@ -432,7 +519,8 @@ class Fund_bank extends MY_Controller
  				$log_msg = "一次性随机验证码错误";
  			}
  			if (isset($log_msg)){
- 				file_put_contents('log/user/bankcard_delete'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."银行卡注销失败，原因为：".$log_msg."\r\n\r\n",FILE_APPEND);
+//  				file_put_contents('log/user/bankcard_delete'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."银行卡注销失败，原因为：".$log_msg."\r\n\r\n",FILE_APPEND);
+ 				myLog('user/bankcard_delete',"用户:".$_SESSION ['customer_name']."银行卡注销失败，原因为：".$log_msg);
  				Message(Array(
  						'msgTy' => 'fail',
  						'msgContent' => isset($err_msg) ? $err_msg : '系统故障, 银行卡注销失败!',
@@ -452,6 +540,7 @@ class Fund_bank extends MY_Controller
 	
 	private function getBankCardInfo($channelid){
 		$bank_info =$this->fund_interface->bankCardPhone();
+// var_dump($bank_info);
 		if (isset($bank_info['code']) && $bank_info['code'] == '0000'){
 			foreach ($bank_info['data'] as $val){
 				if ($val['channelid'] == $channelid){
