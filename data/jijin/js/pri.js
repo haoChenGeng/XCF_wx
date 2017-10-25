@@ -9,6 +9,9 @@ window.onload = function() {
 			type: "get",
 			success: function(res) {
 				console.log("nn"+res);
+			},
+			error: function(er){
+				console.log(er)
 			}
 		});		
 	})();
