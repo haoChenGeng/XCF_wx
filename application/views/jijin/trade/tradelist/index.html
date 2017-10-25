@@ -8,6 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="../../../../../aboutus/css/mui.min.css"/>
 		<link rel="stylesheet" type="text/css" href="../static/tradelist.css"/>
 		<script src="../../../../../aboutus/js/mui.min.js"></script>
+		<script src="../../../../../data/jijin/js/tradelist.js"></script>
 	</head>
 	<body>
 		<header class="mui-bar mui-bar-nav">
@@ -17,7 +18,7 @@
 		<div class="mui-content">
 		    <div class="tab-view">
 				<div class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-					<a class="mui-control-item mui-active" href="#buyCont">申购费用</a>
+					<a class="mui-control-item mui-active buyTitle" href="#buyCont" ></a>		<!--id="buyTitle"-->
 					<a class="mui-control-item" href="#chargeCont">赎回费用</a>		
 					<a class="mui-control-item" href="#manageCont">管理费用</a>	
 				</div>
@@ -27,9 +28,9 @@
 					<div class="content-head">
 						<div class="mui-row">
 					        <div class="mui-col-xs-6">起购金额</div>
-					        <div class="mui-col-xs-6 text-right">1000元</div>
-					        <div class="mui-col-xs-6">申购确认时间</div>
-					        <div class="mui-col-xs-6 text-right">T+1</div>
+					        <div class="mui-col-xs-6 mui-text-right" id="minBuy"></div>
+					        <div class="mui-col-xs-6 buyTitle"></div>			<!--申购确认时间-->
+					        <div class="mui-col-xs-6 mui-text-right" id="buyTime">T+1</div>
 					    </div>						
 					</div>
 					<div class="content-body">
@@ -45,23 +46,34 @@
 					</div>
 					<div class="mui-content-padded">
 						<div class="mui-row">								
-							<div class="mui-col-xs-6 text-center">认申购费率</div>
-							<div class="mui-col-xs-3 text-center">原费率</div>
-							<div class="mui-col-xs-3 text-center">优惠费率</div>	
+							<div class="mui-col-xs-6 mui-text-center buyTitle">认申购费率</div>
+							<div class="mui-col-xs-3">原费率</div>
+							<div class="mui-col-xs-3 mui-text-right">优惠费率</div>	
 						</div>
 					</div>
 					<div class="content-body">
-						<div class="mui-content-padded">
-							<div class="mui-row">								
-								<div class="mui-col-xs-6 text-center" >10</div>
-								<div class="mui-col-xs-3 text-center" >120</div>
-								<div class="mui-col-xs-3 text-center" >235</div>	
-							</div>
-						</div>					
+						<div class="mui-content-padded" id="buyRate">
+						</div>
+<!--						<table class="mui-table mui-table-view mui-table-view-divider">
+							<thead>
+								<tr>
+									<th >认申购费率</th>
+									<th >原费率</th>
+									<th >优惠费率</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="mui-text-center">1111</td>
+									<td class="mui-text-center">2222</td>
+									<td class="mui-text-center">3333</td>
+								</tr>
+							</tbody>
+						</table>-->
 					</div>
 					<div class="content-body">
 						<div class="mui-content-padded">
-							<p style="padding-bottom: 5px;">认申购费率</p>	
+							<p style="padding-bottom: 5px;">申购计算：</p>	
 							<p>净申购金额=申购金额/（1+申购费率）</p>
 							<p>申购费用=申购金额-净申购金额</p>
 							<p>申购份额=净申购金额/T日基金份额净值</p>
@@ -72,9 +84,9 @@
 					<div class="content-head">
 						<div class="mui-row">
 					        <div class="mui-col-xs-6">最低赎回份额</div>
-					        <div class="mui-col-xs-6 text-right">1000元</div>
-					        <div class="mui-col-xs-6">申购确认时间</div>
-					        <div class="mui-col-xs-6 text-right">T+3</div>
+					        <div class="mui-col-xs-6 mui-text-right" id="perMin">1000元</div>
+					        <div class="mui-col-xs-6">预计赎回到账时间</div>
+					        <div class="mui-col-xs-6 mui-text-right" id="dayPay"></div>
 					    </div>						
 					</div>
 					<div class="content-body">
@@ -84,17 +96,13 @@
 					</div>
 					<div class="mui-content-padded">
 						<div class="mui-row">								
-							<div class="mui-col-xs-6 text-center">持有时间</div>
-							<div class="mui-col-xs-6 text-center">原费率</div>
+							<div class="mui-col-xs-6 mui-text-center">持有时间</div>
+							<div class="mui-col-xs-6 mui-text-center">原费率</div>
 							
 						</div>
 					</div>
 					<div class="content-body">
-						<div class="mui-content-padded">
-							<div class="mui-row">								
-								<div class="mui-col-xs-6 text-center" >10</div>
-								<div class="mui-col-xs-6 text-center" >120</div>									
-							</div>
+						<div class="mui-content-padded" id="rateCont">
 						</div>					
 					</div>
 					<div class="content-body">
@@ -110,20 +118,20 @@
 					<div class="content-head manage">
 						<div class="mui-row">
 					        <div class="mui-col-xs-6 border-bottom">费用类别</div>
-					        <div class="mui-col-xs-6 border-bottom text-right">费率</div>
+					        <div class="mui-col-xs-6 border-bottom mui-text-right">费率</div>
 					        <div class="mui-col-xs-6 border-bottom">管理费</div>
-					        <div class="mui-col-xs-6 border-bottom text-right">0.76%(每年)</div>
-					        <div class="mui-col-xs-6 border-bottom">销售服务费</div>
-					        <div class="mui-col-xs-6 border-bottom text-right">0.%(每年)</div>					        
-					    </div>						
+					        <div class="mui-col-xs-6 border-bottom mui-text-right" id="costManage"></div>
+					        <div class="mui-col-xs-6 border-bottom">托管费</div>
+					        <div class="mui-col-xs-6 border-bottom mui-text-right" id="costTrustee"></div>					        
+					   </div>
 					</div>
 					<div class="comment">
 						<div class="mui-content-padded">
-							<p>注：管理费、托管费、销售服务费从基金资产中每日计提。每个工作日公告的基金净值已扣除相应费用，无需投资者在每笔交易中另行支付</p>
+							<p class="mui-text-justify">注：管理费、托管费、销售服务费从基金资产中每日计提。每个工作日公告的基金净值已扣除相应费用，无需投资者在每笔交易中另行支付</p>
 						</div>
 					</div>
 
-					<p class="text-center" style="line-height: 40px;">基金费率等信息已基金公司最新披露的基金信息为准</p>
+					<p class="mui-text-center" style="line-height: 40px;">基金费率等信息已基金公司最新披露的基金信息为准</p>
 				</div>
 			</div>
 		</div>

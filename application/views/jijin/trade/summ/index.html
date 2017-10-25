@@ -8,8 +8,9 @@
 		<meta name="format-detection" content="telephone=no" />
 		<link href="../../../../../data/jijin/css/mui.min.css" rel="stylesheet"/>
 		<link rel="stylesheet" type="text/css" href="../static/summ.css"/>
-		<script src="../../../../../data/jijin/js/mui.min.js"></script>
-		<script></script>
+		<script src="../../../../../data/jijin/js/mui.min.js"></script>		
+		<script src="../../../../../data/jijin/js/echarts.min.js"></script>
+		<script src="../../../../../data/jijin/js/summ.js"></script>
 	</head>
 
 	<body>
@@ -31,65 +32,39 @@
 						<li class="mui-table-view-cell">基本信息</li>						
 					</ul>	
 					<div class="fund-cont">
-						<ul class="mui-table-view fund-info">
-							<li>基金全称</li>
-							<li>×××××</li>
-							<li>基金代码</li>
-							<li>00248</li>
-							<li>成立日期</li>
-							<li>2016-09-08</li>
-							<li>分红方式</li>
-							<li>现金</li>
-							<li>风险等级</li>
-							<li>高风险</li>
-							<li>基金管理</li>
-							<li>华安基金</li>
-							<li>基金托管</li>
-							<li>中国银行</li>
-							<li>资产净值</li>
-							<li>65.98亿元</li>
-							<li>总规模 </li>
-							<li>56.98亿份</li>							
+						<div class="mui-row fund-info">
+							<div class="mui-col-xs-4">基金全称</div>
+							<div class="mui-col-xs-8" id="fundName"></div>
+							<div class="mui-col-xs-4">基金代码</div>
+							<div class="mui-col-xs-8" id="fundCode"></div>
+							<div class="mui-col-xs-4">成立日期</div>
+							<div class="mui-col-xs-8" id="buildDay"></div>
+							<div class="mui-col-xs-4">风险等级</div>
+							<div class="mui-col-xs-8" id="riskRes"></div>
+							<div class="mui-col-xs-4">基金管理</div>
+							<div class="mui-col-xs-8" id="fundMage"></div>
+							<div class="mui-col-xs-4">基金托管</div>
+							<div class="mui-col-xs-8" id="fundTurst"></div>
+							<div class="mui-col-xs-4">资产净值</div>
+							<div class="mui-col-xs-8" id="asets"></div>
+							<div class="mui-col-xs-4">总规模</div>
+							<div class="mui-col-xs-8" id="totalAsets"></div>
+						</div>
+						<ul class="mui-table-view info-cont" id="ulManage">
+							<li style="width: 100%;">基金经理</li>	
 						</ul>
-						<ul class="mui-table-view info-cont">
-							<li style="width: 100%;">基金经理</li>							
-							<p>
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit
-							</p>							
-							<p class="more">查看更多</p>
-							
-						</ul>
-						<ul class="mui-table-view info-cont">
-							<li style="width: 100%;">投资范围</li>							
-							<p>
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit
-							</p>							
-						</ul>
-						<ul class="mui-table-view info-cont">
-							<li style="width: 100%;">投资目标</li>							
-							<p>
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit
-							</p>						
-						</ul>						
 					</div>
 				</div>	<!--基金信息介绍-->	
 				
 				<div class="mui-control-content" id="fundNews">		<!--基金公告开始-->	
 					<ul class="mui-table-view fund-news">
-						<li class="mui-table-view-cell">基金合同</li>
-						<li class="mui-table-view-cell article">
-							<a>基金合同基金合同基金合同基金合同</a>
-						</li>
-						<li class="mui-table-view-cell">
-							托管协议
-						</li>						
 					</ul>
 				</div>	<!--基金公告介绍-->	
 				
-				<div class="mui-control-content mui-active" id="fundSets">		<!--资金配置开始-->
+				<div class="mui-control-content" id="fundSets">		<!--资金配置开始-->
 					<ul class="mui-table-view">
 						<li class="mui-table-view-cell">
-							<div id="fundChart" style="width: 100%;height: 200px;background: red;"></div>
+							<div id="fundChart" style="height: 200px; padding: 10px;"></div>
 						</li>
 						<li class="mui-table-view-cell">持仓配置</li>
 					</ul>
@@ -97,27 +72,9 @@
 						<li>名称</li>
 						<li>持仓比例</li>
 					</ul>
-					<ul class="mui-table-view ul-info">
-						<li>名称</li>
-						<li>持仓比例</li>
-						<li>名称</li>
-						<li>持仓比例</li>
-						<li>名称</li>
-						<li>持仓比例</li>
-					</ul>					
-					<!--<ul class="mui-table-view " id="ul">
-						<li>海盈货币A 002247</li>
-						<li>15%</li>
-						<li>海盈货币A 002247</li>
-						<li>15%</li>
-					</ul>-->
-					
 				</div>	<!--资金配置结束-->
 			</div>	
 		</div>
-		<script type="text/javascript">
-
-		</script>
 	</body>
 
 </html>
