@@ -552,10 +552,10 @@ h3.m-item-5 {
 	display: inline-block;
 }
 
-/*.m-content-t1-detail > p {
+.m-content-t1-detail > p {
 	font-weight: bold;
 	font-size: 16px;
-}*/
+}
 
 .m-content-t2 {
 	display: flex;
