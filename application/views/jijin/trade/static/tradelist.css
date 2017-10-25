@@ -2,7 +2,6 @@ ul li{
 	list-style: none;
 }
 .content-head {
-    margin-top: 10px;
     background: #fff;
     padding: 6px 15px;
 }
@@ -31,6 +30,9 @@ ul li{
 }
 .comment{
     margin-top: 10px;
-    padding: 10px 5px 1px;
+    padding: 5px 5px 1px;
     background: #fff;
+}
+#buyRate .mui-row, #rateCont .mui-row{
+	font-size: 14px;;
 }

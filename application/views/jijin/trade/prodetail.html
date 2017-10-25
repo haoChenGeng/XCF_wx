@@ -6,9 +6,12 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<meta name="format-detection" content="telephone=no" />
 		<title>产品详情</title>
-		<link rel="stylesheet" type="text/css" href="../../../../data/jijin/css/mui.min.css"/>
+		<link rel="stylesheet" href="../../../../data/jijin/css/mui.min.css"/>
 		<link rel="stylesheet" href="../../../../data/jijin/css/style.css">
+		<!--<link rel="stylesheet" type="text/css" href="xxx.css" media="only screen and (max-device-width:480px)">-->
 		<script src="../../../../aboutus/js/mui.min.js"></script>
+		<script src="../../../../data/jijin/js/prod.js"></script>
+		<script src="../../../../data/jijin/js/echarts-all.js"></script>
 	</head>
 
 	<body>
@@ -21,133 +24,135 @@
 				<div class="m-content-t1">
 					<div class="fund-data">
 						<div class="m-content-t1-detail">
-							<p style="text-align: left;">货币名称</p>
-							<p class="day-num">1.2%</p>
-							<p>日涨跌幅</p>
+							<p class="text-left" id="fundname"></p>
+							<p class="day-num dayGrow" style="font-size: 20px;"></p>
+							<p class="dayUp"></p>
 						</div>
 						<div class="m-content-t1-detail">
-							<p style="text-align: right;">06-29</p>
-							<p class="day-num">1.086</p>
-							<p>最新净值（元）</p>
+							<p class="text-right date"></p>
+							<p class="day-num dayNew" style="font-size: 20px;"></p>
+							<p class="newVal"></p>
 							
 						</div>	
 					</div>
 					<div class="fund-index">
-						<div class="fund-index-cont">
-							指数型基金 |<span class="fund-msg">高风险</span>|
-						</div>	
-						<div class="fund-index-cont" style="text-align: right;">
-							评级 
-							<span class="mui-icon mui-icon-star active-star"></span>
-							<span class="mui-icon mui-icon-star active-star"></span>
-							<span class="mui-icon mui-icon-star active-star"></span>
-							<span class="mui-icon mui-icon-star"></span>
-							<span class="mui-icon mui-icon-star"></span>
+						<div class="mui-row fund-index">
+							<div class="mui-col-xs-6">
+								<span class="text-left" id="fundIndex"></span>  |<span class="fund-msg"></span>|
+							</div>
+							<div class="mui-col-xs-6 text-right level">
+								评级 
+							</div>
 						</div>
 						
 					</div>
 				</div>
-			</section>	
+			</section>
 			<div class="tab-view">
 				<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
 					<a class="mui-control-item mui-active" href="#achiev-tab">业绩走势</a>
-					<a class="mui-control-item" href="#histroy-tab">历史净值</a>					
+					<a class="mui-control-item" id="historyVal" href="#histroy-tab">历史净值</a>					
 				</div>
 			</div>
 			<div class="subtab-viw">
 				<div id="achiev-tab" class="mui-control-content mui-active">					
-					<div class="m-content-t3">
-						<div id="chartContent" style="width: 100%; height: 300px; background: red; margin-top: 1px;"></div>
-						<div class="m-content-t3-tab" id="worthChart">
-							<button class="mui-btn mui-btn-primary mui-btn-outlined time-btn">11月</button>
-							<button class="mui-btn mui-btn-primary mui-btn-outlined time-btn">3月</button>
-							<button class="mui-btn mui-btn-primary mui-btn-outlined time-btn">6月</button>
-							<button class="mui-btn mui-btn-primary mui-btn-outlined time-btn">1年</button>
-						</div>
+					<!--<div id="chartContent" style="width: 100%; height: 300px; margin-top: 1px;"></div>-->
+					<div class="chartAlls">
+						
+
 					</div>
+<!--					<div class="mui-row">
+						<div class="mui-col-xs-12" id="worthChart"></div>
+						<div class="mui-col-xs-3 btn-group">
+							<button class="mui-btn mui-btn-primary mui-btn-outlined time-btn tab-active" data-day = "1">1月</button>
+						</div>
+						<div class="mui-col-xs-3 btn-group">
+							<button class="mui-btn mui-btn-primary mui-btn-outlined time-btn" data-day = "3">3月</button>
+						</div>
+						<div class="mui-col-xs-3 btn-group">
+							<button class="mui-btn mui-btn-primary mui-btn-outlined time-btn" data-day = "6">6月</button>
+						</div>
+						<div class="mui-col-xs-3 btn-group">
+							<button class="mui-btn mui-btn-primary mui-btn-outlined time-btn" data-day = "12">1年</button>
+						</div>
+					</div>-->
+		        <div id="chartContent">
+		          	<div class="m-content-t3-chart" style="height:280px;display: block;" id="one" data-day = "1"></div>
+		          	<div class="m-content-t3-chart" style="height: 280px;" id="three" data-day = "3"></div>
+		          	<div class="m-content-t3-chart" style="height: 280px;" id="six" data-day = "6"></div>
+		          	<div class="m-content-t3-chart" style="height: 280px;" id="year" data-day = "12"></div>
+		        </div>					
+		        <div class="m-content-t3-tab" id="worthChart">
+		          	<div class="tabItem tab-active">1月</div>
+		          	<div class="tabItem">3月</div>
+		          	<div class="tabItem">6月</div>
+		         	<div class="tabItem">1年</div>
+		        </div>					
 				</div>
 				<div id="histroy-tab" class="mui-control-content">
-					<div class="mui-content-padded">
+					<div class="mui-content-padded" >
 						<div class="mui-row history-title">								
 							<div class="mui-col-xs-4 text-left">日期</div>
 							<div class="mui-col-xs-4 text-center">单位净值(元)</div>
 							<div class="mui-col-xs-4 text-right">日涨跌幅(%)</div>
 						</div>
-						<div class="mui-row">								
-							<div class="mui-col-xs-4 text-left"><p>2017-10-18</p></div>
-							<div class="mui-col-xs-4 text-center"><p>31750</p></div>
-							<div class="mui-col-xs-4 text-right"><p>0.16</p> </div>
+						<div id="historyCont">							
+							
 						</div>
-						<div class="mui-row">								
-							<div class="mui-col-xs-4 text-left"><p>2017-10-18</p></div>
-							<div class="mui-col-xs-4 text-center"><p>31750</p></div>
-							<div class="mui-col-xs-4 text-right"><p>0.16</p> </div>
-						</div>	
-						<p class="text-center query-more" id="queryMore">查看更多</p>
 					</div>
 					
 				</div>
 			</div>
 			<ul class="mui-table-view fund-charge" id="fund-list">
 		        <li class="mui-table-view-cell">
-		            <a class="mui-navigate-right" >基金概括</a>		<!--href="summ/index.html"-->
+		            <a class="mui-navigate-right">基金概括</a>		
 		        </li>
 		        <li class="mui-table-view-cell">
-		            <a class="mui-navigate-right">交易须知</a>		<!--href="tradelist/index.html"-->
+		            <a class="mui-navigate-right">交易须知</a>		
 		        </li>			        
 		    </ul>
 		    <ul class="mui-table-view">
 		    	<li class="mui-table-view-cell">
-		            <p class="text-warning">基金过往业绩不预示其未来表现，市场有风险，投资需谨慎。</p>
+		            <p>基金过往业绩不预示其未来表现，市场有风险，投资需谨慎。</p>
 		        </li>
 		    </ul>
-			<section class="m-footer">
-      			<p class="m-footer-content">立即申购</p>
+			<section class="m-footer" id="buy_fund">
+      			
     		</section>
 		</div>
 		
 		<script type="text/javascript">
-			var oBtnP =document.getElementById("worthChart");
-			var oBtn =oBtnP.children;
-			for (var i=0; i<oBtn.length; i++) {
-				oBtn[i].addEventListener("tap", function(){
-					this.setAttribute("class","btn-active").nextElementSibling.removeAttribute("class","btn-active");
-				});
-			}
-			
-			
-			function loadPages(url){		//用于页面跳转
-				mui.openWindow({
-					url: url,
-					id:	url,
-					extras: {
-						name: "111"
-					}
-				});
-			}
-			
-			var oP = document.getElementById("queryMore");		//历史净值查看更多
-		    oP.addEventListener("tap", function(){
-			    var url ="history/"		
-				loadPages(url);				    
-	  		});
-			var oLi =document.getElementById("fund-list");     //获取绑定事件对象
-			var oLiChlid = oLi.children;
-			for (var i=0; i<oLiChlid.length; i++) {
-				oLiChlid[i].addEventListener("tap", function(){
-					var strA =this.children[0].innerHTML;
-					if(strA =="基金概括"){			//跳转到基金概括
-						var url ="summ/"		
-						loadPages(url);
-					}
-					else if(strA =="交易须知"){	//跳转到交易须知							
-						var url ="tradelist/"		
-						loadPages(url);
-					}
-				});
-			}
-			
-			
+			mui.init();
+			mui.ready(function() {
+				function getUrlParam(name) {		//获取url地址参数
+					var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+					var r = window.location.search.substr(1).match(reg); //匹配目标参数
+					if(r != null) return unescape(r[2]);
+					return null; //返回参数值
+				}				
+				function loadPages(url) { //用于页面跳转
+					mui.openWindow({
+						url: url,
+						id: url
+					});
+				}
+				var fundcode =getUrlParam("fundcode");
+				var oLi = document.getElementById("fund-list"); //获取绑定事件对象
+				var oLiChlid = oLi.childNodes;
+				for(var i = 0; i < oLiChlid.length; i++) {
+					oLiChlid[i].addEventListener("tap", function() {						
+						var strA = this.children[0].innerHTML;						
+						if(strA == "基金概括") { //跳转到基金概括
+							var url = "summ/?fundcode="+fundcode;
+							this.childNodes[1].href= url;
+						} else if(strA == "交易须知") { //跳转到交易须知							
+							var url = "tradelist/?fundcode="+fundcode;
+							this.childNodes[1].href= url;
+						}
+					});
+				}
+
+			});
 		</script>
 	</body>
 
