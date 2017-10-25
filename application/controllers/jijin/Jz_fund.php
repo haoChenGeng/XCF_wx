@@ -296,13 +296,13 @@ class Jz_fund extends MY_Controller
 			$select = 'net_date,net_day_growth,round(net_unit,4) as net_day_nav';
 		}
 		$fundCure = $this->db->select($select)->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
-		$hs300 = $this->db->where('TradingDay >',$startDate)->order_by('TradingDay','DESC')->get('p2_hsindexvalue')->result_array();
+		$hs300 = $this->db->select('TradingDay , IndexValue')->where('TradingDay >',$startDate)->order_by('TradingDay','DESC')->get('p2_hsindexvalue')->result_array();
 		if (!empty($fundCure) && is_array($fundCure) && !empty($hs300) && is_array($hs300)){
 			$return = array('code'=>0,'data'=>&$fundCure, 'hs_data'=>&$hs300);
 		}else{
 			$return = array('code'=>1,'msg'=>'数据不存在');
 		}
-		$return['fundtype'] = $startDate;
+		$return['fundtype'] = $fundtype;
 		echo json_encode($return);
 	}
 	
