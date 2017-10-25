@@ -35,10 +35,13 @@ window.onload = function() {
 			document.getElementsByClassName("fund-msg")[0].innerHTML = fundlist.risklevel; //风险
 			document.getElementsByClassName("dayNew")[0].innerHTML = fundlist.nav
 			var starParent = document.getElementsByClassName("level");
+			
 			if(stars <10){
-				for(var i = 0; i < stars; i++) { //评级							
+				for(var i = 0; i < stars; i++) { //评级		
+					
 					var oStar = document.createElement("span");
 					oStar.className = "mui-icon mui-icon-star active-star";
+					starParent[0].appendChild(oStar);
 				}				
 			}
 			else{
@@ -46,7 +49,7 @@ window.onload = function() {
 				oStar.style.fontSize ="12px";
 				oStar.innerHTML ="(未评级)"
 			}
-			starParent[0].appendChild(oStar);
+			
 			var oParent = byId("buy_fund");
 			var a = document.createElement("a");
 			a.className = "m-footer-content ";
@@ -74,7 +77,7 @@ window.onload = function() {
 				var prdData =res.data;		//产品指数
 				if(res.code ==0){					
 					if(data){
-						for (var i=0 ;i<7; i++) {
+						for (var i=0 ;i<7; i++) {		//历史净值
 							var newEle =document.createElement("div");
 							newEle.className ="mui-row";
 							var divEle_1 = document.createElement("div");
@@ -83,9 +86,9 @@ window.onload = function() {
 							divEle_1.className ="mui-col-xs-4";
 							divEle_2.className ="mui-col-xs-4";
 							divEle_3.className ="mui-col-xs-4";						
-							divEle_1.innerHTML= "<p class='text-left'>"+data[i].TradingDay+"</p>";
-							divEle_2.innerHTML= "<p class='text-center'>"+data[i].IndexValue+"</p>";
-							divEle_3.innerHTML= "<p class='text-right text-warning'>"+data[i].ValueDailyGrowthRate+"</p>";
+							divEle_1.innerHTML= "<p class='mui-text-left'>"+prdData[i].net_date+"</p>";
+							divEle_2.innerHTML= "<p class='mui-text-center'>"+prdData[i].net_day_nav+"</p>";
+							divEle_3.innerHTML= "<p class='mui-text-right text-warning'>"+prdData[i].net_day_growth+"</p>";
 							newEle.appendChild(divEle_1);
 							newEle.appendChild(divEle_2);
 							newEle.appendChild(divEle_3);
@@ -134,9 +137,9 @@ window.onload = function() {
 						k= index*30;
 					}
 					for (var i=0; i<k; i++) {
-						shXdata.push(data[i].TradingDay);
+						shXdata.push(prdData[i].net_date);
 						shYdata.push(data[i].ValueDailyGrowthRate);							
-						prdYdata.push(prdData[i].net_day_growth);
+						prdYdata.push(prdData[i].net_day_growth);						
 					}
 					one.setOption(getOption(shXdata, shYdata, prdYdata));	
 				}

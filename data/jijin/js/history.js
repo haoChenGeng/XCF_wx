@@ -20,11 +20,11 @@
 					fundCode: fundCode
 				},
 				success: function(res) {
-					var data = res.hs_data;
+					var prdData =res.data;		//产品指数
 					if(index == 30) {
 						index = 30;
 					} else if(!index) {
-						index = data.length;
+						index = prdData.length;
 					}
 					for(var i = 0; i < index; i++) {
 						li_1 = document.createElement('li');
@@ -32,9 +32,9 @@
 						li_3 = document.createElement('li');
 						li_2.className = "mui-text-center";
 						li_3.className = "mui-text-right text-warning";
-						li_1.innerHTML = data[i].TradingDay;
-						li_2.innerHTML = data[i].IndexValue;
-						li_3.innerHTML = data[i].ValueDailyGrowthRate;
+						li_1.innerHTML = prdData[i].net_date;
+						li_2.innerHTML = prdData[i].net_day_nav;
+						li_3.innerHTML = prdData[i].net_day_growth;
 						fragment.appendChild(li_1);
 						fragment.appendChild(li_2);
 						fragment.appendChild(li_3);
@@ -56,7 +56,7 @@
 				up: {
 					callback: function() {
 						setTimeout(function() {
-						querymore()
+						querymore();
 						var loadTxt =document.getElementsByClassName("mui-pull-bottom-tips")[0];
 						loadTxt.style.display = 'none';
 					}, 1000);
