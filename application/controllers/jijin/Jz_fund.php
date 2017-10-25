@@ -291,9 +291,9 @@ class Jz_fund extends MY_Controller
 		$startDate = (substr($startDate,0,4)-1).substr($startDate,4);
 		$fundtype = $this->db->select('fundtype')->where(array('fundCode'=>$get['fundCode']))->get('p2_fundlist')->row_array()['fundtype'];
 		if (2 == $fundtype){
-			$select = 'net_date,round(growthrate,3) as net_day_growth';
+			$select = 'net_date,round(growthrate,3) as net_day_growth,round(fundincomeunit,4) as net_day_nav';
 		}else{
-			$select = 'net_date,net_day_growth';
+			$select = 'net_date,net_day_growth,round(net_unit,4) as net_day_nav';
 		}
 		$fundCure = $this->db->select($select)->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
 		$hs300 = $this->db->where('TradingDay >',$startDate)->order_by('TradingDay','DESC')->get('p2_hsindexvalue')->result_array();
