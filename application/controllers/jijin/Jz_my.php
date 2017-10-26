@@ -21,11 +21,9 @@ class Jz_my extends MY_Controller
 		$data = array();
 		if (isset($_SESSION['myPageOper'])){
 			$data['pageOper'] = $_SESSION['myPageOper'];
-			unset($_SESSION['myPageOper']);
 		}else{
 			$data['pageOper'] = 'asset';
 		}
-		unset($_SESSION['myPageOper']);
 		$data['base'] = $this->base;
 		$this->load->view('jijin/my.html', $data);
 	}
@@ -81,28 +79,34 @@ class Jz_my extends MY_Controller
 		switch ($activePage) {
 			case 'fund' :
 				$data = $this->getMyFundList();
+				$_SESSION['myPageOper'] = 'asset';
 				break;
 			case 'bonus_change':
 				$res = $this->bonusChangeAbleList();
+				$_SESSION['myPageOper'] = 'bonus';
 				$data['bonus_change'] = $res;
 				break;
 			case 'bank_card':
 				//获取银行卡
+				$_SESSION['myPageOper'] = 'account';
 				$res = $this->bank_info();
 				//对res进行验证
 				$data['bank_info'] = $this->bank_info();
 				break;
 			case 'risk_test':
+				$_SESSION['myPageOper'] = 'account';
 				//获取风险测试
 				$res = $this->getRiskLevel();
 				if (isset($res['code']) && isset($res['msg']) && isset($res['data']) && !empty($res['data'])) {
 					$data['custrisk'] = $res['data']['custrisk'] ;
 					$data['custriskname'] = $res['data']['custriskname'] ;
 				} else {
+				
 					$data['custrisk'] = '查询失败';
 				}
 				break;
-			case 'history':
+/* 			case 'history':
+				$_SESSION['myPageOper'] = 'history';
 				//获取历史记录
 				$res = $this->getTodayTran();
 				if (isset($res['errorMsg'])) {
@@ -114,7 +118,7 @@ class Jz_my extends MY_Controller
 						$data['hisErrorMsg'] = '查询失败';
 					}
 				}
-				break;
+				break; */
 			default:
 				$data['errorMsg'] = '不存在该页面';
 		}
@@ -195,6 +199,7 @@ class Jz_my extends MY_Controller
 	//获取历史申请（委托）
 	function getHistoryApply() {
 		$post = $this->input->post();
+		$_SESSION['myPageOper'] = 'history';
 		if (isset($_SESSION['JZ_user_id'])){
 			if (1 == $_SESSION['JZ_user_id']){
 				$startDate = empty($post['startDate']) ? date('Ymd',time()) : $post['startDate'];

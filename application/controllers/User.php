@@ -363,67 +363,9 @@ class User extends MY_Controller {
 				exit;
 			}
 		}
-		$sendSms = $this->db->where(array('dealitem'=>'sendSms'))->get('p2_dealitems')->row_array();
-		$this->load->helper(array("logfuncs"));
-		if (empty($sendSms)){
-			$this->db->set(array('dealitem'=>'sendSms','updatetime'=>time(),'times'=>1))->insert('p2_dealitems');
-		}else{
-			if ((time()-$sendSms['updatetime'])> 3600){
-				$this->db->set(array('updatetime'=>time(),'times'=>1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
-			}else{
-				$smsSetting = $this->db->where(array('name'=>'smsErrTimes'))->get('p2_interface')->row_array();
-				if (empty($smsSetting)){
-					$this->db->set(array('name'=>'smsErrTimes','description'=>'系统防短信攻击设置(通过设置1小时内，短信验证码未返回最大次数partnerId来阻止短信攻击)','partnerId'=>300,'url'=>'#'))->insert('p2_interface');
-				}
-				$allowtime = empty($smsSetting['partnerId']) ? 300 : $smsSetting['partnerId'];
-				if ($sendSms['times'] > $allowtime){
-					echo '短信验证码发送失败，请稍后重试';
-// 					file_put_contents(FCPATH.'/log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证被拒绝,短信接口可能遭受攻击，1小时内超过300条短信未返回正确验证码\r\n\r\n",FILE_APPEND);
-					myLog('sendSms',"手机(".$post ['tel'].")申请短信验证被拒绝,短信接口可能遭受攻击，1小时内超过".$allowtime."条短信未返回正确验证码");
-					exit;
-				}else{
-					$this->db->set(array('times'=>$sendSms['times']+1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
-				}
-			}
-		}
-		if (ISTESTING) {
-			$_SESSION ['telcode'] = $telcode = '123456';
-			$_SESSION ['T_name'] = $post ['tel'];
-			echo '您的验证码为:123456';
-		}else{
-			$_SESSION ['telcode'] = $telcode = $this->TelCode();
-			$_SESSION ['T_name'] = $post ['tel'];
-			$content = "您的验证码是:" . $telcode;
-			$res2 = $this->NDFsendSms ( $post ['tel'], $content );
-			$res = json_decode ( $res2, TRUE );
-// 			file_put_contents('log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证码,返回数据:".serialize($res2)."\r\n\r\n",FILE_APPEND);
-			myLog('sendSms',"手机(".$post ['tel'].")申请短信验证码,返回数据:".serialize($res2));
-			if (isset($res['returnCode']) && $res['returnCode'] == 0){
-				$result = '验证码已发送！';
-				$_SESSION['send_sms'] = time();
-			}else{
-				$result = '验证码发送失败';
-			}
-			echo $result;
-		}
-	}
-		// 发短信
-	private function NDFsendSms($mobile, $content = '') {
-		if (empty ( $mobile )) {
-			return false;
-		}
-		$ISTESTING = false;
-		$messageInterface = $this->db->where(array('name'=>'MessageInterface'))->get('p2_interface')->row_array();
-		$sms_url = $messageInterface['url'];
-		$sms_signature_key = $messageInterface['password'];
-		$partnerId = $messageInterface['partnerId'];
-		$moduleId = $messageInterface['moduleId'];
-		$signTextTemp = "mobile=$mobile&moduleId=$moduleId&partnerId=$partnerId&value=$content" . $sms_signature_key;
-		$signature = sha1 ( $signTextTemp );
-		$post_data = "partnerId=$partnerId&mobile=$mobile&signature=$signature&value=$content&moduleId=SENDSMS";
-		$this->load->helper('comfunction');
-		$ret = comm_curl($sms_url,$post_data );
-		return $ret;
+		$_SESSION ['T_name'] = $post ['tel'];
+		$this->load->Model("Model_sms");
+		echo $this->Model_sms->send_sms($post ['tel'],$_SESSION ['telcode']);
 	}
 	
 //获取最新的基金列表
@@ -489,25 +431,6 @@ class User extends MY_Controller {
 		$this->load->view('commingsoon');
 	}
 	
-	function TelCode() {
-		$arr = Array(
-				0,
-				1,
-				2,
-				3,
-				5,
-				6,
-				8,
-				9
-				);
-		$randNum = "";
-		for ($i = 0; $i < 6; $i++) {
-			$randKey = mt_rand(0, 7);
-			$randNum .= $arr[$randKey];
-		}
-		return $randNum;
-	}
-	
 	function queryPlanner(){
 		$post = $this->input->post ();
 		if (!empty($post['planner_id'])){
@@ -555,7 +478,6 @@ class User extends MY_Controller {
 			}
 			$this->load->view ( 'user/myPlanner' , $data);
 		}
-		
 	}
 	
 }

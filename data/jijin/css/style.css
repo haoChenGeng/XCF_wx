@@ -213,10 +213,13 @@ body {
 	color: #007aff;
 }
 
+<<<<<<< HEAD
+=======
 .mui-scroll-wrapper {
 	/* background-color: #fff; */
 }
 
+>>>>>>> 5eb560e2dbd8d9a1ebaf364376621e319d37c4de
 .fundlist-title {
 	display: flex;
 	background-color: #fff;
@@ -232,9 +235,14 @@ body {
 }
 
 .fundlist-networth {
+<<<<<<< HEAD
+  flex: 3;
+  padding: 10px;
+=======
 	flex: 3;
 	padding: 10px;
 	/* text-align: center; */
+>>>>>>> 5eb560e2dbd8d9a1ebaf364376621e319d37c4de
 }
 
 .fundlist-chg {
