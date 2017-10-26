@@ -450,6 +450,73 @@ class Jz_account extends MY_Controller
     	}
     }
     
+    function resetPassward($pwdtype = 0)                              //$pwdtype='0'交易密码、= '1'登陆密码
+    {
+    	if (!$this->logincontroller->isLogin()) {
+    		exit;
+    	}
+    	$post = $this->input->post();
+    	$_SESSION['myPageOper'] = 'account';
+    	if (empty($post))
+    	{
+    		$this->load->Model("Model_sms");
+    		$userInfo = $this->fund_interface->AccountInfo()['data'];
+    		$this->load->config('jz_dict');
+    		$data['certificatetype'] = $this->config->item('certificatetype')[$userInfo['certificatetype']];
+    		$_SESSION['RPcertificateno'] = $userInfo['certificateno'];
+    		$this->Model_sms->send_sms($_SESSION['customer_name'],$_SESSION['RJZTPVCode']);
+    		unset($_SESSION ['telcode']);
+    		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
+    		$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
+    		$_SESSION['rand_code'] = $data['rand_code'];
+    		$this->load->view('jijin/account/reset_passward', $data);
+    	}else{
+    		//-----------RSA解密----------------------------
+    		$msgTy = 'fail';
+    		if ($_SESSION['RJZTPVCode'] == $post['verifyCode']){
+// var_dump($post,$_SESSION['RJZTPVCode'],$_SESSION['RPcertificateno']);
+    			$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
+    			openssl_private_decrypt(base64_decode($post['certificateno']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
+    			//判断一次性随机验证码是否存在
+    			$div_bit = strpos($decryptData,(string)$_SESSION['rand_code']);
+    			unset($_SESSION['rand_code']);
+    			if ($div_bit !== false){                      //找到一次性随机验证码
+    				$certificateno = substr($decryptData, 0, $div_bit);
+    				if ($certificateno == $_SESSION['RPcertificateno']){
+// echo '---------'; 
+    					$newpwd = substr($decryptData, $div_bit+7);
+    					$res = $this->fund_interface->resetPassward($newpwd);
+    					myLog('user/reset_passward',"用户:".$_SESSION ['customer_name']."重置交易密码，调用接口返回数据为".serialize($res));
+    					if (isset($res['code']) && $res['code'] == '0000')
+    					{
+    						$msgTy = 'sucess';
+    						$message = '密码重置成功！';
+    					}else{
+    						$message = '系统错误，请稍后重试！';
+    						$log_message = serialize($res);
+    					}
+    				}else{
+    					$message = '输入证件号码错误！';
+    				}
+    			}else{
+    				$message = '系统错误，请稍后重试！';
+    				$log_message = '一次性随机验证码错误';
+    			}
+    		}else{
+    			$message = '手机验证码错误！';
+    		}
+    		if (isset($log_message)){
+    			myLog('user/reset_passward',"用户:".$_SESSION ['customer_name']."修改".$str_info.'密码失败，原因为'.$log_message);
+    		}
+    		Message(Array(
+    				'msgTy' => $msgTy,
+    				'msgContent' => $message,
+    				'msgUrl' => $this->base . "/jijin/Jz_my",
+    				'base' => $this->base
+    				));
+    	}
+    }
+    
     /*
      * 和登录系统的接口，登录系统由此进入基金系统
      * */

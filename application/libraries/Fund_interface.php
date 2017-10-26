@@ -425,6 +425,12 @@ class Fund_interface
 		return ($this->getReturnData($returnData));
 	}
 	
+	function resetPassward($newpwd){
+		$submitData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'ResetPassward','newpwd'=>$newpwd));
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+	
 	function SeekAccount($certificatetype,$certificateno){
 		$submitData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'seekAccount','certificatetype'=>$certificatetype,'certificateno'=>$certificateno));
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
