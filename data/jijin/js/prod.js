@@ -9,13 +9,6 @@ window.onload = function() {
 		return null; //返回参数值
 	}
 	var fundcode = getUrlParam("fundcode");		//获取基金代码
-/*	var oBtnP = byId("worthChart");
-	var oBtn = oBtnP.children;
-	for(var i = 0; i < oBtn.length; i++) {
-		oBtn[i].addEventListener("tap", function() {
-			this.setAttribute("class", "btn-active").nextElementSibling.removeAttribute("class", "btn-active");
-		});
-	}*/
 	mui.ajax("/jijin/Jz_fund/fundDetail", {		//基金详情信息		
 		data: {
 			fundcode: fundcode
@@ -95,7 +88,7 @@ window.onload = function() {
 							oTab.appendChild(newEle);
 						}
 						var pEle = document.createElement("a");
-						pEle.className="text-center query-more";
+						pEle.className="mui-text-center query-more";
 						pEle.setAttribute("id","queryMore");
 						pEle.href= "history?fundCode="+fundcode;
 						pEle.innerHTML="查看更多";						
