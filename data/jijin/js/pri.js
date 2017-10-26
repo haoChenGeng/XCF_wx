@@ -1,18 +1,44 @@
 window.onload = function() {
 
+	function createEle(itemId, dataType ){		//返回item容器
+		var oDiv =document.createElement("div");
+		oDiv.className ="mui-slider-item mui-control-content";
+		oDiv.setAttribute("data-type", dataType);
+		oDiv.id ="item"+itemId;
+		var slid ="scroll"+itemId
+		oDiv.innerHTML ="<div id="+slid+" class='mui-scroll-wrapper'>"+
+							"<div class='mui-scroll'>"+
+								"<div class='mui-loading'>"+
+									"<div class='mui-spinner'></div>"+
+								"</div>"+							
+							"</div>"+
+						"</div>";
+		return 	oDiv;			
+	}
 
-	(function querTab(){
-		console.log(1);
+	(function querTab(){	//查询顶部导航栏数据	
 		mui.ajax("/admin/PrivateFundType/type_list", {
 			data: {},
 			dataType: "json",
 			type: "get",
 			success: function(res) {
-				console.log("nn"+res);
-			},
-			error: function(er){
-				console.log(er)
+				var k=0;
+				var oDiv =document.getElementById("tabScroll");
+				for (var i =0; i<res.length; i++) {
+					k++;
+					var oA =document.createElement("a");
+					oA.className="mui-control-item";
+					oA.href ="#item"+k;
+					oA.setAttribute("data-id", k);
+					oA.innerHTML =res[i].name;
+					oDiv.appendChild(oA);
+					var itemId =k;
+					var nn =createEle(itemId, k);
+					document.getElementById("info").appendChild(nn);
+					//getFundList(k)
+				}
 			}
+			
 		});		
 	})();
 	
@@ -23,6 +49,7 @@ window.onload = function() {
 			type: 'get',
 			async: false,
 			success: function(res) {
+				
 				if(res.code === 0) {
 					needModal(res.data);
 				} else {
@@ -44,7 +71,8 @@ window.onload = function() {
 
 			},
 			success: function(res) {
-				renderList(res);
+				mui(".mui-loading")[0].style.display ="none";
+				renderList(res, type);
 			},
 			error: function(res) {
 				alert('查询基金失败！');
@@ -53,11 +81,12 @@ window.onload = function() {
 	}
 
 	function needModal(data) {
+		//console.log(data);
 		var prompt = '根据《私募投资基金募集行为管理办法》及《证券期货投资者适当性管理办法》规定，小牛投资咨询只向特定的合格投资者宣传推介相关私募投资产品。 阁下如有意向进行私募类相关产品投资且满足《私募投资基金管理募集行为管理办法》关于“合格投资者”之标准规定，具备相应风险识别能力和风险承担能力，愿意完成投资者风险测评，请阁下详细阅读本提示，完成注册投资者风险测评，方可获得小牛投资咨询私募投资基金产品宣传推介服务';
 		var btn = ['暂不测评', '立即测评'];
 		var riskTip = '您还未完成风险承受能力评测,请点击按钮开始进行风险承受能力评测,谢谢!';
-		var type = document.getElementById('info').querySelector('.mui-active').dataset.type;
-
+//		var type = document.getElementById('info').querySelector('.mui-active').dataset.type;
+		
 		if(data.readpfmsg === 0) {
 			mui.alert(prompt, '温馨提示', function() {
 				updataLoginStatus();
@@ -131,11 +160,15 @@ window.onload = function() {
 		});
 	}
 
-	function renderList(data) {
-		var content = document.getElementById('info').querySelector('.mui-active');
+	function renderList(data, type) {
+		//var content = document.getElementById('info').querySelector('.mui-active');
+		var contId ="item"+type;
 		if(!data) {
-			content.querySelector('.mui-scroll').innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';
+			//content.querySelector('.mui-scroll').innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';
+			mui("#"+contId)[0].innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';
 		} else {
+			
+			
 			var oL = document.createElement('ul');
 			oL.classList.add('mui-table-view');
 			for(var i = 0; i < data.length; i++) {
@@ -157,10 +190,13 @@ window.onload = function() {
 					'<p class="info-desc"><span class="mui-icon mui-icon-chatboxes-filled"></span>' + data[i].evaluate + '</p>' +
 					'</div>' +
 					'</div>';
+					
 				oL.appendChild(oLi);
 			}
-			content.querySelector('.mui-scroll').innerHTML = '';
-			content.querySelector('.mui-scroll').appendChild(oL);
+			mui("#"+contId)[0].innerHTML ="";
+			mui("#"+contId)[0].appendChild(oL);
+			//content.querySelector('.mui-scroll').innerHTML = '';
+			//content.querySelector('.mui-scroll').appendChild(oL);
 		}
 	}
 
@@ -169,10 +205,10 @@ window.onload = function() {
 			indicators: true //是否显示滚动条
 		});
 
-		var item2 = document.getElementById('item2mobile');
-		var item3 = document.getElementById('item3mobile');
-		var item4 = document.getElementById('item4mobile');
-		var item5 = document.getElementById('item5mobile');
+		var item2 = document.getElementById('item1');
+		var item3 = document.getElementById('item2');
+		var item4 = document.getElementById('item3');
+		var item5 = document.getElementById('item4');
 		document.getElementById('slider').addEventListener('slide', function(e) {
 			switch(e.detail.slideNumber + 1) {
 				case 1:
@@ -257,4 +293,34 @@ window.onload = function() {
 			}
 		});
 	})();
+	
+	function sibling( elem ){ 
+		var r = []; 
+		var n = elem.parentNode.firstChild; 
+		for ( ; n; n = n.nextSibling ) { 
+			if ( n.nodeType === 1 && n !== elem ){ 
+				r.push( n ); 
+			} 
+		}   
+		return r; 
+	}
+//getFundList(2);
+//getFundList(3);
+//getFundList(4);
+//getFundList(5);
+//getFundList(6);
+//getFundList(7);
+
+	mui(document).on("tap",".mui-control-item", function(){		//导航栏切换
+		var atr =this.getAttribute("data-id");
+/*		var atrId =this.getAttribute("href").slice(1);
+		var nn=document.getElementById(atrId);
+		nn.style.display="block";
+		console.log(nn);
+		console.log(mui(atrId));
+		mui(atrId).style.display ="block";
+		atrId.slice(1);
+		console.log(atrId)*/
+		getFundList(atr);
+	})
 }
