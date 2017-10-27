@@ -366,7 +366,7 @@
     var searchList = document.getElementById('searchList');
     var tab = document.getElementById('sliderSegmentedControl').querySelectorAll('a');
     var content = document.getElementsByClassName('mui-control-content');
-    var searchValue;
+    // var searchValue;
 
     searchList.addEventListener('click', function(e) {
       input.value = e.target.innerHTML;
@@ -417,7 +417,7 @@
       document.getElementsByClassName('mui-input-row')[0].classList.remove('search-height');
     })
     btn.addEventListener('click', function(e) {
-      console.log(e.target.innerHTML);
+      // console.log(e.target.innerHTML);
       input.value = e.target.innerHTML.trim();
       searchQues(e.target.innerHTML.trim());
     })
@@ -427,7 +427,7 @@
     }
 
     function searchQues(value) {
-      console.log(value);
+      // console.log(value);
       var frag = document.createDocumentFragment();
       for (var i = 0; i < ques.length; i++) {
         if (JSON.parse(ques[i].dataset.key).indexOf(value) != -1) {
