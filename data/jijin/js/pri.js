@@ -3,22 +3,18 @@ window.onload = function() {
 	function createEle(itemId, dataType ){		//返回item容器
 		var oDiv =document.createElement("div");
 		oDiv.className ="mui-slider-item mui-control-content";
+		oDiv.style.borderBottom =0;
 		oDiv.setAttribute("data-type", dataType);
 		oDiv.id ="item"+itemId;
-		var slid ="scroll"+itemId
-		oDiv.innerHTML ="<div id="+slid+" class='mui-scroll-wrapper'>"+
-							"<div class='mui-scroll'>"+
-								"<div class='mui-loading'>"+
-									"<div class='mui-spinner'></div>"+
-								"</div>"+							
-							"</div>"+
-						"</div>";
+		var oScrollDiv =document.createElement("div");
+		oScrollDiv.id ="scroll"+itemId;
+		oScrollDiv.className ="mui-scroll-wrapper";
+		oDiv.appendChild(oScrollDiv);
 		return 	oDiv;			
 	}
 
 	(function querTab(){	//查询顶部导航栏数据	
-		mui.ajax("/admin/PrivateFundType/type_list", {
-			data: {},
+		mui.ajax("/admin/PrivateFundType/type_list", {			
 			dataType: "json",
 			type: "get",
 			success: function(res) {
@@ -33,9 +29,9 @@ window.onload = function() {
 					oA.innerHTML =res[i].name;
 					oDiv.appendChild(oA);
 					var itemId =k;
-					var nn =createEle(itemId, k);
-					document.getElementById("info").appendChild(nn);
-					//getFundList(k)
+					var box =createEle(itemId, k);
+					document.getElementById("info").appendChild(box);
+					
 				}
 			}
 			
@@ -68,10 +64,10 @@ window.onload = function() {
 			dataType: 'json',
 			type: 'get',
 			beforeSend: function() {
-
+				
 			},
 			success: function(res) {
-				mui(".mui-loading")[0].style.display ="none";
+				
 				renderList(res, type);
 			},
 			error: function(res) {
@@ -100,7 +96,7 @@ window.onload = function() {
 					});
 				} else {
 					getFundList(1);
-					scrollFundList(mui);
+					//scrollFundList(mui);
 				}
 			});
 		} else if(data.readpfmsg === 1 && data.pflevel === 0) {
@@ -113,7 +109,7 @@ window.onload = function() {
 			});
 		} else if(data.readpfmsg === 1 && data.pflevel === 1) {
 			getFundList(1);
-			scrollFundList(mui);
+			//scrollFundList(mui);
 		} else {
 			alert('系统错误！');
 		}
@@ -167,7 +163,10 @@ window.onload = function() {
 			//content.querySelector('.mui-scroll').innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';
 			mui("#"+contId)[0].innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';
 		} else {
-			
+			if(type == "1"){	//默认选择导航栏第一个
+				var tabItem =document.getElementsByClassName("mui-control-item");
+				tabItem[0].className= "mui-control-item mui-active";				
+			}
 			
 			var oL = document.createElement('ul');
 			oL.classList.add('mui-table-view');
@@ -200,54 +199,69 @@ window.onload = function() {
 		}
 	}
 
-	function scrollFundList($) {
-		$('.mui-scroll-wrapper').scroll({
-			indicators: true //是否显示滚动条
-		});
-
-		var item2 = document.getElementById('item1');
-		var item3 = document.getElementById('item2');
-		var item4 = document.getElementById('item3');
-		var item5 = document.getElementById('item4');
-		document.getElementById('slider').addEventListener('slide', function(e) {
-			switch(e.detail.slideNumber + 1) {
-				case 1:
-					getFundList(1);
-					break;
-				case 2:
-					if(item2.querySelector('.mui-loading')) {
-						getFundList(2);
-					}
-					break;
-				case 3:
-					if(item3.querySelector('.mui-loading')) {
-						getFundList(3);
-					}
-					break;
-				case 4:
-					if(item4.querySelector('.mui-loading')) {
-						getFundList(4);
-					}
-					break;
-				case 5:
-					if(item5.querySelector('.mui-loading')) {
-						getFundList(5);
-					}
-					break;
-				default:
-					// statements_def
-					break;
-			}
-		});
-		var sliderSegmentedControl = document.getElementById('sliderSegmentedControl');
-		$('.mui-input-group').on('change', 'input', function() {
-			if(this.checked) {
-				sliderSegmentedControl.className = 'mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-' + this.value;
-				//force repaint
-				sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
-			}
-		});
-	}
+//	function scrollFundList($) {
+//		$('.mui-scroll-wrapper').scroll({
+//			indicators: true //是否显示滚动条
+//		});
+//
+//		var item2 = document.getElementById('item2');
+//		var item3 = document.getElementById('item3');
+//		var item4 = document.getElementById('item4');
+//		var item5 = document.getElementById('item5');
+//		var item6 = document.getElementById('item6');
+//		var item7 = document.getElementById('item7');
+//
+//		document.getElementById('slider').addEventListener('slide', function(e) {
+//			switch(e.detail.slideNumber + 1) {
+//				case 1:
+//					getFundList(1);
+//					alert(1);
+//					break;
+//				case 2:
+//					//if(item2.querySelector('.mui-loading')) {
+//						getFundList(2);
+//						alert(2);
+//					//}
+//					break;
+//				case 3:
+//					//if(item3.querySelector('.mui-loading')) {
+//						getFundList(3);
+//					//}
+//					break;
+//				case 4:
+//					//if(item4.querySelector('.mui-loading')) {
+//						getFundList(4);
+//					//}
+//					break;
+//				case 5:
+//					//if(item5.querySelector('.mui-loading')) {
+//						getFundList(5);
+//					//}
+//					break;
+//				case 6:
+//					//if(item5.querySelector('.mui-loading')) {
+//						getFundList(6);
+//					//}
+//					break;	
+//				case 7:
+//					//if(item5.querySelector('.mui-loading')) {
+//						getFundList(7);
+//					//}
+//					break;					
+//				default:
+//					// statements_def
+//					break;
+//			}
+//		});
+//		var sliderSegmentedControl = document.getElementById('sliderSegmentedControl');
+//		$('.mui-input-group').on('change', 'input', function() {
+//			if(this.checked) {
+//				sliderSegmentedControl.className = 'mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-' + this.value;
+//				//force repaint
+//				sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
+//			}
+//		});
+//	}
 
 	(function() {
 		var name;
@@ -293,34 +307,17 @@ window.onload = function() {
 			}
 		});
 	})();
-	
-	function sibling( elem ){ 
-		var r = []; 
-		var n = elem.parentNode.firstChild; 
-		for ( ; n; n = n.nextSibling ) { 
-			if ( n.nodeType === 1 && n !== elem ){ 
-				r.push( n ); 
-			} 
-		}   
-		return r; 
-	}
-//getFundList(2);
-//getFundList(3);
-//getFundList(4);
-//getFundList(5);
-//getFundList(6);
-//getFundList(7);
 
-	mui(document).on("tap",".mui-control-item", function(){		//导航栏切换
+
+	mui(document).on("tap",".mui-control-item", function(){		//导航栏切换		
 		var atr =this.getAttribute("data-id");
-/*		var atrId =this.getAttribute("href").slice(1);
-		var nn=document.getElementById(atrId);
-		nn.style.display="block";
-		console.log(nn);
-		console.log(mui(atrId));
-		mui(atrId).style.display ="block";
-		atrId.slice(1);
-		console.log(atrId)*/
-		getFundList(atr);
+		getFundList(atr);		//请求当前数据并渲染出来
+		var le =document.getElementsByClassName("mui-control-content");
+		for (var i=0; i<le.length;i++) {
+			le[i].style.display ="none";	//隐藏
+		}
+		var atrId =this.getAttribute("href").slice(1);
+		var contID=document.getElementById(atrId);
+		contID.style.display ="block";		
 	})
 }
