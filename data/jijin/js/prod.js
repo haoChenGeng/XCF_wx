@@ -66,6 +66,7 @@ window.onload = function() {
 				var data = res.hs_data; //沪深指数
 				var prdData = res.data; //产品指数				
 				renderChart(prdData);	//产品指数
+				
 				if(res.code == 0) {
 					if(data) {
 						for(var i = 0; i < 7; i++) { //历史净值
@@ -243,12 +244,76 @@ window.onload = function() {
 		throw new Error("Unable to copy obj! Its type isn't supported.")
 	}
 
+	function getData(data){
+		if(!data || !data.length) {
+			alert('无数据');
+			return false;
+		}
+		
+		var oneData = [];
+		var threeData = [];
+		var halfData = [];
+		console.log(data[0]);
+		var today = new Date().valueOf() - 30 * 24 * 60 * 60 * 1000;
+		var three = new Date().valueOf() - 3 * 30 * 24 * 60 * 60 * 1000;
+		var half = new Date().valueOf() - 6 * 30 * 24 * 60 * 60 * 1000;
+		var start = new Date(data[0].net_date.replace(/-/g, '/')).valueOf();
+		var ii = start;
+		for(var i = 0; i < data.length; i++) {
+			if(today > start) {
+				oneData = [];
+				break;
+			} else if(today > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
+				ii = i;
+				break;
+			}
+		}
+		if(i == data.length) {
+			ii = i - 1;
+		}
+		oneData = data.slice(0, ii);
+		//console.log(oneData);
+		for(; i < data.length; i++) {
+			if(three > start) {
+				threeData = [];
+				break;
+			} else if(three > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
+				ii = i;
+				break;
+			}
+		}
+		if(i == data.length) {
+			ii = i - 1;
+		}
+		threeData = data.slice(0, ii);
+		for(; i < data.length; i++) {
+			if(half > start) {
+				halfData = [];
+				break;
+			} else if(half > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
+				ii = i;
+				break;
+			}
+		}
+		if(i == data.length) {
+			ii = i - 1;
+		}
+		halfData = data.slice(0, ii);
+		var yearData = data;	
+		
+		
+		
+		
+	}
+	
+	
+
 	function renderChart(prdData, type) {
 		if(!prdData || !prdData.length) {
 			alert('无数据');
 			return false;
 		}
-		//var _echart_width = $(document.body).width() - 20;
+		
 		var oneData = [];
 		var threeData = [];
 		var halfData = [];
@@ -271,7 +336,7 @@ window.onload = function() {
 			ii = i - 1;
 		}
 		oneData = prdData.slice(0, ii);
-		console.log(oneData);
+		//console.log(oneData);
 		for(; i < prdData.length; i++) {
 			if(three > start) {
 				threeData = [];
@@ -362,29 +427,7 @@ window.onload = function() {
 			// name: '3个月净值走势',
 			type: 'line',
 			data: []
-		};
-
-//		if(type == 2) {
-//			opOne.legend.data.push('1个月七日年化收益率走势');
-//			opThree.legend.data.push('3个月七日年化收益率走势');
-//			opSix.legend.data.push('6个月七日年化收益率走势');
-//			opYear.legend.data.push('1年七日年化收益率走势');
-//			a.name = '6个月七日年化收益率走势';
-//			b.name = '1年七日年化收益率走势';
-//			c.name = '1个月七日年化收益率走势';
-//			d.name = '3个月七日年化收益率走势';
-//		} else {
-//			opOne.legend.data.push('1个月净值走势');
-//			opThree.legend.data.push('3个月净值走势');
-//			opSix.legend.data.push('6个月净值走势');
-//			opYear.legend.data.push('1年净值走势');
-//			a.name = '6个月净值走势';
-//			b.name = '1年净值走势';
-//			c.name = '1个月净值走势';
-//			d.name = '3个月净值走势';
-//		}
-		//console.log(oneData);
-		
+		};		
 		var _echart_width = document.body.offsetWidth; //获取屏幕宽度，根据屏幕设置图表容器的宽度
 		byId("one").style.width = _echart_width + "px";
 		byId("three").style.width = _echart_width + "px";
@@ -430,4 +473,66 @@ window.onload = function() {
 		n4.setOption(opYear);
 	}
 
+	function getData(data){
+		if(!data || !data.length) {
+			alert('无数据');
+			return false;
+		}
+		
+		var oneData = [];
+		var threeData = [];
+		var halfData = [];
+		console.log(data[0]);
+		var today = new Date().valueOf() - 30 * 24 * 60 * 60 * 1000;
+		var three = new Date().valueOf() - 3 * 30 * 24 * 60 * 60 * 1000;
+		var half = new Date().valueOf() - 6 * 30 * 24 * 60 * 60 * 1000;
+		var start = new Date(data[0].net_date.replace(/-/g, '/')).valueOf();
+		var ii = start;
+		for(var i = 0; i < data.length; i++) {
+			if(today > start) {
+				oneData = [];
+				break;
+			} else if(today > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
+				ii = i;
+				break;
+			}
+		}
+		if(i == data.length) {
+			ii = i - 1;
+		}
+		oneData = data.slice(0, ii);
+		//console.log(oneData);
+		for(; i < data.length; i++) {
+			if(three > start) {
+				threeData = [];
+				break;
+			} else if(three > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
+				ii = i;
+				break;
+			}
+		}
+		if(i == data.length) {
+			ii = i - 1;
+		}
+		threeData = data.slice(0, ii);
+		for(; i < data.length; i++) {
+			if(half > start) {
+				halfData = [];
+				break;
+			} else if(half > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
+				ii = i;
+				break;
+			}
+		}
+		if(i == data.length) {
+			ii = i - 1;
+		}
+		halfData = data.slice(0, ii);
+		var yearData = data;	
+		
+		
+		
+		
+	}
+	
 }

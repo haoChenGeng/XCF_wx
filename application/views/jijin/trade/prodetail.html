@@ -103,12 +103,12 @@
 					if(r != null) return unescape(r[2]);
 					return null; //返回参数值
 				}				
-				function loadPages(url) { //用于页面跳转
-					mui.openWindow({
-						url: url,
-						id: url
-					});
-				}
+//				function loadPages(url) { //用于页面跳转
+//					mui.openWindow({
+//						url: url,
+//						id: url
+//					});
+//				}
 				var fundcode =getUrlParam("fundcode");
 				var oLi = document.getElementById("fund-list"); //获取绑定事件对象
 				var oLiChlid = oLi.childNodes;
