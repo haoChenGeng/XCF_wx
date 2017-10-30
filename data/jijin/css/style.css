@@ -830,6 +830,7 @@ h3.m-item-5 {
 }
 
 .m-content-t1-detail p {
+	white-space: nowrap;
   color: #8f8f94;
 }
 

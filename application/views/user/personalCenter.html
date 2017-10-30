@@ -81,26 +81,26 @@
 
     function getParameter(data) {
       wx.config({
-        debug: true, // ??????ģʽ,???????api?ķ??????ڿͻ???lert???????Ҫ?鿴????Ĳ????????c?˴򿪣?????Ϣ?????log???????pc????Ż?ӡ??
-        appId: data.appId, // ??????ŵ??һ???
-        timestamp: data.timestamp, // ????????????
-        nonceStr: data.nonceStr, // ????????????
-        signature: data.signature, // ??ǩ???????¼1
+        debug: true, 
+        appId: data.appId, 
+        timestamp: data.timestamp, 
+        nonceStr: data.nonceStr, 
+        signature: data.signature, 
         jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone', ] // ???Ҫʹ???S?ӿ?б?
       });
 
-      var shareInfo = "测试小牛投资咨询"; //?????
-      var shareDesc = "我的测试分享,详细风险内容"; //????
-      var link = "http://xcfwx.xiaoniu66.com"; //????????
-      var imgLink = "http://xcfwx.xiaoniu66.com/3-1611191G352260.jpg"; //????Ƭ???
+      var shareInfo = "测试小牛投资咨询"; 
+      var shareDesc = "我的测试分享,详细风险内容"; 
+      var link = "http://xcfwx.xiaoniu66.com";
+      var imgLink = "http://xcfwx.xiaoniu66.com/3-1611191G352260.jpg";
 
       wx.ready(function() {
         // alert("It is ready, good!");
         wx.onMenuShareTimeline({
-          title: shareInfo, // ؖЭҪ͢
+          title: shareInfo, 
           desc: shareDesc,
-          link: link, // ؖЭtޓ
-          imgUrl: imgLink, // ؖЭͼҪ
+          link: link, 
+          imgUrl: imgLink, 
           success: function() {
             // 用户确认分享后执行的回调函数
             alert('已分享');
@@ -137,10 +137,10 @@
           }
         });
         wx.onMenuShareQQ({
-          title: shareInfo, // ?????
+          title: shareInfo, 
           desc: shareDesc,
-          link: link, // ??????
-          imgUrl: imgLink, // ??????
+          link: link, 
+          imgUrl: imgLink, 
           success: function() {
             // 用户确认分享后执行的回调函数
             alert('已分享');
@@ -155,12 +155,12 @@
             alert('已取消');
           }
         });
-        // ????qq?ռ?
+        // 
         wx.onMenuShareQZone({
-          title: shareInfo, // ?????
+          title: shareInfo, 
           desc: shareDesc,
-          link: link, // ??????
-          imgUrl: imgLink, // ??????
+          link: link, 
+          imgUrl: imgLink, 
           success: function() {
             // 用户确认分享后执行的回调函数
             alert('已分享');

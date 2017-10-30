@@ -171,6 +171,12 @@ class Fund_interface
 					$updateData[$key]['XGRQ'] = $currentdate;
 				}
 			}
+			$fields = $this->db->field_data('p2_netvalue_'.$fundcode)->result_array();
+			$fields = setkey($fields,'Field');
+			if (!isset($fields['oneMonth'])){
+				$sql = "ALTER TABLE `wx_xnxcf`.`".'p2_netvalue_'.$fundcode."` ADD COLUMN `oneMonth` DOUBLE NULL COMMENT '1个月增长率数据' AFTER `XGRQ`, ADD COLUMN `threeMonth` DOUBLE NULL COMMENT '3个月增长率数据' AFTER `oneMonth`, ADD COLUMN `sixMonth` DOUBLE NULL COMMENT '6个月增长数据' AFTER `threeMonth`, ADD COLUMN `oneYear` DOUBLE NULL COMMENT '1年增长数据' AFTER `sixMonth`;";
+				$flag = $this->CI->db->query($sql);
+			}
 			$flag = $this->CI->Model_db->incremenUpdate('p2_netvalue_'.$fundcode, $fundNetvalue['data'], 'net_date');
 		}else{
 			$flag = FALSE;

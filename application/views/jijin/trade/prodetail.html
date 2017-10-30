@@ -93,40 +93,6 @@
       			
     		</section>
 		</div>
-		
-		<script type="text/javascript">
-			mui.init();
-			mui.ready(function() {
-				function getUrlParam(name) {		//获取url地址参数
-					var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-					var r = window.location.search.substr(1).match(reg); //匹配目标参数
-					if(r != null) return unescape(r[2]);
-					return null; //返回参数值
-				}				
-//				function loadPages(url) { //用于页面跳转
-//					mui.openWindow({
-//						url: url,
-//						id: url
-//					});
-//				}
-				var fundcode =getUrlParam("fundcode");
-				var oLi = document.getElementById("fund-list"); //获取绑定事件对象
-				var oLiChlid = oLi.childNodes;
-				for(var i = 0; i < oLiChlid.length; i++) {
-					oLiChlid[i].addEventListener("tap", function() {						
-						var strA = this.children[0].innerHTML;						
-						if(strA == "基金概括") { //跳转到基金概括
-							var url = "summ/?fundcode="+fundcode;
-							this.childNodes[1].href= url;
-						} else if(strA == "交易须知") { //跳转到交易须知							
-							var url = "tradelist/?fundcode="+fundcode;
-							this.childNodes[1].href= url;
-						}
-					});
-				}
-
-			});
-		</script>
 	</body>
 
 </html>

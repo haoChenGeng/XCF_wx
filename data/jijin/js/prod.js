@@ -10,6 +10,22 @@ window.onload = function() {
 		return null; //返回参数值
 	}
 	var fundcode = getUrlParam("fundcode"); //获取基金代码
+
+	var oLi = byId("fund-list"); //获取绑定事件对象
+	var oLiChlid = oLi.childNodes;
+	for(var i = 0; i < oLiChlid.length; i++) {
+		oLiChlid[i].addEventListener("tap", function() {
+			var strA = this.children[0].innerHTML;
+			if(strA == "基金概括") { //跳转到基金概括
+				var url = "summ/?fundcode=" + fundcode;
+				this.childNodes[1].href = url;
+			} else if(strA == "交易须知") { //跳转到交易须知							
+				var url = "tradelist/?fundcode=" + fundcode;
+				this.childNodes[1].href = url;
+			}
+		});
+	}
+
 	mui.ajax("/jijin/Jz_fund/fundDetail", { //基金详情信息		
 		data: {
 			fundcode: fundcode
@@ -65,8 +81,7 @@ window.onload = function() {
 			success: function(res) {
 				var data = res.hs_data; //沪深指数
 				var prdData = res.data; //产品指数				
-				renderChart(prdData);	//产品指数
-				
+				renderChart(res); //产品指数
 				if(res.code == 0) {
 					if(data) {
 						for(var i = 0; i < 7; i++) { //历史净值
@@ -120,7 +135,7 @@ window.onload = function() {
 				var prdData = res.data; //产品指数
 				var data = res.hs_data; //沪深指数
 				if(res.code == 0) {
-					if(data) {						
+					if(data) {
 						var k = 0;
 						if(index == 12) {
 							k = prdData.length;
@@ -143,8 +158,8 @@ window.onload = function() {
 	//	drawCharts(12, "year");
 
 	var oBtn = document.getElementsByClassName("time-btn");
-	var nav = document.getElementById("worthChart").getElementsByTagName("div");
-	var con = document.getElementById("chartContent").getElementsByClassName('m-content-t3-chart');
+	var nav = byId("worthChart").getElementsByTagName("div");
+	var con = byId("chartContent").getElementsByClassName('m-content-t3-chart');
 	for(i = 0; i < nav.length; i++) {
 		nav[i].index = i;
 		nav[i].addEventListener('tap', function() { //点击查看时间图表 
@@ -158,74 +173,6 @@ window.onload = function() {
 
 		});
 	}
-	//	var getOption = function(shXdata, shYdata, prdYdata) {		//图表方法
-	//		var chartOption ={
-	//			tooltip:{
-	//		        trigger: 'none',
-	//		        axisPointer: {
-	//		            type: 'cross'
-	//		        }				
-	//			},
-	//			legend: {
-	//				data: ['沪深指数', '产品指数']
-	//			},
-	//			grid: {
-	//				x: 35,
-	//				x2: 10,
-	//				y: 30,
-	//				y2: 25
-	//			},
-	//			toolbox: {
-	//				show: false,
-	//				feature: {
-	//					mark: {
-	//						show: true
-	//					},
-	//					dataView: {
-	//						show: true,
-	//						readOnly: false
-	//					},
-	//					magicType: {
-	//						show: true,
-	//						type: ['line', 'bar']
-	//					},
-	//					restore: {
-	//						show: true
-	//					},
-	//					saveAsImage: {
-	//						show: true
-	//					}
-	//				}
-	//			},
-	//			calculable: false,
-	//			xAxis: [{
-	//				type: 'category',
-	//				data: shXdata
-	//			}],
-	//			yAxis: [{
-	//				type: 'value',
-	//				axisLabel: {
-	//		            formatter: '{value}%'
-	//		        },
-	//				splitArea: {
-	//					show: true
-	//				}
-	//			}],
-	//			series: [
-	//				{
-	//					name: '沪深指数',
-	//					type: 'line',
-	//					data: shYdata
-	//				}, 
-	//				{
-	//					name: '产品指数',
-	//					type: 'line',
-	//					data: prdYdata
-	//				}
-	//			]
-	//		};
-	//		return chartOption;
-	//	};				
 
 	function clone(e) {
 		var t;
@@ -244,84 +191,24 @@ window.onload = function() {
 		throw new Error("Unable to copy obj! Its type isn't supported.")
 	}
 
-	function getData(data){
-		if(!data || !data.length) {
-			alert('无数据');
-			return false;
-		}
-		
+	function renderChart(data, type) {
+		var prdData = data.data; //产品指数
+		var hsData = data.hs_data; //沪深指数
 		var oneData = [];
 		var threeData = [];
 		var halfData = [];
-		console.log(data[0]);
-		var today = new Date().valueOf() - 30 * 24 * 60 * 60 * 1000;
-		var three = new Date().valueOf() - 3 * 30 * 24 * 60 * 60 * 1000;
-		var half = new Date().valueOf() - 6 * 30 * 24 * 60 * 60 * 1000;
-		var start = new Date(data[0].net_date.replace(/-/g, '/')).valueOf();
-		var ii = start;
-		for(var i = 0; i < data.length; i++) {
-			if(today > start) {
-				oneData = [];
-				break;
-			} else if(today > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
-				ii = i;
-				break;
-			}
-		}
-		if(i == data.length) {
-			ii = i - 1;
-		}
-		oneData = data.slice(0, ii);
-		//console.log(oneData);
-		for(; i < data.length; i++) {
-			if(three > start) {
-				threeData = [];
-				break;
-			} else if(three > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
-				ii = i;
-				break;
-			}
-		}
-		if(i == data.length) {
-			ii = i - 1;
-		}
-		threeData = data.slice(0, ii);
-		for(; i < data.length; i++) {
-			if(half > start) {
-				halfData = [];
-				break;
-			} else if(half > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
-				ii = i;
-				break;
-			}
-		}
-		if(i == data.length) {
-			ii = i - 1;
-		}
-		halfData = data.slice(0, ii);
-		var yearData = data;	
-		
-		
-		
-		
-	}
-	
-	
 
-	function renderChart(prdData, type) {
-		if(!prdData || !prdData.length) {
-			alert('无数据');
-			return false;
-		}
-		
-		var oneData = [];
-		var threeData = [];
-		var halfData = [];
-		console.log(prdData[0]);
-		var today = new Date().valueOf() - 30 * 24 * 60 * 60 * 1000;
+		var oneHsData = [];
+		var threeHsData = [];
+		var halfHsData = [];
+
+		var today = new Date().valueOf() - 30 * 24 * 60 * 60 * 1000;	
 		var three = new Date().valueOf() - 3 * 30 * 24 * 60 * 60 * 1000;
 		var half = new Date().valueOf() - 6 * 30 * 24 * 60 * 60 * 1000;
 		var start = new Date(prdData[0].net_date.replace(/-/g, '/')).valueOf();
+		
+		var startHs = new Date(hsData[0].TradingDay.replace(/-/g, '/')).valueOf();
+		var kk = startHs;
 		var ii = start;
 		for(var i = 0; i < prdData.length; i++) {
 			if(today > start) {
@@ -336,7 +223,21 @@ window.onload = function() {
 			ii = i - 1;
 		}
 		oneData = prdData.slice(0, ii);
-		//console.log(oneData);
+		
+		for(var i = 0; i < hsData.length; i++) {
+			if(today > startHs) {
+				oneHsData = [];
+				break;
+			} else if(today > new Date(hsData[i].TradingDay.replace(/-/g, '/')).valueOf()) {
+				kk = i;
+				break;
+			}
+		}
+		if(i == hsData.length) {
+			kk = i - 1;
+		}
+		oneHsData = hsData.slice(0, kk);
+		//console.log(oneHsData);
 		for(; i < prdData.length; i++) {
 			if(three > start) {
 				threeData = [];
@@ -350,6 +251,20 @@ window.onload = function() {
 			ii = i - 1;
 		}
 		threeData = prdData.slice(0, ii);
+		for(var i = 0; i < hsData.length; i++) {
+			if(three > startHs) {
+				threeHsData = [];
+				break;
+			} else if(three > new Date(hsData[i].TradingDay.replace(/-/g, '/')).valueOf()) {
+				kk = i;
+				break;
+			}
+		}
+		if(i == hsData.length) {
+			kk = i - 1;
+		}
+		threeHsData = hsData.slice(0, kk);
+
 		for(; i < prdData.length; i++) {
 			if(half > start) {
 				halfData = [];
@@ -363,20 +278,36 @@ window.onload = function() {
 			ii = i - 1;
 		}
 		halfData = prdData.slice(0, ii);
+		for(var i = 0; i < hsData.length; i++) {
+			if(half > startHs) {
+				halfHsData = [];
+				break;
+			} else if(half > new Date(hsData[i].TradingDay.replace(/-/g, '/')).valueOf()) {
+				kk = i;
+				break;
+			}
+		}
+		if(i == hsData.length) {
+			kk = i - 1;
+		}
+		halfHsData = hsData.slice(0, kk);
+
+		var yearHsData = hsData;
 		var yearData = prdData;
+		
 		var Options = {
 			title: {
 				text: "",
 				left: "center"
 			},
-			tooltip: {				
+			tooltip: {
 				trigger: 'none',
 				axisPointer: {
 					type: "line"
 				}
 			},
 			legend: {
-				data: [],
+				data: ['沪深指数', '产品指数'],
 				bottom: "10px"
 			},
 			grid: {
@@ -384,7 +315,7 @@ window.onload = function() {
 				x2: 20,
 				y: 40,
 				y2: 30
-			},			
+			},
 			toolbox: {
 				show: false,
 			},
@@ -397,8 +328,8 @@ window.onload = function() {
 			yAxis: {
 				type: "value",
 				axisLabel: {
-			            formatter: '{value}%'
-			        },
+					formatter: '{value}%'
+				},
 			},
 			series: []
 		};
@@ -409,63 +340,112 @@ window.onload = function() {
 		var opYear = clone(Options);
 
 		var a = {
-			// name: '6个月净值走势',
+			name: '产品指数',
 			type: 'line',
 			data: []
 		};
 		var b = {
-			// name: '1年净值走势',
+			name: '产品指数',
 			type: 'line',
 			data: []
 		};
 		var c = {
-			// name: '1个月净值走势',
+			name: '产品指数',
 			type: 'line',
 			data: []
 		};
 		var d = {
-			// name: '3个月净值走势',
+			name: '产品指数',
 			type: 'line',
 			data: []
-		};		
+		};
+
+		var hsA = {
+			name: '沪深指数',
+			type: 'line',
+			data: []
+		}
+		var hsB = {
+			name: '沪深指数',
+			type: 'line',
+			data: []
+		}
+		var hsC = {
+			name: '沪深指数',
+			type: 'line',
+			data: []
+		}
+		var hsD = {
+			name: '沪深指数',
+			type: 'line',
+			data: []
+		}
 		var _echart_width = document.body.offsetWidth; //获取屏幕宽度，根据屏幕设置图表容器的宽度
 		byId("one").style.width = _echart_width + "px";
 		byId("three").style.width = _echart_width + "px";
 		byId("six").style.width = _echart_width + "px";
-		byId("year").style.width = _echart_width + "px";		
+		byId("year").style.width = _echart_width + "px";
 		for(var i = 0; i < oneData.length; i++) {
-			opOne.xAxis.data[i] = oneData[i].net_date;
+			opOne.xAxis.data[i] = oneData[i].net_date; //1月x轴
 			c.data[i] = oneData[i].net_day_growth;
 		}
+
+		for(var i = 0; i < oneHsData.length; i++) {
+			hsC.data[i] = oneHsData[i].IndexValue;
+		}
+
+		hsC.data.reverse();
+		opOne.series.push(hsC);
+
 		opOne.xAxis.data.reverse();
 		c.data.reverse();
 		opOne.series.push(c);
+			
 		for(var i = 0; i < threeData.length; i++) {
-			opThree.xAxis.data[i] = threeData[i].net_date;
+			opThree.xAxis.data[i] = threeData[i].net_date; //三月x轴
 			d.data[i] = threeData[i].net_day_growth;
+		}
+		for(var i = 0; i < threeHsData.length; i++) {
+			hsD.data[i] = threeHsData[i].IndexValue;
 		}
 		opThree.xAxis.data.reverse();
 		d.data.reverse();
+		hsD.data.reverse();
+		opThree.series.push(hsD);
 		opThree.series.push(d);
 		for(var i = 0; i < halfData.length; i++) {
-			opSix.xAxis.data[i] = halfData[i].net_date
+			opSix.xAxis.data[i] = halfData[i].net_date //半年x轴
 			a.data[i] = halfData[i].net_day_growth;
+		}
+		for(var i = 0; i < halfData.length; i++) {
+			hsA.data[i] = halfData[i].IndexValue;
 		}
 		opSix.xAxis.data.reverse();
 		a.data.reverse();
+		hsA.data.reverse();
+		opSix.series.push(hsA);
 		opSix.series.push(a);
 		for(var i = 0; i < prdData.length; i++) {
-			opYear.xAxis.data[i] = prdData[i].net_date
+			opYear.xAxis.data[i] = prdData[i].net_date //一年x轴
 			b.data[i] = prdData[i].net_day_growth;
+		}
+		for(var i = 0; i < hsData.length; i++) {
+			hsB.data[i] = hsData[i].IndexValue;
 		}
 		opYear.xAxis.data.reverse();
 		b.data.reverse();
+		hsB.data.reverse();
+		opYear.series.push(hsB);
 		opYear.series.push(b);
 
-		var n1 = echarts.init(document.getElementById("one"));
-		var n2 = echarts.init(document.getElementById("three"));
-		var n3 = echarts.init(document.getElementById("six"));
-		var n4 = echarts.init(document.getElementById("year"));
+		//  console.log(opOne);
+		//  console.log(opThree);
+		//  console.log(opSix);
+		//  console.log(opYear);
+		var n1 = echarts.init(byId("one"));
+		var n2 = echarts.init(byId("three"));
+		var n3 = echarts.init(byId("six"));
+		var n4 = echarts.init(byId("year"));
 		n1.hideLoading();
 		n1.setOption(opOne);
 		n2.setOption(opThree);
@@ -473,66 +453,4 @@ window.onload = function() {
 		n4.setOption(opYear);
 	}
 
-	function getData(data){
-		if(!data || !data.length) {
-			alert('无数据');
-			return false;
-		}
-		
-		var oneData = [];
-		var threeData = [];
-		var halfData = [];
-		console.log(data[0]);
-		var today = new Date().valueOf() - 30 * 24 * 60 * 60 * 1000;
-		var three = new Date().valueOf() - 3 * 30 * 24 * 60 * 60 * 1000;
-		var half = new Date().valueOf() - 6 * 30 * 24 * 60 * 60 * 1000;
-		var start = new Date(data[0].net_date.replace(/-/g, '/')).valueOf();
-		var ii = start;
-		for(var i = 0; i < data.length; i++) {
-			if(today > start) {
-				oneData = [];
-				break;
-			} else if(today > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
-				ii = i;
-				break;
-			}
-		}
-		if(i == data.length) {
-			ii = i - 1;
-		}
-		oneData = data.slice(0, ii);
-		//console.log(oneData);
-		for(; i < data.length; i++) {
-			if(three > start) {
-				threeData = [];
-				break;
-			} else if(three > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
-				ii = i;
-				break;
-			}
-		}
-		if(i == data.length) {
-			ii = i - 1;
-		}
-		threeData = data.slice(0, ii);
-		for(; i < data.length; i++) {
-			if(half > start) {
-				halfData = [];
-				break;
-			} else if(half > new Date(data[i].net_date.replace(/-/g, '/')).valueOf()) {
-				ii = i;
-				break;
-			}
-		}
-		if(i == data.length) {
-			ii = i - 1;
-		}
-		halfData = data.slice(0, ii);
-		var yearData = data;	
-		
-		
-		
-		
-	}
-	
 }

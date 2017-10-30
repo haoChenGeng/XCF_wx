@@ -451,9 +451,8 @@ class Jz_account extends MY_Controller
     }
     
     function sendSms(){
-    	$this->load->Model("Model_sms");$this->load->Model("Model_sms");
-    	echo "验证码已发送！";
-//     	echo $this->Model_sms->send_sms($_SESSION['customer_name'],$_SESSION['RJZTPVCode'])['msg'];
+    	$this->load->Model("Model_sms");
+    	echo $this->Model_sms->send_sms($_SESSION['customer_name'],$_SESSION['RJZTPVCode'])['msg'];
     }
     
     function resetPassward($pwdtype = 0)                              //$pwdtype='0'交易密码、= '1'登陆密码

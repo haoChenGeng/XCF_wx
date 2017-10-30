@@ -401,12 +401,7 @@ class Fund_bank extends MY_Controller
 		$bank_info =$this->fund_interface->bankCardPhone();
 		$channel_info = $this->fund_interface->paymentChannel();
 		$channel_info = setkey($channel_info,'channelid');
-// var_dump($channel_info);
-// var_dump($bank_info);
-// 		if (!isset($bank_info['code']) || $bank_info['code'] != '0000'){
-// 		file_put_contents('log/user/bank_info'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."查询银行卡失败，返回数据为:".serialize($bank_info)."\r\n\r\n",FILE_APPEND);
 		myLog('user/bank_info',"用户".$_SESSION ['customer_name']."查询银行卡信息，返回数据为:".serialize($bank_info));
-// 		}
 		if (isset($bank_info['code']) && $bank_info['code'] == '0000')
 		{
 			if (!empty($bank_info['data'][0]))
@@ -431,10 +426,6 @@ class Fund_bank extends MY_Controller
 			$data['fail_message'] = '银行卡查询失败,请稍候再试!';
 			$data['num_channel'] = 0;
 		}
-// 		$data[num_channel] = 0;
-// var_dump($channel_info); var_dump($data);exit;
-// 		return $data;
-// var_dump($data);
 		$this->load->view('/jijin/bank/bank_info',$data);
 	}
 	
@@ -483,11 +474,6 @@ class Fund_bank extends MY_Controller
  				}else{
  					$post['depositacct'] = $bankCardInfo['depositacct'];
  					$oper_res = $this->fund_interface->bankcardDelete($post);
-// $data['data'] = $oper_res['data'];
-// var_dump($oper_res);
-// $data['url'] = $this->config->item('fundUrl').'/jijin/XCFinterface';
-// $this->load->view('UrlTest',$data);
-// return;
 //  					file_put_contents('log/user/bankcard_delete'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行银行卡删除操作，返回数据为:".serialize($oper_res)."\r\n\r\n",FILE_APPEND);
  					myLog('user/bankcard_delete',"用户:".$_SESSION ['customer_name']."进行银行卡删除操作，返回数据为:".serialize($oper_res));
  					if (isset($oper_res['code']))
@@ -511,9 +497,6 @@ class Fund_bank extends MY_Controller
  									$err_msg = '系统故障, 银行卡注销失败!';
  							}
  							$log_msg = $oper_res['msg'];
- 							/*  						if ($oper_res['code'] == ''){
- 							 $error_msg = $oper_res['msg'];
- 							 } */
  						}
  					}else{
  						$log_msg = '调用删除银行卡接口失败';
@@ -535,7 +518,6 @@ class Fund_bank extends MY_Controller
  		}else{
  			$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
  			$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
-//  			$data['depositacct'] = $depositacct;
  			$data['channelid'] = $channelid;
  			$_SESSION['rand_code'] = $data['rand_code'];
  			$this->load->view('/jijin/bank/bankcard_delete',$data);
@@ -544,7 +526,6 @@ class Fund_bank extends MY_Controller
 	
 	private function getBankCardInfo($channelid){
 		$bank_info =$this->fund_interface->bankCardPhone();
-// var_dump($bank_info);
 		if (isset($bank_info['code']) && $bank_info['code'] == '0000'){
 			foreach ($bank_info['data'] as $val){
 				if ($val['channelid'] == $channelid){
