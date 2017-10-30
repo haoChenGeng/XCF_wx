@@ -228,11 +228,11 @@ class Jz_fund extends MY_Controller
 		$asset_allocation = $this->db->select('bond , cash , other , stock , total_assets')->where('fund_code',$get['fundcode'])->get('p2_funddistribution')->row_array();
 		$asset_allocation['total_assets'] = (string)round($asset_allocation['total_assets']/100000000,2);
 		$position_allocation = $this->db->select('security_name , security_scale')->where('fund_code',$get['fundcode'])->get('p2_fundposition')->result_array();
-
-		if(!empty($fund_list)&&!empty($manager)&&!empty($file))
+		/*if(!empty($fund_list)&&!empty($manager)&&!empty($file))
 			$return = array('code'=>0,'data'=>array('basic_info' => $fund_list , 'manager'=>$manager , 'file' => $file , 'asset_allocation' => $asset_allocation , 'position_allocation' => $position_allocation));
 		else
-			$return = array('code'=>1,'msg'=>'数据不存在');
+			$return = array('code'=>1,'msg'=>'数据不存在');*/
+		$return = array('code'=>0,'data'=>array('basic_info' => $fund_list , 'manager'=>$manager , 'file' => $file , 'asset_allocation' => $asset_allocation , 'position_allocation' => $position_allocation));
 
 		echo json_encode($return);
 	}
