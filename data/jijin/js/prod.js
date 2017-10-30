@@ -362,7 +362,7 @@ window.onload = function() {
         }
       },
       legend: {
-        data: [],
+        data: ['沪深指数', '产品指数'],
         bottom: "10px"
       },
       grid: {
@@ -395,35 +395,43 @@ window.onload = function() {
     var opYear = clone(Options);
 
     var a = {
+      name: '产品指数',
       type: 'line',
       data: []
     };
     var b = {
+      name: '产品指数',
       type: 'line',
       data: []
     };
     var c = {
+      name: '产品指数',
       type: 'line',
       data: []
     };
     var d = {
+      name: '产品指数',
       type: 'line',
       data: []
     };
 
     var hsA = {
+      name: '沪深指数',
       type: 'line',
       data: []
     }
     var hsB = {
+      name: '沪深指数',
       type: 'line',
       data: []
     }
     var hsC = {
+      name: '沪深指数',
       type: 'line',
       data: []
     }
     var hsD = {
+      name: '沪深指数',
       type: 'line',
       data: []
     }
