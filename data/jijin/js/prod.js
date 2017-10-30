@@ -156,75 +156,7 @@ window.onload = function() {
       nav[this.index].classList.add('tab-active');
 
     });
-  }
-  //	var getOption = function(shXdata, shYdata, prdYdata) {		//图表方法
-  //		var chartOption ={
-  //			tooltip:{
-  //		        trigger: 'none',
-  //		        axisPointer: {
-  //		            type: 'cross'
-  //		        }				
-  //			},
-  //			legend: {
-  //				data: ['沪深指数', '产品指数']
-  //			},
-  //			grid: {
-  //				x: 35,
-  //				x2: 10,
-  //				y: 30,
-  //				y2: 25
-  //			},
-  //			toolbox: {
-  //				show: false,
-  //				feature: {
-  //					mark: {
-  //						show: true
-  //					},
-  //					dataView: {
-  //						show: true,
-  //						readOnly: false
-  //					},
-  //					magicType: {
-  //						show: true,
-  //						type: ['line', 'bar']
-  //					},
-  //					restore: {
-  //						show: true
-  //					},
-  //					saveAsImage: {
-  //						show: true
-  //					}
-  //				}
-  //			},
-  //			calculable: false,
-  //			xAxis: [{
-  //				type: 'category',
-  //				data: shXdata
-  //			}],
-  //			yAxis: [{
-  //				type: 'value',
-  //				axisLabel: {
-  //		            formatter: '{value}%'
-  //		        },
-  //				splitArea: {
-  //					show: true
-  //				}
-  //			}],
-  //			series: [
-  //				{
-  //					name: '沪深指数',
-  //					type: 'line',
-  //					data: shYdata
-  //				}, 
-  //				{
-  //					name: '产品指数',
-  //					type: 'line',
-  //					data: prdYdata
-  //				}
-  //			]
-  //		};
-  //		return chartOption;
-  //	};				
+  }			
 
   function clone(e) {
     var t;
@@ -244,14 +176,8 @@ window.onload = function() {
   }
 
   function renderChart(data, type) {
-    /* if (!prdData || !prdData.length) {
-      alert('无数据');
-      return false;
-    } */
-    var prdData = data.data;
-    var hsData = data.hs_data;
-    console.log(data);
-    //var _echart_width = $(document.body).width() - 20;
+    var prdData = data.data;		//产品指数
+    var hsData = data.hs_data;		//沪深指数
     var oneData = [];
     var threeData = [];
     var halfData = [];
@@ -293,7 +219,7 @@ window.onload = function() {
       kk = i - 1;
     }
     oneHsData = hsData.slice(0, kk);
-
+	//console.log(oneHsData);
     for (; i < prdData.length; i++) {
       if (three > start) {
         threeData = [];
@@ -435,41 +361,23 @@ window.onload = function() {
       type: 'line',
       data: []
     }
-
-    //		if(type == 2) {
-    //			opOne.legend.data.push('1个月七日年化收益率走势');
-    //			opThree.legend.data.push('3个月七日年化收益率走势');
-    //			opSix.legend.data.push('6个月七日年化收益率走势');
-    //			opYear.legend.data.push('1年七日年化收益率走势');
-    //			a.name = '6个月七日年化收益率走势';
-    //			b.name = '1年七日年化收益率走势';
-    //			c.name = '1个月七日年化收益率走势';
-    //			d.name = '3个月七日年化收益率走势';
-    //		} else {
-    //			opOne.legend.data.push('1个月净值走势');
-    //			opThree.legend.data.push('3个月净值走势');
-    //			opSix.legend.data.push('6个月净值走势');
-    //			opYear.legend.data.push('1年净值走势');
-    //			a.name = '6个月净值走势';
-    //			b.name = '1年净值走势';
-    //			c.name = '1个月净值走势';
-    //			d.name = '3个月净值走势';
-    //		}
-    //console.log(oneData);
-
     var _echart_width = document.body.offsetWidth; //获取屏幕宽度，根据屏幕设置图表容器的宽度
     byId("one").style.width = _echart_width + "px";
     byId("three").style.width = _echart_width + "px";
     byId("six").style.width = _echart_width + "px";
     byId("year").style.width = _echart_width + "px";
     for (var i = 0; i < oneData.length; i++) {
-      opOne.xAxis.data[i] = oneData[i].net_date;
+      opOne.xAxis.data[i] = oneData[i].net_date;	//1月x轴
       c.data[i] = oneData[i].net_day_growth;
+      //console.log(oneData[i].net_date);
     }
 
     for (var i = 0; i < oneHsData.length; i++) {
       hsC.data[i] = oneHsData[i].IndexValue;
+      //hsC.data[i] =parseInt(oneHsData[i].IndexValue) - 3825.99;
+      //console.log(hsC.data[i]);
     }
+   
     hsC.data.reverse();
     opOne.series.push(hsC);
 
@@ -478,7 +386,7 @@ window.onload = function() {
     opOne.series.push(c);
 
     for (var i = 0; i < threeData.length; i++) {
-      opThree.xAxis.data[i] = threeData[i].net_date;
+      opThree.xAxis.data[i] = threeData[i].net_date;	//三月x轴
       d.data[i] = threeData[i].net_day_growth;
     }
     for (var i = 0; i < threeHsData.length; i++) {
@@ -489,8 +397,8 @@ window.onload = function() {
     hsD.data.reverse();
     opThree.series.push(hsD);
     opThree.series.push(d);
-    for (var i = 0; i < halfData.length; i++) {
-      opSix.xAxis.data[i] = halfData[i].net_date
+    for (var i = 0; i < halfData.length; i++) {	
+      opSix.xAxis.data[i] = halfData[i].net_date	//半年x轴
       a.data[i] = halfData[i].net_day_growth;
     }
     for (var i = 0; i < halfData.length; i++) {
@@ -502,7 +410,7 @@ window.onload = function() {
     opSix.series.push(hsA);
     opSix.series.push(a);
     for (var i = 0; i < prdData.length; i++) {
-      opYear.xAxis.data[i] = prdData[i].net_date
+      opYear.xAxis.data[i] = prdData[i].net_date	//一年x轴
       b.data[i] = prdData[i].net_day_growth;
     }
     for (var i = 0; i < hsData.length; i++) {
@@ -514,10 +422,10 @@ window.onload = function() {
     opYear.series.push(hsB);
     opYear.series.push(b);
 
-    // console.log(opOne);
-    // console.log(opThree);
-    // console.log(opSix);
-    // console.log(opYear);
+//  console.log(opOne);
+//  console.log(opThree);
+//  console.log(opSix);
+//  console.log(opYear);
     var n1 = echarts.init(document.getElementById("one"));
     var n2 = echarts.init(document.getElementById("three"));
     var n3 = echarts.init(document.getElementById("six"));
