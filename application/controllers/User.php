@@ -365,7 +365,7 @@ class User extends MY_Controller {
 		}
 		$_SESSION ['T_name'] = $post ['tel'];
 		$this->load->Model("Model_sms");
-		echo $this->Model_sms->send_sms($post ['tel'],$_SESSION ['telcode']);
+		echo $this->Model_sms->send_sms($post ['tel'],$_SESSION ['telcode'])['msg'];
 	}
 	
 //获取最新的基金列表

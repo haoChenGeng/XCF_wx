@@ -29,7 +29,8 @@
 				<div class="m-item">
 					<i class="icon icon-pwd"></i>
 					<label>
-						<input type="text" id="verifyCode" class="w80-p"  name="verifyCode"   data-reg=".+"  data-error="手机验证码不能为空" placeholder="请输入手机验证码" />
+						<input type="text" id="verifyCode" class="input"  name="verifyCode"   data-reg=".+"  data-error="手机验证码不能为空" placeholder="请输入手机验证码" />
+						<a href="#" id="sendSms" class="input_btn">获取验证码</a>
 					</label>
 				</div>
 				<div class="m-item">
@@ -67,6 +68,34 @@
             	$('#login_form').submit();
             });
         });
+    });
+
+    $('#sendSms').on('click',function(){
+    	$.post("/jijin/Jz_account/sendSms", {},function(res){
+            M.alert({
+                title:'提示',
+                message:res==null||res==''||res==undefined?'发送失败':res
+            });
+            if( res == '验证码已发送！'){
+//                alert("发送成功");
+                var timer = null;
+                var times = 60;
+                var oldStr = $('#sendSms').html();
+
+                $('#sendSms').html(times+' 秒');
+                $('#sendSms').attr('disabled','disabled').addClass('disabled');
+                timer = setInterval(function(){
+                    if(times==0){
+                        clearInterval(timer);
+                        $('#sendSms').html(oldStr);
+                        $('#sendSms').removeAttr('disabled').removeClass('disabled');
+                    }else{
+                        times--;
+                        $('#sendSms').html(times+' 秒');
+                    }
+                },1000);
+            }
+        })
     });
 </script>
 

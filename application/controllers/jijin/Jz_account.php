@@ -450,6 +450,12 @@ class Jz_account extends MY_Controller
     	}
     }
     
+    function sendSms(){
+    	$this->load->Model("Model_sms");$this->load->Model("Model_sms");
+    	echo "验证码已发送！";
+//     	echo $this->Model_sms->send_sms($_SESSION['customer_name'],$_SESSION['RJZTPVCode'])['msg'];
+    }
+    
     function resetPassward($pwdtype = 0)                              //$pwdtype='0'交易密码、= '1'登陆密码
     {
     	if (!$this->logincontroller->isLogin()) {
@@ -459,13 +465,10 @@ class Jz_account extends MY_Controller
     	$_SESSION['myPageOper'] = 'account';
     	if (empty($post))
     	{
-    		$this->load->Model("Model_sms");
     		$userInfo = $this->fund_interface->AccountInfo()['data'];
     		$this->load->config('jz_dict');
     		$data['certificatetype'] = $this->config->item('certificatetype')[$userInfo['certificatetype']];
     		$_SESSION['RPcertificateno'] = $userInfo['certificateno'];
-    		$this->Model_sms->send_sms($_SESSION['customer_name'],$_SESSION['RJZTPVCode']);
-    		unset($_SESSION ['telcode']);
     		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey')); //获取RSA_加密公钥
     		$data['rand_code'] = "\t".mt_rand(100000,999999);                              //随机生成验证码
     		$_SESSION['rand_code'] = $data['rand_code'];
@@ -474,7 +477,7 @@ class Jz_account extends MY_Controller
     		//-----------RSA解密----------------------------
     		$msgTy = 'fail';
     		if ($_SESSION['RJZTPVCode'] == $post['verifyCode']){
-// var_dump($post,$_SESSION['RJZTPVCode'],$_SESSION['RPcertificateno']);
+    			unset($_SESSION['RJZTPVCode']);
     			$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
     			openssl_private_decrypt(base64_decode($post['certificateno']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
     			//判断一次性随机验证码是否存在

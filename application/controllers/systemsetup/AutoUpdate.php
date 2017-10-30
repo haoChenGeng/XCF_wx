@@ -27,7 +27,7 @@ class AutoUpdate extends MY_Controller {
 		$plannerInfo = json_decode(comm_curl($this->config->item('XNPlannerUrl'),array()),true)[0];
 		if ('0000' == $plannerInfo['code']){
 			foreach ($plannerInfo['data'] as &$val){
-				$newData[] = array('FName'=>$val['name'],'EmployeeID'=>$val['workNum'],'status'=>1); 
+				$newData[] = array('FName'=>$val['name'],'EmployeeID'=>$val['workNum'],'status'=>1,'area'=>$val['area'],'city'=>$val['city']); 
 			}
 			$this->load->model("Model_db");
 			$this->db->set(array('status'=>0))->update('p2_planner');

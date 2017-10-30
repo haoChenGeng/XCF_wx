@@ -28,7 +28,7 @@ class Model_sms extends CI_Model {
 				if ($sendSms['times'] > $allowtime){
 // 					file_put_contents(FCPATH.'/log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证被拒绝,短信接口可能遭受攻击，1小时内超过300条短信未返回正确验证码\r\n\r\n",FILE_APPEND);
 					myLog('sendSms',"手机(".$post ['tel'].")申请短信验证被拒绝,短信接口可能遭受攻击，1小时内超过".$allowtime."条短信未返回正确验证码");
-					return '短信验证码发送失败，请稍后重试';
+					return array('code'=>'9999','msg'=>'短信验证码发送失败，请稍后重试');
 				}else{
 					$this->db->set(array('times'=>$sendSms['times']+1))->where(array('dealitem'=>'sendSms'))->update('p2_dealitems');
 				}
@@ -36,7 +36,7 @@ class Model_sms extends CI_Model {
 		}
 		if (ISTESTING) {
 			$verifyCode = '123456';
-			return '您的验证码为:123456';
+			return array('code'=>'0000','msg'=>'您的验证码为:123456');
 		}else{
 			$verifyCode = $this->TelCode();
 			$content = "您的验证码是:" . $verifyCode;
@@ -45,10 +45,10 @@ class Model_sms extends CI_Model {
 // 			file_put_contents('log/sendSms'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n手机(".$post ['tel'].")申请短信验证码,返回数据:".serialize($res2)."\r\n\r\n",FILE_APPEND);
 			myLog('sendSms',"手机(".$mobile.")申请短信验证码,返回数据:".serialize($res2));
 			if (isset($res['returnCode']) && $res['returnCode'] == 0){
-				$result = '验证码已发送！';
+				$result = array('code'=>'0000','msg'=>'验证码已发送！');
 				$_SESSION['send_sms'] = time();
 			}else{
-				$result = '验证码发送失败';
+				$result = array('code'=>'9999','msg'=>'短信验证码发送失败，请稍后重试');
 			}
 			return $result;
 		}
