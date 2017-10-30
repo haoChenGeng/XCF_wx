@@ -249,3 +249,8 @@
 .risk-success p,.risk-success span {
   color: #333;
 }
+
+#tabScroll .mui-active{
+	height: 38px;
+	border-bottom: 2px solid;			
+}
