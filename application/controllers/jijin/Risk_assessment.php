@@ -31,17 +31,6 @@ class Risk_assessment extends MY_Controller {
 		$data['data'] = $ret;
 		$data['base'] = $this->base;
 		$this->load->view('jijin/account/view_risk_assessment',$data);
-/* 		if (key_exists('code',$ret) && $ret['code'] == '0000'){
-			$data['data'] = $ret['data'];
-			$this->load->view('jijin/account/view_risk_assessment',$data);
-		}else{
-			$arr['ret_code'] ='AAAA';
-			$arr['head_title'] = '风险等级测试结果';
-			$arr['ret_msg'] = '系统故障，请稍候重试';
-			$arr['back_url'] = '/jijin/Jz_my';
-			$arr['base'] = $this->base;
-			$this->load->view('ui/view_operate_result',$arr);
-		} */
 	}
 	
 	function getRiskQuestion(){
@@ -111,14 +100,6 @@ class Risk_assessment extends MY_Controller {
 				$_SESSION['riskLevel'] = $ret['data']['custrisk'];
 				$this->load->config('jz_dict');
 				$data['custrisk'] = $this->config->item('custrisk')[$_SESSION['riskLevel']];
-/* 				switch ($ret['data']['custrisk']) {////风险承受能力(1:安全型 2:保守型 3:稳健型 4:积极型 5:进取型)
-					case 1:$data['custrisk']='安全型 ';break;
-					case 2:$data['custrisk']='保守型 ';break;
-					case 3:$data['custrisk']='稳健型 ';break;
-					case 4:$data['custrisk']='积极型 ';break;
-					case 5:$data['custrisk']='进取型 ';break;
-					default:$data['custrisk']='安全型 ';break;
-				} */
 				$paperCode = $this->db->select('paperCode')->get('p2_riskquestion')->row_array()['paperCode'];
 				$riskData = array('customerId'=>$_SESSION['customer_id'],'paperCode'=>$paperCode,'answer'=>$answerList,'point'=>$pointList);
 				$riskData['riskLevel'] = empty($_SESSION['riskLevel']) ? '' : $_SESSION['riskLevel'];
@@ -135,11 +116,6 @@ class Risk_assessment extends MY_Controller {
 	function ZNTGsubmit() {
 		$data = array();
 		$post = $this->input->post();
-// file_put_contents('log/debug.txt', serialize($post));
-/* 
-$str = 'a:1:{s:3:"res";s:475:"[{"num":"3002","result":"A","point":"0.00"},{"num":"3003","result":"A","point":"0.00"},{"num":"3006","result":"A","point":"0.00"},{"num":"3007","result":"A","point":"2.00"},{"num":"3008","result":"A","point":"10.00"},{"num":"3009","result":"A","point":"8.00"},{"num":"3011","result":"A","point":"2.00"},{"num":"3012","result":"A","point":"2.00"},{"num":"3013","result":"A","point":"2.00"},{"num":"3014","result":"A","point":"2.00"},{"num":"3015","result":"A","point":"2.00"}]";}';
-$str = 'a:1:{s:3:"res";s:690:"[{"num":"3001","result":"A","point":"0.00"},{"num":"3002","result":"A","point":"0.00"},{"num":"3003","result":"A","point":"0.00"},{"num":"3004","result":"A","point":"0.00"},{"num":"3005","result":"A","point":"0.00"},{"num":"3006","result":"A","point":"0.00"},{"num":"3007","result":"A","point":"2.00"},{"num":"3008","result":"A","point":"10.00"},{"num":"3009","result":"A","point":"8.00"},{"num":"3010","result":"A","point":"2.00"},{"num":"3011","result":"A","point":"2.00"},{"num":"3012","result":"A","point":"2.00"},{"num":"3013","result":"A","point":"2.00"},{"num":"3014","result":"A","point":"2.00"},{"num":"3015","result":"A","point":"2.00"},{"num":"3016","result":"A","point":"2.00"}]";}';
-$post = unserialize($str); */
 		$answerList = $pointList = '';
 		$result = json_decode($post['res'],true);
 		$questionNum = $this->db->from('p2_riskquestion')->count_all_results();
@@ -154,7 +130,6 @@ $post = unserialize($str); */
 		$answerList = substr($answerList,1);
 		$pointList = substr($pointList,1);
 		//计算获得$answerList，$pointList
-// $_SESSION['JZ_user_id'] = 0;		
 		if (isset($_SESSION['JZ_user_id']) && 1==$_SESSION['JZ_user_id']){
 			$res = $this->JZsubmit($answerList, $pointList, $data);
 			echo json_encode(array('code'=>$data['ret_code'],"msg"=>$data['ret_msg']));
