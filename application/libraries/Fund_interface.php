@@ -120,7 +120,8 @@ class Fund_interface
 		return $flag;
 	}
 	
-	function getFundNetvalue($fundcode,$startDate='',$fundType=0){
+	function getFundNetvalue($fundcode,$startDate='',$fundType = 0){
+var_dump($fundType);
 		$tableName = 'p2_netvalue_'.$fundcode;
 		$submitData = array("code"=>'fundNetvalue','fund_code'=>$fundcode);
 		if (!empty($startDate)){
@@ -145,9 +146,7 @@ class Fund_interface
 				}
 			}
 			$this->CI->load->model("Model_db");
-// var_dump($updateData);
-			$flag = 1;//$this->CI->Model_db->incremenUpdate($tableName, $fundNetvalue['data'], 'net_date');
-// var_dump("-------");exit;
+			$flag = $this->CI->Model_db->incremenUpdate($tableName, $fundNetvalue['data'], 'net_date');
 			if ($fundType != 2){
 				$fields = $this->CI->db->query("SHOW FULL COLUMNS FROM ".$tableName)->result_array();
 				$fields = setkey($fields,'Field');
