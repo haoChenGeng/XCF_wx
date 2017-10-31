@@ -6,6 +6,7 @@ class AutoUpdate extends MY_Controller {
 
 	function __construct() {
 		parent::__construct ();
+		set_time_limit(1800);
 		$this->load->helper ( array('comfunction'));
 		$this->load->library(array('Fund_interface'));
 	}
@@ -18,6 +19,9 @@ class AutoUpdate extends MY_Controller {
 			if (!empty($returnData['data'])){
 				$this->db->truncate($key);
 				$this->db->insert_batch($key,$returnData['data']);
+			}
+			if ($key == 'hsindexvalue'){
+				$this->updateHsindexCurve();
 			}
 		}
 	}
@@ -35,8 +39,32 @@ class AutoUpdate extends MY_Controller {
 		}
 	}
 	
-	function updateFundData(){
-				
+	private function updateHsindexCurve(){
+		$this->db->set(array("oneMonth"=>-1000,"threeMonth"=>-1000,"sixMonth"=>-1000,"oneYear"=>-1000))->update("p2_hsindexvalue");
+		$period = array(date("Y-m-d", strtotime("-1 month")),
+				date("Y-m-d", strtotime("-3 month")),
+				date("Y-m-d", strtotime("-6 month")),
+				date("Y-m-d", strtotime("-1 year")));
+		$hsindex = $this->db->select("TradingDay,IndexValue")->where(array("TradingDay >="=>$period[3]))->order_by("TradingDay","ASC")->get("p2_hsindexvalue")->result_array();
+		$i = 3;
+		$j = 0;
+		$fields = array("oneMonth","threeMonth","sixMonth","oneYear");
+		$netBase[3] = current($hsindex);
+		foreach ($hsindex as $val){
+			while ($i > 0 && $val['TradingDay'] >= $period[$i-1]){
+				$i --;
+				$netBase[$i] = $val;
+			}
+			$newData[$j]['TradingDay'] = $val['TradingDay'];
+			for ($ii = 3; $ii >= $i; $ii--){
+				$newData[$j][$fields[$ii]] = round(100*($val['IndexValue']-$netBase[$ii]['IndexValue'])/$netBase[$ii]['IndexValue'],2);
+			}
+			for (; $ii>=0; $ii--){
+				$newData[$j][$fields[$ii]] = -1000;
+			}
+			$j++;
+		}
+		$this->load->model("Model_db");
+		$this->Model_db->incremenUpdate("p2_hsindexvalue", $newData, 'TradingDay');
 	}
-	
 }
