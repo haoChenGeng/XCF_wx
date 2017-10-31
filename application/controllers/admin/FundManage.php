@@ -119,10 +119,10 @@ class FundManage extends MY_Controller {
 	}
 	
 	private function operdownload(&$input, &$data){
-		$fundcode = $this->db->select('fundcode')->where(array('id'=>$input['editItem']))->get('p2_fundlist')->row_array()['fundcode'];
+		$fundInfo = $this->db->select('fundcode,fundtype')->where(array('id'=>$input['editItem']))->get('p2_fundlist')->row_array();
 		$this->load->library(array('Fund_interface'));
 		$this->load->model("Model_db");
-		if ($this->fund_interface->getFundNetvalue($fundcode)){
+		if ($this->fund_interface->getFundNetvalue($fundInfo['fundcode'],'',$fundInfo['fundtype'])){
 			$data['success'] = '历史净值数据更新成功';                //设置操作成功提示
 		}else{
 			$data['error_warning'] = '历史净值数据更新失败';          //设置操作失败提示

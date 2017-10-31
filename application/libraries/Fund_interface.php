@@ -67,7 +67,6 @@ class Fund_interface
 		$RSA->setEncryptionMode(CRYPT_RSA_ENCRYPTION_PKCS1);
 		$RSA->loadKey($public_key);
 		$AESKey = array('encryptkey'=>base64_encode($RSA->encrypt($newKey)));
-// var_dump($AESKey,$fundUrl.'/jijin/XCFinterface/renewCryptKey');
 		if (!empty($AESKey)){
 			$res = comm_curl($fundUrl.'/jijin/XCFinterface/renewCryptKey',$AESKey);
 			if (strstr($res,'SUCESS')){
@@ -110,45 +109,19 @@ class Fund_interface
 					if ($this->CI->db->table_exists($tableName)){
 						$preDate = $this->CI->db->select_max('net_date')->get($tableName)->row_array()['net_date'];
 						if ($preDate < $val['navdate']){
-							$this->getFundNetvalue($val['fundcode'],$preDate);
+							$this->getFundNetvalue($val['fundcode'],$preDate,$val['fundtype']);
 						}
 					}else{
-						$this->getFundNetvalue($val['fundcode']);
+						$this->getFundNetvalue($val['fundcode'],'',$val['fundtype']);
 					}
 				}
-/* 				$fundcodes = array_column($funddata, 'fundcode');
-				$tables = $this->CI->db->list_tables();
-				foreach ($fundcodes as $key=>$val){
-					if (in_array('p2_netvalue_'.$val, $tables)){
-						unset($fundcodes[$key]);
-					}
-				}
-				if (!empty($fundcodes)){
-					foreach ($fundcodes as $val){
-						$this->getFundNetvalue($val);
-					}
-				}
-				$currentdate = date('Y-m-d',time());
-				foreach ($funddata as $val){
-					if ($val['navdate'] != $preFundInfo[$val['fundcode']]['navdate']){
-						$val['navdate'] = date('Y-m-d',strtotime($val['navdate']));
-						$updateNav = array('net_date' => $val['navdate'],
-								'net_unit' => $val['nav'],
-								'net_sum' => empty($val['totalnav']) ? 0 : $val['totalnav'],
-								'net_day_growth' => ($val['nav']-$preFundInfo[$val['fundcode']]['nav'])/$preFundInfo[$val['fundcode']]['nav'],
-								'fundincomeunit' => $val['fundincomeunit'],
-								'growthrate' => $val['growthrate'],
-								'XGRQ' => $currentdate,
-						);
-						$this->CI->db->replace('p2_netvalue_'.$val['fundcode'],$updateNav);
-					}
-				} */
 			}
 		}
 		return $flag;
 	}
 	
-	function getFundNetvalue($fundcode,$startDate=''){
+	function getFundNetvalue($fundcode,$startDate='',$fundType=0){
+		$tableName = 'p2_netvalue_'.$fundcode;
 		$submitData = array("code"=>'fundNetvalue','fund_code'=>$fundcode);
 		if (!empty($startDate)){
 			$submitData['startDate'] = $startDate;
@@ -157,8 +130,8 @@ class Fund_interface
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		$fundNetvalue = $this->getReturnData($returnData);
 		if ($fundNetvalue['code'] == '0000' && is_array($fundNetvalue['data'])){
-			if (!$this->CI->db->table_exists('p2_netvalue_'.$fundcode)){
-				$this->creatFundNetValue('p2_netvalue_'.$fundcode);
+			if (!$this->CI->db->table_exists($tableName)){
+				$this->creatFundNetValue($tableName);
 			}
 			$updateData = &$fundNetvalue['data'];
 			$currentdate = date('Y-m-d',time());
@@ -171,13 +144,19 @@ class Fund_interface
 					$updateData[$key]['XGRQ'] = $currentdate;
 				}
 			}
-			$fields = $this->db->field_data('p2_netvalue_'.$fundcode)->result_array();
-			$fields = setkey($fields,'Field');
-			if (!isset($fields['oneMonth'])){
-				$sql = "ALTER TABLE `wx_xnxcf`.`".'p2_netvalue_'.$fundcode."` ADD COLUMN `oneMonth` DOUBLE NULL COMMENT '1个月增长率数据' AFTER `XGRQ`, ADD COLUMN `threeMonth` DOUBLE NULL COMMENT '3个月增长率数据' AFTER `oneMonth`, ADD COLUMN `sixMonth` DOUBLE NULL COMMENT '6个月增长数据' AFTER `threeMonth`, ADD COLUMN `oneYear` DOUBLE NULL COMMENT '1年增长数据' AFTER `sixMonth`;";
-				$flag = $this->CI->db->query($sql);
+			$this->CI->load->model("Model_db");
+// var_dump($updateData);
+			$flag = 1;//$this->CI->Model_db->incremenUpdate($tableName, $fundNetvalue['data'], 'net_date');
+// var_dump("-------");exit;
+			if ($fundType != 2){
+				$fields = $this->CI->db->query("SHOW FULL COLUMNS FROM ".$tableName)->result_array();
+				$fields = setkey($fields,'Field');
+				if (!isset($fields['oneMonth'])){
+					$sql = "ALTER TABLE `wx_xnxcf`.`".$tableName."` ADD COLUMN `oneMonth` DOUBLE NULL COMMENT '1个月增长率数据' AFTER `XGRQ`, ADD COLUMN `threeMonth` DOUBLE NULL COMMENT '3个月增长率数据' AFTER `oneMonth`, ADD COLUMN `sixMonth` DOUBLE NULL COMMENT '6个月增长数据' AFTER `threeMonth`, ADD COLUMN `oneYear` DOUBLE NULL COMMENT '1年增长数据' AFTER `sixMonth`;";
+					$this->CI->db->query($sql);
+				}
+				$flag = $flag && $this->updateDrawData($tableName);
 			}
-			$flag = $this->CI->Model_db->incremenUpdate('p2_netvalue_'.$fundcode, $fundNetvalue['data'], 'net_date');
 		}else{
 			$flag = FALSE;
 		}
@@ -195,7 +174,40 @@ class Fund_interface
 				`XGRQ` datetime DEFAULT NULL COMMENT '更新日期',
 				PRIMARY KEY (`net_date`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+		// 				`oneMonth` double DEFAULT NULL COMMENT '1个月增长率数据',
+		// 				`threeMonth` double DEFAULT NULL COMMENT '3个月增长率数据',
+		// 				`sixMonth` double DEFAULT NULL COMMENT '6个月增长数据',
+		// 				`oneYear` double DEFAULT NULL COMMENT '1年增长数据',		
 		$flag = $this->CI->db->query($sql);
+		return $flag;
+	}
+	
+	private function updateDrawData($tableName){
+		$this->CI->db->set(array("oneMonth"=>-1000,"threeMonth"=>-1000,"sixMonth"=>-1000,"oneYear"=>-1000))->update($tableName);
+		$period = array(date("Y-m-d", strtotime("-1 month")),
+				date("Y-m-d", strtotime("-3 month")),
+				date("Y-m-d", strtotime("-6 month")),
+				date("Y-m-d", strtotime("-1 year")));
+		$netValue = $this->CI->db->select("net_date,net_unit,net_sum")->where(array("net_date >="=>$period[3]))->order_by("net_date","ASC")->get($tableName)->result_array();
+		$i = 3;
+		$fields = array("oneMonth","threeMonth","sixMonth","oneYear");
+		$j = 0;
+		$netBase[3] = current($netValue);
+		foreach ($netValue as $val){
+			while ($i > 0 && $val['net_date'] >= $period[$i-1]){
+				$i --;
+				$netBase[$i] = $val;
+			}
+			$newData[$j]['net_date'] = $val['net_date'];
+			for ($ii = 3; $ii >= $i; $ii--){
+				$newData[$j][$fields[$ii]] = round(100*($val['net_sum']-$netBase[$ii]['net_sum'])/$netBase[$ii]['net_unit'],2);
+			}
+			for (; $ii>=0; $ii--){
+				$newData[$j][$fields[$ii]] = -1000;
+			}
+			$j++;
+		}
+		$flag = $this->CI->Model_db->incremenUpdate($tableName, $newData, 'net_date');
 		return $flag;
 	}
 	
@@ -309,7 +321,6 @@ class Fund_interface
 	}
 	
 	function Trans_applied($startDate, $endDate){
-		// var_dump($_SESSION['customer_name']);
 		if (isset($_SESSION['customer_name'])){
 			$submitData = $this->getSubmitData(array('customerNo'=>$_SESSION['customer_name'],"code"=>'transQuery','startDate'=>$startDate,'endDate'=>$endDate));
 			$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
