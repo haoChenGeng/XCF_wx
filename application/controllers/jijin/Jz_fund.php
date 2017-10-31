@@ -297,7 +297,7 @@ class Jz_fund extends MY_Controller
 				$select = 'net_date,net_day_growth,round(net_unit,4) as net_day_nav';
 			}
 			$fundCure = $this->db->select($select)->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
-			$hs300 = $this->db->select('TradingDay , IndexValue')->where('TradingDay >',$startDate)->order_by('TradingDay','DESC')->get('p2_hsindexvalue')->result_array();
+			/*$hs300 = $this->db->select('TradingDay , IndexValue')->where('TradingDay >',$startDate)->order_by('TradingDay','DESC')->get('p2_hsindexvalue')->result_array();*/
 
 			$onemonth = $this->db->select('f.net_date , f.onemonth as value , h.onemonth as hs_value')->where('f.onemonth>'.-1000)->from($tableName.' as f')->join('p2_hsindexvalue as h', 'h.TradingDay = f.net_date and h.onemonth > -1000')->order_by('net_date','DESC')->get()->result_array();
 			$threemonth = $this->db->select('f.net_date , f.threemonth as value , h.threemonth as hs_value')->where('f.threemonth>'.-1000)->from($tableName.' as f')->join('p2_hsindexvalue as h', 'h.TradingDay = f.net_date and h.threemonth > -1000')->order_by('net_date','DESC')->get()->result_array();
@@ -309,8 +309,8 @@ class Jz_fund extends MY_Controller
 			array_pop($sixmonth);
 			array_pop($oneyear);
 
-			if (!empty($fundCure) && is_array($fundCure) && !empty($hs300) && is_array($hs300)){
-				$return = array('code'=>0,'data'=>&$fundCure, 'hs_data'=>&$hs300 , 'onemonth'=>$onemonth,'threemonth'=>$threemonth,'sixmonth'=>$sixmonth,'oneyear'=>$oneyear);
+			if (!empty($fundCure) && is_array($fundCure)){
+				$return = array('code'=>0,'data'=>&$fundCure, 'onemonth'=>$onemonth,'threemonth'=>$threemonth,'sixmonth'=>$sixmonth,'oneyear'=>$oneyear);
 				$return['fundtype'] = $fundtype;
 			}else{
 				$return = array('code'=>1,'msg'=>'数据不存在');
