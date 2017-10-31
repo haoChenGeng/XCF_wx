@@ -12,9 +12,10 @@ class AutoUpdate extends MY_Controller {
 	}
 	
 	public function index() {
+		$this->fund_interface->autoUpdateJZInfo();		//更新p2_fundlist信息
 		$tableNames = array('hsindexvalue'=>'fund_hsindexvalue','fundmanager'=>'fund_manager','fundmanagerinfo'=>'fund_managerinfo',
 							'funddistribution'=>'fund_distribution','fundposition'=>'fund_position');
-		foreach ($tableNames as $key => $val){
+		foreach ($tableNames as $key => $val){			//更新基金其它信息
 			$returnData = $this->fund_interface->autoUpdateJZInfo($val);
 			if (!empty($returnData['data'])){
 				$this->db->truncate($key);
@@ -24,6 +25,7 @@ class AutoUpdate extends MY_Controller {
 				$this->updateHsindexCurve();
 			}
 		}
+		$this->updatePlannerInfo();						//更新理财师信息
 	}
 
 	function updatePlannerInfo(){
