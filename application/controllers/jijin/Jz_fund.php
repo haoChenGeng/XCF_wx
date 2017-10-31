@@ -299,10 +299,10 @@ class Jz_fund extends MY_Controller
 			$fundCure = $this->db->select($select)->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
 			$hs300 = $this->db->select('TradingDay , IndexValue')->where('TradingDay >',$startDate)->order_by('TradingDay','DESC')->get('p2_hsindexvalue')->result_array();
 
-			$onemonth = $this->db->select("net_date,onemonth")->where('onemonth>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
-			$threemonth = $this->db->select("net_date,threemonth")->where('threemonth>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
-			$sixmonth = $this->db->select("net_date,sixmonth")->where('sixmonth>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
-			$oneyear = $this->db->select("net_date,oneyear")->where('oneyear>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
+			$onemonth = $this->db->select('f.net_date , f.onemonth as value , h.onemonth as hs_value')->where('f.onemonth>'.-1000)->from($tableName.' as f')->join('p2_hsindexvalue as h', 'h.TradingDay = f.net_date and h.onemonth > -1000')->order_by('net_date','DESC')->get()->result_array();
+			$threemonth = $this->db->select('f.net_date , f.threemonth as value , h.threemonth as hs_value')->where('f.threemonth>'.-1000)->from($tableName.' as f')->join('p2_hsindexvalue as h', 'h.TradingDay = f.net_date and h.threemonth > -1000')->order_by('net_date','DESC')->get()->result_array();
+			$sixmonth = $this->db->select('f.net_date , f.sixmonth as value , h.sixmonth as hs_value')->where('f.sixmonth>'.-1000)->from($tableName.' as f')->join('p2_hsindexvalue as h', 'h.TradingDay = f.net_date and h.sixmonth > -1000')->order_by('net_date','DESC')->get()->result_array();
+			$oneyear = $this->db->select('f.net_date , f.oneyear as value , h.oneyear as hs_value')->where('f.oneyear>'.-1000)->from($tableName.' as f')->join('p2_hsindexvalue as h', 'h.TradingDay = f.net_date and h.oneyear > -1000')->order_by('net_date','DESC')->get()->result_array();
 
 			array_pop($onemonth);
 			array_pop($threemonth);
