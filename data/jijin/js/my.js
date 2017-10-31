@@ -28,27 +28,30 @@
           document.getElementById('yesterDayIncome').innerHTML = res.yestincomesum || 0;
           document.getElementById('totalIncome').innerHTML = res.addincomesum || 0;
           document.getElementById('customerName').innerHTML = res.customerName || '未登录';
+          var slider = mui('#slider').slider();
 
           switch (res.activePage) {
             case 'asset':
-              document.getElementsByClassName('mui-control-item')[0].classList.add('mui-active');
-              document.getElementById('item1mobile').classList.add('mui-active');
+              slider.gotoItem(0);
               page1();
               break;
             case 'bonus':
-              document.getElementById('item2mobile').classList.add('mui-active');
-              document.getElementsByClassName('mui-control-item')[1].classList.add('mui-active');
+              slider.gotoItem(1);
               page2();
               break;
             case 'account':
-              document.getElementById('item3mobile').classList.add('mui-active');
-              document.getElementsByClassName('mui-control-item')[2].classList.add('mui-active');
+              slider.gotoItem(2);
               page3();
               break;
             case 'history':
-              document.getElementById('item4mobile').classList.add('mui-active');
-              document.getElementsByClassName('mui-control-item')[3].classList.add('mui-active');
-              page4();
+              slider.gotoItem(3);
+              var picker = new mui.DtPicker({ type: 'date' });
+              var now = picker.getSelected().value;
+              var startDate = document.getElementById('begin');
+              var endDate = document.getElementById('end');
+              startDate.innerHTML = now;
+              endDate.innerHTML = now;
+              page4(now, now);
               break;
             default:
               break;
@@ -192,8 +195,6 @@
         document.getElementById('scroll4').querySelector('.mui-loading').style.display = "block";
       },
       success: function(res) {
-        // res = mockData;
-        // console.log(res);
         document.getElementById('scroll4').querySelector('.mui-loading').style.display = "none";
         var listWrap = document.getElementById('history');
         var fragment = document.createDocumentFragment();
@@ -262,6 +263,8 @@
       },
     });
   }
+
+
 
   var item1 = document.getElementById('item1mobile');
   var item2 = document.getElementById('item2mobile');
@@ -360,80 +363,3 @@
     }, false);
   });
 })(mui);
-
-
-var mockData = {
-  "data": [{
-      "operdate": "2017-10-12",
-      "opertime": "17:22:46",
-      "fundname": "大成标普500指数基金",
-      "fundcode": "096001",
-      "applicationamount": "111.00",
-      "applicationvol": "--",
-      "appsheetserialno": "201708290000000006438622",
-      "businesscode": "申购申请",
-      "cancelable": 1,
-      "transactiondate": "2017-08-29",
-      "status": "待报",
-      "paystatus": "支付成功"
-    },
-    {
-      "operdate": "2017-10-12",
-      "opertime": "17:21:41",
-      "fundname": "大成标普500指数基金",
-      "fundcode": "096001",
-      "applicationamount": "111.00",
-      "applicationvol": "--",
-      "appsheetserialno": "201708290000000006338622",
-      "businesscode": "申购申请",
-      "cancelable": 1,
-      "transactiondate": "2017-08-29",
-      "status": "待报",
-      "paystatus": "支付成功"
-    },
-    {
-      "operdate": "2017-10-12",
-      "opertime": "17:11:30",
-      "fundname": "大成债券基金C级",
-      "fundcode": "092002",
-      "applicationamount": "111.00",
-      "applicationvol": "--",
-      "appsheetserialno": "201708290000000006238622",
-      "businesscode": "申购申请",
-      "cancelable": 1,
-      "transactiondate": "2017-08-29",
-      "status": "待报",
-      "paystatus": "支付成功"
-    },
-    {
-      "operdate": "2017-10-12",
-      "opertime": "17:10:52",
-      "fundname": "大成标普500指数基金",
-      "fundcode": "096001",
-      "applicationamount": "111.00",
-      "applicationvol": "--",
-      "appsheetserialno": "201708290000000006138622",
-      "businesscode": "申购申请",
-      "cancelable": 1,
-      "transactiondate": "2017-08-29",
-      "status": "待报",
-      "paystatus": "支付成功"
-    },
-    {
-      "operdate": "2017-10-12",
-      "opertime": "17:10:52",
-      "fundname": "大成标普500指数基金",
-      "fundcode": "096001",
-      "applicationamount": "111.00",
-      "applicationvol": "--",
-      "appsheetserialno": "201708290000000006138622",
-      "businesscode": "申购申请",
-      "cancelable": 1,
-      "transactiondate": "2017-08-29",
-      "status": "待报",
-      "paystatus": "支付成功"
-    }
-  ],
-  "code": "0000",
-  "msg": "查询交易明细成功"
-};

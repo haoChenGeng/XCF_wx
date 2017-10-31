@@ -290,19 +290,36 @@ class Jz_fund extends MY_Controller
 		$startDate = date('Y-m-d',time());
 		$startDate = (substr($startDate,0,4)-1).substr($startDate,4);
 		$fundtype = $this->db->select('fundtype')->where(array('fundCode'=>$get['fundCode']))->get('p2_fundlist')->row_array()['fundtype'];
-		if (2 == $fundtype){
-			$select = 'net_date,round(growthrate,3) as net_day_growth,round(fundincomeunit,4) as net_day_nav';
+		if($fundtype != null){
+			if (2 == $fundtype){
+				$select = 'net_date,round(growthrate,3) as net_day_growth,round(fundincomeunit,4) as net_day_nav';
+			}else{
+				$select = 'net_date,net_day_growth,round(net_unit,4) as net_day_nav';
+			}
+			$fundCure = $this->db->select($select)->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
+			$hs300 = $this->db->select('TradingDay , IndexValue')->where('TradingDay >',$startDate)->order_by('TradingDay','DESC')->get('p2_hsindexvalue')->result_array();
+
+			$onemonth = $this->db->select("net_date,onemonth")->where('onemonth>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
+			$threemonth = $this->db->select("net_date,threemonth")->where('threemonth>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
+			$sixmonth = $this->db->select("net_date,sixmonth")->where('sixmonth>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
+			$oneyear = $this->db->select("net_date,oneyear")->where('oneyear>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
+
+			array_pop($onemonth);
+			array_pop($threemonth);
+			array_pop($sixmonth);
+			array_pop($oneyear);
+
+			if (!empty($fundCure) && is_array($fundCure) && !empty($hs300) && is_array($hs300)){
+				$return = array('code'=>0,'data'=>&$fundCure, 'hs_data'=>&$hs300 , 'onemonth'=>$onemonth,'threemonth'=>$threemonth,'sixmonth'=>$sixmonth,'oneyear'=>$oneyear);
+				$return['fundtype'] = $fundtype;
+			}else{
+				$return = array('code'=>1,'msg'=>'数据不存在');
+			}
+			
 		}else{
-			$select = 'net_date,net_day_growth,round(net_unit,4) as net_day_nav';
+			$return = array('code'=>2,'msg'=>'该基金不存在');
 		}
-		$fundCure = $this->db->select($select)->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
-		$hs300 = $this->db->select('TradingDay , IndexValue')->where('TradingDay >',$startDate)->order_by('TradingDay','DESC')->get('p2_hsindexvalue')->result_array();
-		if (!empty($fundCure) && is_array($fundCure) && !empty($hs300) && is_array($hs300)){
-			$return = array('code'=>0,'data'=>&$fundCure, 'hs_data'=>&$hs300);
-		}else{
-			$return = array('code'=>1,'msg'=>'数据不存在');
-		}
-		$return['fundtype'] = $fundtype;
+		
 		echo json_encode($return);
 	}
 	
