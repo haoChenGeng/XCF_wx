@@ -121,7 +121,6 @@ class Fund_interface
 	}
 	
 	function getFundNetvalue($fundcode,$startDate='',$fundType = 0){
-var_dump($fundType);
 		$tableName = 'p2_netvalue_'.$fundcode;
 		$submitData = array("code"=>'fundNetvalue','fund_code'=>$fundcode);
 		if (!empty($startDate)){
