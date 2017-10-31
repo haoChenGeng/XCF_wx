@@ -299,10 +299,10 @@ class Jz_fund extends MY_Controller
 			$fundCure = $this->db->select($select)->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
 			$hs300 = $this->db->select('TradingDay , IndexValue')->where('TradingDay >',$startDate)->order_by('TradingDay','DESC')->get('p2_hsindexvalue')->result_array();
 
-			$onemonth = $this->db->select("onemonth")->where('onemonth>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
-			$threemonth = $this->db->select("threemonth")->where('threemonth>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
-			$sixmonth = $this->db->select("sixmonth")->where('sixmonth>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
-			$oneyear = $this->db->select("oneyear")->where('oneyear>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
+			$onemonth = $this->db->select("net_date,onemonth")->where('onemonth>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
+			$threemonth = $this->db->select("net_date,threemonth")->where('threemonth>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
+			$sixmonth = $this->db->select("net_date,sixmonth")->where('sixmonth>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
+			$oneyear = $this->db->select("net_date,oneyear")->where('oneyear>',-1000)->order_by('net_date','DESC')->get($tableName)->result_array();
 
 			array_pop($onemonth);
 			array_pop($threemonth);
