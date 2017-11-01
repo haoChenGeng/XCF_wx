@@ -299,10 +299,10 @@ class Jz_fund extends MY_Controller
 				$data['sixmonth'] = $this->db->select('f.net_date , f.sixmonth as value , h.sixmonth as hs_value')->where('f.sixmonth>'.-1000)->from($tableName.' as f')->join('p2_hsindexvalue as h', 'h.TradingDay = f.net_date and h.sixmonth > -1000')->order_by('net_date','DESC')->get()->result_array();
 				$data['oneyear'] = $this->db->select('f.net_date , f.oneyear as value , h.oneyear as hs_value')->where('f.oneyear>'.-1000)->from($tableName.' as f')->join('p2_hsindexvalue as h', 'h.TradingDay = f.net_date and h.oneyear > -1000')->order_by('net_date','DESC')->get()->result_array();
 
-				array_pop($data['onemonth']);
+				/*array_pop($data['onemonth']);
 				array_pop($data['threemonth']);
 				array_pop($data['sixmonth']);
-				array_pop($data['oneyear']);
+				array_pop($data['oneyear']);*/
 
 				$data['fundCure'] = $this->db->select('net_date,net_day_growth,round(net_unit,4) as net_day_nav')->where('net_date>',$startDate)->order_by('net_date','DESC')->get($tableName)->result_array();
 
