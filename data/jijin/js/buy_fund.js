@@ -98,7 +98,6 @@ function renderFundList(fundtype) {
         listTitle.innerHTML = '<div class="fundlist-name">基金名称</div><div class="fundlist-networth">单位净值(元)</div><select class="fundlist-chg"><option value="1">日涨幅</option><option value="2">近一月</option><option value="3">近三月</option><option value="4">近六月</option><option value="5">近一年</option></select><span></span>';
         listWrap.parentNode.insertBefore(listTitle, listWrap);
       }
-      console.log(fundtype);
       if (!res.data[fundtype]) {
         listWrap.innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';
       } else {
@@ -113,7 +112,7 @@ function renderFundList(fundtype) {
           for (var i = 0; i < fundListData.length; i++) {
             var oLi = document.createElement('li');
             oLi.setAttribute('class', 'mui-table-view-cell');
-            oLi.innerHTML = '<a href="' + '/jijin/Jz_fund/showprodetail?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].fundincomeunit + '</div><div class="fundlist-growthrate">' + (fundListData[i].growthrate * 100).toFixed(2) + '%</div></a>';
+            oLi.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].fundincomeunit + '</div><div class="fundlist-growthrate">' + (fundListData[i].growthrate * 100).toFixed(2) + '%</div></a>';
             frag.appendChild(oLi);
           }
           listWrap.appendChild(frag);
@@ -133,27 +132,27 @@ function renderFundList(fundtype) {
           for (var i = 0; i < fundListData.length; i++) {
             var oLiDay = document.createElement('li');
             oLiDay.classList.add('mui-table-view-cell');
-            oLiDay.innerHTML = '<a href="' + '/jijin/Jz_fund/showprodetail?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_day * 100).toFixed(2) + '%</div></a>';
+            oLiDay.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_day * 100).toFixed(2) + '%</div></a>';
             fragDay.appendChild(oLiDay);
 
             var oLiOne = document.createElement('li');
             oLiOne.classList.add('mui-table-view-cell');
-            oLiOne.innerHTML = '<a href="' + '/jijin/Jz_fund/showprodetail?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_onemonth * 100).toFixed(2) + '%</div></a>';
+            oLiOne.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_onemonth * 100).toFixed(2) + '%</div></a>';
             fragOnemonth.appendChild(oLiOne);
 
             var oLiThree = document.createElement('li');
             oLiThree.classList.add('mui-table-view-cell');
-            oLiThree.innerHTML = '<a href="' + '/jijin/Jz_fund/showprodetail?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_threemonth * 100).toFixed(2) + '%</div></a>';
+            oLiThree.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_threemonth * 100).toFixed(2) + '%</div></a>';
             fragThreemonth.appendChild(oLiThree);
 
             var oLiSix = document.createElement('li');
             oLiSix.classList.add('mui-table-view-cell');
-            oLiSix.innerHTML = '<a href="' + '/jijin/Jz_fund/showprodetail?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_sixmonth * 100).toFixed(2) + '%</div></a>';
+            oLiSix.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_sixmonth * 100).toFixed(2) + '%</div></a>';
             fragSixmonth.appendChild(oLiSix);
 
             var oLiYear = document.createElement('li');
             oLiYear.classList.add('mui-table-view-cell');
-            oLiYear.innerHTML = '<a href="' + '/jijin/Jz_fund/showprodetail?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_year * 100).toFixed(2) + '%</div></a>';
+            oLiYear.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_year * 100).toFixed(2) + '%</div></a>';
             fragYear.appendChild(oLiYear);
           }
           listWrap.innerHTML = '';
