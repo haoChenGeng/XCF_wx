@@ -114,7 +114,7 @@ window.onload = function() {
 					byId("three").style.width = _echart_width + "px";
 					byId("six").style.width = _echart_width + "px";
 					byId("year").style.width = _echart_width + "px";
-					if(res.data.fundtype == 0) {
+					if(res.data.fundtype != 2) {
 						byId("netVal").innerHTML = "单位净值(元)";
 						byId("dayGrowUp").innerHTML = "日涨跌幅(%)";
 						var onemonth = res.data.onemonth; //产品一月数据
@@ -222,7 +222,8 @@ window.onload = function() {
 			},			
 			xAxis: [{
 				type: 'category',
-				data: xdata
+				data: xdata,
+				boundaryGap: false
 			}],
 			yAxis: [{
 				type: 'value',
@@ -323,8 +324,14 @@ window.onload = function() {
 		var Options = {
 			color: ["#98d4f9"],
 			title: {
-				text: "",
-				left: "center"
+				text: "七日年化",
+				textStyle: {
+					color: "#98d4f9",
+					fontWeight: "normal",
+					fontSize: 14,
+					
+				},
+				left:	300
 			},
 			tooltip: {
 				trigger: 'none',
@@ -332,15 +339,11 @@ window.onload = function() {
 					type: "line"
 				}
 			},
-			legend: {
-				data: ["七日年化"],
-				bottom: "10px"
-			},
 			grid: {
-				x: 50,
+				x: 40,
 				x2: 20,
-				y: 40,
-				y2: 30
+				y: 30,
+				y2: 25
 			},
 			toolbox: {
 				show: false,
