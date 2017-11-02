@@ -37,7 +37,6 @@ window.onload = function() {
         minBuy.innerHTML = buyRata.first_per_min + "元";
         byId("buyTime").innerHTML = "T+" + buyRata.confirmed;
         var aRate = buyRata.rate //认申购费率
-        console.log(aRate);
         var buyRate = byId(buyRate);
         for (var k = 0; k < aRate.length; k++) { //认申购费率
           var len = aRate.length - 1;
@@ -59,15 +58,18 @@ window.onload = function() {
             div_1.innerHTML = aRate[k].downamount + "<=" + buyRata.businesscode + "金额";
             div_2.innerHTML = aRate[k].ratevalue + rateType;
           } else if (k == len) {
-            div_1.innerHTML = aRate[k].downamount + "万<=" + buyRata.businesscode + "金额<";
+            div_1.innerHTML = aRate[k].downamount + "万<=" + buyRata.businesscode + "金额";
             div_2.innerHTML = aRate[k].ratevalue + rateType;
           } else {
-            div_1.innerHTML = aRate[k].downamount + "万<=" + buyRata.businesscode + "金额" + aRate[k].upamount + "万";
+            div_1.innerHTML = aRate[k].downamount + "万<=" + buyRata.businesscode + "金额<" + aRate[k].upamount + "万";
             div_2.innerHTML = aRate[k].ratevalue + rateType;
           }
 
-
-          div_3.innerHTML = aRate[k].executionrate + "元";
+          if (aRate[k].rate_type == 1) {
+            div_3.innerHTML = aRate[k].executionrate + "元";
+          } else {
+            div_3.innerHTML = aRate[k].executionrate + "%";
+          }
           rowDiv.appendChild(div_1);
           rowDiv.appendChild(div_2);
           rowDiv.appendChild(div_3);
@@ -75,7 +77,6 @@ window.onload = function() {
         }
         for (var i = 0; i < rate.length; i++) { //赎回费用
           if (rate[i].feepolicy == "1") { //无赎回费率
-            console.log("无赎回费率");
           } else { //有赎回费率
             var len = rate.length - 1;
             var data = ""
