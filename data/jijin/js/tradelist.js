@@ -26,7 +26,13 @@ window.onload = function() {
         byId("costManage").innerHTML = costData.cost_manage + "%"; //管理费
         byId("costTrustee").innerHTML = costData.cost_trustee + "%"; //托管费
         byId("perMin").innerHTML = feeData.per_min_24 + "份"; //赎回份额
-        byId("dayPay").innerHTML = "T+" + feeData.date_payment //预计赎回到账时间
+        if (!feeData.date_payment) {
+          byId('dayPay').innerHTML = '无赎回';
+          byId('rateCont').innerHTML = '无赎回';
+          byId('rateCont').style.textAlign = 'center';
+        } else {
+          byId("dayPay").innerHTML = "T+" + feeData.date_payment //预计赎回到账时间
+        }
         var oRateDiv = byId("rateCont");
         var oBuyDiv = byId("buyRate");
         var minBuy = byId("minBuy");
@@ -76,7 +82,8 @@ window.onload = function() {
           oBuyDiv.appendChild(rowDiv);
         }
         for (var i = 0; i < rate.length; i++) { //赎回费用
-          if (rate[i].feepolicy == "1") { //无赎回费率
+          if (!rate[i].feepolicy) { //无赎回费率
+
           } else { //有赎回费率
             var len = rate.length - 1;
             var data = ""
