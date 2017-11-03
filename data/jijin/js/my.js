@@ -28,8 +28,8 @@
           document.getElementById('yesterDayIncome').innerHTML = res.yestincomesum || 0;
           document.getElementById('totalIncome').innerHTML = res.addincomesum || 0;
           document.getElementById('customerName').innerHTML = res.customerName || '未登录';
-          var slider = mui('#slider').slider();
 
+          var slider = mui('#slider').slider();
           switch (res.activePage) {
             case 'asset':
               slider.gotoItem(0);

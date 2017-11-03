@@ -32,6 +32,10 @@
     .mui-control-content {
       height: 700px;
     }
+    .subUl li{
+	  	font-size: 14px;
+	    color: #7b7777;    	
+    }
   </style>
 </head>
 
@@ -42,8 +46,8 @@
   </header>
   <div class="mui-content">
     <div class="mui-input-row" style="margin: 10px 5%;position: relative;">
-      <input type="text" class="mui-input-clear" list="searchList" id="helpSearch" onfocus="onSearch()" style="width:85%" placeholder="请输入关键词"><span id="quitSearch" style="color:lightskyblue;margin-left:8px;display:none;">取消</span>
-      <ul id="searchList" style="position: absolute;width:85%;padding-left:0;margin:0;top:40px;z-index:3;background-color:#fff;border-radius:3px;">
+      <input type="search" class="mui-input-clear" list="searchList" id="helpSearch" onfocus="onSearch()" style="background: #fff;" placeholder="请输入关键词"><span id="quitSearch" style="color:lightskyblue;margin-left:8px;display:none;">取消</span>
+      <ul id="searchList" style="width: 85%; position: absolute;padding-left:0;margin:0;top:40px;z-index:3;background-color:#fff;border-radius:3px;">
 
       </ul>
     </div>
@@ -70,31 +74,31 @@
             <ul class="mui-table-view mui-table-view-chevron">
               <li class="mui-table-view-cell mui-collapse">
                 <a class="mui-navigate-right" data-key='["客服电话", "电话"]' data-num="1" href="#"><span class="mui-icon mui-icon-help"></span> 如何联系客服专员？</a>
-                <ul class="mui-table-view mui-table-view-chevron">
+                <ul class="mui-table-view mui-table-view-chevron subUl">
                   <li class="mui-table-view-cell">您好！工作时间内拨打微信移动端客服热线：400-669-5666（服务时间周一至周五 9：00-20：30，周六周日：9:00-17:00）。</li>
                 </ul>
               </li>
               <li class="mui-table-view-cell mui-collapse">
                 <a class="mui-navigate-right" data-key='["短信验证码", "注册"]' data-num="2" href="#"><span class="mui-icon mui-icon-help"></span> 如果用户收不到短信验证码怎么办？</a>
-                <ul class="mui-table-view mui-table-view-chevron">
+                <ul class="mui-table-view mui-table-view-chevron subUl">
                   <li class="mui-table-view-cell">您好！可以点击重新发送验证短信。若排除信号网络等问题后屡次尝试仍接收不到验证短信，则可能有以下三种情况：<br> 1.建议客户与银行核实预留手机号码是否正确；<br> 2.此前设置过拒收此类短信，客户可自行发送短信解除，解除方法：用户发送1111至1065712079及106571207931662；<br> 3. 验证码短信被手机安全软件拦截。</li>
                 </ul>
               </li>
               <li class="mui-table-view-cell mui-collapse">
                 <a class="mui-navigate-right" data-key='["短信验证码", "注册"]' data-num="3" href="#"><span class="mui-icon mui-icon-help"></span> 为什么无法获取短信验证码？</a>
-                <ul class="mui-table-view mui-table-view-chevron">
+                <ul class="mui-table-view mui-table-view-chevron subUl">
                   <li class="mui-table-view-cell">您好！同一个号码30秒内只能获取一条，1分钟内不能超过2条，30分钟内不能超过3条</li>
                 </ul>
               </li>
               <li class="mui-table-view-cell mui-collapse">
                 <a class="mui-navigate-right" data-key='["短信验证码", "注册"]' data-num="4" href="#"><span class="mui-icon mui-icon-help"></span> 为什么注册时显示验证码错误？</a>
-                <ul class="mui-table-view mui-table-view-chevron">
+                <ul class="mui-table-view mui-table-view-chevron subUl">
                   <li class="mui-table-view-cell">您好！验证码出错是因为验证码为一次性使用后失效，所以客户短时间内反复点击获取验证码就导致同时收到多条验证码短信，却使用了旧的已经失效的验证码。请大家以最后一次的验证码为准，如果短时间内点击获取超过三次，则需要半个小时后再重新尝试。</li>
                 </ul>
               </li>
               <li class="mui-table-view-cell mui-collapse">
                 <a class="mui-navigate-right" data-key='["换卡", "更换银行卡", "银行卡"]' data-num="5" href="#"><span class="mui-icon mui-icon-help"></span> 如何更换银行卡？</a>
-                <ul class="mui-table-view mui-table-view-chevron">
+                <ul class="mui-table-view mui-table-view-chevron subUl">
                   <li class="mui-table-view-cell">1. 旧卡上无份额或在途资金或在途交易，可以直接更换。<br> 2. 旧卡上有持有份额或在途资金或在途交易，需提交相关资料邮寄至小牛新财富，审核通过后方可更换银行卡。您可通过公募—银行卡管理进行操作或咨询0755—88695688。</li>
                 </ul>
               </li>
@@ -108,51 +112,51 @@
               <ul class="mui-table-view mui-table-view-chevron">
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='["账户", "基金账户"]' data-num="6" href="#"><span class="mui-icon mui-icon-help"></span> 什么是基金账户？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">基金账户（TA账户）指基金注册登记机构为投资者开立的记录其持有开放式基金的基金份额及其变更情况的账户。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='["未成年人", "账户", "基金账户"]' data-num="7" href="#"><span class="mui-icon mui-icon-help"></span> 未成年人是否可以开立基金账户购买基金？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">目前基金公司暂不支持未满18周岁的成年人开立基金账户购买基金。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='["基金开户", "确认", "开户"]' data-num="8" href="#"><span class="mui-icon mui-icon-help"></span> 基金开户后多久可以得到确认？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">开立基金账户一般需T＋1个工作日确认。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='["基金开户", "确认", "开户"]' data-num="9" href="#"><span class="mui-icon mui-icon-help"></span> 开户同时办理认购、申购委托的，开户失败是否影响该笔交易？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">会有影响。开户同时办理认购、申购委托的情况下，如开户失败，则该笔认购或申购视为无效申请，认购或申购资金会退回客户的银行卡账户。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='["基金销户", "销户"]' data-num="10" href="#"><span class="mui-icon mui-icon-help"></span> 什么是基金账户销户？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">基金账户销户是指投资者办理基金账户销户业务，办理基金销户投资者需确认该基金账户下已无份额、无在途交易及在途资金，若该基金账户对应多个基金交易账户，则各基金交易账户下都需、无在途交易及在途资金。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='["基金销户", "销户"]' data-num="11" href="#"><span class="mui-icon mui-icon-help"></span> 基金账户销户需要什么条件吗？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">1、基金账户和基金交易账户均处于正常状态，未被冻结、挂失。<br> 2、基金账户和交易账户处于三无状态：无基金份额、无在途交易、无在途资金
                     </li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='["添加银行卡", "多卡交易", "基金交易"]' data-num="12" href="#"><span class="mui-icon mui-icon-help"></span> 小牛新财富的基金交易系统支持多卡交易吗？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">1、小牛新财富基金交易系统本身支持多张银行卡交易；<br> 2、具体是否支持多卡交易，要以各个合作伙伴是否限制单卡交易为准。
                     </li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='["换卡", "更换银行卡", "银行卡"]' data-num="13" href="#"><span class="mui-icon mui-icon-help"></span> 如何更换银行卡？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">1. 旧卡上无份额或在途资金或在途交易，可以直接更换。<br> 2. 旧卡上有持有份额或在途资金或在途交易，需提交相关资料邮寄至小牛新财富，审核通过后方可更换银行卡。您可通过公募—银行卡管理进行操作或咨询0755—88695688。</li>
                   </ul>
                 </li>
@@ -166,75 +170,75 @@
               <ul class="mui-table-view mui-table-view-chevron">
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "申购", "认购"]' data-num="14" href="#"><span class="mui-icon mui-icon-help"></span> 申购和认购有什么区别？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">基金首次募集期购买基金的行为称为认购；在基金成立后购买基金的行为称为申购；一般情况下，认购费率低于申购费率。认购期结束后基金需要进入不超过3个月的封闭建仓期，申购的基金要在申购成功后的第二个工作日进行赎回。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "募集期"]' data-num="15" href="#"><span class="mui-icon mui-icon-help"></span> 什么是基金募集期？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">基金募集期指基金合同和招募说明书中载明，并经中国证监会核准的基金份额募集期限，自基金份额发售之日起，一般为一到三个月不等，最长不超过三个月。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "净值", "认购"]' data-num="16" href="#"><span class="mui-icon mui-icon-help"></span> 认购后基金何时公布净值？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">基金成立当天开始公布净值。当基金处于封闭期时，每周公布一次净值（公布每周五当天的净值）。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "认购", "份额"]' data-num="17" href="#"><span class="mui-icon mui-icon-help"></span> 认购份额与实际份额不一致?</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">由于募集期间，基金公司会对投资者的认购金额按日支付利息，待募集期结束，基金公司会将投资者的利息折算成基金份额加入投资者的基金账户。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "申购"]' data-num="18" href="#"><span class="mui-icon mui-icon-help"></span> 什么是基金申购？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">申购是指投资人在基金成立之后，按照当日收市后计算出的基金单位资产净值加上少量手续费购买基金的行为。通常投资者在开放日，即上海证券交易所和深圳证券交易所的交易日（上午9:00—下午15:00），15:00前提交的有效申购申请，将按“未知价”原则以当日计算出的净值确认，15:00之后提交的申请通常按下一开放日计算的净值确认。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "份额", "申购"]' data-num="19" href="#"><span class="mui-icon mui-icon-help"></span> 申购基金，按哪一天的净值计算份额？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">工作日15：00前的交易按当日净值计算，15点之后按下一个工作日的净值计算。如果是非交易日（周末或节假日），则视作下一交易日的交易申请。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "撤单", "撤销"]' data-num="20" href="#"><span class="mui-icon mui-icon-help"></span> 认/申购申请是否可以撤单？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">投资者在基金认购期内已经正式受理的认购申请不得撤销。<br> 对于在当日基金业务办理时间内提交的申购申请，投资者可以在当日15：00前提交撤销申请，予以撤销。15：00后则无法撤销申请。
                     </li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "赎回"]' data-num="21" href="#"><span class="mui-icon mui-icon-help"></span> 什么是基金赎回？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">赎回是指投资人将已经持有的开放式基金单位出售给基金管理人，收回资金的行为。通常投资者在开放日，即上海证券交易所和深圳证券交易所的交易日（上午9:00—下午15:00），15:00前提交的有效赎回申请，将按“未知价”原则以当日计算出的净值确认，15:00之后提交的申请通常按下一开放日计算的净值确认。基金遇到大规模赎回的，依基金合同规定办理。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "赎回", "到账时间"]' data-num="22" href="#"><span class="mui-icon mui-icon-help"></span> 基金赎回到账时间？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">普遍来说，<br> 货币基金赎回到账时间一般为T+1至T+2个工作日；<br> 国内股票、混合、债券型基金到账时间一般为T+2至T+4个工作日；<br> 海外型QDII基金赎回到账时间一般为T+4至T+10个工作日。<br> 具体以产品实际到账时间为准。也可查询《招募说明书》核实到账时间。
                     </li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "到账", "赎回"]' data-num="23" href="#"><span class="mui-icon mui-icon-help"></span> 我赎回的基金确认成功了怎么还没到账？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">基金赎回交易确认和基金赎回资金到账时间是独立的。基金赎回确认后，会从基金账户中扣除份额，届时可以通过基金账户查询到份额减少，并不代表资金到账，不同的基金赎回到账时间不同，您可以通过基金招募说明书，查询基金的赎回款划出时间和预计到达时间。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "赎回", "净值"]' data-num="24" href="#"><span class="mui-icon mui-icon-help"></span> 赎回基金按照哪天净值确认？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">一般情况下，交易日 15:00以前提交赎回申请，按当天净值确认；交易日15:00以后或非交易日提交赎回申请，按下一交易日净值确认。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "货币基金", "收益", "周末"]' data-num="25" href="#"><span class="mui-icon mui-icon-help"></span> 周五赎回货币基金，是否享受周末收益？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">投资者周五交易时间内赎回货币基金，自下一交易日即下周一起不享有基金的分配权益，但仍享受赎回当天及周末的收益。</li>
                   </ul>
                 </li>
@@ -248,77 +252,77 @@
               <ul class="mui-table-view mui-table-view-chevron">
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "分红"]' data-num="26" href="#"><span class="mui-icon mui-icon-help"></span> 什么是基金分红？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">基金分红是指基金将收益的一部分以现金或折算成基金份额的形式派发给投资人，这部分收益原来就是基金份额净值的一部分。按照《证券投资基金运作管理办法》的规定，封闭式基金的收益分配，每年不得少于一次，封闭式基金年度收益分配比例不得低于基金年度已实现收益的百分之九十；开放式基金的基金合同应当约定每年基金收益分配的最多次数和基金收益分配的最低比例。开放式基金的默认分红方式为现金红利，投资人可以在购买时自行设定或在确认份额后将其修改为“红利再投资”。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "分红", "现金分红", "红利再投资"]' data-num="27" href="#"><span class="mui-icon mui-icon-help"></span> 基金分红有哪两种方式？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">基金分红主要有两种方式：一种是现金分红，一种是红利再投资。 现金分红：是指基金分红时，基金公司将投资者分红所得以现金形式派发给投资者的一种分红方式。 红利再投资：是指基金分红时，基金投资者将分红所得的现金直接用于申购本基金份额的一种形式，红利再投资部分不收取申购费用。<br> 持有人可以根据投资安排设置基金的分红方式，通常情况下，开放式基金默认的分红方式为现金分红，货币理财型基金的分红方式仅为红利再投资。各基金的分红方式的设置以基金合同规定为准
                     </li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "分红"]' data-num="28" href="#"><span class="mui-icon mui-icon-help"></span> 投资者可享受基金分红的条件是什么?</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">如权益登记日为T日，则收益分配对象为T日登记在册的本基金全体持有人，即T日登记在册的基金份额享有基金红利分配权。<br> 因此在T日申购和基金转换转入的基金份额无红利分配权，在T日赎回和基金转换转出的基金份额享有红利分配权。
                     </li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "分红", "净值"]' data-num="29" href="#"><span class="mui-icon mui-icon-help"></span> 为什么基金分红后净值会下降?</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">由于基金进行分红，除息后的净值是在除息当天清算出来单位净值基础上直接减去每份分红金额后的净值。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "分红"]' data-num="30" href="#"><span class="mui-icon mui-icon-help"></span> 红利再投有哪些优点？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">红利再投不收取费用。如果投资者领取现金红利后，又要再追加投资的话，将视为新的申购，需要支付申购费用。因此，选择红利再投有利于降低投资者的成本。同时，对开放式基金进行长期投资，如果选择红利再投方式则可享受基金投资增值的复利增长效果。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "撤单"]' data-num="31" href="#"><span class="mui-icon mui-icon-help"></span> 基金申购撤单后资金回到什么地方？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">通过银行卡扣款申购的撤单后资金T+1回到银行卡.</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "管理费", "费用"]' data-num="32" href="#"><span class="mui-icon mui-icon-help"></span> 什么是基金的管理费？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">基金管理费指基金管理人管理基金资产所收取的报酬。基金管理人可按固定费率或固定费率加提业绩表现费的方式收取管理费。业绩表现费指固定管理费之外的支付给基金管理人的与基金业绩挂钩的费用。按固定费率收取的管理费按基金资产净值的一定比例逐日计算，按月提取。国内的管理费通常为1.5%，根据不同的基金类型也会有所不同。日管理费＝计算日基金资产净值×管理费率÷当年天数。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "托管费", "费用"]' data-num="33" href="#"><span class="mui-icon mui-icon-help"></span> 什么是基金托管费？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">基金托管费是指基金托管人托管基金资产所收取的费用，通常按基金资产净值的一定比例逐日计算，按月提取。国内的托管费通常为0.25%，根据不同的基金类型也会有所不同。 日托管费＝计算日基金资产净值×托管费率÷当年天数。
                     </li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "销售服务费", "费用"]' data-num="34" href="#"><span class="mui-icon mui-icon-help"></span> 什么是基金销售服务费？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">销售服务费主要用于支付销售机构佣金、以及基金管理人的基金行销广告费、促销活动费、持有人服务费等。并不是所有基金都有销售服务费，通常是货币基金或C类的债券基金会有销售服务费。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "前端", "后端", "收费"]' data-num="35" href="#"><span class="mui-icon mui-icon-help"></span> 什么是前端/后端收费？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">这是针对基金的认/申购费而言的。如果认/申购费是在购买基金时收取，通常按照购买金额的大小递减，称为前端收费；在赎回时补收认/申费的，通常按照基金持有时间的长短递减，称为后端收费。有些后端收费在持有基金到达一定年限后可免除。</li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "申购", "计算公式"]' data-num="36" href="#"><span class="mui-icon mui-icon-help"></span> 申购基金的计算公式？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">净申购金额=申购金额/（1+申购费率）<br> 申购费用=申购金额-净申购金额 <br>申购份额=净申购金额/T日基金份额净值
                     </li>
                   </ul>
                 </li>
                 <li class="mui-table-view-cell mui-collapse">
                   <a class="mui-navigate-right" data-key='[ "赎回", "计算公式"]' data-num="37" href="#"><span class="mui-icon mui-icon-help"></span> 赎回基金的计算公式？</a>
-                  <ul class="mui-table-view mui-table-view-chevron">
+                  <ul class="mui-table-view mui-table-view-chevron subUl">
                     <li class="mui-table-view-cell">赎回总额=赎回份额×T日基金单位净值<br> 赎回费用=赎回总额x赎回费率<br> 赎回金额=赎回总额-赎回费用
                     </li>
                   </ul>
@@ -330,7 +334,7 @@
       </div>
     </div>
   </div>
-  </div>
+
   <div class="search-key" id="searchKey" style="display:none;">
     <p>大家都在问</p>
     <div class="mui-btn mui-btn-primary">
@@ -414,6 +418,8 @@
       quesContent.style.display = 'block';
       btn.style.display = 'none';
       this.style.display = 'none';
+    	
+    	input.style.width ="100%";
       document.getElementsByClassName('mui-input-row')[0].classList.remove('search-height');
     })
     btn.addEventListener('click', function(e) {
@@ -427,7 +433,6 @@
     }
 
     function searchQues(value) {
-      // console.log(value);
       var frag = document.createDocumentFragment();
       for (var i = 0; i < ques.length; i++) {
         if (JSON.parse(ques[i].dataset.key).indexOf(value) != -1) {
@@ -447,6 +452,9 @@
       quit.style.display = 'inline-block';
       document.getElementById('helpWrap').style.display = 'none';
       btn.style.display = 'block';
+  
+  		input.style.width ="85%";
+  
     }
   </script>
 </body>

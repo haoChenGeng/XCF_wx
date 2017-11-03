@@ -20,25 +20,39 @@
 					fundCode: fundCode
 				},
 				success: function(res) {
-					var prdData =res.data;		//产品指数
+					var prdData =res.data.fundCure;		//产品指数
+					if(res.data.fundtype ==0){
+		        		document.getElementById("netVal").innerHTML ="单位净值(元)";
+		        		document.getElementById("dayGrowUp").innerHTML ="日涨跌幅(%)";						
+					}
+		        	else if(res.data.fundtype ==2){
+		        		document.getElementById("netVal").innerHTML ="单位净值(元)";
+		        		document.getElementById("dayGrowUp").innerHTML ="日涨跌幅(%)";
+		        	}					
+		
 					if(index == 30) {
 						index = 30;
 					} else if(!index) {
 						index = prdData.length;
 					}
 					for(var i = 0; i < index; i++) {
-						li_1 = document.createElement('li');
-						li_2 = document.createElement('li');
-						li_3 = document.createElement('li');
-						li_2.className = "mui-text-center";
-						li_3.className = "mui-text-right text-warning";
-						li_1.innerHTML = prdData[i].net_date;
-						li_2.innerHTML = prdData[i].net_day_nav;
-						li_3.innerHTML = prdData[i].net_day_growth;
-						fragment.appendChild(li_1);
-						fragment.appendChild(li_2);
-						fragment.appendChild(li_3);
-						ul.appendChild(fragment);
+						
+						if(prdData[i].net_day_nav !=null){	//w为null或0处理
+							li_1 = document.createElement('li');
+							li_2 = document.createElement('li');
+							li_3 = document.createElement('li');
+							li_2.className = "mui-text-center";
+							li_3.className = "mui-text-right text-warning";
+							li_1.innerHTML = prdData[i].net_date;
+							li_2.innerHTML = prdData[i].net_day_nav;
+							li_3.innerHTML = prdData[i].net_day_growth;
+							fragment.appendChild(li_1);
+							fragment.appendChild(li_2);
+							fragment.appendChild(li_3);
+							ul.appendChild(fragment);	
+						}
+						
+
 					}
 				}
 			});
