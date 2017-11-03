@@ -133,6 +133,9 @@ class Fund_interface
 			if (!$this->CI->db->table_exists($tableName)){
 				$this->creatFundNetValue($tableName);
 			}
+			if (empty($startDate)){
+				$this->CI->db->truncate($tableName);
+			}
 			$updateData = &$fundNetvalue['data'];
 			$currentdate = date('Y-m-d',time());
 			foreach ($updateData as $key=>$val){
@@ -145,7 +148,11 @@ class Fund_interface
 				}
 			}
 			$this->CI->load->model("Model_db");
-			$flag = $this->CI->Model_db->incremenUpdate($tableName, $fundNetvalue['data'], 'net_date');
+			if (empty($startDate)){
+				$flag = $this->CI->Model_db->batch_insert($tableName, $fundNetvalue['data']);
+			}else{
+				$flag = $this->CI->Model_db->incremenUpdate($tableName, $fundNetvalue['data'], 'net_date');
+			}
 			if ($fundType != 2){
 				$fields = $this->CI->db->query("SHOW FULL COLUMNS FROM ".$tableName)->result_array();
 				$fields = setkey($fields,'Field');

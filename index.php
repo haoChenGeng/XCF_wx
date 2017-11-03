@@ -99,7 +99,7 @@ switch (ENVIRONMENT)
  * Include the path if the folder is not in the same directory
  * as this file.
  */
-	define('WXCODEPATH', '/data/XCFWXFund/');	
+	define('WXCODEPATH', '');	
 	if(ENVIRONMENT=='production')
 		$system_path = WXCODEPATH.'system'; //运维定义安全目录,用于存放运行代码,请修改fundwx为对应的安全目录名字
 	else

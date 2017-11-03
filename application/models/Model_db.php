@@ -11,7 +11,7 @@ class Model_db extends CI_Model {
 		parent::__construct();
 		$this->load->database();
 		$this->load->helper('comfunction_helper');
-		$this->maxOperitem = 200;
+		$this->maxOperitem = 500;
 	}
 	
 	public function getdata($table, $filter,$select='*' ){
@@ -86,27 +86,25 @@ class Model_db extends CI_Model {
 			$dbData = setkey($dbData,$majorKey);
 			$newData = setkey($newData,$majorKey);
 		}
-		$i = 0;
+		$i = $j = 0;
 		$flag = TRUE;
 		$insertData = array();
 		foreach ($newData as $key => $val)
 		{
-			$updateData = array();
+			$updateFlag = 0;
 			if (isset($dbData[$key])){
 				foreach ($dbFields as $v){
-					if (isset($val[$v]) && $dbData[$key][$v] != $val[$v]){
-						$updateData[$v] = $val[$v];
-					}
-				}
-				if (!empty($updateData)){
-					if(is_array($majorKey)){
-						foreach ($majorKey as $k){
-							$where[$k] = $val[$k];
+					if (isset($val[$v])){
+						if ($dbData[$key][$v] != $val[$v]){
+							$updateFlag = 1;
 						}
 					}else{
-						$where = array($majorKey=>$key);
+						$val[$v] = $dbData[$key][$v];
 					}
-					$flag = $flag && $this->db->set($updateData)->where($where)->update($tableName);
+				}
+				if ($updateFlag == 1){
+					$updateData[] = $val;
+					$j++;
 				}
 			}else{
 				foreach ($dbFields as $v){
@@ -116,83 +114,37 @@ class Model_db extends CI_Model {
 						$insertData[$i][$v] = $dbFieldDefault[$v];
 					}
 				}
-				if ($i >= $this->maxOperitem) {
-					$flag = $flag && $this->db->insert_batch($tableName,$insertData);
-					$i = 0;
-					$insertData = array();
-				}else{
-					$i++;
-				}
+				$i++;
 			}
 		}
 		if (!empty($insertData)){
-			$flag = $flag && $this->db->insert_batch($tableName,$insertData);
+			$flag = $flag && $this->batch_insert($tableName,$insertData);
+		}
+		if (!empty($updateData)){
+			$flag = $flag && $this->batchUpdate($tableName,$updateData,$majorKey);
 		}
 		return $flag;
 	}
 	
-	function renewDatas(&$newData,$tableName,$majorKey,&$msg=''){                    //更新函数,不插入新记录
-		$dbData = $this->db->get($tableName)->result_array();
-		if (empty($dbData)){
-			$dbInfo = $res = $this->db->field_data($tableName);
-			foreach ($dbInfo as $val){
-				$dbFields[] = $val->name;
-			}
-		}else{
-			$dbFields = array_keys(current($dbData));
+	function batch_insert($tableName, &$newData,$db=null){
+		if (empty($db)){
+			$db = $this->db;
 		}
-/* 		$singleData = end($newData);
-		foreach ($dbFields as $key=>$val){
-			if (!array_key_exists($val,$singleData)){
-				unset($dbFields[$key]);
-			}
-		} */
-		if (is_array($majorKey)){
-			$dbData = setMutliKey($dbData,$majorKey);
-			$newData = setMutliKey($newData,$majorKey);
-		}else{
-			$dbData = setkey($dbData,$majorKey);
-			$newData = setkey($newData,$majorKey);
-		}
-		$flag = TRUE;
-		foreach ($newData as $key => $val)
-		{
-			$updateData = array();
-			if (isset($dbData[$key])){
-				foreach ($dbFields as $v){
-					if (isset($val[$v]) && $dbData[$key][$v] != $val[$v]){
-						$updateData[$v] = $val[$v];
-					}
-				}
-				if (!empty($updateData)){
-					if(is_array($majorKey)){
-						foreach ($majorKey as $k){
-							$where[$k] = $val[$k];
-						}
-					}else{
-						$where = array($majorKey=>$key);
-					}
-					$flag = $flag && $this->db->set($updateData)->where($where)->update($tableName);
-				}
-			}else{
-				$msg .= $key.', ';
-			}
-		}
-		return $flag;
-	}
-	
-	function batch_insert($tableName, &$newData){
 		$flag = true;
 		if (!empty($newData)){
 			$insertData = array_chunk($newData, $this->maxOperitem);
 			foreach ($insertData as $val){
-				$flag = $flag && $this->db->insert_batch($tableName,$val);
+				$db->insert_batch($tableName,$val);
+				$flag = $flag && ($db->error()['code'] == 0);
 			}
 		}
 		return $flag;
 	}
 	
-	function batch_update($tableName,$updateData,&$whereIn,$key,$type = 1){
+	//-----------将多个数据的多个字段批量设置为同一个值----------
+	// $key字符串  where_in或where_not_in关联的字段
+	// $type =1 采用where_in，其它采用where_not_in
+	function batchSet($tableName,$updateData,&$whereIn,$key,$type = 1){
 		if (!empty($updateData) && !empty($whereIn)){
 			$subWhereIN = array_chunk($whereIn, $this->maxOperitem);
 			if ($type ==1){
@@ -208,7 +160,7 @@ class Model_db extends CI_Model {
 	}
 	
 	function batch_get($tableName,$select,&$whereIn,$key,$db=null,$where=null){
-		if (null == $db){
+		if (empty($db)){
 			$db = $this->db;
 		}
 		$returnData = array();
@@ -224,5 +176,162 @@ class Model_db extends CI_Model {
 		}
 		return $returnData;
 	}
+	
+	//-----------批量更新数据函数----------
+	// $majorKey为空，采用insert into的方式进行更新，会依据数据库中表$tableName设置的主键进行更新,同时会进行增量更新
+	// $majorKey为数组采用建立临时表的方式进行更新
+	// $majorKey为字符串时，采用CI自带update_batch进行更新
+	public function batchUpdate($tableName,&$datas,$majorKey='',$db=null){
+		if (empty($db)){
+			$db = $this->db;
+		}
+		if (empty($datas)){
+			return false;
+		}else{
+			$flag = true;
+		}
+		if (is_array($majorKey) || empty($majorKey)){
+			$fields = $db->query("SHOW FULL COLUMNS FROM ".$tableName)->result_array();
+			if (!empty($majorKey)){
+				$creatFields = "(";
+				$setStr = $whereStr = "";
+				$tmpTab = "Tmp_".$tableName.time();
+				foreach ($fields as $val){
+					$creatFields .= $val['Field']." ".$val['Type'].',';
+					if (!in_array($val['Field'], $majorKey)){
+						$setStr .= " org.".$val['Field']."=tmp.".$val['Field'].",";
+					}else{
+						$whereStr .= " org.".$val['Field']."=tmp.".$val['Field']." AND ";
+					}
+				}
+				if (!empty($setStr) && !empty($whereStr)){
+					$setStr[strlen($setStr)-1] = " ";
+					$whereStr = substr($whereStr,0,-4);
+				}else{
+					var_dump("majorKey 设置错误！");
+					return false;
+				}
+				$creatFields[strlen($creatFields)-1] = ")";
+			}else{
+				$PRIKeys = array();
+				foreach ($fields as $val){
+					if ( 'PRI' == $val['Key']){
+						$PRIKeys[] = $val['Field'];
+					}
+				}
+				if (empty($PRIKeys)){
+					var_dump("表格".$tableName."的主键设置为空");
+					return false;
+				}else{
+					$fields = " (";
+					$updateFields = '';
+					foreach (array_keys(current($datas)) as $val){
+						$fields .= '`'.$val.'`,';
+						if (!in_array($val, $PRIKeys)){
+							$updateFields .= "`".$val."`=values(`".$val."`),";
+						}
+					}
+					$fields[strlen($fields)-1] = ")";
+					if (!empty($updateFields)){
+						$updateFields[strlen($updateFields)-1] = " ";
+					}else{
+						return 0;
+					}
+				}
+			}
+		}
+		$updateDatas = array_chunk($datas, $this->maxOperitem);
+		foreach ($updateDatas as &$updateData){
+			if (empty($majorKey)){
+				$sql = "insert into ".$tableName.$fields." values";
+				foreach ($updateData as $value){
+					$sql .=' (';
+					foreach ($value as $val){
+						$sql .= "'".$val."',";
+					}
+					$sql[strlen($sql)-1] = ")";
+					$sql .=",";
+				}
+				$sql[strlen($sql)-1] = " ";
+				$sql .= "on duplicate key update ".$updateFields;
+				$db->query($sql);
+				$flag = $flag && ($db->error()['code'] == 0);
+			}else{
+				if (is_array($majorKey)){
+					$tmpData = "";
+					foreach ($updateData as $val){
+						$tmpData .= " (";
+						foreach ($fields as $v){
+							$tmpData .= "'".$val[$v['Field']]."',";
+						}
+						$tmpData[strlen($tmpData)-1] = ")";
+						$tmpData .=',';
+					}
+					$tmpData[strlen($tmpData)-1] = ";";
+					$db->trans_start();
+					$sql = "create temporary table ".$tmpTab.$creatFields.";";
+					$db->query($sql);
+					$flag = $flag && ($db->error()['code'] == 0);
+					$sql = "insert into ".$tmpTab." values".$tmpData;
+					$db->query($sql);
+					$flag = $flag && ($db->error()['code'] == 0);
+					$sql = "update ".$tableName." org,".$tmpTab." tmp set".$setStr."where".$whereStr.";";
+					$db->query($sql);
+					$flag = $flag && ($db->error()['code'] == 0);
+					$sql = " DROP TABLE ".$tmpTab.";";
+					$db->query($sql);
+					$db->trans_complete();
+				}else{
+					$db->update_batch($tableName, $updateData, $majorKey);
+					$flag = $flag && ($db->error()['code'] == 0);
+				}
+			}
+		}
+		return $flag;
+	}
+/* 	
+	function renewDatas(&$newData,$tableName,$majorKey,&$msg=''){                    //更新函数,不插入新记录
+		$dbData = $this->db->get($tableName)->result_array();
+		if (empty($dbData)){
+		 $dbInfo = $res = $this->db->field_data($tableName);
+		 foreach ($dbInfo as $val){
+		 	$dbFields[] = $val->name;
+		 }
+		}else{
+		 $dbFields = array_keys(current($dbData));
+		}
+		if (is_array($majorKey)){
+		 $dbData = setMutliKey($dbData,$majorKey);
+		 $newData = setMutliKey($newData,$majorKey);
+		}else{
+		 $dbData = setkey($dbData,$majorKey);
+		 $newData = setkey($newData,$majorKey);
+		}
+		$flag = TRUE;
+		foreach ($newData as $key => $val)
+		{
+		 $updateData = array();
+		 if (isset($dbData[$key])){
+		 	foreach ($dbFields as $v){
+		 		if (isset($val[$v]) && $dbData[$key][$v] != $val[$v]){
+		 			$updateData[$v] = $val[$v];
+		 		}
+		 	}
+		 	if (!empty($updateData)){
+		 		if(is_array($majorKey)){
+		 			foreach ($majorKey as $k){
+		 				$where[$k] = $val[$k];
+		 			}
+		 		}else{
+		 			$where = array($majorKey=>$key);
+		 		}
+		 		$flag = $flag && $this->db->set($updateData)->where($where)->update($tableName);
+		 	}
+		 }else{
+		 	$msg .= $key.', ';
+		 }
+		}
+		return $flag;
+	} */
 
 }
