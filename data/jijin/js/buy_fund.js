@@ -245,7 +245,7 @@ function partition(arr, left, right,a) {
     var pivot = left,
         index = pivot + 1;
     for (var i = index; i <= right; i++) {
-        if (parseFloat(arr[i][a]) > parseFloat(arr[pivot][a])) {
+        if (Math.abs(parseFloat(arr[i][a])) > Math.abs(parseFloat(arr[pivot][a]))) {
             swap(arr, i, index);
             index++;
         }
