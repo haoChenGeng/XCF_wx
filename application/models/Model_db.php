@@ -95,15 +95,16 @@ class Model_db extends CI_Model {
 			if (isset($dbData[$key])){
 				foreach ($dbFields as $v){
 					if (isset($val[$v])){
+						$renewData[$v] = $val[$v];
 						if ($dbData[$key][$v] != $val[$v]){
 							$updateFlag = 1;
 						}
 					}else{
-						$val[$v] = $dbData[$key][$v];
+						$renewData[$v] = $dbData[$key][$v];
 					}
 				}
 				if ($updateFlag == 1){
-					$updateData[] = $val;
+					$updateData[] = $renewData;
 					$j++;
 				}
 			}else{
