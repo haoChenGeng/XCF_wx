@@ -491,6 +491,7 @@ class Fund_bank extends MY_Controller
  									$err_msg = '密码输入错误';
  									break;
  								case '-440117034':
+ 								case '-440114020':
  									$err_msg = $oper_res['msg'];
  									break;
  								default:

@@ -65,9 +65,10 @@ class Model_db extends CI_Model {
 		return $num;
 	}
 	
-	public function incremenUpdate($tableName, &$newData, $majorKey){                  //增量更新函数，可插入新记录
+	// 更新函数($newData每个元素的字段可以不同) $add = 1 增量更新，可插入新记录; $add = 0 非增量更新，不插入新记录
+	public function incremenUpdate($tableName, &$newData, $majorKey, $add = 1){
 		$dbData = $this->db->get($tableName)->result_array();
-		if (!strstr($tableName,$this->db->dbprefix)){
+		if (!empty($this->db->dbprefix) && !strstr($tableName,$this->db->dbprefix)){
 			$tableName = $this->db->dbprefix($tableName);
 		}
 		$tableInfo = $this->db->query("SHOW FULL COLUMNS FROM ".$tableName)->result_array();
@@ -107,7 +108,7 @@ class Model_db extends CI_Model {
 					$updateData[] = $renewData;
 					$j++;
 				}
-			}else{
+			}elseif ($add == 1){
 				foreach ($dbFields as $v){
 					if (isset($val[$v])){
 						$insertData[$i][$v] = $val[$v];
