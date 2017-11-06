@@ -21,22 +21,20 @@
 				},
 				success: function(res) {
 					var prdData =res.data.fundCure;		//产品指数
-					if(res.data.fundtype ==0){
+					if(res.data.fundtype != 2){
 		        		document.getElementById("netVal").innerHTML ="单位净值(元)";
 		        		document.getElementById("dayGrowUp").innerHTML ="日涨跌幅(%)";						
 					}
 		        	else if(res.data.fundtype ==2){
-		        		document.getElementById("netVal").innerHTML ="单位净值(元)";
-		        		document.getElementById("dayGrowUp").innerHTML ="日涨跌幅(%)";
-		        	}					
-		
+		        		document.getElementById("netVal").innerHTML ="万份收益(元)";
+		        		document.getElementById("dayGrowUp").innerHTML ="七日年化(%)";
+		        	}
 					if(index == 30) {
 						index = 30;
 					} else if(!index) {
 						index = prdData.length;
 					}
-					for(var i = 0; i < index; i++) {
-						
+					for(var i = 0; i < index; i++) {						
 						if(prdData[i].net_day_nav !=null){	//w为null或0处理
 							li_1 = document.createElement('li');
 							li_2 = document.createElement('li');

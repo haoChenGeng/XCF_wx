@@ -405,7 +405,6 @@ window.onload = function() {
 		for(var i = 0; i < threeData.length; i++) {			
 			opThree.xAxis.data[i] = threeData[i].net_date;
 			d.data[i] = threeData[i].net_day_growth;
-			
 		}
 		
 		opThree.xAxis.data.reverse();
