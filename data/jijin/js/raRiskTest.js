@@ -8,7 +8,6 @@ window.onload = function() {
     timeout: 10000,
     async: false,
     success: function(res) {
-      // console.log(res);
       if (!res || res.code !== '0000') {
         alert('获取题目出错，请稍后再试！')
       } else {
@@ -78,10 +77,8 @@ function renderTest(data) {
       '</div>';
     }
     element.innerHTML = item;
-    // console.log(item);
     frag.appendChild(element);
   }
-  // console.log(frag);
   var app = document.getElementById('app');
   app.parentNode.insertBefore(frag, app.nextSibling);
   initView();
@@ -95,7 +92,6 @@ function initView() {
 
   var res = [];
   document.getElementById('app').addEventListener('tap', function(e) {
-    console.log(e.target);
     var self = e.target;
 
     if (self.classList.contains('test-item')) {
@@ -226,9 +222,7 @@ function getTestResult(data) {
     dataType: 'json',
     timeout: 10000,
     success: function(res) {
-      // console.log(res);
       if (res.code == '0000') {
-        // alert('测评成功');
         window.location.href = '/application/views/roboAdvisor/showRiskResult.html';
       } else {
         alert(res.msg);
@@ -237,5 +231,5 @@ function getTestResult(data) {
     error: function(xhr) {
       alert('网络错误');
     }
-  })
+  });
 }
