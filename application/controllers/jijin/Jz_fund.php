@@ -397,9 +397,9 @@ class Jz_fund extends MY_Controller
 			$this->db->where(array('risklevel <='=>$_SESSION['riskLevel']));
 		}
 		if ( 2 == $fundtype ){
-			$this->db->select('status,fundcode,fundname,fundincomeunit,growthrate')->order_by('growthrate',"DESC");
+			$this->db->select('status,fundcode,fundname,fundincomeunit,round(growthrate,2) as growthrate')->order_by('growthrate',"DESC");
 		}else{
-			$this->db->select('status,fundcode,fundname,nav,growth_day,growth_week,growth_onemonth,growth_threemonth,growth_sixmonth,growth_year')->order_by('growth_year',"DESC");
+			$this->db->select('status,fundcode,fundname,nav,round(growth_day,2) as growth_day,round(growth_week,2) as growth_week,round(growth_onemonth,2) as growth_onemonth,round(growth_threemonth,2) as growth_threemonth,round(growth_sixmonth,2) as growth_sixmonth,round(growth_year,2) as growth_year')->order_by('growth_year',"DESC");
 		}
 		$res = $this->db->where(array('fundtype'=>$fundtype))->get('fundlist')->result_array();
 		$this->load->config('jz_dict');

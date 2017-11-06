@@ -48,7 +48,6 @@ window.onload = function() {
 						fundnews.appendChild(li);
 					}
 					var fundAllocat = res.data.asset_allocation; //资金配置
-					console.log(fundAllocat);
 					var div = dc.getElementById("fundSets");
 					for(var funds in fundAllocat) {
 						var fundnames = "";

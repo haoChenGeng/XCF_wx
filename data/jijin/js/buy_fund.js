@@ -13,7 +13,7 @@ function getFundType() {
     },
     timeout: 10 * 1000,
     success: function(res) {
-      console.log(res);
+// console.log(res);
       if (!res) {
         alert('无数据！');
       } else if (res.code !== '0000' || !res.code) {
@@ -34,7 +34,7 @@ function getFundType() {
     error: function(xhr) {
       alert('请求错误');
     }
-  })
+  });
 }
 
 function renderFundType(data) {
@@ -101,9 +101,7 @@ function renderFundList(fundtype) {
       if (!res.data[fundtype]) {
         listWrap.innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';
       } else {
-
         listWrap.innerHTML = '';
-        var fundListData = res.data[fundtype];
 
         if (fundtype == 2) {
           listTitle.innerHTML = '<div class="fundlist-name">基金名称</div><div class="fundlist-networth">万分收益(元)</div><div class="fundlist-return">七日年化</div>';
@@ -112,7 +110,7 @@ function renderFundList(fundtype) {
           for (var i = 0; i < fundListData.length; i++) {
             var oLi = document.createElement('li');
             oLi.setAttribute('class', 'mui-table-view-cell');
-            oLi.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].fundincomeunit + '</div><div class="fundlist-growthrate">' + (fundListData[i].growthrate * 100).toFixed(2) + '%</div></a>';
+            oLi.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].fundincomeunit + '</div><div class="fundlist-growthrate">' + (fundListData[i].growthrate) + '%</div></a>';
             frag.appendChild(oLi);
           }
           listWrap.appendChild(frag);
@@ -129,30 +127,46 @@ function renderFundList(fundtype) {
           var fragYear = document.createElement('ul');
           fragYear.classList.add('mui-table-view');
 
-          for (var i = 0; i < fundListData.length; i++) {
+          var growth_day,growth_onemonth,growth_threemonth,growth_sixmonth,growth_year;
+          var dayData = quickSort(fundListData,growth_day);
+          var oneData = quickSort(fundListData,growth_onemonth);
+          var threeData = quickSort(fundListData,growth_threemonth);
+          var sixData = quickSort(fundListData,growth_sixmonth);
+          var yearData = quickSort(fundListData,growth_year);
+          
+console.log(dayData);
+          for (var i = 0; i < dayData.length; i++) {
             var oLiDay = document.createElement('li');
             oLiDay.classList.add('mui-table-view-cell');
-            oLiDay.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_day * 100).toFixed(2) + '%</div></a>';
-            fragDay.appendChild(oLiDay);
+            oLiDay.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + dayData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + dayData[i].fundname + '</div><div class="fundlist-networth">' + dayData[i].nav + '</div><div class="fundlist-growthrate">' + (dayData[i].growth_day) + '%</div></a>';
+            fragDay.appendChild(oLiDay);            
+          }
 
+          for (var i = 0; i < oneData.length; i++) {
             var oLiOne = document.createElement('li');
             oLiOne.classList.add('mui-table-view-cell');
-            oLiOne.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_onemonth * 100).toFixed(2) + '%</div></a>';
-            fragOnemonth.appendChild(oLiOne);
+            oLiOne.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + oneData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + oneData[i].fundname + '</div><div class="fundlist-networth">' + oneData[i].nav + '</div><div class="fundlist-growthrate">' + (oneData[i].growth_onemonth) + '%</div></a>';
+            fragOnemonth.appendChild(oLiOne);            
+          }
 
+          for (var i = 0; i < threeData.length; i++) {
             var oLiThree = document.createElement('li');
             oLiThree.classList.add('mui-table-view-cell');
-            oLiThree.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_threemonth * 100).toFixed(2) + '%</div></a>';
-            fragThreemonth.appendChild(oLiThree);
+            oLiThree.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + threeData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + threeData[i].fundname + '</div><div class="fundlist-networth">' + threeData[i].nav + '</div><div class="fundlist-growthrate">' + (threeData[i].growth_threemonth) + '%</div></a>';
+            fragThreemonth.appendChild(oLiThree);            
+          }
 
+          for (var i = 0; i < sixData.length; i++) {
             var oLiSix = document.createElement('li');
             oLiSix.classList.add('mui-table-view-cell');
-            oLiSix.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_sixmonth * 100).toFixed(2) + '%</div></a>';
-            fragSixmonth.appendChild(oLiSix);
+            oLiSix.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + sixData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + sixData[i].fundname + '</div><div class="fundlist-networth">' + sixData[i].nav + '</div><div class="fundlist-growthrate">' + (sixData[i].growth_sixmonth) + '%</div></a>';
+            fragSixmonth.appendChild(oLiSix);            
+          }
 
+          for (var i = 0; i < yearData.length; i++) {
             var oLiYear = document.createElement('li');
             oLiYear.classList.add('mui-table-view-cell');
-            oLiYear.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + fundListData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + fundListData[i].fundname + '</div><div class="fundlist-networth">' + fundListData[i].nav + '</div><div class="fundlist-growthrate">' + (fundListData[i].growth_year * 100).toFixed(2) + '%</div></a>';
+            oLiYear.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + yearData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + yearData[i].fundname + '</div><div class="fundlist-networth">' + yearData[i].nav + '</div><div class="fundlist-growthrate">' + (yearData[i].growth_year) + '%</div></a>';
             fragYear.appendChild(oLiYear);
           }
           listWrap.innerHTML = '';
@@ -164,15 +178,13 @@ function renderFundList(fundtype) {
     error: function(res) {
       alert('请求错误，请稍候重试');
     }
-  })
+  });
 }
 
 function chgIncrease(type, day, one, three, six, year) {
   var wrap = document.getElementById('fund' + type).querySelector('.mui-scroll');
   var select = document.getElementById('fund' + type).querySelector('.fundlist-chg');
   select.addEventListener('change', function(e) {
-    console.log(e.target.value);
-    console.log(one);
     switch (e.target.value) {
       case '1':
         wrap.innerHTML = '';
@@ -197,7 +209,7 @@ function chgIncrease(type, day, one, three, six, year) {
       default:
         break;
     }
-  })
+  });
 }
 
 
@@ -207,7 +219,7 @@ function initScroll($) {
   document.getElementById('slider').addEventListener('slide', function(e) {
     var con = e.target.querySelector('#sliderSegmentedControl');
     var tar = con.querySelector('.mui-active');
-    console.log(tar.dataset.type);
+// console.log(tar.dataset.type);
     var load = e.target.querySelector('.mui-slider-group');
     if (load.querySelector('.mui-loading')) {
       renderFundList(tar.dataset.type);
@@ -215,8 +227,8 @@ function initScroll($) {
   });
   var sliderSegmentedControl = document.getElementById('sliderSegmentedControl');
   sliderSegmentedControl.addEventListener('tap', function(e) {
-      console.log(e.target);
-    })
+// console.log(e.target);
+    });
     /* $('.mui-input-group').on('change', 'input', function() {
       if (this.checked) {
         alert(1);
@@ -225,4 +237,21 @@ function initScroll($) {
         sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
       }
     }); */
+}
+
+var quickSort = function(arr,property) {
+　　if (arr.length <= 1) { return arr; }
+　　var pivotIndex = Math.floor(arr.length / 2);
+　　var pivot = arr.splice(pivotIndex, 1)[0];
+    var num = pivot[property];
+　　var left = [];
+　　var right = [];
+　　for (var i = 0; i < arr.length; i++){
+　　　　if (arr[i][property] < num) {
+　　　　　　left.push(arr[i]);
+　　　　} else {
+　　　　　　right.push(arr[i]);
+　　　　}
+　　}
+　　return quickSort(left,property).concat([pivot], quickSort(right,property));
 };
