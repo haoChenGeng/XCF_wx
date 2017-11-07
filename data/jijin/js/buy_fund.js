@@ -127,48 +127,42 @@ function renderFundList(fundtype) {
           var fragYear = document.createElement('ul');
           fragYear.classList.add('mui-table-view');
 
-          var growth_day,growth_onemonth,growth_threemonth,growth_sixmonth,growth_year;
-          var dayData = quickSort(fundListData,growth_day);
-          var oneData = quickSort(fundListData,growth_onemonth);
-          var threeData = quickSort(fundListData,growth_threemonth);
-          var sixData = quickSort(fundListData,growth_sixmonth);
-          var yearData = quickSort(fundListData,growth_year);
-          
-console.log(dayData);
+          var dayData = quickSort(fundListData,0,(fundListData.length - 1),'growth_day');
           for (var i = 0; i < dayData.length; i++) {
             var oLiDay = document.createElement('li');
             oLiDay.classList.add('mui-table-view-cell');
             oLiDay.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + dayData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + dayData[i].fundname + '</div><div class="fundlist-networth">' + dayData[i].nav + '</div><div class="fundlist-growthrate">' + (dayData[i].growth_day) + '%</div></a>';
             fragDay.appendChild(oLiDay);            
           }
-
+          var oneData = quickSort(fundListData,0,(fundListData.length - 1),'growth_onemonth');
           for (var i = 0; i < oneData.length; i++) {
             var oLiOne = document.createElement('li');
             oLiOne.classList.add('mui-table-view-cell');
             oLiOne.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + oneData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + oneData[i].fundname + '</div><div class="fundlist-networth">' + oneData[i].nav + '</div><div class="fundlist-growthrate">' + (oneData[i].growth_onemonth) + '%</div></a>';
             fragOnemonth.appendChild(oLiOne);            
           }
-
+          var threeData = quickSort(fundListData,0,(fundListData.length - 1),'growth_threemonth');
           for (var i = 0; i < threeData.length; i++) {
             var oLiThree = document.createElement('li');
             oLiThree.classList.add('mui-table-view-cell');
             oLiThree.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + threeData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + threeData[i].fundname + '</div><div class="fundlist-networth">' + threeData[i].nav + '</div><div class="fundlist-growthrate">' + (threeData[i].growth_threemonth) + '%</div></a>';
             fragThreemonth.appendChild(oLiThree);            
           }
-
+          var sixData = quickSort(fundListData,0,(fundListData.length - 1),'growth_sixmonth');
           for (var i = 0; i < sixData.length; i++) {
             var oLiSix = document.createElement('li');
             oLiSix.classList.add('mui-table-view-cell');
             oLiSix.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + sixData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + sixData[i].fundname + '</div><div class="fundlist-networth">' + sixData[i].nav + '</div><div class="fundlist-growthrate">' + (sixData[i].growth_sixmonth) + '%</div></a>';
             fragSixmonth.appendChild(oLiSix);            
           }
-
+          var yearData = quickSort(fundListData,0,(fundListData.length - 1),'growth_year');
           for (var i = 0; i < yearData.length; i++) {
             var oLiYear = document.createElement('li');
             oLiYear.classList.add('mui-table-view-cell');
             oLiYear.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + yearData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + yearData[i].fundname + '</div><div class="fundlist-networth">' + yearData[i].nav + '</div><div class="fundlist-growthrate">' + (yearData[i].growth_year) + '%</div></a>';
             fragYear.appendChild(oLiYear);
           }
+
           listWrap.innerHTML = '';
           listWrap.appendChild(fragDay);
           chgIncrease(fundtype, fragDay, fragOnemonth, fragThreemonth, fragSixmonth, fragYear);
@@ -219,7 +213,6 @@ function initScroll($) {
   document.getElementById('slider').addEventListener('slide', function(e) {
     var con = e.target.querySelector('#sliderSegmentedControl');
     var tar = con.querySelector('.mui-active');
-// console.log(tar.dataset.type);
     var load = e.target.querySelector('.mui-slider-group');
     if (load.querySelector('.mui-loading')) {
       renderFundList(tar.dataset.type);
@@ -227,31 +220,43 @@ function initScroll($) {
   });
   var sliderSegmentedControl = document.getElementById('sliderSegmentedControl');
   sliderSegmentedControl.addEventListener('tap', function(e) {
-// console.log(e.target);
     });
-    /* $('.mui-input-group').on('change', 'input', function() {
-      if (this.checked) {
-        alert(1);
-        sliderSegmentedControl.className = 'mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-' + this.value;
-        //force repaint
-        sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
-      }
-    }); */
 }
 
-var quickSort = function(arr,property) {
-　　if (arr.length <= 1) { return arr; }
-　　var pivotIndex = Math.floor(arr.length / 2);
-　　var pivot = arr.splice(pivotIndex, 1)[0];
-    var num = pivot[property];
-　　var left = [];
-　　var right = [];
-　　for (var i = 0; i < arr.length; i++){
-　　　　if (arr[i][property] < num) {
-　　　　　　left.push(arr[i]);
-　　　　} else {
-　　　　　　right.push(arr[i]);
-　　　　}
-　　}
-　　return quickSort(left,property).concat([pivot], quickSort(right,property));
-};
+
+function quickSort(arr, left, right,a) {
+    var len = arr.length,
+        partitionIndex,
+        left = typeof left !== 'number' ? 0 : left,
+        right = typeof right !== 'number' ? len - 1 : right;
+
+    if (left < right) {
+
+        partitionIndex = partition(arr, left, right,a);
+
+        quickSort(arr, left, partitionIndex - 1,a);
+
+        quickSort(arr, partitionIndex + 1, right,a);
+    }
+    return arr;
+}
+
+function partition(arr, left, right,a) {
+    var pivot = left,
+        index = pivot + 1;
+    for (var i = index; i <= right; i++) {
+        if (parseFloat(arr[i][a]) > parseFloat(arr[pivot][a])) {
+            swap(arr, i, index);
+            index++;
+        }
+    }
+    swap(arr, pivot, index - 1);
+
+    return index - 1;
+}
+
+function swap(arr, i, j) {
+    var temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
