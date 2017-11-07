@@ -79,7 +79,7 @@ class Fund_bank extends MY_Controller
     		Message(Array(
     				'msgTy' => 'fail',
     				'msgContent' => $oper_des.'失败，系统正在返回...',
-    				'msgUrl' => $this->base . '/jijin/Jz_my',
+    				'msgUrl' => '/jijin/Jz_my',
     				'base' => $this->base
     				));
     	}else{
@@ -140,8 +140,8 @@ class Fund_bank extends MY_Controller
     			{
     				$submitData = $_SESSION['bankCard_operData'];
     				unset($submitData['depositacct_old'],$submitData['channelname'],$submitData['moneyaccount']);
-    				$submitData['depositacct'] = $post['depositacct'];
-    				$submitData['mobiletelno'] = $post['mobiletelno'];
+    				$submitData['depositacct'] = $_SESSION['bankCard_operData']['depositacct'] = $post['depositacct'];
+    				$submitData['mobiletelno'] = $_SESSION['bankCard_operData']['mobiletelno'] = $post['mobiletelno'];
     				//     			if (!isset($submitData['channelid'])){
     				//     				$submitData['channelid'] = $post['channelid'];
     				//     			}
@@ -187,9 +187,27 @@ class Fund_bank extends MY_Controller
     		Message(Array(
     				'msgTy' => 'fail',
     				'msgContent' => $err_msg.'<br/>系统正在返回...',
-    				'msgUrl' => $this->base . '/jijin/Fund_bank/bank_info',
+    				'msgUrl' => '/jijin/Fund_bank/bank_info',
     				'base' => $this->base
     				));
+    	}
+    }
+    
+    function sendSms(){
+    	$post = $this->input->post();
+    	$submitData = $_SESSION['bankCard_operData'];
+    	unset($submitData['depositacct_old'],$submitData['channelname'],$submitData['moneyaccount']);
+    	$submitData['addBankCard'] = 1;
+    	$logData = $submitData;
+    	$logData['certificateno'] = substr($logData['certificateno'],0,6).'***'.substr($logData['certificateno'],-3);
+    	$logData['depositacct'] = substr($logData['depositacct'],0,3).'***'.substr($logData['depositacct'],-3);
+    	$res_bMS = $this->fund_interface->bgMsgSend($submitData);
+    	myLog('user/'.$post['operation'],"用户:".$_SESSION ['customer_name']."调用bgMsgSend接口\t调用数据:".serialize($logData)."\t返回数据:".serialize($res_bMS));
+    	if ( !isset($res_bMS['code']) || $res_bMS['code'] != '0000' )
+    	{
+    		echo '验证码发送失败';
+    	}else{
+			echo '验证码已发送！';
     	}
     }
   
@@ -297,7 +315,7 @@ class Fund_bank extends MY_Controller
     				Message(Array(
     						'msgTy' => 'sucess',
     						'msgContent' => $oper_des.'成功',
-    						'msgUrl' => $this->base.$msgUrl, //调用我的基金界面
+    						'msgUrl' => $msgUrl, //调用我的基金界面
     						'base' => $this->base
     						));
     				exit;
@@ -332,7 +350,7 @@ class Fund_bank extends MY_Controller
     		Message(Array(
     				'msgTy' => 'fail',
     				'msgContent' => $err_msg.', 正在返回...',
-    				'msgUrl' => $this->base .'/jijin/Fund_bank/bank_info',
+    				'msgUrl' => '/jijin/Fund_bank/bank_info',
     				'base' => $this->base
     				));
     	}
@@ -362,7 +380,7 @@ class Fund_bank extends MY_Controller
     			Message(Array(
     					'msgTy' => 'sucess',
     					'msgContent' => '银行卡激活成功',
-    					'msgUrl' => $this->base.$msgUrl, //调用我的基金界面
+    					'msgUrl' => $msgUrl, //调用我的基金界面
     					'base' => $this->base
     					));
     			exit;
@@ -387,7 +405,7 @@ class Fund_bank extends MY_Controller
     		Message(Array(
     				'msgTy' => 'fail',
     				'msgContent' => $err_msg.', 正在返回...',
-    				'msgUrl' => $this->base .'/jijin/Fund_bank/bank_info',
+    				'msgUrl' => '/jijin/Fund_bank/bank_info',
     				'base' => $this->base
     				));
     	}
@@ -486,7 +504,7 @@ class Fund_bank extends MY_Controller
  							Message(Array(
  									'msgTy' => 'success',
  									'msgContent' => '银行卡注销成功!',
- 									'msgUrl' => $this->base . "/jijin/Fund_bank/bank_info",
+ 									'msgUrl' => "/jijin/Fund_bank/bank_info",
  									'base' => $this->base
  									));
  						}else{
@@ -516,7 +534,7 @@ class Fund_bank extends MY_Controller
  				Message(Array(
  						'msgTy' => 'fail',
  						'msgContent' => isset($err_msg) ? $err_msg : '系统故障, 银行卡注销失败!',
- 						'msgUrl' => $this->base . "/jijin/Fund_bank/bank_info",
+ 						'msgUrl' => "/jijin/Fund_bank/bank_info",
  						'base' => $this->base
  				));
  			}
