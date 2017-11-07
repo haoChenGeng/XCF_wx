@@ -410,10 +410,14 @@ class Fund_bank extends MY_Controller
 				$this->load->config('jz_dict');
 				foreach ($data['bank_info'] as $key => $val)
 				{
-					$data['bank_info'][$key]['status'] = $this->config->item('bankcard_status')[$val['status']];
-					if (empty($data['bank_info'][$key]['status'])) {
-						$data['bank_info'][$key]['status'] = '未知';
-					};
+					if(0 == $val['authenticateflag'] && 0 == $val['status']){
+						$data['bank_info'][$key]['status'] = '未激活';
+					}else{
+						$data['bank_info'][$key]['status'] = $this->config->item('bankcard_status')[$val['status']];
+						if (empty($data['bank_info'][$key]['status'])) {
+							$data['bank_info'][$key]['status'] = '未知';
+						};
+					}
 					$data['bank_info'][$key]['channelname'] = $channel_info[$val['channelid']]['channelname'];
 				}
 			}
