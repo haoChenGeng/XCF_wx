@@ -62,7 +62,8 @@
               ?>
             </li>
             <li class="li05">
-              <a href="/application/views/roboAdvisor/roboAdvisor.html" class="span01">智投</a>
+<!--               <a href="/application/views/roboAdvisor/roboAdvisor.html" class="span01">智投</a> -->
+              <a href="/application/views/roboAdvisor/next.html" class="span01">智投</a>
             </li>
             <li class="li03">
               <a href="/FindPaper" id="sign_in" class="span01">发现</a>
