@@ -318,7 +318,6 @@ class Jz_fund extends MY_Controller
 		}else{
 			$return = array('code'=>2,'msg'=>'该基金不存在');
 		}
-		
 		echo json_encode($return);
 	}
 	
