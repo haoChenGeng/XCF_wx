@@ -56,7 +56,7 @@
             <li class="li02">
             <?php 
               if (isset($_SESSION['customer_id']))
-                echo '<a href="/Pf_assessment/userpfa" id="" class="span01">私募</a>';
+                echo '<a href="/Pf_assessment/userpfa" id="" class="span01" style="padding-left: 40px;">私募</a>';
               else
                 echo '<a href="/user/login/1" id="" class="span01" style="padding-left: 40px;">私募</a>';
               ?>
