@@ -23,7 +23,8 @@
 						echo '<div class="m-item">
 								  <i class="icon icon-phone"></i>
 								  <label>
-						  			  <input type="text" name="verificationCode"  class="w80-p" style="padding-left:10px;" placeholder="请输入短信验证码(必填)"/>
+						  			  <input type="text" name="verificationCode"  class="input" style="padding-left:10px;" placeholder="请输入短信验证码(必填)"/>
+									  <a href="#" id="sendSms" class="input_btn">获取验证码</a>
 								  </label>
 							  </div>';
 					}
@@ -42,5 +43,40 @@
 <script src="http://apps.bdimg.com/libs/zepto/1.1.4/zepto.min.js"></script>
 <script>window.Zepto || document.write('<script src="/data/lib/zepto.min.js"><\/script>')</script>
 <script src="/data/jijin/js/m.min.js"></script>
+
+<script>
+	window.onload = function (){smsDisplay();};
+	
+    $('#sendSms').on('click',function(){
+    	$.post("/jijin/Fund_bank/sendSms", {operation:'bankcard_active'},function(res){
+            M.alert({
+                title:'提示',
+                message:res==null||res==''||res==undefined?'发送失败':res
+            });
+            if( res == '验证码已发送！'){
+            	smsDisplay();
+            }
+        })
+    });
+
+    function smsDisplay(){
+        var timer = null;
+        var times = 60;
+        var oldStr = $('#sendSms').html();
+
+        $('#sendSms').html(times+' 秒');
+        $('#sendSms').attr('disabled','disabled').addClass('disabled');
+        timer = setInterval(function(){
+            if(times==0){
+                clearInterval(timer);
+                $('#sendSms').html(oldStr);
+                $('#sendSms').removeAttr('disabled').removeClass('disabled');
+            }else{
+                times--;
+                $('#sendSms').html(times+' 秒');
+            }
+        },1000);
+    }
+</script>
 
 </html>

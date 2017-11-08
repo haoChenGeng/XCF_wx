@@ -163,7 +163,11 @@
 			}
 		}
 		if (!document.getElementById('tradeFile').checked) {
-			alert('请先阅读并同意相关协议');
+//			alert('请先阅读并同意相关协议');
+            M.alert({
+                title:'提示',
+                message:'请先阅读并同意相关协议'
+            });
 			res = false;
 		}else {
 			res = true;

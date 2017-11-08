@@ -67,11 +67,15 @@
 				<div class="m-item">
 					<i class="icon icon-phone"></i>
 					<label>
-						<input type="text" name="mobiletelno"  class="w80-p" placeholder="请输入银行预留电话"/>
+						<input type="text" name="mobiletelno"  class="w80-p" data-reg="^[1][34578][0-9]{9}$" data-error="手机号错误" placeholder="请输入银行预留电话"/>
 					</label>
 				</div>
 
 			</section>
+			<section>
+				<label for="tradeFile" class="trade-file"><input id="tradeFile" type="checkbox"> 我已阅读并同意<a href="/data/jijin/file/基金电子交易远程服务协议.pdf">《基金电子交易远程协议》</a><a href="/data/jijin/file/委托支付协议.pdf">《委托支付协议》</a><a href="/data/jijin/file/投资者须知.pdf">《投资者须知》</a></label>
+			</section>
+			
 			<section class="m-btn-wrap">
 				<input class="btn" type="button" value="下一步"/>
 			</section>
@@ -112,6 +116,7 @@
 	Zepto(function($) {
 		M.checkBoxInit();
         $('.btn').on('click', function () {
+        	if(!validate()) return;
             M.checkForm(function () {
             	var encrypt = new JSEncrypt();
 				encrypt.setPublicKey($('#bankcard_no').attr('data-key'));
@@ -122,6 +127,28 @@
             });
         });
 	});
+
+	function validate() {
+		var res = true;
+		var inputList = $('input[type=text]');
+		for(var i = 0, length1 = inputList.length; i < length1; i++){
+			if(!inputList[i].value.toString().trim()) {
+			  alert(inputList[i].getAttribute('placeholder'));
+			  res = false;
+			  return;
+			}
+		}
+		if (!document.getElementById('tradeFile').checked) {
+            M.alert({
+                title:'提示',
+                message:'请先阅读并同意相关协议'
+            });
+			res = false;
+		}else {
+			res = true;
+		}
+		return res;
+	}
 
 	<?php if(isset($provCity)){
 		echo 'var provCity = '.$provCity;
