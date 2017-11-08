@@ -13,6 +13,7 @@ class ModifyBonusController extends MY_Controller {
 		parent::__construct();
 		$this->load->library('Fund_interface');
 		$this->base = $this->config->item("base_url");
+		$this->load->helper(array("logfuncs"));
 		$this->load->database();
 	}
 	
@@ -54,7 +55,8 @@ class ModifyBonusController extends MY_Controller {
 				$data['tpasswd'] = $tpasswd;
 				$res = $this->fund_interface->bonus_mode($data);
 				$data['tpasswd'] = '***';
-				file_put_contents('log/trade/modifybonus'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行分红方式变更，交易数据为:".serialize($data)."\r\n返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
+// 				file_put_contents('log/trade/modifybonus'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行分红方式变更，交易数据为:".serialize($data)."\r\n返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
+				myLog('trade/modifybonus',"用户:".$_SESSION['customer_name'].'进行分红方式变更，交易数据为:'.serialize($data)."\t返回数据:".serialize($res));
 				if (isset($res['code'])){
 					$data['ret_code'] = $res['code'];
 					if ($res['code'] == '0000'){
@@ -74,7 +76,8 @@ class ModifyBonusController extends MY_Controller {
 				$data['ret_msg'] = '分红方式变更失败，请稍候重试';
 			}
 			if (isset($log_msg)){
-				file_put_contents('log/trade/redeem'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行分红方式变更交易失败，原因为:".$log_msg."\r\n\r\n",FILE_APPEND);
+// 				file_put_contents('log/trade/redeem'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行分红方式变更交易失败，原因为:".$log_msg."\r\n\r\n",FILE_APPEND);
+				myLog('trade/modifybonus',"用户:".$_SESSION['customer_name']."进行分红方式变更交易失败，原因为:".$log_msg);
 			}
 			$data['head_title'] = '分红方式变更结果';
 			$data['back_url'] = '/jijin/Jz_my';

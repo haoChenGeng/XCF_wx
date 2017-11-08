@@ -12,6 +12,7 @@ class CancelApplyController extends MY_Controller {
 	{
 		parent::__construct();
 		$this->load->library(array('Fund_interface','Logincontroller'));
+		$this->load->helper(array("logfuncs"));
 		$this->load->database();
 	}
 	
@@ -77,7 +78,8 @@ class CancelApplyController extends MY_Controller {
 // $this->load->view('UrlTest',$data);
 // var_dump($res);
 // return;
-				file_put_contents('log/trade/cancelApply'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行撤单操作，交易数据为:".$revoke['appsheetserialno']."\r\n返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
+// 				file_put_contents('log/trade/cancelApply'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行撤单操作，交易数据为:".$revoke['appsheetserialno']."\r\n返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
+				myLog('trade/cancelApply',"用户:".$_SESSION ['customer_name']."进行撤单操作，交易数据为:".$revoke['appsheetserialno']."\t返回数据:".serialize($res));
 				if (isset($res['code'])){
 					$data['ret_code'] = '0000';
 					if ($res['code'] == '0000'){
@@ -97,7 +99,8 @@ class CancelApplyController extends MY_Controller {
 				$data['ret_msg'] = '撤单失败，请稍候重试';
 			}
 			if (isset($log_msg)){
-				file_put_contents('log/trade/cancelApply'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行撤单交易失败，失败原因为:".$log_msg."\r\n\r\n",FILE_APPEND);
+// 				file_put_contents('log/trade/cancelApply'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行撤单交易失败，失败原因为:".$log_msg."\r\n\r\n",FILE_APPEND);
+				myLog('trade/cancelApply',"用户:".$_SESSION ['customer_name']."进行撤单交易失败，失败原因为:".$log_msg);
 			}
 			$data['head_title'] = '撤单结果';
 			$data['back_url'] = '/jijin/Jz_my';

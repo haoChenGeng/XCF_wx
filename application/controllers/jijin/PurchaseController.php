@@ -10,7 +10,7 @@ class PurchaseController extends MY_Controller {
 	{
 		parent::__construct();
 		$this->load->library(array('Fund_interface','Logincontroller'));
-		$this->load->helper(array("url"));
+		$this->load->helper(array("url","logfuncs"));
 	}
 	
 	//申购 认购前准备
@@ -57,9 +57,11 @@ class PurchaseController extends MY_Controller {
 		}
 		$purchase_info =$this->fund_interface->beforePurchase($data);
 		if (!isset($purchase_info['code']) || $purchase_info['code'] != '0000'){
-			file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."调用beforePurchase接口失败，返回数据为:".serialize($purchase_info)."\r\n\r\n",FILE_APPEND);
+// 			file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."调用beforePurchase接口失败，返回数据为:".serialize($purchase_info)."\r\n\r\n",FILE_APPEND);
+			myLog('trade/apply_fund',"用户:".$_SESSION['customer_name']."调用beforePurchase接口失败，返回数据为:".serialize($purchase_info));
 		}else{
-			file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."调用beforePurchase接口成功，返回可交易的银行卡数量为:".count($purchase_info['data']['bank_info'])."\r\n\r\n",FILE_APPEND);
+// 			file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."调用beforePurchase接口成功，返回可交易的银行卡数量为:".count($purchase_info['data']['bank_info'])."\r\n\r\n",FILE_APPEND);
+			myLog('trade/apply_fund',"用户:".$_SESSION['customer_name']."调用beforePurchase接口成功，返回可交易的银行卡数量为:".count($purchase_info['data']['bank_info']));
 		}
 		if (key_exists('code',$purchase_info)){
 			if ($purchase_info['code'] == '0000' ){
@@ -223,7 +225,8 @@ class PurchaseController extends MY_Controller {
 				$purchase = $this->fund_interface->purchase($purchaseData);
 				$purchaseData['tpasswd'] = '***';
 // 				$purchaseData['depositacct'] = substr($purchaseData['depositacct'],0,3).'***'.substr($purchaseData['depositacct'],-3);
-				file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."进行".$post['purchasetype']."基金(purchase<520003>)操作\r\n申请数据为：".serialize($purchaseData)."\r\n返回数据:".serialize($purchase)."\r\n\r\n",FILE_APPEND);
+// 				file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name']."进行".$post['purchasetype']."基金(purchase<520003>)操作\r\n申请数据为：".serialize($purchaseData)."\r\n返回数据:".serialize($purchase)."\r\n\r\n",FILE_APPEND);
+				myLog('trade/apply_fund',"用户:".$_SESSION['customer_name']."进行".$post['purchasetype']."基金(purchase<520003>)操作,申请数据为：".serialize($purchaseData)."\t返回数据:".serialize($purchase));
 				if (key_exists('code',$purchase)){
 					$arr['ret_code'] = $purchase['code'];
 					if ($purchase['code'] == '0000'){
@@ -244,7 +247,8 @@ class PurchaseController extends MY_Controller {
 				$arr['ret_code'] = 'SJME';
 			}
 			if (isset($log_msg)){
-				file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name'].$post['purchasetype']."基金操作失败，失败原因为：".$log_msg."\r\n\r\n",FILE_APPEND);
+// 				file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户".$_SESSION ['customer_name'].$post['purchasetype']."基金操作失败，失败原因为：".$log_msg."\r\n\r\n",FILE_APPEND);
+				myLog('trade/apply_fund',"用户:".$_SESSION['customer_name']."进行".$post['purchasetype']."基金操作失败，失败原因为：".$log_msg);
 			}
 			if (!isset($arr['ret_msg'])){
 				$arr['ret_msg'] = '系统错误，基金'.$post['purchasetype'].'失败';
@@ -259,7 +263,8 @@ class PurchaseController extends MY_Controller {
 	function purchaseFee(){
 		$post = $this->input->post();
 		$purchaseFee = $this->fund_interface->feeQuery($post);
-		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询基金交易费用，调用数据为：".serialize($post)."\r\n返回数据为".serialize($purchaseFee)."\r\n\r\n",FILE_APPEND);
+// 		file_put_contents('log/trade/apply_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询基金交易费用，调用数据为：".serialize($post)."\r\n返回数据为".serialize($purchaseFee)."\r\n\r\n",FILE_APPEND);
+		myLog('trade/apply_fund',"查询基金交易费用，调用数据为：".serialize($post)."\r\n返回数据为".serialize($purchaseFee));
 		if ($purchaseFee['code'] == '0000' && is_array($purchaseFee['data'])){
 			echo json_encode(array('code'=>0,'charge'=>$purchaseFee['data']['charge']));
 		}else{

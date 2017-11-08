@@ -10,6 +10,7 @@ class Jz_my extends MY_Controller
         parent::__construct();
         $this->load->database();
         $this->load->library(array('Fund_interface','Logincontroller'));
+        $this->load->helper(array("logfuncs"));
     }
 
 	//我的基金页面入口
@@ -131,7 +132,8 @@ class Jz_my extends MY_Controller
 	private function getMyFundList() {
 		//调用接口
 		$res = $this->fund_interface->asset();
-		file_put_contents('log/trade/Jz_my'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['customer_name'].'进行资产查询，返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
+// 		file_put_contents('log/trade/Jz_my'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['customer_name'].'进行资产查询，返回数据为'.serialize($res)."\r\n\r\n",FILE_APPEND);
+		myLog('trade/Jz_my',"用户:".$_SESSION['customer_name'].'进行资产查询，返回数据为'.serialize($res));
 		$data = &$res['data'];
 		$this->load->config('jz_dict');
 		$productrisk = $this->config->item('productrisk');
@@ -205,7 +207,8 @@ class Jz_my extends MY_Controller
 				$startDate = empty($post['startDate']) ? date('Ymd',time()) : $post['startDate'];
 				$endDate = (empty($post['endDate']) || $post['endDate'] == date('Ymd',time())) ? date('Ymd',time()+86400) : $post['endDate'];                  					 				 //因当天收市后下的单会归到下一天，因此结束时间加1天
 				$fund_list = $this->fund_interface->Trans_applied($startDate, $endDate);
-				file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['customer_name'].'进行历史交易申请查询('.$startDate.'-'.$endDate.')'.serialize($fund_list)."\r\n\r\n",FILE_APPEND);
+// 				file_put_contents('log/trade/Jz_fund'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).'客户:'.$_SESSION['customer_name'].'进行历史交易申请查询('.$startDate.'-'.$endDate.')'.serialize($fund_list)."\r\n\r\n",FILE_APPEND);
+				myLog('trade/Jz_my',"用户:".$_SESSION['customer_name'].'进行历史交易申请查询('.$startDate.'-'.$endDate.')'.serialize($fund_list));
 				if (isset($fund_list['code']) && '0000'==$fund_list['code']){
 					if(isset($fund_list['data'])){
 						foreach ($fund_list['data'] as &$val){

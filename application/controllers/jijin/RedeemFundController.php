@@ -14,6 +14,7 @@ class RedeemFundController extends MY_Controller {
 		$this->load->library(array('Fund_interface','Logincontroller'));
 		$this->load->model(array("Model_db"));
 		$_SESSION['myPageOper'] = 'asset';
+		$this->load->helper(array("logfuncs"));
 	}
 	
 	//赎回
@@ -56,7 +57,8 @@ class RedeemFundController extends MY_Controller {
 					$data['tpasswd'] = $tpasswd;
 					$res = $this->fund_interface->redemption($data);
 					$data['tpasswd'] = '***';
-					file_put_contents('log/trade/redeem'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行赎回，交易数据为:".serialize($data)."\r\n返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
+// 					file_put_contents('log/trade/redeem'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行赎回，交易数据为:".serialize($data)."\r\n返回数据:".serialize($res)."\r\n\r\n",FILE_APPEND);
+					myLog('trade/redeem',"用户:".$_SESSION['customer_name']."进行赎回，交易数据为:".serialize($data)."\t返回数据:".serialize($res));
 					if (isset($res['code'])){
 						$data['ret_code'] = $res['code'];
 						if ($res['code'] == '0000'){
@@ -76,7 +78,8 @@ class RedeemFundController extends MY_Controller {
 					$data['ret_msg'] = '基金赎回操作失败，请稍候重试';
 				}
 				if (isset($log_msg)){
-					file_put_contents('log/trade/redeem'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行赎回交易失败，失败原因为:".$log_msg."\r\n\r\n",FILE_APPEND);
+// 					file_put_contents('log/trade/redeem'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']."进行赎回交易失败，失败原因为:".$log_msg."\r\n\r\n",FILE_APPEND);
+					myLog('trade/redeem',"用户:".$_SESSION['customer_name']."进行赎回交易失败，失败原因为:".$log_msg);
 				}
 			}
 		}
@@ -89,7 +92,8 @@ class RedeemFundController extends MY_Controller {
 	function redeemFee(){
 		$post = $this->input->post();
 		$purchaseFee = $this->fund_interface->feeQuery($post);
-		file_put_contents('log/trade/redeem'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询基金赎回费用，调用数据为：".serialize($post)."\r\n返回数据为".serialize($purchaseFee)."\r\n\r\n",FILE_APPEND);
+// 		file_put_contents('log/trade/redeem'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n查询基金赎回费用，调用数据为：".serialize($post)."\r\n返回数据为".serialize($purchaseFee)."\r\n\r\n",FILE_APPEND);
+		myLog('trade/redeem',"查询基金赎回费用，调用数据为：".serialize($post)."\t返回数据为".serialize($purchaseFee));
 		if ($purchaseFee['code'] == '0000' && is_array($purchaseFee['data'])){
 			echo json_encode(array('code'=>0,'charge'=>$purchaseFee['data']['charge']));
 		}else{
