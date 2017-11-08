@@ -23,17 +23,46 @@ window.onload = function() {
         var costData = res.data.cost; //管理费用
         var feeData = res.data.rate_24; //赎回费用
         var rate = feeData.rate; //赎回费率
+        var oRateDiv = byId("rateCont");
         byId("costManage").innerHTML = costData.cost_manage + "%"; //管理费
         byId("costTrustee").innerHTML = costData.cost_trustee + "%"; //托管费
         byId("perMin").innerHTML = feeData.per_min_24 + "份"; //赎回份额
         if (!feeData.date_payment) {
           byId('dayPay').innerHTML = '无赎回';
-          byId('rateCont').innerHTML = '无赎回';
-          byId('rateCont').style.textAlign = 'center';
-        } else {
+        } else { 
           byId("dayPay").innerHTML = "T+" + feeData.date_payment //预计赎回到账时间
+          if (rate[0].uphold == -1) {
+             oRateDiv.innerHTML = '<div class="mui-row"><div class="mui-col-xs-6 mui-text-center">--</div><div class="mui-col-xs-6 mui-text-center">0.00%</div></div>'
+          }else {
+            for (var i = 0; i < rate.length; i++) {
+              var len = rate.length - 1;
+              var data = ""
+              if (rate[i].feepolicy == "3") {
+                data = "日";
+              } else if (rate[i].feepolicy == "4") {
+                data = "月";
+              }
+              var rowDiv = document.createElement("div");
+              rowDiv.className = "mui-row";
+              var div_1 = document.createElement("div");
+              var div_2 = document.createElement("div");
+              div_1.className = "mui-col-xs-6 mui-text-center";
+              div_2.className = "mui-col-xs-6 mui-text-center";
+              if (i == 0) {
+                div_1.innerHTML = rate[i].downhold + "<持有天数<=" + rate[i].uphold + data;
+              } else if (i == len) {
+                div_1.innerHTML = rate[i].downhold + data + "<=持有天数";
+              } else {
+                div_1.innerHTML = rate[i].downhold + data + "<持有天数<=" + rate[i].uphold + data;
+              }
+
+              div_2.innerHTML = rate[i].feerate + "%";
+              rowDiv.appendChild(div_1);
+              rowDiv.appendChild(div_2);
+              oRateDiv.appendChild(rowDiv);
+            }
+          }
         }
-        var oRateDiv = byId("rateCont");
         var oBuyDiv = byId("buyRate");
         var minBuy = byId("minBuy");
         var buyTitle = document.getElementsByClassName("buyTitle");
@@ -81,9 +110,9 @@ window.onload = function() {
           rowDiv.appendChild(div_3);
           oBuyDiv.appendChild(rowDiv);
         }
-        for (var i = 0; i < rate.length; i++) { //赎回费用
-          if (!rate[i].feepolicy) { //无赎回费率
-
+        /*for (var i = 0; i < rate.length; i++) { //赎回费用
+          if (rate[0].uphold !== -1) { //无赎回费率
+            
           } else { //有赎回费率
             var len = rate.length - 1;
             var data = ""
@@ -111,7 +140,7 @@ window.onload = function() {
             rowDiv.appendChild(div_2);
             oRateDiv.appendChild(rowDiv);
           }
-        }
+        }*/
       }
     });
   })();

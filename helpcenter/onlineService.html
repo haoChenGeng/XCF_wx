@@ -52,7 +52,7 @@
       </ul>
     </div>
     <div id="helpWrap" class="">
-      <div id="sliderSegmentedControl" class="mui-segmented-control">
+      <div id="sliderSegmentedControl" class="mui-segmented-control" style="width: 90%;margin:10px auto;">
         <a class="mui-control-item mui-active" href="#item1mobile">
           热点问题
         </a>
@@ -356,12 +356,9 @@
       分红
     </div>
   </div>
-  <!-- <datalist id="searchList">
-    
-  </datalist> -->
 
   <script type="text/javascript">
-    mui.init()
+    mui.init();
     var input = document.getElementById('helpSearch');
     var ques = document.getElementsByClassName('mui-navigate-right');
     var quesContent = document.getElementById('helpWrap');
@@ -370,8 +367,8 @@
     var searchList = document.getElementById('searchList');
     var tab = document.getElementById('sliderSegmentedControl').querySelectorAll('a');
     var content = document.getElementsByClassName('mui-control-content');
-    // var searchValue;
 
+    //点击搜索提示列表展示问题
     searchList.addEventListener('click', function(e) {
       input.value = e.target.innerHTML;
       searchList.style.display = 'none';
@@ -381,17 +378,15 @@
       document.getElementsByClassName('mui-input-row')[0].classList.remove('search-height');
       for (var i = 0; i < content.length; i++) {
         if (tab[i].classList.contains('mui-active')) {
-          tab[i].classList.remove('mui-active')
+          tab[i].classList.remove('mui-active');
         }
         if (content[i].classList.contains('mui-active')) {
           content[i].classList.remove('mui-active');
         }
       }
-      // item1.classList.remove('mui-active');
-      // tab[0].classList.remove('mui-active');
 
+      //判断题号在哪个tab
       var num = parseInt(e.target.dataset.num);
-      // console.log(num);
       if (num <= 5) {
         tab[0].classList.add('mui-active');
         content[0].classList.add('mui-active');
@@ -399,10 +394,10 @@
         tab[1].classList.add('mui-active');
         content[1].classList.add('mui-active');
       } else if (num > 13 && num <= 25) {
-        tab[2].classList.add('mui-active')
+        tab[2].classList.add('mui-active');
         content[2].classList.add('mui-active');
       } else if (num >= 26) {
-        tab[3].classList.add('mui-active')
+        tab[3].classList.add('mui-active');
         content[3].classList.add('mui-active');
       }
       for (var i = 0; i < ques.length; i++) {
@@ -410,10 +405,12 @@
           ques[i].parentNode.classList.remove('mui-active');
         }
         if (ques[i].dataset.num == num) {
-          ques[i].parentNode.classList.add('mui-active')
+          ques[i].parentNode.classList.add('mui-active');
         }
       }
-    })
+    });
+
+    //退出搜索
     quit.addEventListener('click', function() {
       quesContent.style.display = 'block';
       btn.style.display = 'none';
@@ -421,24 +418,24 @@
     	
     	input.style.width ="100%";
       document.getElementsByClassName('mui-input-row')[0].classList.remove('search-height');
-    })
+    });
     btn.addEventListener('click', function(e) {
-      // console.log(e.target.innerHTML);
       input.value = e.target.innerHTML.trim();
       searchQues(e.target.innerHTML.trim());
-    })
+    });
 
     input.oninput = function() {
       searchQues(this.value);
-    }
+    };
 
+    //获取搜索提示列表
     function searchQues(value) {
       var frag = document.createDocumentFragment();
       for (var i = 0; i < ques.length; i++) {
         if (JSON.parse(ques[i].dataset.key).indexOf(value) != -1) {
           var oLi = document.createElement('li');
-          oLi.innerHTML = ques[i].innerText;
-          oLi.dataset.num = ques[i].dataset.num;
+          oLi.innerHTML = ques[i].innerText;        //设置题目
+          oLi.dataset.num = ques[i].dataset.num;    //设置题号
           frag.appendChild(oLi);
         }
       }
@@ -451,10 +448,8 @@
       document.getElementsByClassName('mui-input-row')[0].classList.add('search-height');
       quit.style.display = 'inline-block';
       document.getElementById('helpWrap').style.display = 'none';
-      btn.style.display = 'block';
-  
-  		input.style.width ="85%";
-  
+      btn.style.display = 'block';  
+  		input.style.width ="85%";  
     }
   </script>
 </body>
