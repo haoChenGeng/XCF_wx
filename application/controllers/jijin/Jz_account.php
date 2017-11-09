@@ -348,6 +348,7 @@ class Jz_account extends MY_Controller
     			if ($res['code'] == '0000'){
     				unset($_SESSION['data_OPT']);
     				$_SESSION['JZ_user_id'] = 1;
+    				$_SESSION['riskLevel'] = $res['custrisk'];
     				Message(Array(
     						'msgTy' => 'sucess',
     						'msgContent' => '开通手机交易成功',
