@@ -2,9 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>系统消息提醒-<?php echo 111#$GLOBALS['site_title'];?></title>
-<meta name="Keywords" content="<?php echo 222#$GLOBALS['site_keyword'];?>" />
-<meta name="Description" content="<?php echo 333#$GLOBALS['site_desc'];?>" />
+<title>系统消息提醒</title>
 <style type="text/css">
 	*{font-family: 微软雅黑;font-size: 30px;}
 	#error_t{height: 549px;margin-top: 50px;}

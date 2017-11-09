@@ -133,7 +133,10 @@
 		var inputList = $('input[type=text]');
 		for(var i = 0, length1 = inputList.length; i < length1; i++){
 			if(!inputList[i].value.toString().trim()) {
-			  alert(inputList[i].getAttribute('placeholder'));
+	            M.alert({
+	                title:'提示',
+	                message:inputList[i].getAttribute('placeholder')
+	            });			
 			  res = false;
 			  return;
 			}
@@ -207,11 +210,17 @@
           }
           childOp.appendChild(opList);
           }else {
-            alert(res.msg);
+              M.alert({
+                  title:'提示',
+                  message:res.msg
+              });
           }
         },
         error: function(res) {
-          alert('请求错误');
+            M.alert({
+                title:'提示',
+                message:'请求错误'
+            });
         }
       });
     }

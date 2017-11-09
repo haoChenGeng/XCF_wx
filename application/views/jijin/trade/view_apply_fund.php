@@ -99,7 +99,10 @@
                     div1 = document.createElement('div');
                 	div2 = document.createElement('div');
                 if (!sum || parseInt(sum, 10) < parseInt(min, 10) || parseInt(sum, 10) > parseInt(max, 10)) {
-                    alert('金额输入错误');
+                    M.alert({
+                        title:'提示',
+                        message:'金额输入错误'
+                    });
                     return false;
                 }
                 jsonData = JSON.parse($('#json').val());
@@ -132,7 +135,10 @@
                         document.getElementById('info_form').insertBefore(div2, payDiv.nextSibling);
                         $('#nextBtn').off();
                 	}else{
-                    	alert('查询<?php echo $purchasetype?>费用失败');
+                        M.alert({
+                            title:'提示',
+                            message:'查询<?php echo $purchasetype?>费用失败'
+                        });
                 	}
                 });
 

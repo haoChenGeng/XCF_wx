@@ -111,17 +111,29 @@ function complete(obj) {
                 div1 = document.createElement('div');
                 div2 = document.createElement('div');
                 if (availablevol === 0) {
-                    alert('无可用份额');
+                    M.alert({
+                        title:'提示',
+                        message:'无可用份额'
+                    });
                     return false;
                 }
                 if ((applicationval-parseInt(applicationval*100)/100) > 0.0000000001) {
-                    alert('份额最小单位为0.01');
+                    M.alert({
+                        title:'提示',
+                        message:'份额最小单位为0.01'
+                    });
                     return false;
                 }else if (applicationval <= 0 ||  applicationval > availablevol) {
-                    alert('输入份额错误或无效');
+                    M.alert({
+                        title:'提示',
+                        message:'输入份额错误或无效'
+                    });
                     return false;
                 }else if (!applicationval) {
-                    alert('请输入赎回份额');
+                    M.alert({
+                        title:'提示',
+                        message:'请输入赎回份额'
+                    });
                     return false;
                 }
                 document.getElementById('applicationval').value = applicationval;
@@ -152,7 +164,10 @@ function complete(obj) {
                         document.getElementById('info_form').insertBefore(div2, payDiv.nextSibling);
                         $('#nextBtn').off();
                     }else{
-                    	alert('查询赎回费用失败');
+                        M.alert({
+                            title:'提示',
+                            message:'查询赎回费用失败'
+                        });
                 	}
                 }); 
 

@@ -96,7 +96,7 @@ class Jz_account extends MY_Controller
 				$seekAccount = $this->fund_interface->SeekAccount($post['certificatetype'],$post['certificateno']);
 // $seekAccount['code'] = '0033';
 // $seekAccount['custno'] = '37';
-				if (key_exists('code', $seekAccount)){
+				if (isset($seekAccount['code'])){
 					if ($seekAccount['code'] == '0000'){
 						//调用银行鉴权接口及log
 						$res_bMS = $this->fund_interface->bgMsgSend($post);
