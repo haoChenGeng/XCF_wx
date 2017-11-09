@@ -56,10 +56,12 @@ class Jz_my extends MY_Controller
 			$data['totalfundvolbalance'] = $_SESSION['totalfundvolbalance'] = $fundlist['totalfundvolbalance'];
 			$data['yestincomesum'] = $_SESSION['yestincomesum'] = $fundlist['yestincomesum'];
 			$data['addincomesum'] = $_SESSION['addincomesum'] = $fundlist['addincomesum'];
+			$data['unincome'] = $_SESSION['unincome'] = $fundlist['unincome'];
 		}else{
 			$data['totalfundvolbalance'] = $_SESSION['totalfundvolbalance'];
 			$data['yestincomesum'] = $_SESSION['yestincomesum'];
 			$data['addincomesum'] = $_SESSION['addincomesum'];
+			$data['unincome'] = $_SESSION['unincome'];
 		}
 		echo json_encode($data);
 	}
