@@ -203,8 +203,8 @@ class Jz_my extends MY_Controller
 	//获取历史申请（委托）
 	function getHistoryApply() {
 		$post = $this->input->post();
-		$_SESSION['myPageOper'] = 'history';
 		if (isset($_SESSION['JZ_user_id'])){
+			$_SESSION['myPageOper'] = 'history';
 			if (1 == $_SESSION['JZ_user_id']){
 				$startDate = empty($post['startDate']) ? date('Ymd',time()) : $post['startDate'];
 				$endDate = (empty($post['endDate']) || $post['endDate'] == date('Ymd',time())) ? date('Ymd',time()+86400) : $post['endDate'];                  					 				 //因当天收市后下的单会归到下一天，因此结束时间加1天

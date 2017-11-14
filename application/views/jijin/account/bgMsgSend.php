@@ -103,6 +103,9 @@
 				<input class="btn" id="openAccount" type="button" value="下一步"/>
 			</section>
 		</form>
+		<section class="m-btn-wrap">
+			<a href="/jijin/Jz_account/onlineTrans" style="text-align: center;color: #FF5809;">已有柜台用户开通手机交易</a>
+		</section>
 		<div class="light-content" id="certificateno" style="display:none;">
 			<ul>
 				<?php
