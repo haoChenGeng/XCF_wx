@@ -27,6 +27,7 @@
           document.getElementById('totalBalance').innerHTML = res.totalfundvolbalance || 0;
           document.getElementById('yesterDayIncome').innerHTML = res.yestincomesum || 0;
           document.getElementById('totalIncome').innerHTML = res.addincomesum || 0;
+          document.getElementById('unIncome').innerHTML = res.unincome || 0;
           document.getElementById('customerName').innerHTML = res.customerName || '未登录';
 
           var slider = mui('#slider').slider();
