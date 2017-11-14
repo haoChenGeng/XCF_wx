@@ -160,7 +160,7 @@ body {
 }
 
 .mui-bar-tab~.mui-content {
-  padding-bottom: 35px;
+  padding-bottom: 48px;
 }
 
 .ps-correct {
@@ -772,8 +772,8 @@ h3.m-item-5 {
 }
 
 .mui-content {
-  margin-bottom: 60px;
-  padding-bottom: 5px;
+  // padding-bottom: 50px;
+  // padding-bottom: 5px;
 }
 
 .tab-active {
@@ -850,4 +850,8 @@ h3.m-item-5 {
   line-height: 35px;
   color: #8f8f94;
   font-size: 13px;
+}
+
+.mui-scroll-wrapper {
+  overflow: scroll;
 }
