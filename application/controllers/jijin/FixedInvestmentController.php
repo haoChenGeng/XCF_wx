@@ -60,6 +60,8 @@ class FixedInvestmentController extends MY_Controller
 					$data['riskmatching'] = 0;
 				else
 					$data['riskmatching'] = 1;
+				$this->load->config('jz_dict');
+				$fundinfo['risklevel'] =isset($this->config->item('productrisk')[$fundinfo['risklevel']])?$this->config->item('productrisk')[$fundinfo['risklevel']]:null;
 				$return['code'] = 0;
 				$return['data'] = $data;
 			}else{
