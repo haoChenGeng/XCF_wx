@@ -332,10 +332,10 @@ class Jz_account extends MY_Controller
     		$decryptData ='';
     		openssl_private_decrypt(base64_decode($post['lpasswd']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
     		//判断一次性验证码是否存在
-    		$div_bit = strpos($decryptData,(string)$_SESSION['rand_code']);
+    		$div_bit = strpos($decryptData,(string)$_SESSION['openPhoneTrans_randCode']);
     		$openPhoneTrans = $_SESSION['data_OPT'];
-    		unset($_SESSION['rand_code']);
     		if ($div_bit !== false){                      //找到一次性验证码
+    			unset($_SESSION['openPhoneTrans_randCode']);
     			//----------- 记录解密后post数据 ---------------------
 //     			file_put_contents('log/user/OpenPhoneTtrans'.$this->logfile_suffix,date('Y-m-d H:i:s',time()).":\r\n用户:".$_SESSION ['customer_name']." 解密后数据：".serialize($post)."\r\n\r\n",FILE_APPEND);
     			myLog('user/OpenPhoneTtrans',"用户:".$_SESSION ['customer_name']." 解密后数据：".serialize($post));
@@ -384,9 +384,72 @@ class Jz_account extends MY_Controller
     	else                                                                                   //调用来自info_OpenPhoneTtrans
     	{
     		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));     //获取RSA_加密公钥
-    		$data['rand_code'] = "\t".mt_rand(100000,999999);                                  //随机生成验证码
-    		$_SESSION['rand_code'] = $data['rand_code'];
+    		$_SESSION['openPhoneTrans_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999); //随机生成验证码
     		$this->load->view('/jijin/account/OpenPhoneTtrans',$data);
+    	}
+    }
+
+    //-------------------      直销客户开通手机交易前准备，通过手机号判断是否已有客户      --------------------------------------------------
+    function onlineTrans(){
+    	$post = $this->input->post();
+    	if(!empty($post)){                   //通过isset($post['lpasswd'])存在判断调用是来自界面OpenPhoneTtrans，否则来自info_OpenPhoneTtrans
+    		//----------- 记录post输入数据(其对包含密码的部分进行裁减)---------------------
+    		myLog('user/OpenPhoneTtrans',"用户:".$_SESSION ['customer_name']." post数据".serialize($post));
+    		//-----------RSA解密----------------------------
+    		$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
+    		$decryptData ='';
+    		openssl_private_decrypt(base64_decode($post['certificateno']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
+    		//判断一次性验证码是否存在
+    		$div_bit = strpos($decryptData,(string)$_SESSION['onlineTrans_randCode']);
+    		unset($_SESSION['onlineTrans_randCode']);
+    		if ($div_bit !== false){                      //找到一次性验证码
+    			//----------- 记录解密后post数据 ---------------------
+    			myLog('user/OpenPhoneTtrans',"用户:".$_SESSION ['customer_name']." 解密后数据：".$decryptData);
+    			$post['certificateno'] = substr($decryptData, 0, $div_bit);
+    			$seekAccount = $this->fund_interface->SeekAccount($post['certificatetype'],$post['certificateno']);
+    			myLog('user/OpenPhoneTtrans',"用户:".$_SESSION ['customer_name']." 调用SeekAccount接口，调用数据：".serialize($post)." 返回数据为：".serialize($seekAccount));
+    			if (isset($seekAccount['code'])){
+    				if ($seekAccount['code'] == '0033'){
+    					$_SESSION['data_OPT'] = array('certificateno' => $post['certificateno'],'certificatetype' => $post['certificatetype'],'custno' => $seekAccount['custno']); //通过session记录证件类型、证件号、基金帐号等信息
+    					$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));     //获取RSA_加密公钥
+    					$_SESSION['openPhoneTrans_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999); //随机生成验证码
+    					$this->load->view('/jijin/account/OpenPhoneTtrans',$data);
+    				}else{
+    					if ('0033' == $seekAccount['code']){
+    						$info_msg = $seekAccount['msg'];
+    					}else{
+    						switch ($seekAccount['code']){
+    							case '0000':
+    								$err_msg = '该证件并未开通基金账户';
+    								break;
+    							case '0032':
+    								$err_msg = '该证件已开通手机端基金交易';
+    								break;
+    							default:
+    								$err_msg = '系统故障，请稍后重试';
+    						}
+    					}
+    				}
+    			}else{
+    				$err_msg = '系统故障，请稍后重试';
+    			}
+    		}else{
+    			$err_msg = '系统故障，请稍后重试';
+    		}
+    		if (isset($err_msg)){
+    			Message(Array(
+    					'msgTy' => 'fail',
+    					'msgContent' => $err_msg,
+    					'msgUrl' => '/jijin/Jz_account/onlineTrans',                           //调用my界面
+    					'base' => $this->base
+    					));
+    		}
+    	}else{                                                                                   //调用来自info_OpenPhoneTtrans
+    		$this->load->config('jz_dict');
+    		$data['certificatetype'] = $this->config->item('certificatetype');
+    		$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));     //获取RSA_加密公钥
+    		$_SESSION['onlineTrans_randCode'] = $data['rand_code'] = "\t".mt_rand(100000,999999);                                  //随机生成验证码
+    		$this->load->view('/jijin/account/onlineTrans',$data);
     	}
     }
 
