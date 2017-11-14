@@ -1,7 +1,7 @@
 ﻿<?php
 include_once(dirname(__DIR__).DIRECTORY_SEPARATOR.'weixin/CommonUtil.php');
 include_once "wxBizMsgCrypt.php";
-include_once 'wxConfig.php';
+include_once FCPATH.'application\config\wxConfig.php';
 include_once 'CommonUtil.php';
 class Api extends MY_Controller
 {

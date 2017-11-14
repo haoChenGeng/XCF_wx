@@ -32,12 +32,15 @@ class AutoUpdate extends MY_Controller {
 		$this->load->config('jz_dict');
 		$plannerInfo = json_decode(comm_curl($this->config->item('XNPlannerUrl'),array()),true)[0];
 		if ('0000' == $plannerInfo['code']){
+			$newData = array();
 			foreach ($plannerInfo['data'] as &$val){
 				$newData[] = array('FName'=>$val['name'],'EmployeeID'=>$val['workNum'],'status'=>1,'area'=>$val['area'],'city'=>$val['city']); 
 			}
-			$this->load->model("Model_db");
-			$this->db->set(array('status'=>0))->update('p2_planner');
-			$this->Model_db->incremenUpdate('p2_planner',$newData,'EmployeeID');
+			if (!empty($newData)){
+				$this->load->model("Model_db");
+				$this->db->set(array('status'=>0))->update('p2_planner');
+				$this->Model_db->incremenUpdate('p2_planner',$newData,'EmployeeID');
+			}
 		}
 	}
 	

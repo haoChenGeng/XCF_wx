@@ -1,6 +1,6 @@
 <?php
 include_once 'CommonUtil.php';
-include_once 'wxConfig.php';
+include_once FCPATH.'application\config\wxConfig.php';
 include_once 'Api.php';
 
 class Oauth extends MY_Controller
