@@ -96,7 +96,6 @@ class FixedInvestmentController extends MY_Controller
 
 		$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
 		$decryptData ='';
-		
 		openssl_private_decrypt(base64_decode($post['token']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
 		//判断一次性随机验证码是否存在
 		$div_bit = strpos($decryptData,(string)$_SESSION['token']);
@@ -117,5 +116,11 @@ class FixedInvestmentController extends MY_Controller
 		}
 
 		echo json_encode($return);
+	}
+
+	function FixedInvestmentEnd(){
+		$post = $this->input->post();
+
+
 	}
 }

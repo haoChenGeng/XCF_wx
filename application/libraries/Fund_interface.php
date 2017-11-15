@@ -592,12 +592,23 @@ class Fund_interface
 	}
 
 	function FixedInvestment($input){
-		$neededFields = array('tpasswd','channelid','depositacct','investamount','fundcode','tano','moneyaccount','investcycle','investcyclevalue','investperiods','investperiodsvalue');
+		$neededFields = array('tpasswd','channelid','depositacct','investamount','fundcode','tano','moneyaccount','investcycle','investcyclevalue');
     	foreach ($neededFields as $val){
     		if (!isset($input[$val])){
     			return array('code'=>'9999', 'msg'=>'必填字段,'.$val.'不能为空！');
     		}
     	}
+    	if($input['investcycle'] == '0'){
+    		$input['investperiods'] = '0';
+    		$input['investperiodsvalue'] = '1';
+    	}else if($input['investcycle'] == '1'){
+    		$input['investperiods'] = '1';
+    		$input['investperiodsvalue'] = '1';
+    	}else if($input['investcycle'] == '2'){
+    		$input['investperiods'] = '1';
+    		$input['investperiodsvalue'] = '2';
+    	}
+    	
 		$submitData = $this->getSubmitData(array(
 			'customerNo'=>$_SESSION['customer_name'],
 			"code"=>'FixedInvestment',
