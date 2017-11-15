@@ -1016,3 +1016,30 @@ h3.m-item-5 {
 .mui-scroll-wrapper {
   overflow: scroll;
 }
+.pass-box{
+	display: none;
+}
+.castSurelyTip{
+    position: fixed;
+    z-index: 998;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+	background-color: #eee;
+	display: none;
+}
+.castSurelyTip *{
+	font-family: Helvetica,Arial,Tahoma,sans-serif;	
+}
+.castSurelyTip .riskTip-content{
+	text-align:center;
+	padding: 30px;
+	font-size: 19px;
+	font-weight: 700;
+	color: #000;
+	line-height: 26px;
+}
+.castSurelyTip .m-item-5 > h3 {
+   font-weight: 700;
+}
