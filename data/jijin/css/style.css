@@ -633,15 +633,11 @@ h3.m-item-5 {
 
 .m-content {
   padding: 10px;
-  /*	margin-bottom: 54px;*/
   background: #fff;
-  /*add new*/
 }
 
 .m-content-t1 {
   text-align: center;
-  /*	padding-bottom: 5px;
-	border-bottom: 1px solid #f5bc44;*/
 }
 
 .m-content-t1-detail {
@@ -650,14 +646,8 @@ h3.m-item-5 {
 }
 
 .m-content-t1-detail>p {
-  /*font-weight: bold;*/
   font-size: 16px;
 }
-
-
-/*.m-content-t1-detail>p:first-child {
-	font-weight: bold;
-}*/
 
 .m-content-t2 {
   display: flex;
@@ -769,11 +759,6 @@ h3.m-item-5 {
 
 .m-content-t3-chart {
   display: none;
-}
-
-.mui-content {
-  // padding-bottom: 50px;
-  // padding-bottom: 5px;
 }
 
 .tab-active {
