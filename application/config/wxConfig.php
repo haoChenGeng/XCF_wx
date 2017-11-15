@@ -12,7 +12,7 @@ define('tokenFile',__DIR__.DIRECTORY_SEPARATOR.'accessToken.txt');
 define("TOKEN", "");
 define("APPID", "");
 define("APPSECRET", "");
-define("encodingAesKey", "");
+define("encodingAesKey", "a key for test");
 
 define("MSG_TYPE_TEXT",'text');
 define("MSG_TYPE_NEWS",'news');

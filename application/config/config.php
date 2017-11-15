@@ -531,3 +531,4 @@ $config['unifyEntrance'] = '/Xnxcfindex/WK8YGc3Yi2oP3/';
 
 date_default_timezone_set('Asia/ShangHai');
 $config['time_zone'] = date_default_timezone_get();
+$config['myLogDir'] = FCPATH."log/";
