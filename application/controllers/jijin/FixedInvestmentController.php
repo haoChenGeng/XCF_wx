@@ -52,6 +52,8 @@ class FixedInvestmentController extends MY_Controller
 					$fundinfo['fundtype'] = $fundInfo['fundtype'];
 					$fundinfo['risklevel'] = $fundInfo['risklevel'];
 					$fundinfo['fundname'] = $fundInfo['fundname'];
+					$fundinfo['per_min_39'] = $fundInfo['per_min_39'];
+					$fundinfo['per_max_39'] = $fundInfo['per_max_39'];
 				}else{
 					$return['code'] = 1;
 					$data['fail_message'] = '该基金不存在';
@@ -62,6 +64,7 @@ class FixedInvestmentController extends MY_Controller
 					$data['riskmatching'] = 1;
 				$this->load->config('jz_dict');
 				$fundinfo['risklevel'] =isset($this->config->item('productrisk')[$fundinfo['risklevel']])?$this->config->item('productrisk')[$fundinfo['risklevel']]:null;
+				$data['token'] = $_SESSION['token'] = mt_rand(100000,999999);
 				$return['code'] = 0;
 				$return['data'] = $data;
 			}else{
@@ -74,5 +77,15 @@ class FixedInvestmentController extends MY_Controller
 		}
 		
 		echo json_encode($return);
+	}
+
+	function FixedInvestment(){
+		$post = $this->input->post();
+		if($post['token'] == $_SESSION['token']){
+
+		}else{
+			$return['code'] = 1;
+			$data['fail_message'];
+		}
 	}
 }
