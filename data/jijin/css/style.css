@@ -160,7 +160,7 @@ body {
 }
 
 .mui-bar-tab~.mui-content {
-  padding-bottom: 35px;
+  padding-bottom: 48px;
 }
 
 .ps-correct {
@@ -773,8 +773,8 @@ h3.m-item-5 {
 }
 
 .mui-content {
-  margin-bottom: 60px;
-  padding-bottom: 5px;
+  // padding-bottom: 50px;
+  // padding-bottom: 5px;
 }
 
 .tab-active {
@@ -1027,4 +1027,7 @@ h3.m-item-5 {
 .list-box li .record-result{
 	float: right;
 	font-size: 14px;
+}
+.mui-scroll-wrapper {
+  overflow: scroll;
 }
