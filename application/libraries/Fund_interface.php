@@ -610,12 +610,10 @@ class Fund_interface
 			'customerNo'=>$_SESSION['customer_name'],
 			"code"=>'FixedInvestment',
 			'tpasswd'=>$input['tpasswd'],
-			'channelid'=>$input['channelid'],
 			'depositacct'=>$input['depositacct'],
 			'investamount'=>$input['investamount'],
 			'fundcode'=>$input['fundcode'],
 			'tano'=>$input['tano'],
-			'moneyaccount'=>$input['moneyaccount'],
 			'investcycle'=>$input['investcycle'],
 			'investcyclevalue'=>$input['investcyclevalue']));
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
