@@ -600,11 +600,9 @@ class Fund_interface
 
 	function FixedInvestment($input){
 		$neededFields = array('tpasswd','depositacct','investamount','fundcode','tano','investcycle','investcyclevalue');
-    	foreach ($neededFields as $val){
-    		if (!isset($input[$val])){
+    	foreach ($neededFields as $val)
+    		if (!isset($input[$val]))
     			return array('code'=>'9999', 'msg'=>'必填字段,'.$val.'不能为空！');
-    		}
-    	}
     	
 		$submitData = $this->getSubmitData(array(
 			'customerNo'=>$_SESSION['customer_name'],
@@ -616,6 +614,54 @@ class Fund_interface
 			'tano'=>$input['tano'],
 			'investcycle'=>$input['investcycle'],
 			'investcyclevalue'=>$input['investcyclevalue']));
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+
+	function FixedInvestmentEnd($input){
+		$neededFields = array('tpasswd','depositacct','buyplanno');
+    	foreach ($neededFields as $val)
+    		if (!isset($input[$val]))
+    			return array('code'=>'9999', 'msg'=>'必填字段,'.$val.'不能为空！');
+    	
+		$submitData = $this->getSubmitData(array(
+			'customerNo'=>$_SESSION['customer_name'],
+			"code"=>'FixedInvestmentEnd',
+			'tpasswd'=>$input['tpasswd'],
+			'depositacct'=>$input['depositacct'],
+			'buyplanno'=>$input['buyplanno']));
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+
+	function FixedInvestmentUpdate($input){
+		$neededFields = array('tpasswd','depositacct','buyplanno','investamount','fundcode','investcycle','investcyclevalue');
+    	foreach ($neededFields as $val)
+    		if (!isset($input[$val]))
+    			return array('code'=>'9999', 'msg'=>'必填字段,'.$val.'不能为空！');
+    	
+		$submitData = $this->getSubmitData(array(
+			'customerNo'=>$_SESSION['customer_name'],
+			"code"=>'FixedInvestmentUpdate',
+			'tpasswd'=>$input['tpasswd'],
+			'depositacct'=>$input['depositacct'],
+			'buyplanno'=>$input['buyplanno'],
+			'investamount'=>$input['investamount'],
+			'fundcode'=>$input['fundcode'],
+			'investcycle'=>$input['investcycle'],
+			'investcyclevalue'=>$input['investcyclevalue']));
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+
+	function FixedInvestmentQuery($input){
+
+		$data['customerNo'] = $_SESSION['customer_name'];
+		$data['code'] = "FixedInvestmentQuery";
+		if(!empty($input['buyplanno']))
+			$data['buyplanno'] = $input['buyplanno'];
+
+		$submitData = $this->getSubmitData($data);
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
