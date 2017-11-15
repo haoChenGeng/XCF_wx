@@ -605,16 +605,6 @@ class Fund_interface
     			return array('code'=>'9999', 'msg'=>'必填字段,'.$val.'不能为空！');
     		}
     	}
-    	if($input['investcycle'] == '0'){
-    		$input['investperiods'] = '0';
-    		$input['investperiodsvalue'] = '1';
-    	}else if($input['investcycle'] == '1'){
-    		$input['investperiods'] = '1';
-    		$input['investperiodsvalue'] = '1';
-    	}else if($input['investcycle'] == '2'){
-    		$input['investperiods'] = '1';
-    		$input['investperiodsvalue'] = '2';
-    	}
     	
 		$submitData = $this->getSubmitData(array(
 			'customerNo'=>$_SESSION['customer_name'],
@@ -628,8 +618,6 @@ class Fund_interface
 			'moneyaccount'=>$input['moneyaccount'],
 			'investcycle'=>$input['investcycle'],
 			'investcyclevalue'=>$input['investcyclevalue'],
-			'investperiods'=>$input['investperiods'],
-			'investperiodsvalue'=>$input['investperiodsvalue']));
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
