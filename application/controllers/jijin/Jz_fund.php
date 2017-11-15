@@ -166,7 +166,7 @@ class Jz_fund extends MY_Controller
 	
 	public function fundDetail(){
 		$get = $this->input->get();
-		$fund_list = $this->db->select('fundtype,fundname,fundcode,shareclasses,nav,navdate,growth_day,growthrate,fundincomeunit,status,risklevel,first_per_min_22,first_per_min_20,star')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
+		$fund_list = $this->db->select('fundtype,fundname,fundcode,shareclasses,nav,navdate,growth_day,growthrate,fundincomeunit,status,risklevel,first_per_min_22,first_per_min_20,star,business_flag')->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
 		if(!empty($fund_list)){
 			if (2 == $fund_list['fundtype']){
 				$fund_list['growth_day'] = round($fund_list['growthrate'],3);
@@ -203,6 +203,7 @@ class Jz_fund extends MY_Controller
 			$tmp = isset($this->config->item('productrisk')[$productrisk])?$this->config->item('productrisk')[$productrisk]:null;
 			//$fund_list['risklevel'] = 'R'.$productrisk.'('.$tmp.')';
 			$fund_list['risklevel'] = $tmp;
+			$fund_list['business_flag'] = strstr($fund_list['business_flag'],"1") == null ? 0 : 1;
 			$data['fundlist'] = $fund_list;
 			$data['code'] = 0;
 		}else

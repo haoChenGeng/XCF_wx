@@ -597,4 +597,29 @@ class Fund_interface
 		return ($returnData);
 
 	}
+
+	function FixedInvestment($input){
+		$neededFields = array('tpasswd','channelid','depositacct','investamount','fundcode','tano','moneyaccount','investcycle','investcyclevalue','investperiods','investperiodsvalue');
+    	foreach ($neededFields as $val){
+    		if (!isset($input[$val])){
+    			return array('code'=>'9999', 'msg'=>'必填字段,'.$val.'不能为空！');
+    		}
+    	}
+		$submitData = $this->getSubmitData(array(
+			'customerNo'=>$_SESSION['customer_name'],
+			"code"=>'FixedInvestment',
+			'tpasswd'=>$input['tpasswd'],
+			'channelid'=>$input['channelid'],
+			'depositacct'=>$input['depositacct'],
+			'investamount'=>$input['investamount'],
+			'fundcode'=>$input['fundcode'],
+			'tano'=>$input['tano'],
+			'moneyaccount'=>$input['moneyaccount'],
+			'investcycle'=>$input['investcycle'],
+			'investcyclevalue'=>$input['investcyclevalue'],
+			'investperiods'=>$input['investperiods'],
+			'investperiodsvalue'=>$input['investperiodsvalue']));
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
 }

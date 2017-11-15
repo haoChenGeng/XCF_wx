@@ -759,7 +759,7 @@ header .shezhi {
 /*登入*/
 
 .engin {
-  position: fixed;
+  position: relative;
   width: 640px;
   height: 100%;
   margin: 0 auto;
@@ -771,7 +771,7 @@ header .shezhi {
 }
 
 .engin .content01 {
-  position: absolute;
+  position: relative;
   top: 35%;
   width: 100%;
 }

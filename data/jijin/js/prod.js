@@ -61,12 +61,20 @@ window.onload = function() {
 			var a = document.createElement("a");
 			a.className = "mui-btn mui-btn-block buy-btn";
 			if(res.purchasetype == "申购") {
-				a.innerHTML = "立即" + res.purchasetype;
+				a.innerHTML = "" + res.purchasetype;
 			} else if(res.purchasetype == "认购") {
-				a.innerHTML = "立即" + res.purchasetype;
+				a.innerHTML = "" + res.purchasetype;
 			}
 			a.setAttribute("data-fundType", res.purchasetype);
 			a.href = "/jijin/PurchaseController/Apply?fundcode=" + fundcode + "&purchasetype=" + res.purchasetype;
+			
+			var castSurely = document.createElement("a");
+			castSurely.innerHTML = "定投";
+			castSurely.className = "mui-btn mui-btn-block buy-btn";
+			castSurely.setAttribute("data-fundType", res.purchasetype);
+			castSurely.href = "/application/views/jijin/trade/castSurely.html";
+			
+			oParent.appendChild(castSurely);
 			oParent.appendChild(a);
 		}
 	});

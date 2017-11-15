@@ -131,35 +131,35 @@ function renderFundList(fundtype) {
           for (var i = 0; i < dayData.length; i++) {
             var oLiDay = document.createElement('li');
             oLiDay.classList.add('mui-table-view-cell');
-            oLiDay.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + dayData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + dayData[i].fundname + '</div><div class="fundlist-networth">' + dayData[i].nav + '</div><div class="fundlist-growthrate">' + (dayData[i].growth_day) + '%</div></a>';
+            oLiDay.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + dayData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + dayData[i].fundname + '</div><div class="fundlist-networth">' + dayData[i].nav + '</div><div class="fundlist-growthrate">' + (dayData[i].growth_day || '-- ') + '%</div></a>';
             fragDay.appendChild(oLiDay);            
           }
           var oneData = quickSort(fundListData,0,(fundListData.length - 1),'growth_onemonth');
           for (var i = 0; i < oneData.length; i++) {
             var oLiOne = document.createElement('li');
             oLiOne.classList.add('mui-table-view-cell');
-            oLiOne.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + oneData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + oneData[i].fundname + '</div><div class="fundlist-networth">' + oneData[i].nav + '</div><div class="fundlist-growthrate">' + (oneData[i].growth_onemonth) + '%</div></a>';
+            oLiOne.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + oneData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + oneData[i].fundname + '</div><div class="fundlist-networth">' + oneData[i].nav + '</div><div class="fundlist-growthrate">' + (oneData[i].growth_onemonth || '-- ') + '%</div></a>';
             fragOnemonth.appendChild(oLiOne);            
           }
           var threeData = quickSort(fundListData,0,(fundListData.length - 1),'growth_threemonth');
           for (var i = 0; i < threeData.length; i++) {
             var oLiThree = document.createElement('li');
             oLiThree.classList.add('mui-table-view-cell');
-            oLiThree.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + threeData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + threeData[i].fundname + '</div><div class="fundlist-networth">' + threeData[i].nav + '</div><div class="fundlist-growthrate">' + (threeData[i].growth_threemonth) + '%</div></a>';
+            oLiThree.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + threeData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + threeData[i].fundname + '</div><div class="fundlist-networth">' + threeData[i].nav + '</div><div class="fundlist-growthrate">' + (threeData[i].growth_threemonth || '-- ') + '%</div></a>';
             fragThreemonth.appendChild(oLiThree);            
           }
           var sixData = quickSort(fundListData,0,(fundListData.length - 1),'growth_sixmonth');
           for (var i = 0; i < sixData.length; i++) {
             var oLiSix = document.createElement('li');
             oLiSix.classList.add('mui-table-view-cell');
-            oLiSix.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + sixData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + sixData[i].fundname + '</div><div class="fundlist-networth">' + sixData[i].nav + '</div><div class="fundlist-growthrate">' + (sixData[i].growth_sixmonth) + '%</div></a>';
+            oLiSix.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + sixData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + sixData[i].fundname + '</div><div class="fundlist-networth">' + sixData[i].nav + '</div><div class="fundlist-growthrate">' + (sixData[i].growth_sixmonth || '-- ') + '%</div></a>';
             fragSixmonth.appendChild(oLiSix);            
           }
           var yearData = quickSort(fundListData,0,(fundListData.length - 1),'growth_year');
           for (var i = 0; i < yearData.length; i++) {
             var oLiYear = document.createElement('li');
             oLiYear.classList.add('mui-table-view-cell');
-            oLiYear.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + yearData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + yearData[i].fundname + '</div><div class="fundlist-networth">' + yearData[i].nav + '</div><div class="fundlist-growthrate">' + (yearData[i].growth_year) + '%</div></a>';
+            oLiYear.innerHTML = '<a href="' + '/application/views/jijin/trade/prodetail.html?fundcode=' + yearData[i].fundcode + '" class="fundlist-link"><div class="fundlist-name">' + yearData[i].fundname + '</div><div class="fundlist-networth">' + yearData[i].nav + '</div><div class="fundlist-growthrate">' + (yearData[i].growth_year || '-- ') + '%</div></a>';
             fragYear.appendChild(oLiYear);
           }
 

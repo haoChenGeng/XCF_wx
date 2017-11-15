@@ -47,7 +47,7 @@
                 <div class="item-width-wrap clearfix">
                     <span class="m2-item-t1"><?php echo $purchasetype?>金额：</span>
                     <label>
-                        <input type="number" id="sum" name="sum" style="color:#333;" data-error="金额错误"  placeholder=<?php echo "最小".intval($min_money+0.5)."元最大".($max_money>1000000?intval($max_money/10000)."万元":$max_money."元");?> />
+                        <input type="number" id="sum" name="sum" style="color:#333;" data-error="金额错误"  placeholder=<?php echo intval($min_money+0.5)."元起投"?> />
                     </label>
                 </div>
             </div>
