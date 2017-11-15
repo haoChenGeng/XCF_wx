@@ -599,7 +599,7 @@ class Fund_interface
 	}
 
 	function FixedInvestment($input){
-		$neededFields = array('tpasswd','channelid','depositacct','investamount','fundcode','tano','moneyaccount','investcycle','investcyclevalue');
+		$neededFields = array('tpasswd','depositacct','investamount','fundcode','tano','investcycle','investcyclevalue');
     	foreach ($neededFields as $val){
     		if (!isset($input[$val])){
     			return array('code'=>'9999', 'msg'=>'必填字段,'.$val.'不能为空！');
