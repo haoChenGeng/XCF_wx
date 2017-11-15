@@ -131,10 +131,11 @@ class Fund_interface
 		$fundNetvalue = $this->getReturnData($returnData);
 		if ($fundNetvalue['code'] == '0000' && is_array($fundNetvalue['data'])){
 			if (!$this->CI->db->table_exists($tableName)){
-				$this->creatFundNetValue($tableName);
+				$this->creatFundNetValue($tableName,$fundType);
 			}
 			if (empty($startDate)){
-				$this->CI->db->truncate($tableName);
+// 				$this->CI->db->truncate($tableName);
+				$this->CI->db->where('1=1')->delete($tableName);
 			}
 			$updateData = &$fundNetvalue['data'];
 			$currentdate = date('Y-m-d',time());
@@ -168,21 +169,26 @@ class Fund_interface
 		return $flag;
 	}
 	
-	private function creatFundNetValue($tableName){
-		$sql = "CREATE TABLE `".$tableName."` (
-				`net_date` varchar(24) ,
-				`net_unit` varchar(24) DEFAULT '0',
-				`net_sum` varchar(24) DEFAULT '0',
-				`net_day_growth` varchar(24) NOT NULL DEFAULT '0',
-				`fundincomeunit` varchar(24) DEFAULT NULL,
-				`growthrate` varchar(24) NOT NULL DEFAULT '0',
-				`XGRQ` datetime DEFAULT NULL COMMENT '更新日期',
-				PRIMARY KEY (`net_date`)
-				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-		// 				`oneMonth` double DEFAULT NULL COMMENT '1个月增长率数据',
-		// 				`threeMonth` double DEFAULT NULL COMMENT '3个月增长率数据',
-		// 				`sixMonth` double DEFAULT NULL COMMENT '6个月增长数据',
-		// 				`oneYear` double DEFAULT NULL COMMENT '1年增长数据',		
+	function creatFundNetValue($tableName,$fundType){
+		$sql = "
+				CREATE TABLE `".$tableName."` (
+					`net_date` varchar(24) ,
+					`net_unit` varchar(24) DEFAULT '0',
+					`net_sum` varchar(24) DEFAULT '0',
+					`net_day_growth` varchar(24) NOT NULL DEFAULT '0',
+					`fundincomeunit` varchar(24) DEFAULT NULL,
+					`growthrate` varchar(24) NOT NULL DEFAULT '0',
+					`XGRQ` datetime DEFAULT NULL COMMENT '更新日期',";	
+		if ( 2 != $fundType ){
+			$sql .="
+					`oneMonth` double DEFAULT NULL COMMENT '1个月增长率数据',
+					`threeMonth` double DEFAULT NULL COMMENT '3个月增长率数据',
+					`sixMonth` double DEFAULT NULL COMMENT '6个月增长数据',
+					`oneYear` double DEFAULT NULL COMMENT '1年增长数据',";
+		}
+		$sql .="
+					PRIMARY KEY (`net_date`)
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		$flag = $this->CI->db->query($sql);
 		return $flag;
 	}
@@ -377,7 +383,8 @@ class Fund_interface
 				myLog('trade/risk_test_query',"调用riskQuery接口失败,返回数据为".serialize($JZQuestion));
 			}
 			if (!empty($updateData)){
-				$flag = $this->CI->db->truncate('p2_riskquestion');
+// 				$flag = $this->CI->db->truncate('p2_riskquestion');
+				$flag = $this->CI->db->where('1=1')->delete('p2_riskquestion');
 				$flag = $this->CI->db->insert_batch('p2_riskquestion',$updateData);
 				if ($flag){
 					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'riskQuestion'))->update('dealitems');

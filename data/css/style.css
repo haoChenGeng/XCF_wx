@@ -905,7 +905,7 @@ header .shezhi {
 }
 
 .title_listul li {
-  width: 25%;
+  width: 20%;
   height: 120px;
   float: left;
   list-style-type: none;
@@ -921,6 +921,7 @@ header .shezhi {
 
 .title_listul .li03 {
   background: url(../img/index_ico3.png) no-repeat 16px 0;
+  background-size: 70%;
 }
 
 .title_listul .li04 {
@@ -935,7 +936,7 @@ header .shezhi {
   font-size: 20px;
   padding-top: 91px;
   display: block;
-  text-align: left;
+  text-align: center;
   color: #727272;
 }
 

@@ -51,25 +51,25 @@
       
         <ul class="title_listul">
           <li class="li01" >
-              <a href="/application/views/jijin/buy_fund.html" id="fund_access" class="span01" style="padding-left: 40px;">公募</a>
+              <a href="/application/views/jijin/buy_fund.html" id="fund_access" class="span01" >公募</a>
             </li>
             <li class="li02">
             <?php 
               if (isset($_SESSION['customer_id']))
-                echo '<a href="/Pf_assessment/userpfa" id="" class="span01" style="padding-left: 40px;">私募</a>';
+                echo '<a href="/Pf_assessment/userpfa" id="" class="span01" >私募</a>';
               else
-                echo '<a href="/user/login/1" id="" class="span01" style="padding-left: 40px;">私募</a>';
+                echo '<a href="/user/login/1" id="" class="span01">私募</a>';
               ?>
             </li>
-<!--             <li class="li05"> -->
-<!--               <a href="/application/views/roboAdvisor/roboAdvisor.html" class="span01">智投</a> --> 
+            <li class="li05">
+              <a href="/application/views/roboAdvisor/roboAdvisor.html" class="span01">智投</a> 
 <!--               <a href="/application/views/roboAdvisor/next.html" class="span01">智投</a> -->
-<!--             </li> -->
+            </li>
             <li class="li03" >
-              <a href="/FindPaper" id="sign_in" class="span01" style="padding-left: 40px;">发现</a>
+              <a href="/FindPaper" id="sign_in" class="span01">发现</a>
             </li>
             <li class="li04">
-              <a href="https://neoclub.xiaoniuxcf.com/wap.php" class="span01" style="padding-left: 20px;">会员专区</a>
+              <a href="https://neoclub.xiaoniuxcf.com/wap.php" class="span01" >会员专区</a>
             </li>
         </ul>
         <div class="text_list pos-re mt60">

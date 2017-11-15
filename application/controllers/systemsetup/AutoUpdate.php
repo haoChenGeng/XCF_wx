@@ -18,7 +18,8 @@ class AutoUpdate extends MY_Controller {
 		foreach ($tableNames as $key => $val){			//更新基金其它信息
 			$returnData = $this->fund_interface->autoUpdateJZInfo($val);
 			if (!empty($returnData['data'])){
-				$this->db->truncate($key);
+// 				$this->db->truncate($key);
+				$this->db->where('1=1')->delete($key);
 				$this->db->insert_batch($key,$returnData['data']);
 			}
 			if ($key == 'hsindexvalue'){
