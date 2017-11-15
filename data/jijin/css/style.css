@@ -885,15 +885,6 @@ h3.m-item-5 {
 	line-height: 36px;
 	padding: 8px 0 8px 16px;
 }
-/* .debit-btn{
-    background: #f5bc44;
-    color: #fff;
-    font-size: 22px;
-    margin: 20px auto;
-    width: 300px;
-    padding: 15px 0;
-    display: block;
-} */
 .i-picker{
     position: fixed;
     left: 0px;
@@ -1042,4 +1033,7 @@ h3.m-item-5 {
 }
 .castSurelyTip .m-item-5 > h3 {
    font-weight: 700;
+}
+.castSurely-content{
+	opacity:0;
 }
