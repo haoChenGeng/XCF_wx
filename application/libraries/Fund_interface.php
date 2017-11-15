@@ -617,7 +617,7 @@ class Fund_interface
 			'tano'=>$input['tano'],
 			'moneyaccount'=>$input['moneyaccount'],
 			'investcycle'=>$input['investcycle'],
-			'investcyclevalue'=>$input['investcyclevalue'],
+			'investcyclevalue'=>$input['investcyclevalue']));
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));
 	}
