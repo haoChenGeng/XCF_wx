@@ -16,13 +16,32 @@ function beforeCast(){
 		success: function(res) {
 			if(res.code==0){
 				if(res.data.riskmatching==0){
-					byId("castSurelyTip").style.display="block";
-					byId("beforeCastSure").onclick=function(){						
-						byId("castSurelyTip").style.display="none";
-						document.getElementsByClassName("castSurely-content")[0].style.opacity=1;
-					}
-				}else{					
-					document.getElementsByClassName("castSurely-content")[0].style.opacity=1;
+					mui.ajax("/application/views/jijin/trade/riskTip/riskTip.html",{
+						success:function(rest){
+							byId("riskmatching0").innerHTML=rest;
+							byId("riskmatching0").className="castSurelyTip";
+							byId("ensureSubmit").innerHTML = "我已悉知并确认购买";
+							byId("custRisk").innerHTML = res.data.my_risklevel;
+							byId("ensureSubmit").onclick=function(){						
+								remove(byId("riskmatching0"));
+								byClass("castSurely-content").style.opacity=1;
+							}
+						}
+					})
+					
+				}else if(res.data.riskmatching==2){	
+					mui.ajax("/application/views/jijin/trade/riskTip/riskTip.html",{
+						success:function(rest){
+							byId("riskmatching2").innerHTML = rest;
+							byId("riskmatching2").className="castSurelyTip";
+							byId("ensureSubmit").innerHTML = "重新测评";
+							byId("custRisk").innerHTML = res.data.my_risklevel;
+							byId("ensureSubmit").href="/jijin/Risk_assessment";
+						}
+					})
+					
+				}else{
+					byClass("castSurely-content").style.opacity=1;					
 				}
 				
 				var fundinfo = res.data.fundinfo;
@@ -40,9 +59,7 @@ function beforeCast(){
 				pickerOp(bankList);
 				castOp();
 			}else{
-				mui.alert('暂无数据',' ', function() {
-					
-				});
+				mui.alert('暂无数据',' ', function() {});
 			}
 		}
 	});
@@ -59,7 +76,7 @@ function castNextOp(){
 		var max = byId("castSurelyNum").max;
 		var min = byId("castSurelyNum").min;
 		
-		if(val==""){
+		/*if(val==""){
 			mui.alert('请输入有效的金额',' ', function() {
 				
 			});
@@ -85,7 +102,26 @@ function castNextOp(){
 			castSubmit.id = "castSubmit";
 			byId("castOpBox").appendChild(castSubmit);
 			submitOp();
-		}
+		}*/
+		if(!moneyRange({
+			val:val,
+			max:max,
+			min:min
+		})) return;
+		
+		byClass("pass-box").style.display="block";
+		
+		var castNext = byId("castNext");
+		castNext.parentNode.removeChild(castNext);
+		
+		var castSubmit = document.createElement("div");
+		castSubmit.innerHTML = "确认";
+		castSubmit.className = "mui-btn mui-btn-block buy-btn";
+		castSubmit.id = "castSubmit";
+		byId("castOpBox").appendChild(castSubmit);
+		byId("castSurelyNum").disabled=true;
+		
+		submitOp();
 		
 	}
 }
@@ -299,10 +335,10 @@ function showPicker(id,pickerId){
 		div.className = "mui-backdrop";
 		document.body.appendChild(div);
 		div.onclick=function(){
-			var div = document.getElementsByClassName("mui-backdrop")[0];
+			var div = byClass("mui-backdrop");
 			div.parentNode.removeChild(div);
 			
-			var cnodes = document.getElementsByClassName("i-picker");
+			var cnodes = byClass("i-picker");
 			for(var cnode in cnodes){
 				cnodes[cnode].className = "i-picker";
 			}
@@ -314,7 +350,7 @@ function hidePicker(showId,valId,pickerId,item){
 	byId(showId).innerHTML = item.text;
 	byId(valId).value = item.value;
 	
-	var div = document.getElementsByClassName("mui-backdrop")[0];
+	var div = byClass("mui-backdrop")[0];
 	div.parentNode.removeChild(div); 
 	var iPicker=byId(pickerId);
 	iPicker.className="i-picker";
@@ -389,57 +425,3 @@ function getBankList(list){
 	return blist;
 }
 
-var byId = function(id) {
-	return document.getElementById(id);
-};
-
-function getUrlParam(name) { //获取url地址参数
-	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-	var r = window.location.search.substr(1).match(reg); //匹配目标参数
-	if(r != null) return unescape(r[2]);
-	return null; //返回参数值
-}
-
-var moneyRange = function(param){
-	var val = param.value;
-	var max = param.max;
-	var min = param.min;
-	
-	if(val==""){
-		mui.alert('请输入有效的金额',' ', function() {});
-		return false;
-	}
-	if(val<parseInt(min)){
-		mui.alert('最低定投'+min+'元',' ', function() {});
-		return false;
-	}
-	if(val>parseInt(max)){
-		mui.alert('最高定投'+max+'元',' ', function() {});
-		return false
-	}
-	return true;
-}
-var keyupMoney = function(id){
-	var oldVal = "";
-	byId(id).onkeyup=function(){
-		var val = byId(id).value;
-		var max = byId(id).max;
-		var min = byId(id).min;
-		if(val>=parseFloat(min)&&val<=parseFloat(max)){
-			byId(id).style.color = "#222";
-		}else{
-			byId(id).style.color = "#ff0000";			
-		}
-		
-		var re = /^\d+(?:\.\d{0,2})?$/;
-		if(val!=""){			
-			if(val.match(re)==null){
-				byId(id).value = oldVal;
-			}else{
-				oldVal = val;
-			}
-		}else{
-			oldVal = null;
-		}
-	}
-}
