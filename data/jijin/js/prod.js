@@ -68,14 +68,17 @@ window.onload = function() {
 			a.setAttribute("data-fundType", res.purchasetype);
 			a.href = "/jijin/PurchaseController/Apply?fundcode=" + fundcode + "&purchasetype=" + res.purchasetype;
 			
-			var castSurely = document.createElement("a");
-			castSurely.innerHTML = "定投";
-			castSurely.className = "mui-btn mui-btn-block buy-btn";
-			castSurely.setAttribute("data-fundType", res.purchasetype);
-			castSurely.href = "/application/views/jijin/trade/castSurely.html";
-			
-			oParent.appendChild(castSurely);
 			oParent.appendChild(a);
+			
+			if(fundlist.business_flag==1){
+				var castSurely = document.createElement("a");
+				castSurely.innerHTML = "定投";
+				castSurely.className = "mui-btn mui-btn-block buy-btn";
+				castSurely.setAttribute("data-fundType", res.purchasetype);
+				castSurely.href = "/application/views/jijin/trade/castSurely.html?fundcode=" + fundcode;
+				
+				oParent.appendChild(castSurely);
+			}
 		}
 	});
 

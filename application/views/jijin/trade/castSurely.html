@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="format-detection" content="telephone=no" />
+		<title>定投计划</title>
+		<link rel="stylesheet" href="../../../../data/jijin/css/mui.min.css"/>
+		<link rel="stylesheet" href="../../../../data/jijin/css/style.css"/>
+		<link rel="stylesheet" href="../../../../data/jijin/css/mobile.css"/>
+		<link rel="stylesheet" href="../../../../data/jijin/css/risk.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">定投计划</h1>
+		</header>
+		<div class="mui-content castSurely-content">
+			<div class="normal-info">				
+				<span id="fundNameDesc"></span>
+				<span id="fundCodeDesc"></span>
+			</div>
+			<form method="post" action="">
+				<div class="m2-item inp-item">
+	                <div class="item-width-wrap clearfix">
+	                    <span class="m2-item-t1">定投金额：</span>
+	                    <label>
+	                        <input type="tel" id="castSurelyNum" placeholder="" step="0.01">
+	                    </label>
+	                </div>
+	                <p class="inp_desc">定投费率以实际买入确认费率为准</p>
+	            </div>
+	            <ul class="mui-table-view castSurely-setting" id="">
+			        <li class="mui-table-view-cell" id="castSurelyCycle">
+			            <div class="mui-navigate-right">
+			            	<div class="select-title">定投周期</div>
+			            	<div class="select-value" id="castSurelyCycleShow"></div>
+			            	<input type="hidden" id="castSurelyCycleVal">
+			            </div>		
+			        </li>
+			        <li class="mui-table-view-cell" id="castSurelyDate">
+			        	<div class="mui-navigate-right">
+				            <div class="select-title">定投日</div>
+			            	<div class="select-value" id="castSurelyDateShow"></div>
+			            	<input type="hidden" id="castSurelyDateVal">
+		            	</div>
+			        </li>			        
+			    </ul>
+	            <ul class="mui-table-view castSurely-card" id="bankSelect">
+			        <li class="mui-table-view-cell">
+			            <div class="mui-navigate-right">
+			            	<div class="select-title">支付方式</div>
+			            	<div class="select-value" id="bankSelectShow"></div>
+			            	<input type="hidden" id="bankSelectVal">
+			            	<!-- <input type="hidden" id="channelid">
+			            	<input type="hidden" id="moneyaccount"> -->
+			            </div>		
+			        </li>		        
+			    </ul>
+			</form>
+			<div class="debit-date">
+				下次扣款时间：<span id="getNextPayDate">2017-11-11</span>
+			</div>
+			<div class="m2-item inp-item pass-box">
+                <div class="item-width-wrap clearfix">
+                    <span class="m2-item-t1">交易密码：</span>
+                    <label>
+                        <input type="password" id="passwd" name="tpasswd" data-reg=".+" data-error="交易密码不能为空" placeholder="请输入交易密码">
+                    </label>
+                </div>
+            </div>
+			<section class="m-footer" id="castOpBox">
+      			<div class="mui-btn mui-btn-block buy-btn"  id="castNext">下一步</div>
+    		</section>
+		</div>
+		
+		<div class="castSurelyTip" id="castSurelyTip">
+			<div data-role="page" id="pageone">
+				<div data-role="content">
+					<section class="m-item-wrap m-item-5-wrap">
+				        <div class="m-item-5">
+				            <h3 class="text-center">适当性风险提示</h3>
+				        </div>
+				    </section>
+					<h3 class="riskTip-content">您的风险水平为"平衡型"，所购买产品的风险等级为中高，已超过您的风险承受能力，根据<a style="color: #0066fe;" href="/data/jijin/file/证券期货投资者适当性管理办法.pdf">《证券期货投资者适当性管理办法》</a>，请确认您已经仔细阅读产品合同等法律文件以了解产品风险，确认继续购买该产品并自愿承担产品风险。</h3> 
+				</div>
+				
+				<a href="javascrip:void(0)" data-role="button" data-theme="b" class="risk-btn risk-result" id="beforeCastSure">我已悉知并确认购买</a>
+				<a href="/jijin/Jz_fund" data-role="button" data-theme="b" class="risk-btn risk-result">返回</a>
+			</div>
+		</div>
+		
+		<script src="../../../../aboutus/js/mui.min.js"></script>
+		<script src="../../../../data/jijin/js/castSurely.js"></script>
+		<script src="/data/js/RSA.min.js"></script>
+	</body>
+</html>

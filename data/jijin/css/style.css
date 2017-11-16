@@ -855,10 +855,11 @@ h3.m-item-5 {
 	font-size: 17px;
 	color: #808080;
 }
-.m2-item.inp-item input{
+.m2-item.inp-item input[type="tel"]{
 	border: none;
 	margin-bottom: 0;
 	color: #222;
+	width: 150px;
 }
 .m2-item.inp-item .inp_desc{
 	padding-left: 18px;
@@ -885,15 +886,6 @@ h3.m-item-5 {
 	line-height: 36px;
 	padding: 8px 0 8px 16px;
 }
-/* .debit-btn{
-    background: #f5bc44;
-    color: #fff;
-    font-size: 22px;
-    margin: 20px auto;
-    width: 300px;
-    padding: 15px 0;
-    display: block;
-} */
 .i-picker{
     position: fixed;
     left: 0px;
@@ -951,7 +943,7 @@ h3.m-item-5 {
 	padding-right: 20px;
 }
 .castState.mui-navigate-right{
-	padding-right: 0;
+	padding-right: 36px;
 	line-height: 36px;
 }
 .castCurely-item .item-f2{
@@ -1015,4 +1007,34 @@ h3.m-item-5 {
 }
 .mui-scroll-wrapper {
   overflow: scroll;
+}
+.pass-box{
+	display: none;
+}
+.castSurelyTip{
+    position: fixed;
+    z-index: 998;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+	background-color: #eee;
+	display: none;
+}
+.castSurelyTip *{
+	font-family: Helvetica,Arial,Tahoma,sans-serif;	
+}
+.castSurelyTip .riskTip-content{
+	text-align:center;
+	padding: 30px;
+	font-size: 19px;
+	font-weight: 700;
+	color: #000;
+	line-height: 26px;
+}
+.castSurelyTip .m-item-5 > h3 {
+   font-weight: 700;
+}
+.castSurely-content{
+	opacity:0;
 }

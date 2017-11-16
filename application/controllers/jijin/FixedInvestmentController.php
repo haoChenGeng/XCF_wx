@@ -96,7 +96,6 @@ class FixedInvestmentController extends MY_Controller
 
 		$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
 		$decryptData ='';
-		
 		openssl_private_decrypt(base64_decode($post['token']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
 		//判断一次性随机验证码是否存在
 		$div_bit = strpos($decryptData,(string)$_SESSION['token']);
@@ -116,6 +115,57 @@ class FixedInvestmentController extends MY_Controller
 			$return['msg'] = "非正常请求，请按照流程发起定投请求！";
 		}
 
+		echo json_encode($return);
+	}
+
+	function FixedInvestmentEnd(){
+		$post = $this->input->post();
+		$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
+		$decryptData ='';
+		openssl_private_decrypt(base64_decode($post['tpasswd']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
+		$post['tpasswd'] = $decryptData;
+
+		$fixed =$this->fund_interface->FixedInvestmentEnd($post);
+		if(isset($fixed['code'])&&$fixed['code'] == "0000"){
+			$return['code'] = 0;
+			$return['msg'] = $fixed['msg'];
+		}else{
+			$return['code'] = 1;
+			$return['msg'] = $fixed['msg'];
+		}
+		echo json_encode($return);
+	}
+
+	function FixedInvestmentUpdate(){
+		$post = $this->input->post();
+		$private_key = openssl_get_privatekey(file_get_contents($this->config->item('RSA_privatekey')));
+		$decryptData ='';
+		openssl_private_decrypt(base64_decode($post['tpasswd']),$decryptData, $private_key, OPENSSL_PKCS1_PADDING);
+		$post['tpasswd'] = $decryptData;
+
+		$fixed =$this->fund_interface->FixedInvestmentUpdate($post);
+		if(isset($fixed['code'])&&$fixed['code'] == "0000"){
+			$return['code'] = 0;
+			$return['msg'] = $fixed['msg'];
+		}else{
+			$return['code'] = 1;
+			$return['msg'] = $fixed['msg'];
+		}
+		echo json_encode($return);
+	}
+
+	function FixedInvestmentQuery(){
+		$post = $this->input->get();
+
+		$fixed =$this->fund_interface->FixedInvestmentQuery($post);
+		if(isset($fixed['code'])&&$fixed['code'] == "0000"){
+			$return['code'] = 0;
+			$return['msg'] = $fixed['msg'];
+			$return['data'] = $fixed['data'];
+		}else{
+			$return['code'] = 1;
+			$return['msg'] = $fixed['msg'];
+		}
 		echo json_encode($return);
 	}
 }
