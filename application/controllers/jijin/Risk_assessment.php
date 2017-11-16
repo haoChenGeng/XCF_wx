@@ -97,6 +97,9 @@ class Risk_assessment extends MY_Controller {
 			if ($ret['code'] == '0000') {
 				$data['ret_code'] = '0000';
 				$data['ret_msg'] = '风险评测成功';
+				if ($_SESSION['riskLevel'] > $ret['data']['custrisk']){
+					$data['cautionFlag'] = 1;
+				}
 				$_SESSION['riskLevel'] = $ret['data']['custrisk'];
 				$this->load->config('jz_dict');
 				$data['custrisk'] = $this->config->item('custrisk')[$_SESSION['riskLevel']];

@@ -34,6 +34,11 @@
 						echo "/jijin/Jz_my/index";	
 					}
 				 ?>" data-role="button" data-theme="b" class="risk-btn risk-result" >返回</a>
+		<?php
+		if (isset($cautionFlag)){
+			echo '<br><p style="text-align:center";>投资者风险评测变更可能影响您持有的基金份额和定投计划，请根据您实际的风险等级进行购买基金产品交易。</p>';
+		}
+		?>
 	</div>
 </body>
 </html>
