@@ -177,10 +177,11 @@ class FixedInvestmentController extends MY_Controller
 					$fixed['data'][$key]['risklevel'] = null;
 			}
 
-			$fixed['data']['public_key'] = file_get_contents($this->config->item('RSA_publickey'));
+			$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));
+			$data['fixed'] = $fixed['data'];
 			$return['code'] = 0;
 			$return['msg'] = $fixed['msg'];
-			$return['data'] = $fixed['data'];
+			$return['data'] = $data;
 		}else{
 			$return['code'] = 1;
 			$return['msg'] = $fixed['msg'];
