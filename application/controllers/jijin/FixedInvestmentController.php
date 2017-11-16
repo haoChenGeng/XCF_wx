@@ -11,6 +11,11 @@ class FixedInvestmentController extends MY_Controller
         $this->load->database();
         $this->load->helper(array("output","comfunction","logfuncs"));       //"page"  "log"   "func",
         $this->load->library(array('Fund_interface','Logincontroller'));
+        $_SESSION['next_url'] = $this->base . "/jijin/Jz_fund";
+		if (!$this->logincontroller->isLogin()) {
+			redirect($this->base . "/jijin/Jz_account/register");
+			exit;
+		}
     }
 
     function index($activePage = 'fund'){
@@ -18,11 +23,6 @@ class FixedInvestmentController extends MY_Controller
 
 	function beforeFixedInvestment(){
 		$get = $this->input->get();
-		$_SESSION['next_url'] = $this->base . "/jijin/Jz_fund";
-		if (!$this->logincontroller->isLogin()) {
-			redirect($this->base . "/jijin/Jz_account/register");
-			exit;
-		}
 
 		if(!isset($get['fundcode'])){
 			echo json_encode(array('code'=>1,'msg'=>'fundcode不存在!'));
@@ -68,6 +68,10 @@ class FixedInvestmentController extends MY_Controller
 					$fundinfo['risklevel'] =isset($this->config->item('productrisk')[$fundinfo['risklevel']])?$this->config->item('productrisk')[$fundinfo['risklevel']]:null;
 					$data['token'] = $_SESSION['token'] = mt_rand(100000,999999);
 					$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));
+					if((int)$_SESSION['riskLevel'] == 1){
+						$data['riskmatching'] = 2;
+						$data['token'] = 0;
+					}
 					$return['code'] = 0;
 					$return['data'] = $data;
 				}else{
@@ -159,6 +163,12 @@ class FixedInvestmentController extends MY_Controller
 
 		$fixed =$this->fund_interface->FixedInvestmentQuery($post);
 		if(isset($fixed['code'])&&$fixed['code'] == "0000"){
+			$channel_info = $this->fund_interface->paymentChannel();
+			$channel_info = setkey($channel_info,'channelid');
+			foreach ($fixed['data'] as $key => $value) {
+				$fixed['data'][$key]['channelname'] = $channel_info[$value['channelid']]['channelname'];
+			}
+			
 			$return['code'] = 0;
 			$return['msg'] = $fixed['msg'];
 			$return['data'] = $fixed['data'];
