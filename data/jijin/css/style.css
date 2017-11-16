@@ -855,10 +855,11 @@ h3.m-item-5 {
 	font-size: 17px;
 	color: #808080;
 }
-.m2-item.inp-item input{
+.m2-item.inp-item input[type="tel"]{
 	border: none;
 	margin-bottom: 0;
 	color: #222;
+	width: 150px;
 }
 .m2-item.inp-item .inp_desc{
 	padding-left: 18px;
