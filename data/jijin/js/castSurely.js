@@ -30,6 +30,7 @@ function beforeCast(){
 				byId("fundNameDesc").innerHTML = fundinfo.fundname;
 				byId("castSurelyNum").max = fundinfo.per_max_39;
 				byId("castSurelyNum").min = fundinfo.per_min_39;
+				byId("castSurelyNum").placeholder = fundinfo.per_min_39+"元起投";
 				
 				_token = res.data.token;
 				_public_key = res.data.public_key;
@@ -57,6 +58,13 @@ function castNextOp(){
 		var val = byId("castSurelyNum").value;
 		var max = byId("castSurelyNum").max;
 		var min = byId("castSurelyNum").min;
+		
+		if(val==""){
+			mui.alert('请输入有效的金额',' ', function() {
+				
+			});
+			return;
+		}
 		if(val<parseInt(min)){
 			mui.alert('最低定投'+min+'元',' ', function() {
 				
@@ -83,9 +91,27 @@ function castNextOp(){
 }
 
 function numInpOp(){
+	keyupMoney("castSurelyNum");
+	/*var oldVal = "";
 	byId("castSurelyNum").onkeyup=function(){
 		var val = byId("castSurelyNum").value;
-	}
+		var max = byId("castSurelyNum").max;
+		var min = byId("castSurelyNum").min;
+		if(val>=parseFloat(min)&&val<=parseFloat(max)){
+			byId("castSurelyNum").style.color = "#222";
+		}else{
+			byId("castSurelyNum").style.color = "#ff0000";			
+		}
+		
+		var re = /^\d+(?:\.\d{0,2})?$/;
+		if(val!=""){			
+			if(val.match(re)==null){
+				byId("castSurelyNum").value = oldVal;
+			}else{
+				oldVal = val;
+			}
+		}
+	}*/
 }
 
 function submitOp(){
@@ -372,4 +398,48 @@ function getUrlParam(name) { //获取url地址参数
 	var r = window.location.search.substr(1).match(reg); //匹配目标参数
 	if(r != null) return unescape(r[2]);
 	return null; //返回参数值
+}
+
+var moneyRange = function(param){
+	var val = param.value;
+	var max = param.max;
+	var min = param.min;
+	
+	if(val==""){
+		mui.alert('请输入有效的金额',' ', function() {});
+		return false;
+	}
+	if(val<parseInt(min)){
+		mui.alert('最低定投'+min+'元',' ', function() {});
+		return false;
+	}
+	if(val>parseInt(max)){
+		mui.alert('最高定投'+max+'元',' ', function() {});
+		return false
+	}
+	return true;
+}
+var keyupMoney = function(id){
+	var oldVal = "";
+	byId(id).onkeyup=function(){
+		var val = byId(id).value;
+		var max = byId(id).max;
+		var min = byId(id).min;
+		if(val>=parseFloat(min)&&val<=parseFloat(max)){
+			byId(id).style.color = "#222";
+		}else{
+			byId(id).style.color = "#ff0000";			
+		}
+		
+		var re = /^\d+(?:\.\d{0,2})?$/;
+		if(val!=""){			
+			if(val.match(re)==null){
+				byId(id).value = oldVal;
+			}else{
+				oldVal = val;
+			}
+		}else{
+			oldVal = null;
+		}
+	}
 }
