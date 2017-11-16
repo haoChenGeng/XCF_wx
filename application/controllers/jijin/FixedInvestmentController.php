@@ -167,9 +167,16 @@ class FixedInvestmentController extends MY_Controller
 		if(isset($fixed['code'])&&$fixed['code'] == "0000"){
 			$channel_info = $this->fund_interface->paymentChannel();
 			$channel_info = setkey($channel_info,'channelid');
+			$this->load->config('jz_dict');
 			foreach ($fixed['data'] as $key => $value) {
 				$fixed['data'][$key]['channelname'] = $channel_info[$value['channelid']]['channelname'];
+				$fixed['data'][$key]['risklevel'] = $this->db->select('risklevel')->where(array('fundcode' => $value['fundcode']))->get('fundlist')->row_array()['risklevel'];
+				if((int)$_SESSION['riskLevel'] < (int)$fixed['data'][$key]['risklevel']){
+					$fixed['data'][$key]['risklevel'] = isset($this->config->item('productrisk')[$fixed['data'][$key]['risklevel']])?$this->config->item('productrisk')[$fixed['data'][$key]['risklevel']]:null;
+				}else
+					$fixed['data'][$key]['risklevel'] = null;
 			}
+
 			$fixed['data']['public_key'] = file_get_contents($this->config->item('RSA_publickey'));
 			$return['code'] = 0;
 			$return['msg'] = $fixed['msg'];
