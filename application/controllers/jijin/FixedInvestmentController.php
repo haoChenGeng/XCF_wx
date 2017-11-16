@@ -164,8 +164,6 @@ class FixedInvestmentController extends MY_Controller
 		$get = $this->input->get();
 
 		$data =$this->fund_interface->FixedInvestmentQuery($get);
-		echo json_encode($data);
-		return;
 		if(isset($data['code'])&&$data['code'] == "0000"){
 			$channel_info = $this->fund_interface->paymentChannel();
 			$channel_info = setkey($channel_info,'channelid');
@@ -178,17 +176,11 @@ class FixedInvestmentController extends MY_Controller
 				}else
 					$data['data'][$key]['fixed']['risklevel'] = null;
 			}
-			$data['fixed'] = $data['data']['fixed'];
-			$data['order'] = $data['data']['order'];
-			$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));
-			unset($data['data']);
-			$return['code'] = 0;
-			$return['msg'] = $data['msg'];
-			$return['data'] = $data;
+			$data['data']['public_key'] = file_get_contents($this->config->item('RSA_publickey'));
+			$data['code'] = 0;
 		}else{
-			$return['code'] = 1;
-			$return['msg'] = $data['msg'];
+			$data['code'] = 1;
 		}
-		echo json_encode($return);
+		echo json_encode($data);
 	}
 }
