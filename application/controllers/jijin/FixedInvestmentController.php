@@ -161,30 +161,33 @@ class FixedInvestmentController extends MY_Controller
 	}
 
 	function FixedInvestmentQuery(){
-		$post = $this->input->get();
+		$get = $this->input->get();
 
-		$fixed =$this->fund_interface->FixedInvestmentQuery($post);
-		if(isset($fixed['code'])&&$fixed['code'] == "0000"){
+		$data =$this->fund_interface->FixedInvestmentQuery($get);
+		echo json_encode($data);
+		return;
+		if(isset($data['code'])&&$data['code'] == "0000"){
 			$channel_info = $this->fund_interface->paymentChannel();
 			$channel_info = setkey($channel_info,'channelid');
 			$this->load->config('jz_dict');
-			foreach ($fixed['data'] as $key => $value) {
-				$fixed['data'][$key]['channelname'] = $channel_info[$value['channelid']]['channelname'];
-				$fixed['data'][$key]['risklevel'] = $this->db->select('risklevel')->where(array('fundcode' => $value['fundcode']))->get('fundlist')->row_array()['risklevel'];
-				if((int)$_SESSION['riskLevel'] < (int)$fixed['data'][$key]['risklevel']){
-					$fixed['data'][$key]['risklevel'] = isset($this->config->item('productrisk')[$fixed['data'][$key]['risklevel']])?$this->config->item('productrisk')[$fixed['data'][$key]['risklevel']]:null;
+			foreach ($data['data']['fixed'] as $key => $value) {
+				$data['data']['fixed'][$key]['channelname'] = $channel_info[$value['channelid']]['channelname'];
+				$data['data']['fixed'][$key]['risklevel'] = $this->db->select('risklevel')->where(array('fundcode' => $value['fundcode']))->get('fundlist')->row_array()['risklevel'];
+				if((int)$_SESSION['riskLevel'] < (int)$data['data']['fixed'][$key]['risklevel']){
+					$data['data']['fixed'][$key]['risklevel'] = isset($this->config->item('productrisk')[$data['data']['fixed'][$key]['risklevel']])?$this->config->item('productrisk')[$data['data']['fixed'][$key]['risklevel']]:null;
 				}else
-					$fixed['data'][$key]['risklevel'] = null;
+					$data['data'][$key]['fixed']['risklevel'] = null;
 			}
-
+			$data['fixed'] = $data['data']['fixed'];
+			$data['order'] = $data['data']['order'];
 			$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));
-			$data['fixed'] = $fixed['data'];
+			unset($data['data']);
 			$return['code'] = 0;
-			$return['msg'] = $fixed['msg'];
+			$return['msg'] = $data['msg'];
 			$return['data'] = $data;
 		}else{
 			$return['code'] = 1;
-			$return['msg'] = $fixed['msg'];
+			$return['msg'] = $data['msg'];
 		}
 		echo json_encode($return);
 	}
