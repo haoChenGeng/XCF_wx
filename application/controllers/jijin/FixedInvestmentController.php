@@ -66,6 +66,7 @@ class FixedInvestmentController extends MY_Controller
 						$data['riskmatching'] = 1;
 					$this->load->config('jz_dict');
 					$fundinfo['risklevel'] =isset($this->config->item('productrisk')[$fundinfo['risklevel']])?$this->config->item('productrisk')[$fundinfo['risklevel']]:null;
+					$data['my_risklevel'] =isset($this->config->item('custrisk')[$_SESSION['riskLevel']])?$this->config->item('custrisk')[$_SESSION['riskLevel']]:null;
 					$data['token'] = $_SESSION['token'] = mt_rand(100000,999999);
 					$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));
 					if((int)$_SESSION['riskLevel'] == 1){
