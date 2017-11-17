@@ -13,7 +13,7 @@ class FixedInvestmentController extends MY_Controller
         $this->load->library(array('Fund_interface','Logincontroller'));
         $_SESSION['next_url'] = $this->base . "/jijin/Jz_fund";
 		if (!$this->logincontroller->isLogin()) {
-			redirect($this->base . "/jijin/Jz_account/register");
+			echo json_encode(array('code'=>-1));
 			exit;
 		}
     }
@@ -184,5 +184,10 @@ class FixedInvestmentController extends MY_Controller
 			$data['code'] = 1;
 		}
 		echo json_encode($data);
+	}
+
+	function FixedInvestmentOrder(){
+		$get = $this->input->get();
+		
 	}
 }
