@@ -47,7 +47,7 @@ function getCastDetail(){
 						<span class="record-result">'+record.status+'</span>\
 					</li>';
 				}
-				byId("orderList").innerHTML = ohtml;
+				byId("orderList").innerHTML = ohtml||"<div class='norecord'>暂无记录</div>";
 				
 				var status = item.status;
 				if(status=="D"||status=="C"){

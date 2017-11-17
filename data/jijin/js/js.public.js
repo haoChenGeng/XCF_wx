@@ -61,6 +61,16 @@ var keyupMoney = function(id){
 	}
 }
 
+var loadingShow=function(){
+	var div = document.createElement("div");
+	div.className = "mui-backdrop loading";
+	div.id="loadId";
+	div.innerHTML = "loading...";
+	document.body.appendChild(div);
+}
+var loadingRemove=function(){
+	remove(byId("loadId"));
+}
 //移除节点
 var remove = function(dom){
 	dom.parentNode.removeChild(dom);

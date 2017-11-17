@@ -140,7 +140,7 @@ function submitOp(){
 				success: function(res) {
 					if(res.code==0){
 						mui.alert('定投计划修改成功',' ', function() {
-							window.location.href="/application/views/jijin/trade/castSurelyDetail.html?buyplanno="+res.data[0].buyplanno;
+							//window.location.href="/application/views/jijin/trade/castSurelyDetail.html?buyplanno="+res.data[0].buyplanno;
 						});
 					}
 				}
@@ -261,10 +261,14 @@ function picker(p){
 			
 			ul.appendChild(li);
 		}
-		/*if(p.id=="bankSelectPicker"){
-			byId("channelid").value=list[0].channelid;
-			byId("moneyaccount").value=list[0].moneyaccount;			
-		}*/
+		if(p.id=="bankSelectPicker"){
+			var showid=p.id.replace(/Picker/,"")+"Show";
+			var valid=p.id.replace(/Picker/,"")+"Val";
+			byId(showid).innerHTML=list[0].text;
+			byId(valid).value=list[0].value
+			/*byId("channelid").value=list[0].channelid;
+			byId("moneyaccount").value=list[0].moneyaccount;*/			
+		}
 	}
 	box.appendChild(ul);
 	document.body.appendChild(box);
@@ -436,6 +440,8 @@ function getBankList(list){
 
 
 function editCast(){
+	//添加loading
+	loadingShow();
 	var buyplanno = getUrlParam("buyplanno");
 	mui.ajax("/jijin/FixedInvestmentController/FixedInvestmentQuery",{
 		data:{
@@ -466,7 +472,8 @@ function editCast(){
 					createCastSurelyDate(item.investcyclevalue);
 					//展示定投日
 					showPicker("castSurelyDate","castSurelyDatePicker");
-					
+					//移除loading
+					loadingRemove();
 				}
 			}
 		}//success end
