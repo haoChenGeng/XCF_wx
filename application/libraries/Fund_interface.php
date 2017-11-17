@@ -660,7 +660,7 @@ class Fund_interface
 		$data['code'] = "FixedInvestmentQuery";
 		if(empty($input['pageindex']) || $input['pageindex'] == '0'){
 			$data['pagenum'] = '1';
-			$data['pagesize'] = '1';
+			$data['pagesize'] = '6';
 		}
 		if(!empty($input['buyplanno']))
 			$data['buyplanno'] = $input['buyplanno'];
