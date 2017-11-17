@@ -12,12 +12,14 @@ class FixedInvestmentController extends MY_Controller
         $this->load->helper(array("output","comfunction","logfuncs"));       //"page"  "log"   "func",
         $this->load->library(array('Fund_interface','Logincontroller'));
         $_SESSION['next_url'] = $this->base . "/jijin/Jz_fund";
-		if ($_SESSION['JZ_user_id'] == 0) {
-			echo json_encode(array('code'=>-2));
-			exit;
-		}else if($_SESSION['JZ_user_id'] == -1) {
-			echo json_encode(array('code'=>-1));
-			exit;
+        if (!$this->logincontroller->isLogin()) {
+			if ($_SESSION['JZ_user_id'] == 0) {
+				echo json_encode(array('code'=>-2));
+				exit;
+			}else if($_SESSION['JZ_user_id'] == -1) {
+				echo json_encode(array('code'=>-1));
+				exit;
+			}
 		}
     }
 
