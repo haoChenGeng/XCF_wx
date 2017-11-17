@@ -1,74 +1,64 @@
 <!doctype html>
 <html>
 
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<meta name="format-detection" content="telephone=no" />
-		<title>定投详情</title>
-		<link rel="stylesheet" href="../../../../data/jijin/css/mui.min.css"/>
-		<link rel="stylesheet" href="../../../../data/jijin/css/style.css"/>
-		<link rel="stylesheet" href="../../../../data/jijin/css/mobile.css"/>
-		<script src="../../../../aboutus/js/mui.min.js"></script>
-	</head>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<meta name="format-detection" content="telephone=no" />
+	<title>定投详情</title>
+	<link rel="stylesheet" href="../../../../data/jijin/css/mui.min.css"/>
+	<link rel="stylesheet" href="../../../../data/jijin/css/style.css"/>
+	<link rel="stylesheet" href="../../../../data/jijin/css/mobile.css"/>
+</head>
 
-	<body>
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">定投详情</h1>
-		</header>
-		<div class="mui-content">
-			<div class="clearfix castCurely-item">
-				<div class="item-f1 mui-row">
-					<div class="mui-col-sm-9">
-						<div class="castName">银华富裕混合基金（213243）</div>
-						<div class="paytype-wrapper">
-							扣款方式：<span class="payType">中信银行（尾号911）</span>
-						</div>
-					</div>
-					<div class="castState mui-col-sm-3 mui-navigate-right">有效</div>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">定投详情</h1>
+	</header>
+	<div class="mui-content">
+		<div class="clearfix castCurely-item">
+			<div class="item-f1 mui-row">
+				<div class="mui-col-sm-9">
+					<div class="castName textOver"  id="fundName"></div>
+					<div class="paytype-wrapper" id="debitWay"></div>
 				</div>
-				<div class="item-f3">
-					<div>						
-						<span class="f3-l">
-							<span class="payTimeType">每月1日定投：</span>
-							<span class="payAverage">10.00元</span>
-						</span>
-						<span class="f3-r">
-							下次扣款：<span class="nextPayDate">2017-12-12</span>
-						</span>
-					</div>
-					<div>						
-						<span class="f3-l">
-							<span class="payTimeType">累计定投：</span>
-							<span class="payAverage">10.00元</span>
-						</span>
-						<span class="f3-r">
-							已投期数：<span class="nextPayDate">1期</span>
-						</span>
-					</div>
+				<div class="castState mui-col-sm-3 mui-navigate-right" id="castStatue"></div>
+			</div>
+			<div class="item-f3 mui-row">
+				<div>						
+					<span class="f3-l">
+						<span class="payTimeType" id="castType"></span>
+					</span>
+					<span class="f3-r">
+						下次扣款：<span class="nextPayDate" id="nextDebitTime"></span>
+					</span>
+				</div>
+				<div>						
+					<span class="f3-l">
+						<span class="payTimeType">累计定投：</span>
+						<span class="payAverage" id="castTotal"></span>
+					</span>
+					<span class="f3-r">
+						已投期数：<span class="nextPayDate" id="castTimes"></span>
+					</span>
 				</div>
 			</div>
-			<!-- <div class="list-box">
-				<div class="title">定投记录</div>
-				<ul class="list-ul">
-					<li>
-						<span class="record-time">2017-12-19</span>
-						<span class="record-num">10000000.00元</span>
-						<span class="record-result">定投成功</span>
-					</li>
-					<li>
-						<span class="record-time">2017-12-19</span>
-						<span class="record-num">10000000.00元</span>
-						<span class="record-result">定投成功</span>
-					</li>
-				</ul>
-			</div> -->
 		</div>
+		<div class="list-box">
+			<div class="title">定投记录</div>
+			<ul class="list-ul" id="orderList">
+			</ul>
+		</div>
+	</div>
+	
+	<section class="m-footer" id="castSurelyBtn">
 		
-		<section class="m-footer" id="castSurelyBtn">
-			
-		</section>
+	</section>
+		
+	<script src="/aboutus/js/mui.min.js"></script>
+	<script src="/data/jijin/js/js.public.js"></script>
+	<script src="/data/jijin/js/castSurelyDetail.js"></script>
 	</body>
 
 </html>

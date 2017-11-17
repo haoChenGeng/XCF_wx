@@ -828,6 +828,10 @@ h3.m-item-5 {
   font-size: 22px;
   flex: 1;
 }
+.buy-btn.disabled{
+	color: #aaa;
+    background: #eee;
+}
 
 #fund-list li a {
   padding: 15px;
@@ -932,8 +936,12 @@ h3.m-item-5 {
 	margin-bottom: 0;	
 }
 .castCurely-item .item-f1{
-	padding: 12px 15px 6px 15px;
+	padding: 12px 0 6px 15px;
 	
+}
+.item-f1 .castName{
+	max-width: 225px;
+	float: left;
 }
 .castCurely-item .item-f1 .castState{
 	float: right;
@@ -950,6 +958,12 @@ h3.m-item-5 {
 	font-size: 12px;
 	padding: 0 0 12px 15px;
 	color: #333;
+}
+.item-f2 .castState,.item-f1 .castRisk{
+	font-size: 17px;
+	float: right;
+	color:#222;
+	margin-right: 20px;
 }
 .paytype-wrapper{
 	font-size: 12px;
@@ -1036,4 +1050,9 @@ h3.m-item-5 {
 }
 .castSurely-content{
 	opacity:0;
+}
+.textOver{
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

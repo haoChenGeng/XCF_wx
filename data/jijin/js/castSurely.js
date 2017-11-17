@@ -2,6 +2,9 @@ window.onload = function() {
 	var _token = "";
 	var _tano = "";
 	var _public_key ="";
+	var _isEdit = getUrlParam("isEdit");
+	var _buyplanno = getUrlParam("buyplanno");
+	
 	beforeCast();
 }
 
@@ -15,33 +18,36 @@ function beforeCast(){
 		type: "GET",
 		success: function(res) {
 			if(res.code==0){
-				if(res.data.riskmatching==0){
-					mui.ajax("/application/views/jijin/trade/riskTip/riskTip.html",{
-						success:function(rest){
-							byId("riskmatching0").innerHTML=rest;
-							byId("riskmatching0").className="castSurelyTip";
-							byId("ensureSubmit").innerHTML = "我已悉知并确认购买";
-							byId("custRisk").innerHTML = res.data.my_risklevel;
-							byId("ensureSubmit").onclick=function(){						
-								remove(byId("riskmatching0"));
-								byClass("castSurely-content").style.opacity=1;
+				if(getUrlParam("isEdit")==1){
+					byClass("castSurely-content").style.opacity=1;
+				}else{					
+					if(res.data.riskmatching==0){
+						mui.ajax("/application/views/jijin/trade/riskTip/riskTip.html",{
+							success:function(rest){
+								byId("riskmatching0").innerHTML=rest;
+								byId("riskmatching0").className="castSurelyTip";
+								byId("ensureSubmit").innerHTML = "我已悉知并确认购买";
+								byId("custRisk").innerHTML = res.data.my_risklevel;
+								byId("ensureSubmit").onclick=function(){						
+									remove(byId("riskmatching0"));
+									byClass("castSurely-content").style.opacity=1;
+								}
 							}
-						}
-					})
-					
-				}else if(res.data.riskmatching==2){	
-					mui.ajax("/application/views/jijin/trade/riskTip/riskTip.html",{
-						success:function(rest){
-							byId("riskmatching2").innerHTML = rest;
-							byId("riskmatching2").className="castSurelyTip";
-							byId("ensureSubmit").innerHTML = "重新测评";
-							byId("custRisk").innerHTML = res.data.my_risklevel;
-							byId("ensureSubmit").href="/jijin/Risk_assessment";
-						}
-					})
-					
-				}else{
-					byClass("castSurely-content").style.opacity=1;					
+						})
+					}else if(res.data.riskmatching==2){	
+						mui.ajax("/application/views/jijin/trade/riskTip/riskTip.html",{
+							success:function(rest){
+								byId("riskmatching2").innerHTML = rest;
+								byId("riskmatching2").className="castSurelyTip";
+								byId("ensureSubmit").innerHTML = "重新测评";
+								byId("custRisk").innerHTML = res.data.my_risklevel;
+								byId("ensureSubmit").href="/jijin/Risk_assessment";
+							}
+						})
+						
+					}else{
+						byClass("castSurely-content").style.opacity=1;					
+					}
 				}
 				
 				var fundinfo = res.data.fundinfo;
@@ -52,7 +58,9 @@ function beforeCast(){
 				byId("castSurelyNum").placeholder = fundinfo.per_min_39+"元起投";
 				
 				_token = res.data.token;
-				_public_key = res.data.public_key;
+				if(getUrlParam("isEdit")!=1){					
+					_public_key = res.data.public_key;
+				}
 				_tano = fundinfo.tano;
 				
 				var bankList = res.data.bank_info;
@@ -76,33 +84,6 @@ function castNextOp(){
 		var max = byId("castSurelyNum").max;
 		var min = byId("castSurelyNum").min;
 		
-		/*if(val==""){
-			mui.alert('请输入有效的金额',' ', function() {
-				
-			});
-			return;
-		}
-		if(val<parseInt(min)){
-			mui.alert('最低定投'+min+'元',' ', function() {
-				
-			});
-		}else if(val>parseInt(max)){
-			mui.alert('最高定投'+max+'元',' ', function() {
-				
-			});
-		}else{			
-			document.getElementsByClassName("pass-box")[0].style.display="block";
-			
-			var castNext = byId("castNext");
-			castNext.parentNode.removeChild(castNext);
-			
-			var castSubmit = document.createElement("div");
-			castSubmit.innerHTML = "确认";
-			castSubmit.className = "mui-btn mui-btn-block buy-btn";
-			castSubmit.id = "castSubmit";
-			byId("castOpBox").appendChild(castSubmit);
-			submitOp();
-		}*/
 		if(!moneyRange({
 			val:val,
 			max:max,
@@ -117,7 +98,7 @@ function castNextOp(){
 		var castSubmit = document.createElement("div");
 		castSubmit.innerHTML = "确认";
 		castSubmit.className = "mui-btn mui-btn-block buy-btn";
-		castSubmit.id = "castSubmit";
+		castSubmit.id = "castSubmit";			
 		byId("castOpBox").appendChild(castSubmit);
 		byId("castSurelyNum").disabled=true;
 		
@@ -128,75 +109,82 @@ function castNextOp(){
 
 function numInpOp(){
 	keyupMoney("castSurelyNum");
-	/*var oldVal = "";
-	byId("castSurelyNum").onkeyup=function(){
-		var val = byId("castSurelyNum").value;
-		var max = byId("castSurelyNum").max;
-		var min = byId("castSurelyNum").min;
-		if(val>=parseFloat(min)&&val<=parseFloat(max)){
-			byId("castSurelyNum").style.color = "#222";
-		}else{
-			byId("castSurelyNum").style.color = "#ff0000";			
-		}
-		
-		var re = /^\d+(?:\.\d{0,2})?$/;
-		if(val!=""){			
-			if(val.match(re)==null){
-				byId("castSurelyNum").value = oldVal;
-			}else{
-				oldVal = val;
-			}
-		}
-	}*/
 }
 
 function submitOp(){
 	byId("castSubmit").onclick=function(){
 		
-		var encrypt = new JSEncrypt();
+		/*var encrypt = new JSEncrypt();
 		encrypt.setPublicKey(_public_key);
-		var encrypted = encrypt.encrypt(byId("passwd").value+_token);
+		var encrypted = encrypt.encrypt(byId("passwd").value+_token);*/
+		
 		var param = {
 			fundcode:byId("fundCodeDesc").innerHTML,
-			token:encrypted,
 			//channelid:byId("channelid").value,
 			depositacct:byId("bankSelectVal").value,
 			investamount:byId("castSurelyNum").value,
-			tano:_tano,
+			
 			//moneyaccount:byId("moneyaccount").value,
 			investcycle:byId("castSurelyCycleVal").value,
 			investcyclevalue:byId("castSurelyDateVal").value
 		}
-		mui.ajax("/jijin/FixedInvestmentController/FixedInvestment", {	
-			data: param,
-			dataType: 'json',
-			type: "POST",
-			success: function(res) {
-				if(res.code==0){
-					mui.alert('定投计划设置成功',' ', function() {
-						window.location.href="/application/views/jijin/trade/castSurelyDetail.html?fundcode="+byId("fundCodeDesc").innerHTML;
-					});
+		
+		if(getUrlParam("isEdit")==1){
+			var encrypted = encryptPass(_public_key,byId("passwd").value,"");
+			param.buyplanno=getUrlParam("buyplanno");
+			param.tpasswd=encrypted;
+			mui.ajax("/jijin/FixedInvestmentController/FixedInvestmentUpdate", {	
+				data: param,
+				dataType: 'json',
+				type: "POST",
+				success: function(res) {
+					if(res.code==0){
+						mui.alert('定投计划修改成功',' ', function() {
+							window.location.href="/application/views/jijin/trade/castSurelyDetail.html?buyplanno="+res.data[0].buyplanno;
+						});
+					}
 				}
-			}
-		});
+			});
+		}else{
+			var encrypted = encryptPass(_public_key,byId("passwd").value,_token);
+			param.tano=_tano;
+			param.token=encrypted,
+			mui.ajax("/jijin/FixedInvestmentController/FixedInvestment", {	
+				data: param,
+				dataType: 'json',
+				type: "POST",
+				success: function(res) {
+					if(res.code==0){
+						mui.alert('定投计划设置成功',' ', function() {
+							window.location.href="/application/views/jijin/trade/castSurelyDetail.html?buyplanno="+res.data[0].buyplanno;
+						});
+					}
+				}
+			});
+		}
+		
 	}
 }
 
 function pickerOp(bankList){
-	//生成定投周期
-	createCastSurelyCyle();
-	//展示定投周期
-	showPicker("castSurelyCycle","castSurelyCyclePicker");
-	
-	//生成定投日
-	createCastSurelyDate();
-	//展示定投日
-	showPicker("castSurelyDate","castSurelyDatePicker");
-	
-	//生成银行列表
-	createBankSelect(bankList);
-	//展示银行列表
-	showPicker("bankSelect","bankSelectPicker");
+	if(getUrlParam("isEdit")==1){
+		editCast();
+	}else{		
+		//生成定投周期
+		createCastSurelyCyle();
+		//展示定投周期
+		showPicker("castSurelyCycle","castSurelyCyclePicker");
+		
+		//生成定投日
+		createCastSurelyDate();
+		//展示定投日
+		showPicker("castSurelyDate","castSurelyDatePicker");
+		
+		//生成银行列表
+		createBankSelect(bankList);
+		//展示银行列表
+		showPicker("bankSelect","bankSelectPicker");
+	}
 }
 
 function picker(p){
@@ -210,11 +198,11 @@ function picker(p){
 	if(p.ismoon){		
 		for ( var i=1;i<=28;i++) {
 			var li = document.createElement("li");
-			if(i==1){				
+			/*if(i==1){				
 				li.className = "picker-item picker-item-active";
 			}else{
 				li.className = "picker-item";				
-			}
+			}*/
 			li.innerHTML = i+"日";
 			
 			(function(i){
@@ -228,22 +216,28 @@ function picker(p){
 					this.className = "picker-item picker-item-active";
 				}
 			})(i);
+			
+			if(i==parseInt(p.active, 10)){	
+				byId("castSurelyDateShow").innerHTML=i+"日";
+				byId("castSurelyDateVal").value=i;
+				li.className = "picker-item picker-item-active";
+			}else{
+				li.className = "picker-item";	
+			}
 			ul.appendChild(li);
 		}
-		byId("castSurelyDateShow").innerHTML="1日";
-		byId("castSurelyDateVal").value="1";
 	}else{		
 		for ( var item in list) {
 			var li = document.createElement("li");
-			if(item==0){
+			/*if(item==0){
 				li.className = "picker-item picker-item-active";				
 			}else{				
 				li.className = "picker-item";
-			}
+			}*/
 			li.innerHTML = list[item].text;
 			
 			(function(item){
-				li.onclick=function(){
+				li.onclick = function(){
 					p.callback(list[item]);
 					
 					var cnodes = this.parentNode.childNodes;
@@ -253,12 +247,20 @@ function picker(p){
 					this.className = "picker-item picker-item-active";
 				}
 			})(item);
+			
+			
+			if(list[item].value==p.active){				
+				var showid=p.id.replace(/Picker/,"")+"Show";
+				var valid=p.id.replace(/Picker/,"")+"Val";
+				byId(showid).innerHTML=list[item].text;
+				byId(valid).value=list[item].value
+				li.className = "picker-item picker-item-active";
+			}else{
+				li.className = "picker-item";
+			}
+			
 			ul.appendChild(li);
 		}
-		var showid=p.id.replace(/Picker/,"")+"Show";
-		var valid=p.id.replace(/Picker/,"")+"Val";
-		byId(showid).innerHTML=list[0].text;
-		byId(valid).value=list[0].value;
 		/*if(p.id=="bankSelectPicker"){
 			byId("channelid").value=list[0].channelid;
 			byId("moneyaccount").value=list[0].moneyaccount;			
@@ -267,21 +269,25 @@ function picker(p){
 	box.appendChild(ul);
 	document.body.appendChild(box);
 	
-	byId("getNextPayDate").innerHTML=getNextPayDate();
+	if(getUrlParam("isEdit")!=1){		
+		byId("getNextPayDate").innerHTML=getNextPayDate();
+	}
 }
 
-function createCastSurelyDate(){
+function createCastSurelyDate(active){
 	var listWeek = [{text:"周一",value:"1"},{text:"周二",value:"2"},{text:"周三",value:"3"},{text:"周四",value:"4"},{text:"周五",value:"5"}];
 	var cycleType = byId("castSurelyCycleVal").value||"";
 	var castSurelyDateP={
 		id:"castSurelyDatePicker"
 	};
-	if(cycleType=="2"){
+	if(cycleType=="0"){
 		castSurelyDateP.list=[];
 		castSurelyDateP.ismoon=true;
+		castSurelyDateP.active=active||"01";
 	}else{
 		castSurelyDateP.list=listWeek;
 		castSurelyDateP.ismoon=false;		
+		castSurelyDateP.active=active||"1";
 	};
 	castSurelyDateP.callback=function(item){
 		hidePicker("castSurelyDateShow","castSurelyDateVal","castSurelyDatePicker",item)
@@ -289,8 +295,9 @@ function createCastSurelyDate(){
 	picker(castSurelyDateP);
 }
 
-function createCastSurelyCyle(){
-	var listCycle = [{text:"每周",value:"0"},{text:"每两周",value:"1"},{text:"每月",value:"2"}];
+function createCastSurelyCyle(active){
+	var active = active||"1";
+	var listCycle = [{text:"每周",value:"1"},{text:"每两周",value:"2"},{text:"每月",value:"0"}];
 	var castSurelyCycleP={
 		list:listCycle,
 		callback:function(item){
@@ -305,7 +312,8 @@ function createCastSurelyCyle(){
 			}
 		},
 		ismoon:false,
-		id:"castSurelyCyclePicker"
+		id:"castSurelyCyclePicker",
+		active:active
 	}
 	picker(castSurelyCycleP);
 }
@@ -326,6 +334,7 @@ function createBankSelect(bankList){
 }
 
 function showPicker(id,pickerId){
+	if(id=="bankSelect"&&getUrlParam("isEdit")==1) return;
 	var castSurelyCycle = byId(id);
 	castSurelyCycle.onclick=function(){
 		var iPicker=byId(pickerId);
@@ -350,7 +359,7 @@ function hidePicker(showId,valId,pickerId,item){
 	byId(showId).innerHTML = item.text;
 	byId(valId).value = item.value;
 	
-	var div = byClass("mui-backdrop")[0];
+	var div = byClass("mui-backdrop");
 	div.parentNode.removeChild(div); 
 	var iPicker=byId(pickerId);
 	iPicker.className="i-picker";
@@ -368,7 +377,7 @@ function getNextPayDate(){
 	var pDate = date.getDate();
 	var cDate = date.getDate();
 	
-	if(castPayType=="2"){
+	if(castPayType=="0"){
 		
 		if(cDate>=castPayDate){
 			if(pMoon == 12){
@@ -425,3 +434,41 @@ function getBankList(list){
 	return blist;
 }
 
+
+function editCast(){
+	var buyplanno = getUrlParam("buyplanno");
+	mui.ajax("/jijin/FixedInvestmentController/FixedInvestmentQuery",{
+		data:{
+			buyplanno:buyplanno
+		},
+		dataType: 'json',
+		type: "GET",
+		success:function(res){
+			if(res.code==0){
+				var castList = res.data.fixed;
+				_public_key = res.data.public_key;
+				if(castList.length==1){
+					var item = castList[0];
+					var numLength = item.depositacct.length;
+					var lastNum = item.depositacct.substring(numLength-3,numLength);
+					
+					byId("castSurelyNum").value=item.continueinvestamount;
+					byId("bankSelectShow").innerHTML=item.channelname+'（尾号'+lastNum+'）';
+					byId("bankSelectVal").value=item.depositacct;
+					byId("getNextPayDate").innerHTML=item.nextinvestdate;
+					
+					//生成定投周期
+					createCastSurelyCyle(item.investcycle);
+					//展示定投周期
+					showPicker("castSurelyCycle","castSurelyCyclePicker");
+					
+					//生成定投日
+					createCastSurelyDate(item.investcyclevalue);
+					//展示定投日
+					showPicker("castSurelyDate","castSurelyDatePicker");
+					
+				}
+			}
+		}//success end
+	});
+}
