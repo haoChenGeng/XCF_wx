@@ -140,7 +140,7 @@ function submitOp(){
 				success: function(res) {
 					if(res.code==0){
 						mui.alert('定投计划修改成功',' ', function() {
-							window.location.href="/application/views/jijin/trade/castSurelyDetail.html?buyplanno="+res.data[0].buyplanno;
+							//window.location.href="/application/views/jijin/trade/castSurelyDetail.html?buyplanno="+res.data[0].buyplanno;
 						});
 					}
 				}
