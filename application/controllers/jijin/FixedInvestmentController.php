@@ -176,7 +176,7 @@ class FixedInvestmentController extends MY_Controller
 				if((int)$_SESSION['riskLevel'] < (int)$data['data']['fixed'][$key]['risklevel']){
 					$data['data']['fixed'][$key]['risklevel'] = isset($this->config->item('productrisk')[$data['data']['fixed'][$key]['risklevel']])?$this->config->item('productrisk')[$data['data']['fixed'][$key]['risklevel']]:null;
 				}else
-					$data['data'][$key]['fixed']['risklevel'] = null;
+					$data['data']['fixed'][$key]['risklevel'] = null;
 			}
 			$data['data']['public_key'] = file_get_contents($this->config->item('RSA_publickey'));
 			$data['code'] = 0;
