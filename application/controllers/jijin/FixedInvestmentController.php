@@ -112,6 +112,7 @@ class FixedInvestmentController extends MY_Controller
 			if(isset($fixed['code'])&&$fixed['code'] == "0000"){
 				$return['code'] = 0;
 				$return['msg'] = $fixed['msg'];
+				$return['data'] = $fixed['data'];
 			}else{
 				$return['code'] = 1;
 				$return['msg'] = $fixed['msg'];
@@ -153,6 +154,7 @@ class FixedInvestmentController extends MY_Controller
 		if(isset($fixed['code'])&&$fixed['code'] == "0000"){
 			$return['code'] = 0;
 			$return['msg'] = $fixed['msg'];
+			$return['data'] = $fixed['data'];
 		}else{
 			$return['code'] = 1;
 			$return['msg'] = $fixed['msg'];
