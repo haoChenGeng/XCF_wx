@@ -655,7 +655,6 @@ class Fund_interface
 	}
 
 	function FixedInvestmentQuery($input){
-
 		$data['customerNo'] = $_SESSION['customer_name'];
 		$data['code'] = "FixedInvestmentQuery";
 		if(empty($input['pageindex']) || $input['pageindex'] == '0'){
@@ -665,6 +664,20 @@ class Fund_interface
 		if(!empty($input['buyplanno']))
 			$data['buyplanno'] = $input['buyplanno'];
 
+		$submitData = $this->getSubmitData($data);
+		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
+		return ($this->getReturnData($returnData));
+	}
+
+	function FixedInvestmentOrder($input){
+		$neededFields = array('buyplanno');
+    	foreach ($neededFields as $val)
+    		if (!isset($input[$val]))
+    			return array('code'=>'9999', 'msg'=>'必填字段,'.$val.'不能为空！');
+
+		$data['customerNo'] = $_SESSION['customer_name'];
+		$data['code'] = "FixedInvestmentOrder";
+		$data['buyplanno'] = $input['buyplanno'];
 		$submitData = $this->getSubmitData($data);
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		return ($this->getReturnData($returnData));

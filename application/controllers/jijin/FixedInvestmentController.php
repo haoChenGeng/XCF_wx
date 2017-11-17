@@ -188,6 +188,13 @@ class FixedInvestmentController extends MY_Controller
 
 	function FixedInvestmentOrder(){
 		$get = $this->input->get();
-		
+
+		$data =$this->fund_interface->FixedInvestmentOrder($get);
+		if(isset($data['code'])&&$data['code'] == "0000"){
+			$data['code'] = 0;
+		}else{
+			$data['code'] = 1;
+		}
+		echo json_encode($data);
 	}
 }
