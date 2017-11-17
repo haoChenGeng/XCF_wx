@@ -1062,3 +1062,10 @@ h3.m-item-5 {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.mui-backdrop.loading{
+    background-color: rgba(0,0,0,.5);
+    color: #fff;
+    text-align: center;
+    padding-top: 50%;
+    font-size: 24px;
+}

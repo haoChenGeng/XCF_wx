@@ -47,7 +47,7 @@
                 <div class="item-width-wrap clearfix">
                     <span class="m2-item-t1"><?php echo $purchasetype?>金额：</span>
                     <label>
-                        <input type="number" id="sum" name="sum" style="color:#333;" data-error="金额错误"  placeholder=<?php echo intval($min_money+0.5)."元起投"?> />
+                        <input type="tel" id="sum" name="sum" style="color:#333;" data-error="金额错误"  placeholder=<?php echo intval($min_money+0.5)."元起投"?> />
                     </label>
                 </div>
             </div>
@@ -89,6 +89,7 @@
 <script>
     Zepto(function(){
         M.checkBoxInit();
+        keyupMoney("tel");
         $('#nextBtn').on('click',function(){
             M.checkForm(function () {
                 var min = document.getElementById('range').attributes['data-min'].value,
@@ -184,5 +185,30 @@
         payList = document.getElementById('pay-list');
 
     selectLightbox(pay,payList);
+
+    var keyupMoney = function(){
+    	var oldVal = "";
+    	document.getElementById("sum").onkeyup=function(){
+    		var val = document.getElementById("sum").value;
+    		var min = document.getElementById('range').attributes['data-min'].value;
+    		var max = document.getElementById('range').attributes['data-max'].value;
+    		if(val>=parseFloat(min)&&val<=parseFloat(max)){
+    			document.getElementById("sum").style.color = "#222";
+    		}else{
+    			document.getElementById("sum").style.color = "#ff0000";			
+    		}
+    		
+    		var re = /^\d+(?:\.\d{0,2})?$/;
+    		if(val!=""){			
+    			if(val.match(re)==null){
+    				document.getElementById("sum").value = oldVal;
+    			}else{
+    				oldVal = val;
+    			}
+    		}else{
+    			oldVal = null;
+    		}
+    	}
+    }
 </script>
 </html>
