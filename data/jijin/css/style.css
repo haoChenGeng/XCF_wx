@@ -352,7 +352,7 @@ body {
 }
 
 .mui-table-view-cell.mui-collapse .mui-collapse-content.history-detail-content {
-  padding: 10px 20px;
+  padding: 10px 0 10px 30px;
 }
 
 .history-arrow.mui-navigate-right:after {
@@ -417,12 +417,14 @@ body {
   -webkit-flex: 4;
   -ms-flex: 4;
   flex: 4;
+  padding: 0 10px;
 }
 
 .delegate-oprate {
   -webkit-flex: 2;
   -ms-flex: 2;
   flex: 2;
+  min-width: 90px;
 }
 
 .delegate-amount {
@@ -451,7 +453,10 @@ body {
 }
 
 .cancel-order {
-  color: red;
+  /* color: red; */
+  position: absolute;
+  right: 25px;
+  top: 15px;
 }
 
 .query-padding {
