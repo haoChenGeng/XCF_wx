@@ -956,7 +956,7 @@ h3.m-item-5 {
 }
 .castCurely-item .item-f1 .castState{
 	float: right;
-	color: #333;
+	color: #ff0000;
 }
 .item-f1>.castState{
 	padding-right: 20px;

@@ -204,7 +204,7 @@
 					
 					html += '<div class="item-f1 mui-row">\
 						<div class="castName textOver">'+item.fundname+'（'+item.fundcode+'）</div>\
-						<span class="castState">'+(item.risklevel||"")+'</span>\
+						<span class="castState">'+(item.risklevel==null?"":'['+item.risklevel+']')+'</span>\
 					</div>\
 					<div class="item-f2 mui-row">\
 						<span class="payType">扣款方式：'+item.channelname+'（尾号'+lastNum+'）</span>\
