@@ -67,7 +67,7 @@
 
   function page1() {
     mui.ajax('/jijin/Jz_my/getMyPageData/fund', {
-      data: {a:"aaa"},
+      data: {},
       dataType: 'json',
       type: 'post',
       timeout: 30 * 1000,
@@ -182,9 +182,11 @@
       }
     });*/
   mui.ajax('/jijin/Jz_my/getMyPageData/fixed', {
-	  data: {},
+	  data: {
+		  pageindex:1
+	  },
 	  dataType: 'json',
-	  type: 'GET',
+	  type: 'post',
 	  timeout: 30 * 1000,
 	  success: function(res) {
 		  var nodeWrap = item3.querySelector('.mui-scroll');
