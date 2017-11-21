@@ -186,7 +186,7 @@
 		  timeout: 30 * 1000,
 		  success: function(res) {
 			  if(page==1){
-				  remove("lastLi"); 
+				  remove(byId("lastLi")); 
 			  }
 			  var nodeWrap = item3.querySelector('.mui-scroll');
 	          var nodeChlid = item3.querySelector('.mui-scroll').childNodes;
@@ -225,7 +225,6 @@
 							window.location.href="/application/views/jijin/trade/castSurelyDetail.html?buyplanno="+buyplanno;
 						}
 					})(item.buyplanno);		
-					
 					byClass("castCurely-list").appendChild(li);
 					
 				}
