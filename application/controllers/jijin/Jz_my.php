@@ -21,9 +21,9 @@ class Jz_my extends MY_Controller
 		}
 		$data = array();
 
-		$get = $this->input->get();
+		/*$get = $this->input->get();
 		if(isset($get['activePage']))
-			$_SESSION['myPageOper'] = $this->input->get('activePage');
+			$_SESSION['myPageOper'] = $this->input->get('activePage');*/
 
 		if (isset($_SESSION['myPageOper'])){
 			$data['pageOper'] = $_SESSION['myPageOper'];
