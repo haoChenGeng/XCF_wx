@@ -114,6 +114,7 @@ class FixedInvestmentController extends MY_Controller
 			unset($_SESSION['token']);
 			$post['tpasswd'] = substr($decryptData, 0, $div_bit);
 			$fixed =$this->fund_interface->FixedInvestment($post);
+			$post['tpasswd'] = '***';
 			if(isset($fixed['code'])&&$fixed['code'] == "0000"){
 				$return['code'] = 0;
 				$return['msg'] = $fixed['msg'];
@@ -138,6 +139,7 @@ class FixedInvestmentController extends MY_Controller
 		$post['tpasswd'] = $decryptData;
 
 		$fixed =$this->fund_interface->FixedInvestmentEnd($post);
+		$post['tpasswd'] = '***';
 		if(isset($fixed['code'])&&$fixed['code'] == "0000"){
 			$return['code'] = 0;
 			$return['msg'] = $fixed['msg'];
@@ -156,6 +158,7 @@ class FixedInvestmentController extends MY_Controller
 		$post['tpasswd'] = $decryptData;
 
 		$fixed =$this->fund_interface->FixedInvestmentUpdate($post);
+		$post['tpasswd'] = '***';
 		if(isset($fixed['code'])&&$fixed['code'] == "0000"){
 			$return['code'] = 0;
 			$return['msg'] = $fixed['msg'];
