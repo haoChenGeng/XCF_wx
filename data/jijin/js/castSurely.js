@@ -131,7 +131,7 @@ function submitOp(){
 				success: function(res) {
 					if(res.code==0){
 						mui.alert('定投计划修改成功',' ', function() {
-							window.location.href="/jijin/Jz_my?activePage=fixed";
+							window.location.href="/application/views/jijin/trade/castSurelyDetail.html?buyplanno="+res.data[0].buyplanno;
 						});
 					}
 				}
@@ -147,8 +147,8 @@ function submitOp(){
 				success: function(res) {
 					if(res.code==0){
 						mui.alert('定投计划设置成功',' ', function() {
-							//window.location.href="/application/views/jijin/trade/castSurelyDetail.html?buyplanno="+res.data[0].buyplanno;
-							window.location.href="/jijin/Jz_my?activePage=fixed";
+							window.location.href="/application/views/jijin/trade/castSurelyDetail.html?buyplanno="+res.data[0].buyplanno;
+							//window.location.href="/jijin/Jz_my?activePage=fixed";
 						});
 					}
 				}
