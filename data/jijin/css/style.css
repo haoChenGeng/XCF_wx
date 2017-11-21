@@ -38,7 +38,9 @@ p {
   margin-bottom: 10px;
 }
 
-
+.align-center{
+	text-align: center;
+}
 /* 覆盖框架样式 */
 
 .mui-col-xs-2 {
@@ -514,7 +516,7 @@ input.delegate-search {
 
 .account-management {
   border-bottom: 1px solid #ccc;
-  margin-top: 20px;
+  /* margin-top: 20px; */
 }
 
 .account-management>li {
@@ -1063,9 +1065,17 @@ h3.m-item-5 {
     white-space: nowrap;
 }
 .mui-backdrop.loading{
-    background-color: rgba(0,0,0,.5);
+    background-color: #fff;
     color: #fff;
     text-align: center;
     padding-top: 50%;
     font-size: 24px;
+    margin-top: 45px;
+}
+.mui-scroll-wrapper .castCurely-list{
+	padding: 0;
+	background-color: #eee;
+}
+.acountMana.mui-content>.mui-table-view:first-child{
+	margin-top: 0;
 }

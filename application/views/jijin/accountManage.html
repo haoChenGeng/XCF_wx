@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>个人中心</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta name="keywords" content="小牛资本">
+  <meta name="description" content="小牛资本管理集团公募基金代销系统">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="stylesheet" href="/data/jijin/css/mui.min.css">
+  <link rel="stylesheet" href="/data/jijin/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/data/jijin/css/mui.picker.min.css" />
+</head>
+
+<body>
+  <nav class="mui-bar mui-bar-tab">
+    <a class="mui-tab-item" href="#tabbar-with-contact" id="buy_fund">
+      <span class="mui-icon icon-email iconfont"></span>
+      <span class="mui-tab-label">购买基金</span>
+    </a>
+    <a class="mui-tab-item" href="#tabbar-with-contact" id="my">
+      <span class="mui-icon icon-contact iconfont"></span>
+      <span class="mui-tab-label">我的基金</span>
+    </a> 
+    <a class="mui-tab-item mui-active" href="#tabbar-with-contact">
+      <span class="mui-icon icon-exit iconfont"></span>
+      <span class="mui-tab-label">账户管理</span>
+    </a>
+  </nav>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-icon mui-icon-left-nav mui-pull-left" href="/jijin/Jz_account/logout"></a>
+		<h1 class="mui-title">账户管理</h1>
+	</header>
+	<div class="mui-content acountMana" id="scroll3">
+		<ul class="mui-table-view account-management" id="account">
+		  <li class="my-bank-card"><a href="/jijin/Fund_bank/bank_info" class="dpb">银行卡维护</a></li>
+		  <li class="my-logpwd-mod"><a href="/jijin/Jz_account/revise_passward/0" class="dpb">交易密码修改</a></li>
+		  <li class="my-logpwd-mod"><a href="/jijin/Jz_account/resetPassward" class="dpb">重置交易密码</a></li>
+		  <li class="my-risk-test"><a id="risk_result" href="/jijin/Risk_assessment" class="dpb"></a></li>
+		  <li class="my-risk-test"><a id="" href="/jijin/Jz_my/investorManagement" class="dpb">投资者信息管理</a></li>
+		</ul>
+	</div>
+  <script src="/data/jijin/js/mui.min.js"></script>
+  <script src="/data/jijin/js/mui.picker.min.js"></script>
+  <script src="/data/jijin/js/accountManage.js"></script>
+</body>
+
+</html>

@@ -65,7 +65,7 @@ var loadingShow=function(){
 	var div = document.createElement("div");
 	div.className = "mui-backdrop loading";
 	div.id="loadId";
-	div.innerHTML = "loading...";
+	div.innerHTML = '<img src="/data/jijin/img/loading.gif">';
 	document.body.appendChild(div);
 }
 var loadingRemove=function(){
@@ -84,9 +84,40 @@ var encryptPass=function(public_key,pass,token){
 }
 
 var stopBubble=function(e) { 
-    if(e && e.stopPropagation) { //非IE 
-      e.stopPropagation(); 
-    } else { //IE 
-      window.event.cancelBubble = true; 
-    } 
-  } 
+	if(e && e.stopPropagation) { //非IE 
+    	e.stopPropagation(); 
+	} else { //IE 
+		window.event.cancelBubble = true; 
+	} 
+} 
+
+var muiAjax = function(url, params,type, success, error) {
+	mui.ajax(url,{
+		data:params,
+		dataType: 'json',
+		type: type,
+		success:function(res){
+			if (res.code == 0) {
+				success(res);
+			}
+			else if(res.code == -1){
+				console.log("aa");
+				if (error) {
+					error(res);
+				} else {
+					errorOut();
+				}
+			}
+			else if(res.code == -2){
+				mui.alert('请开户后后在进行操作', '您未开户', function() {
+					window.location.href="/jijin/Jz_account/register";
+				});
+			}
+		}
+	});
+}
+function errorOut(){
+	mui.alert('请登陆后在进行操作', '您未登陆', function() {
+		window.location.href="/User/logout";
+	});
+}

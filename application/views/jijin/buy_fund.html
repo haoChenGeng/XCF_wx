@@ -14,8 +14,6 @@
 </head>
 
 <body>
-  <p style="color: #333;padding:5px 10px;margin-bottom:0;" id="screenFund">
-  </p>
   <nav class="mui-bar mui-bar-tab">
     <a class="mui-tab-item mui-active" href="#tabbar-with-chat">
       <span class="mui-icon icon-email iconfont"></span>
@@ -25,12 +23,21 @@
       <span class="mui-icon icon-contact iconfont"></span>
       <span class="mui-tab-label">我的基金</span>
     </a>
-    <a class="mui-tab-item" href="#tabbar-with-contact" id="exit">
+    <!-- <a class="mui-tab-item" href="#tabbar-with-contact" id="exit">
       <span class="mui-icon icon-exit iconfont"></span>
       <span class="mui-tab-label">返回首页</span>
+    </a> -->
+    <a class="mui-tab-item" href="#tabbar-with-contact" id="manage">
+      <span class="mui-icon icon-exit iconfont"></span>
+      <span class="mui-tab-label">账户管理</span>
     </a>
   </nav>
+  <header class="mui-bar mui-bar-nav">
+		<a class="mui-icon mui-icon-left-nav mui-pull-left" href="/jijin/Jz_account/logout"></a>
+		<h1 class="mui-title">基金列表</h1>
+	</header>
   <div class="mui-content">
+  	<p style="color: #333;padding:5px 10px;margin-bottom:0;" id="screenFund"></p>
     <div id="slider" class="mui-slider">
       <div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
 
@@ -52,11 +59,18 @@
         id: 'my'
       });
     });
-    document.getElementById('exit').addEventListener('tap', function() {
+    /* document.getElementById('exit').addEventListener('tap', function() {
       //退出基金		
       mui.openWindow({
         url: '/jijin/Jz_account/logout',
         id: 'exit'
+      });
+    }); */
+    document.getElementById('manage').addEventListener('tap', function() {
+      //打开账户管理	
+      mui.openWindow({
+        url: '/application/views/jijin/accountManage.html',
+        id: 'manage'
       });
     });
 

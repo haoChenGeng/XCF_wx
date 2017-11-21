@@ -10,66 +10,57 @@ window.onload = function() {
 
 function beforeCast(){
 	var fundcode = getUrlParam("fundcode");
-	mui.ajax("/jijin/FixedInvestmentController/beforeFixedInvestment", {	
-		data: {
-			fundcode: fundcode
-		},
-		dataType: 'json',
-		type: "GET",
-		success: function(res) {
-			if(res.code==0){
-				if(getUrlParam("isEdit")==1){
-					byClass("castSurely-content").style.opacity=1;
-				}else{					
-					if(res.data.riskmatching==0){
-						mui.ajax("/application/views/jijin/trade/riskTip/riskTip.html",{
-							success:function(rest){
-								byId("riskmatching0").innerHTML=rest;
-								byId("riskmatching0").className="castSurelyTip";
-								byId("ensureSubmit").innerHTML = "我已悉知并确认购买";
-								byId("custRisk").innerHTML = res.data.my_risklevel;
-								byId("ensureSubmit").onclick=function(){						
-									remove(byId("riskmatching0"));
-									byClass("castSurely-content").style.opacity=1;
-								}
-							}
-						})
-					}else if(res.data.riskmatching==2){	
-						mui.ajax("/application/views/jijin/trade/riskTip/riskTip.html",{
-							success:function(rest){
-								byId("riskmatching2").innerHTML = rest;
-								byId("riskmatching2").className="castSurelyTip";
-								byId("ensureSubmit").innerHTML = "重新测评";
-								byId("custRisk").innerHTML = res.data.my_risklevel;
-								byId("ensureSubmit").href="/jijin/Risk_assessment";
-							}
-						})
-						
-					}else{
-						byClass("castSurely-content").style.opacity=1;					
+	
+	muiAjax("/jijin/FixedInvestmentController/beforeFixedInvestment",{fundcode: fundcode},"GET",function(res){
+
+		if(getUrlParam("isEdit")==1){
+			byClass("castSurely-content").style.opacity=1;
+		}else{					
+			if(res.data.riskmatching==0){
+				mui.ajax("/application/views/jijin/trade/riskTip/riskTip.html",{
+					success:function(rest){
+						byId("riskmatching0").innerHTML=rest;
+						byId("riskmatching0").className="castSurelyTip";
+						byId("ensureSubmit").innerHTML = "我已悉知并确认购买";
+						byId("custRisk").innerHTML = res.data.my_risklevel;
+						byId("ensureSubmit").onclick=function(){						
+							remove(byId("riskmatching0"));
+							byClass("castSurely-content").style.opacity=1;
+						}
 					}
-				}
+				})
+			}else if(res.data.riskmatching==2){	
+				mui.ajax("/application/views/jijin/trade/riskTip/riskTip.html",{
+					success:function(rest){
+						byId("riskmatching2").innerHTML = rest;
+						byId("riskmatching2").className="castSurelyTip";
+						byId("ensureSubmit").innerHTML = "重新测评";
+						byId("custRisk").innerHTML = res.data.my_risklevel;
+						byId("ensureSubmit").href="/jijin/Risk_assessment";
+					}
+				})
 				
-				var fundinfo = res.data.fundinfo;
-				byId("fundCodeDesc").innerHTML = fundinfo.fundcode;
-				byId("fundNameDesc").innerHTML = fundinfo.fundname;
-				byId("castSurelyNum").max = fundinfo.per_max_39;
-				byId("castSurelyNum").min = fundinfo.per_min_39;
-				byId("castSurelyNum").placeholder = fundinfo.per_min_39+"元起投";
-				
-				_token = res.data.token;
-				if(getUrlParam("isEdit")!=1){					
-					_public_key = res.data.public_key;
-				}
-				_tano = fundinfo.tano;
-				
-				var bankList = res.data.bank_info;
-				pickerOp(bankList);
-				castOp();
 			}else{
-				mui.alert('暂无数据',' ', function() {});
+				byClass("castSurely-content").style.opacity=1;					
 			}
 		}
+		
+		var fundinfo = res.data.fundinfo;
+		byId("fundCodeDesc").innerHTML = fundinfo.fundcode;
+		byId("fundNameDesc").innerHTML = fundinfo.fundname;
+		byId("castSurelyNum").max = fundinfo.per_max_39;
+		byId("castSurelyNum").min = fundinfo.per_min_39;
+		byId("castSurelyNum").placeholder = fundinfo.per_min_39+"元起投";
+		
+		_token = res.data.token;
+		if(getUrlParam("isEdit")!=1){					
+			_public_key = res.data.public_key;
+		}
+		_tano = fundinfo.tano;
+		
+		var bankList = res.data.bank_info;
+		pickerOp(bankList);
+		castOp();
 	});
 }
 
@@ -140,7 +131,7 @@ function submitOp(){
 				success: function(res) {
 					if(res.code==0){
 						mui.alert('定投计划修改成功',' ', function() {
-							//window.location.href="/application/views/jijin/trade/castSurelyDetail.html?buyplanno="+res.data[0].buyplanno;
+							window.location.href="/jijin/Jz_my?activePage=account";
 						});
 					}
 				}
@@ -443,39 +434,31 @@ function editCast(){
 	//添加loading
 	loadingShow();
 	var buyplanno = getUrlParam("buyplanno");
-	mui.ajax("/jijin/FixedInvestmentController/FixedInvestmentQuery",{
-		data:{
-			buyplanno:buyplanno
-		},
-		dataType: 'json',
-		type: "GET",
-		success:function(res){
-			if(res.code==0){
-				var castList = res.data.fixed;
-				_public_key = res.data.public_key;
-				if(castList.length==1){
-					var item = castList[0];
-					var numLength = item.depositacct.length;
-					var lastNum = item.depositacct.substring(numLength-3,numLength);
-					
-					byId("castSurelyNum").value=item.continueinvestamount;
-					byId("bankSelectShow").innerHTML=item.channelname+'（尾号'+lastNum+'）';
-					byId("bankSelectVal").value=item.depositacct;
-					byId("getNextPayDate").innerHTML=item.nextinvestdate;
-					
-					//生成定投周期
-					createCastSurelyCyle(item.investcycle);
-					//展示定投周期
-					showPicker("castSurelyCycle","castSurelyCyclePicker");
-					
-					//生成定投日
-					createCastSurelyDate(item.investcyclevalue);
-					//展示定投日
-					showPicker("castSurelyDate","castSurelyDatePicker");
-					//移除loading
-					loadingRemove();
-				}
-			}
-		}//success end
+	
+	muiAjax("/jijin/FixedInvestmentController/FixedInvestmentQuery",{buyplanno:buyplanno},"GET",function(res){
+		var castList = res.data.fixed;
+		_public_key = res.data.public_key;
+		if(castList.length==1){
+			var item = castList[0];
+			var numLength = item.depositacct.length;
+			var lastNum = item.depositacct.substring(numLength-3,numLength);
+			
+			byId("castSurelyNum").value=item.continueinvestamount;
+			byId("bankSelectShow").innerHTML=item.channelname+'（尾号'+lastNum+'）';
+			byId("bankSelectVal").value=item.depositacct;
+			byId("getNextPayDate").innerHTML=item.nextinvestdate;
+			
+			//生成定投周期
+			createCastSurelyCyle(item.investcycle);
+			//展示定投周期
+			showPicker("castSurelyCycle","castSurelyCyclePicker");
+			
+			//生成定投日
+			createCastSurelyDate(item.investcyclevalue);
+			//展示定投日
+			showPicker("castSurelyDate","castSurelyDatePicker");
+			//移除loading
+			loadingRemove();
+		}
 	});
 }

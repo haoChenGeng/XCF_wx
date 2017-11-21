@@ -23,11 +23,19 @@
       <span class="mui-icon icon-contact iconfont"></span>
       <span class="mui-tab-label">我的基金</span>
     </a>
-    <a class="mui-tab-item" href="#tabbar-with-contact" id="exit">
+    <!-- <a class="mui-tab-item" href="#tabbar-with-contact" id="exit">
       <span class="mui-icon icon-exit iconfont"></span>
       <span class="mui-tab-label">返回首页</span>
+    </a> -->
+    <a class="mui-tab-item" href="#tabbar-with-contact" id="manage">
+      <span class="mui-icon icon-exit iconfont"></span>
+      <span class="mui-tab-label">账户管理</span>
     </a>
   </nav>
+  <header class="mui-bar mui-bar-nav">
+		<a class="mui-icon mui-icon-left-nav mui-pull-left" href="/jijin/Jz_account/logout"></a>
+		<h1 class="mui-title">个人中心</h1>
+	</header>
   <div class="mui-content">
     <header class="person-info clear" id="header">
       <img src="/data/jijin/img/person-info.png" alt="个人信息" class="person-info-img">
@@ -51,8 +59,12 @@
         </a>
         <a class="mui-control-item " href="#item3mobile">
           <i class="risk-test Cicon"></i>
-          <p>账户管理</p>
+          <p>定投计划</p>
         </a>
+		<!--<a class="mui-control-item " href="#item3mobile">
+          <i class="risk-test Cicon"></i>
+          <p>账户管理</p>
+        </a> -->
         <a class="mui-control-item" href="#item4mobile">
           <i class="history-delegate Cicon"></i>
           <p>历史委托</p>
@@ -85,19 +97,29 @@
             </div>
           </div>
         </div>
-        <div id="item3mobile" class="mui-slider-item mui-control-content " style="border-bottom:none;">
+        <!-- <div id="item3mobile" class="mui-slider-item mui-control-content " style="border-bottom:none;">
+          <div id="scroll3" class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+              <div class="mui-loading">
+                <div class="mui-spinner"></div>
+              </div>
+			  <ul class="mui-table-view text_ul castCurely-list" id="castCurelyList"></ul>
+            </div>
+          </div>
+        </div> -->
+		<div id="item3mobile" class="mui-slider-item mui-control-content " style="border-bottom:none;">
           <div id="scroll3" class="mui-scroll-wrapper">
             <div class="mui-scroll">
               <div class="mui-loading">
                 <div class="mui-spinner">
                 </div>
               </div>
-              <ul class="mui-table-view account-management" id="account">
-                <li class="my-bank-card"><a href="/jijin/Fund_bank/bank_info" class="dpb">银行卡维护</a></li>
+              <ul class="mui-table-view account-management text_ul castCurely-list" id="account">
+                <!-- <li class="my-bank-card"><a href="/jijin/Fund_bank/bank_info" class="dpb">银行卡维护</a></li>
                 <li class="my-logpwd-mod"><a href="/jijin/Jz_account/revise_passward/0" class="dpb">交易密码修改</a></li>
                 <li class="my-logpwd-mod"><a href="/jijin/Jz_account/resetPassward" class="dpb">重置交易密码</a></li>
                 <li class="my-risk-test"><a id="risk_result" href="/jijin/Risk_assessment" class="dpb">风险测试[你还未进行测试]</a></li>
-                <li class="my-risk-test"><a id="risk_result" href="/jijin/Jz_my/investorManagement" class="dpb">投资者信息管理</a></li>
+                <li class="my-risk-test"><a id="risk_result" href="/jijin/Jz_my/investorManagement" class="dpb">投资者信息管理</a></li> -->
               </ul>
             </div>
           </div>
@@ -134,6 +156,7 @@
   </div>
   <script src="/data/jijin/js/mui.min.js"></script>
   <script src="/data/jijin/js/mui.picker.min.js"></script>
+  <script src="/data/jijin/js/js.public.js"></script>
   <script src="/data/jijin/js/my.js"></script>
   <script type="text/javascript">
     document.getElementById('buy_fund').addEventListener('tap', function() {
@@ -143,11 +166,18 @@
         id: 'buy_fund'
       });
     });
-    document.getElementById('exit').addEventListener('tap', function() {
+    /* document.getElementById('exit').addEventListener('tap', function() {
       //退出基金,返回首页	
       mui.openWindow({
         url: '/jijin/Jz_account/logout',
         id: 'exit'
+      });
+    }); */
+    document.getElementById('manage').addEventListener('tap', function() {
+      //打开账户管理	
+      mui.openWindow({
+        url: '/application/views/jijin/accountManage.html',
+        id: 'manage'
       });
     });
 
