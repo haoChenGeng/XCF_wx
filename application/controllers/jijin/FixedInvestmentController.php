@@ -168,9 +168,9 @@ class FixedInvestmentController extends MY_Controller
 	}
 
 	function FixedInvestmentQuery(){
-		$get = $this->input->get();
+		$post = $this->input->post();
 
-		$data =$this->fund_interface->FixedInvestmentQuery($get);
+		$data =$this->fund_interface->FixedInvestmentQuery($post);
 		if(isset($data['code'])&&$data['code'] == "0000"){
 			$channel_info = $this->fund_interface->paymentChannel();
 			$channel_info = setkey($channel_info,'channelid');

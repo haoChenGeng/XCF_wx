@@ -20,6 +20,11 @@ class Jz_my extends MY_Controller
 			$_SESSION['next_url'] = $this->base.'/jijin/Jz_my';
 		}
 		$data = array();
+
+		$get = $this->input->get();
+		if(isset($get['activePage']))
+			$_SESSION['myPageOper'] = $this->input->get('activePage');
+
 		if (isset($_SESSION['myPageOper'])){
 			$data['pageOper'] = $_SESSION['myPageOper'];
 		}else{
@@ -83,6 +88,7 @@ class Jz_my extends MY_Controller
 			case 'fund' :
 				$data = $this->getMyFundList();
 				$_SESSION['myPageOper'] = 'asset';
+				$data['A'] = $this->input->post('a');
 				break;
 			case 'bonus_change':
 				$res = $this->bonusChangeAbleList();
@@ -91,7 +97,7 @@ class Jz_my extends MY_Controller
 				break;
 			case 'bank_card':
 				//获取银行卡
-				$_SESSION['myPageOper'] = 'account';
+				//$_SESSION['myPageOper'] = 'account';
 				$res = $this->bank_info();
 				//对res进行验证
 				$data['bank_info'] = $this->bank_info();
@@ -106,6 +112,28 @@ class Jz_my extends MY_Controller
 				} else {
 				
 					$data['custrisk'] = '查询失败';
+				}
+				break;
+			case 'fixed':
+				$_SESSION['myPageOper'] = 'fixed';
+				$post = $this->input->post();
+				$data =$this->fund_interface->FixedInvestmentQuery($post);
+				if(isset($data['code'])&&$data['code'] == "0000"){
+					$channel_info = $this->fund_interface->paymentChannel();
+					$channel_info = setkey($channel_info,'channelid');
+					$this->load->config('jz_dict');
+					foreach ($data['data']['fixed'] as $key => $value) {
+						$data['data']['fixed'][$key]['channelname'] = $channel_info[$value['channelid']]['channelname'];
+						$data['data']['fixed'][$key]['risklevel'] = $this->db->select('risklevel')->where(array('fundcode' => $value['fundcode']))->get('fundlist')->row_array()['risklevel'];
+						if((int)$_SESSION['riskLevel'] < (int)$data['data']['fixed'][$key]['risklevel']){
+							$data['data']['fixed'][$key]['risklevel'] = isset($this->config->item('productrisk')[$data['data']['fixed'][$key]['risklevel']])?$this->config->item('productrisk')[$data['data']['fixed'][$key]['risklevel']]:null;
+						}else
+							$data['data']['fixed'][$key]['risklevel'] = null;
+					}
+					$data['data']['public_key'] = file_get_contents($this->config->item('RSA_publickey'));
+					$data['code'] = 0;
+				}else{
+					$data['code'] = 1;
 				}
 				break;
 /* 			case 'history':
