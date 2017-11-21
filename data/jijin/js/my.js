@@ -40,7 +40,7 @@
               slider.gotoItem(1);
               page2();
               break;
-            case 'account':
+            case 'fixed':
               slider.gotoItem(2);
               page3();
               break;
