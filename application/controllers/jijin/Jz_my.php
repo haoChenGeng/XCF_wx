@@ -103,7 +103,7 @@ class Jz_my extends MY_Controller
 				$data['bank_info'] = $this->bank_info();
 				break;
 			case 'risk_test':
-				$_SESSION['myPageOper'] = 'account';
+				//$_SESSION['myPageOper'] = 'account';
 				//获取风险测试
 				$res = $this->getRiskLevel();
 				if (isset($res['code']) && isset($res['msg']) && isset($res['data']) && !empty($res['data'])) {
@@ -279,7 +279,7 @@ class Jz_my extends MY_Controller
 	}
 	
 	function investorManagement($nexturl=''){
-		$_SESSION['myPageOper'] = 'account';
+		//$_SESSION['myPageOper'] = 'account';
 		$post = $this->input->post();
 		if (!empty($post)){
 			if (empty($post['investorInfo'])){
