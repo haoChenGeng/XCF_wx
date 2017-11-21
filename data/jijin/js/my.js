@@ -186,7 +186,7 @@
 		  timeout: 30 * 1000,
 		  success: function(res) {
 			  if(page==1){
-				  remove("lastLi"); 
+				  remove(byId("lastLi")); 
 			  }
 			  var nodeWrap = item3.querySelector('.mui-scroll');
 	          var nodeChlid = item3.querySelector('.mui-scroll').childNodes;
@@ -225,7 +225,6 @@
 							window.location.href="/application/views/jijin/trade/castSurelyDetail.html?buyplanno="+buyplanno;
 						}
 					})(item.buyplanno);		
-					
 					byClass("castCurely-list").appendChild(li);
 					
 				}
@@ -265,14 +264,14 @@
               oLi.setAttribute('class', 'mui-table-view-cell query-padding mui-collapse');
               oLi.innerHTML = '<a class="mui-navigate-right history-arrow" href="###">' +
                 '<div class="mui-media-body clear history-detail-title">' +
-                '<div class="delegate-name">' + res.data[i].fundname + '<br>' + res.data[i].operdate + ' ' + res.data[i].opertime + '</div>' +
-                '<div class="delegate-oprate">' + res.data[i].businesscode + '<br><span class="cancel-status">可撤单</span></div>' +
-                '<div class="delegate-amount">' + res.data[i].applicationamount + '/' + res.data[i].applicationvol + '</div>' +
+                '<div class="delegate-name textOver">' + res.data[i].fundname + '<br>' + res.data[i].operdate + ' ' + res.data[i].opertime + '</div>' +
+                '<div class="delegate-oprate textOver">' + res.data[i].businesscode + '<br><span class="cancel-status">可撤单</span></div>' +
+                '<div class="delegate-amount textOver">' + res.data[i].applicationamount + '/' + res.data[i].applicationvol + '</div>' +
                 '</div>' +
                 '</a>' +
                 '<div class="mui-collapse-content history-detail-content">' +
                 '<p class="trade-num">申请单号：' + res.data[i].appsheetserialno + '</p>' +
-                '<p class="trade-date">交易日期/状态：' + res.data[i].transactiondate + '/' + res.data[i].status + '/<a type="button" class="cancel-order" href="' + '/jijin/CancelApplyController/cancel?appsheetserialno=' + res.data[i].appsheetserialno + '">撤单</a></p>' +
+                '<p class="trade-date">交易日期/状态：' + res.data[i].transactiondate + '/' + res.data[i].status + '<a type="button" class="cancel-order mui-btn mui-btn-danger" href="' + '/jijin/CancelApplyController/cancel?appsheetserialno=' + res.data[i].appsheetserialno + '">撤单</a></p>' +
                 '<p class="trade-other">基金代码：</p>' +
                 '</div>';
               if (res.data[i].cancelable !== 1) {

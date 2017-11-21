@@ -51,9 +51,9 @@ function getCastDetail(){
 		for (var i in order){
 			var record = order[i];
 			ohtml +='<li>\
-				<span class="record-time">'+record.operdate+'</span>\
+				<span class="record-time">'+record.transactiondate+'</span>\
 				<span class="record-num">'+record.applicationamount+'元</span>\
-				<span class="record-result">'+record.status+'</span>\
+				<span class="record-result">'+getStatus(record.status)+'</span>\
 			</li>';
 		}
 		byId("orderList").innerHTML = ohtml||"<li class='norecord'>暂无记录</li>";
@@ -120,7 +120,7 @@ function castCatch(text){
 	byId("castSurelyBtn").innerHTML="";
 	byId("castSurelyBtn").appendChild(btn);
 }
-/*function getStatus(statu){
+function getStatus(statu){
 	var html = "";
 	switch (statu) {
 	case "00":
@@ -133,22 +133,23 @@ function castCatch(text){
 		html = "待报";
 		break;
 	case "04":
-		html = "";
+		html = "废单";
+		break;
+	case "05":
+		html = "已撤";
+		break;
+	case "06":
+		html = "已报";
+		break;
+	case "07":
+		html = "已确认";
 		break;
 	case "01":
-		html = "待复核";
-		break;
-	case "01":
-		html = "待复核";
-		break;
-	case "01":
-		html = "待复核";
-		break;
-	case "01":
-		html = "待复核";
+		html = "已结束";
 		break;
 
 	default:
 		break;
 	}
-}*/
+	return html;
+}
