@@ -11,7 +11,7 @@ class Fund_bank extends MY_Controller
         $this->load->database();
         $this->load->helper(array("output","comfunction","logfuncs"));       //"page"  "log"   "func",
         $this->load->library(array('Fund_interface','Logincontroller'));
-        $_SESSION['myPageOper'] = 'account';
+        //$_SESSION['myPageOper'] = 'account';
     }
 
     //赠加银行卡

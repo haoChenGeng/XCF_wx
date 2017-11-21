@@ -460,7 +460,7 @@ class Jz_account extends MY_Controller
     		exit;
     	}
     	$post = $this->input->post();
-    	$_SESSION['myPageOper'] = 'account';
+    	//$_SESSION['myPageOper'] = 'account';
     	if (!empty($post))
     	{
     		$str_info = $post['pwdtype']==1?'登录':'交易';
@@ -525,7 +525,7 @@ class Jz_account extends MY_Controller
     		exit;
     	}
     	$post = $this->input->post();
-    	$_SESSION['myPageOper'] = 'account';
+    	//$_SESSION['myPageOper'] = 'account';
     	if (empty($post))
     	{
     		$userInfo = $this->fund_interface->AccountInfo()['data'];
