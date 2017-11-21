@@ -5,7 +5,8 @@
     topHeight = document.getElementById('header').clientHeight,
     control = document.querySelectorAll('.mui-control-content');
 
-  var h = seeHeight - sliderHeight - navHeight - topHeight - 2;
+  var h = seeHeight - sliderHeight - navHeight - topHeight - 2 - 44;
+  byId("historyList").style.height = (h - 96) + 'px';
   for (var i = control.length - 1; i >= 0; i--) {
     control[i].style.height = h + 'px';
   }

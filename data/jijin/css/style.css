@@ -359,6 +359,10 @@ body {
   right: 20px;
 }
 
+.historyList{
+	position: relative;
+}
+
 .fund-btn-bd {
   margin: 0 10px;
   width: 42%;

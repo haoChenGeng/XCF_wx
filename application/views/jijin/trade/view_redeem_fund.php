@@ -118,7 +118,7 @@ function complete(obj) {
                     return false;
                 }
                 //if ((applicationval-parseInt(applicationval*100)/100) > 0.0000000001) {
-                if ((applicationval-applicationval.toFixed(2)>0.0000000001) {
+                if ((applicationval-applicationval.toFixed(2)>0.0000000001)) {
                     M.alert({
                         title:'提示',
                         message:'份额最小单位为0.01'

@@ -97,16 +97,6 @@
             </div>
           </div>
         </div>
-        <!-- <div id="item3mobile" class="mui-slider-item mui-control-content " style="border-bottom:none;">
-          <div id="scroll3" class="mui-scroll-wrapper">
-            <div class="mui-scroll">
-              <div class="mui-loading">
-                <div class="mui-spinner"></div>
-              </div>
-			  <ul class="mui-table-view text_ul castCurely-list" id="castCurelyList"></ul>
-            </div>
-          </div>
-        </div> -->
 		<div id="item3mobile" class="mui-slider-item mui-control-content " style="border-bottom:none;">
           <div id="scroll3" class="mui-scroll-wrapper">
             <div class="mui-scroll">
@@ -114,23 +104,13 @@
                 <div class="mui-spinner">
                 </div>
               </div>
-              <ul class="mui-table-view text_ul castCurely-list" id="account">
-                <!-- <li class="my-bank-card"><a href="/jijin/Fund_bank/bank_info" class="dpb">银行卡维护</a></li>
-                <li class="my-logpwd-mod"><a href="/jijin/Jz_account/revise_passward/0" class="dpb">交易密码修改</a></li>
-                <li class="my-logpwd-mod"><a href="/jijin/Jz_account/resetPassward" class="dpb">重置交易密码</a></li>
-                <li class="my-risk-test"><a id="risk_result" href="/jijin/Risk_assessment" class="dpb">风险测试[你还未进行测试]</a></li>
-                <li class="my-risk-test"><a id="risk_result" href="/jijin/Jz_my/investorManagement" class="dpb">投资者信息管理</a></li> -->
-              </ul>
+              <ul class="mui-table-view text_ul castCurely-list" id="account"></ul>
             </div>
           </div>
         </div>
         <div id="item4mobile" class="mui-slider-item mui-control-content ">
           <div id="scroll4" class="mui-scroll-wrapper">
             <div class="mui-scroll">
-              <div class="mui-loading" style="display:none;">
-                <div class="mui-spinner">
-                </div>
-              </div>
               <div class="mui-table-view-cell query-padding">
                 <label for="begin"><button id='begin' data-options='{"type":"date","beginYear":2016}' class="btn mui-btn">开始日期</button></label>
                 <label for="end"><button id='end' data-options='{"type":"date","beginYear":2016}' class="btn mui-btn">结束日期</button></label>
@@ -145,9 +125,19 @@
                   <!-- <div class="delegate-more-title"></div> -->
                 </div>
               </div>
-              <ul class="mui-table-view" id="history">
-
-              </ul>
+              <div class="mui-loading" style="display:none;">
+                <div class="mui-spinner">
+                </div>
+              </div>
+              <div id="historyList" class="historyList">
+	              <div class="mui-scroll-wrapper">
+	              <div class="mui-scroll">
+		              <ul class="mui-table-view" id="history">
+		
+		              </ul>
+	              </div>
+	              </div>
+              </div>
             </div>
           </div>
         </div>
