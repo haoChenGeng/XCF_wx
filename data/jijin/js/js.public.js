@@ -14,13 +14,17 @@ var getUrlParam= function(name) { //获取url地址参数
 	return null; //返回参数值
 }
 
+var isEmpty = function(v) {
+	return v == null || v == "" || v.length <= 0;
+}
+
 //校验金额范围
 var moneyRange = function(param){
-	var val = param.value;
+	var val = param.val;
 	var max = param.max;
 	var min = param.min;
 	
-	if(val==""){
+	if(isEmpty(val)){
 		mui.alert('请输入有效的金额',' ', function() {});
 		return false;
 	}
