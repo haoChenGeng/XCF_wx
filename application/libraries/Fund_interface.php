@@ -318,7 +318,7 @@ class Fund_interface
 			}
 			if (!empty($updateData)){
 				$this->CI->load->model("Model_db");
-				$flag = $this->CI->Model_db->incremenUpdate('p2_prov_city', $updateData, array('province','city'));
+				$flag = $this->CI->Model_db->incremenUpdate('p2_prov_city', $updateData/*,  array('province','city') */);
 				if ($flag){
 					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'provCity'))->update('dealitems');
 				}
@@ -385,6 +385,11 @@ class Fund_interface
 			if (!empty($updateData)){
 // 				$flag = $this->CI->db->truncate('p2_riskquestion');
 				$flag = $this->CI->db->where('1=1')->delete('p2_riskquestion');
+				$id = 1;
+				foreach ($updateData as &$val){
+					$val['id'] = $id;
+					$id++;
+				}
 				$flag = $this->CI->db->insert_batch('p2_riskquestion',$updateData);
 				if ($flag){
 					$this->CI->db->set(array('updatetime' => time()))->where(array('dealitem' => 'riskQuestion'))->update('dealitems');

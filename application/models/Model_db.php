@@ -270,7 +270,7 @@ class Model_db extends CI_Model {
 						$tmpData .=',';
 					}
 					$tmpData[strlen($tmpData)-1] = ";";
-					$db->trans_start();
+//					$db->trans_start();
 					$sql = "create temporary table ".$tmpTab.$creatFields.";";
 					$db->query($sql);
 					$flag = $flag && ($db->error()['code'] == 0);
@@ -280,9 +280,9 @@ class Model_db extends CI_Model {
 					$sql = "update ".$tableName." org,".$tmpTab." tmp set".$setStr."where".$whereStr.";";
 					$db->query($sql);
 					$flag = $flag && ($db->error()['code'] == 0);
-					$sql = " DROP TABLE ".$tmpTab.";";
-					$db->query($sql);
-					$db->trans_complete();
+//					$sql = " DROP TABLE ".$tmpTab.";";
+//					$db->query($sql);
+//					$db->trans_complete();
 				}else{
 					$db->update_batch($tableName, $updateData, $majorKey);
 					$flag = $flag && ($db->error()['code'] == 0);

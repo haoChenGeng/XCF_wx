@@ -181,9 +181,17 @@ class Risk_assessment extends MY_Controller {
 						$ZNTGQuestion[$val['questioncode']][$v['result']] = $v['resultcontent'];
 					}
 				}
-				$chartDes = array('3002'=>'房地产资产', '3003'=>'股权投资资产', '3004'=>'固定收益资产', '3005'=>'现金类资产', '3006'=>'境外资产',);
+				$ZTQuestion = $this->db->select('id,questionCode')->where(array("id<="=>6))->get('p2_riskquestion')->result_array();
+				$chartDes = array(2=>'房地产资产', 3=>'股权投资资产', 4=>'固定收益资产', 5=>'现金类资产', 6=>'境外资产',);
+				foreach ($ZTQuestion as $val){
+					if (1==$val['id']){
+						$assetCode = $val['questionCode'];
+					}else{
+						$chartDes[$val['questionCode']] = $chartDes[$val['id']];
+					}
+				}
 				foreach ($riskAnswer as $key=>$val){
-					if ('3001'==$key){
+					if ($assetCode == $key){
 						$ZNTGResult['totalAsset'] = $ZNTGQuestion[$key][$val];
 					}else{
 						if (strstr($ZNTGQuestion[$key][$val],'以下')){
