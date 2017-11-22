@@ -866,4 +866,5 @@ h3.m-item-5 {
 
 .mui-scroll-wrapper {
   overflow: scroll;
+  top: 40px;
 }
