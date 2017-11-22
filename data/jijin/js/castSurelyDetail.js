@@ -133,7 +133,7 @@ function getStatus(statu){
 	case "07":
 		html = "已确认";
 		break;
-	case "01":
+	case "08":
 		html = "已结束";
 		break;
 
