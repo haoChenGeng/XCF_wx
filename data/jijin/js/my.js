@@ -189,7 +189,8 @@
 		  timeout: 30 * 1000,
 		  success: function(res) {
 			  if(page==1){
-				  remove(byId("lastLi")); 
+				  //remove(byId("lastLi"));
+				  byId("account").innerHTML = "";
 			  }
 			  var nodeWrap = item3.querySelector('.mui-scroll');
 	          var nodeChlid = item3.querySelector('.mui-scroll').childNodes;
