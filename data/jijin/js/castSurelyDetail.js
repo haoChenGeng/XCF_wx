@@ -80,6 +80,8 @@ function stopCast(){
 							};
 						muiAjax("/jijin/FixedInvestmentController/FixedInvestmentEnd",param,"post",function(res){
 							castCatch("定投计划已终止");
+						},function(res){
+							mui.alert("",res.msg, "确定",null )
 						});
 					} else {}//取消输入密码
 				},'div');

@@ -111,6 +111,12 @@ var muiAjax = function(url, params,type, success, error) {
 				mui.alert('请开户后后在进行操作', '您未开户', function() {
 					window.location.href="/jijin/Jz_account/register";
 				});
+			}else{
+				if (error) {
+					error(res);
+				} else {
+					errorOut();
+				}
 			}
 		}
 	});
