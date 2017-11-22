@@ -14,13 +14,17 @@ var getUrlParam= function(name) { //获取url地址参数
 	return null; //返回参数值
 }
 
+var isEmpty = function(v) {
+	return v == null || v == "" || v.length <= 0;
+}
+
 //校验金额范围
 var moneyRange = function(param){
-	var val = param.value;
+	var val = param.val;
 	var max = param.max;
 	var min = param.min;
 	
-	if(val==""){
+	if(isEmpty(val)){
 		mui.alert('请输入有效的金额',' ', function() {});
 		return false;
 	}
@@ -77,7 +81,6 @@ var remove = function(dom){
 }
 
 var encryptPass=function(public_key,pass,token){
-	console.log(public_key+"-"+pass);
 	var encrypt = new JSEncrypt();
 	encrypt.setPublicKey(public_key);
 	return encrypted = encrypt.encrypt(pass+token);
@@ -112,6 +115,12 @@ var muiAjax = function(url, params,type, success, error) {
 				mui.alert('请开户后后在进行操作', '您未开户', function() {
 					window.location.href="/jijin/Jz_account/register";
 				});
+			}else{
+				if (error) {
+					error(res);
+				} else {
+					errorOut();
+				}
 			}
 		}
 	});

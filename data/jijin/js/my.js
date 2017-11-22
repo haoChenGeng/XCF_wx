@@ -6,7 +6,7 @@
     control = document.querySelectorAll('.mui-control-content');
 
   var h = seeHeight - sliderHeight - navHeight - topHeight - 2 - 44;
-  byId("historyList").style.height = (h - 96) + 'px';
+  byId("historyList").style.height = (h - 96 - 2) + 'px';
   for (var i = control.length - 1; i >= 0; i--) {
     control[i].style.height = h + 'px';
   }
@@ -61,7 +61,7 @@
         }
       },
       error: function(xhr) {
-        alert('请求错误，请稍后重试');
+        //alert('请求错误，请稍后重试');
       }
     })
   }
@@ -110,7 +110,7 @@
         }
       },
       error: function() {
-        alert('查询失败，请稍后重试！');
+        //alert('查询失败，请稍后重试！');
       }
     });
   }
@@ -153,7 +153,7 @@
         }
       },
       error: function() {
-        alert('查询失败，请稍后重试！');
+        //alert('查询失败，请稍后重试！');
       }
     });
   }
@@ -162,7 +162,9 @@
 	  castSurelyList(0);
 	  byId("scroll3").onscroll = function () { 
 		  var t = byId("scroll3").scrollTop;
-		  if(t>parseInt(byId("item3mobile").style.height, 10)){
+		  var clientHeight=parseInt(byId("scroll3").clientHeight, 10);
+		  var scrollHeight=parseInt(byId("scroll3").scrollHeight, 10);
+		  if((t+clientHeight)>=scrollHeight){
 			  var lilast = document.createElement("li");
 			  lilast.id ="lastLi";
 			  lilast.className = "clearfix castCurely-item"
@@ -187,7 +189,8 @@
 		  timeout: 30 * 1000,
 		  success: function(res) {
 			  if(page==1){
-				  remove(byId("lastLi")); 
+				  //remove(byId("lastLi"));
+				  byId("account").innerHTML = "";
 			  }
 			  var nodeWrap = item3.querySelector('.mui-scroll');
 	          var nodeChlid = item3.querySelector('.mui-scroll').childNodes;
@@ -202,7 +205,7 @@
 					
 					html += '<div class="item-f1 mui-row">\
 						<div class="castName textOver">'+item.fundname+'（'+item.fundcode+'）</div>\
-						<span class="castState">'+(item.risklevel||"")+'</span>\
+						<span class="castState">'+(item.risklevel==null?"":'['+item.risklevel+']')+'</span>\
 					</div>\
 					<div class="item-f2 mui-row">\
 						<span class="payType">扣款方式：'+item.channelname+'（尾号'+lastNum+'）</span>\
@@ -231,7 +234,7 @@
 				}
 		  },
 		  error: function() {
-			  alert('查询失败，请稍后重试！');
+			  //alert('查询失败，请稍后重试！');
 		  }
 	  });
   }

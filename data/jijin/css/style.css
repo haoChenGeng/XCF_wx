@@ -161,6 +161,33 @@ body {
   content: "\e604";
 }
 
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../iconfont/icomoon.ttf?c2w0f8') format('truetype');
+}
+
+[class^="myicon-"], [class*=" myicon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.myicon-manage-order:before {
+  content: "\e900";
+}
+.myicon-bussiness-card:before {
+  content: "\e901";
+}
+
 .mui-bar-tab~.mui-content {
   padding-bottom: 48px;
 }
@@ -956,7 +983,7 @@ h3.m-item-5 {
 }
 .castCurely-item .item-f1 .castState{
 	float: right;
-	color: #333;
+	color: #ff0000;
 }
 .item-f1>.castState{
 	padding-right: 20px;

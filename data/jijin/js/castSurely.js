@@ -240,7 +240,6 @@ function picker(p){
 				}
 			})(item);
 			
-			
 			if(list[item].value==p.active){				
 				var showid=p.id.replace(/Picker/,"")+"Show";
 				var valid=p.id.replace(/Picker/,"")+"Val";
@@ -251,13 +250,18 @@ function picker(p){
 				li.className = "picker-item";
 			}
 			
+			if(p.active=="active"&&item==0){
+				var showid=p.id.replace(/Picker/,"")+"Show";
+				var valid=p.id.replace(/Picker/,"")+"Val";
+				byId(showid).innerHTML=list[item].text;
+				byId(valid).value=list[item].value
+				li.className = "picker-item picker-item-active";
+			}
+			
 			ul.appendChild(li);
 		}
 		if(p.id=="bankSelectPicker"){
-			var showid=p.id.replace(/Picker/,"")+"Show";
-			var valid=p.id.replace(/Picker/,"")+"Val";
-			byId(showid).innerHTML=list[0].text;
-			byId(valid).value=list[0].value
+			
 			/*byId("channelid").value=list[0].channelid;
 			byId("moneyaccount").value=list[0].moneyaccount;*/			
 		}
@@ -324,7 +328,8 @@ function createBankSelect(bankList){
 			byId("moneyaccount").value = item.moneyaccount;*/
 		},
 		ismoon:false,
-		id:"bankSelectPicker"
+		id:"bankSelectPicker",
+		active:"active"
 	}
 	picker(castSurelyCycleP);
 }

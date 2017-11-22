@@ -96,7 +96,9 @@ function renderFundList(fundtype) {
       if (!listWrap.parentElement.firstElementChild.classList.contains('fundlist-title')) {
         listTitle.classList.add('fundlist-title');
         listTitle.innerHTML = '<div class="fundlist-name">基金名称</div><div class="fundlist-networth">单位净值(元)</div><select class="fundlist-chg"><option value="1">日涨幅</option><option value="2">近一月</option><option value="3">近三月</option><option value="4">近六月</option><option value="5">近一年</option></select><span></span>';
-        listWrap.parentNode.insertBefore(listTitle, listWrap);
+        //listWrap.parentNode.insertBefore(listTitle, listWrap);
+        var bf = document.getElementById('fund' + fundtype).firstElementChild;
+        document.getElementById('fund' + fundtype).insertBefore(listTitle,bf);
       }
       if (!res.data[fundtype]) {
         listWrap.innerHTML = '<p class="fund-list-error"><span>暂无基金</span></p>';
