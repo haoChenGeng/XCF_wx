@@ -77,7 +77,6 @@ var remove = function(dom){
 }
 
 var encryptPass=function(public_key,pass,token){
-	console.log(public_key+"-"+pass);
 	var encrypt = new JSEncrypt();
 	encrypt.setPublicKey(public_key);
 	return encrypted = encrypt.encrypt(pass+token);

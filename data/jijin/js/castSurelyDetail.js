@@ -73,28 +73,17 @@ function stopCast(){
 				mui.prompt('', '请输入交易密码', '请输入交易密码', btnArray2, function(e) {
 					if (e.index == 1) {
 						var encrypted = encryptPass(_public_key,e.value,"");
-						/*mui.ajax("/jijin/FixedInvestmentController/FixedInvestmentEnd",{
-							data:{
-								tpasswd:encrypted,
-								buyplanno:_buyplanno,
-								depositacct:_depositacct
-							},
-							dataType: 'json',
-							type: "GET",
-							success:function(res){
-								castCatch("定投计划已终止");
-							}
-						});*/
 						var param = {
 								tpasswd:encrypted,
 								buyplanno:_buyplanno,
 								depositacct:_depositacct
 							};
-						muiAjax("/jijin/FixedInvestmentController/FixedInvestmentEnd",param,"GET",function(res){
+						muiAjax("/jijin/FixedInvestmentController/FixedInvestmentEnd",param,"post",function(res){
 							castCatch("定投计划已终止");
 						});
 					} else {}//取消输入密码
-				})
+				},'div');
+				document.querySelector('.mui-popup-input input').type='password';
 			} else {}//取消终止
 		});
 	}
