@@ -40,6 +40,17 @@ function beforeCast(){
 					}
 				})
 				
+			}else if(res.data.riskmatching==3){
+				mui.ajax("/application/views/jijin/trade/riskTip/riskTestTip.html",{
+					success:function(rest){
+						byId("riskmatching3").innerHTML = rest;
+						byId("riskmatching3").className="castSurelyTip";
+						document.getElementById('sub').addEventListener('click', function() {
+							console.log("a");
+							document.getElementById('login_form').submit();
+						});
+					}
+				})
 			}else{
 				byClass("castSurely-content").style.opacity=1;					
 			}
