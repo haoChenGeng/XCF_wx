@@ -374,7 +374,7 @@ class User extends MY_Controller {
 		$res = $this->fund_interface->fund_list();
 		$this->load->config('jz_dict');
 		$qryallfund = isset($_SESSION['qryallfund']) ? $_SESSION['qryallfund'] : 0;
-		if (0 == $qryallfund && isset($_SESSION['riskLevel'])){
+		if (0 == $qryallfund && !empty($_SESSION['riskLevel'])){
 			$custrisk = $_SESSION['riskLevel'];
 		}else{
 			$custrisk = '05';

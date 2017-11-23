@@ -393,7 +393,7 @@ class Jz_fund extends MY_Controller
 		if (!isset($_SESSION['qryallfund'])){
 			$_SESSION['qryallfund'] = 0;
 		}
-		if ( 0 == $_SESSION['qryallfund'] && isset($_SESSION['riskLevel'])){
+		if ( 0 == $_SESSION['qryallfund'] && !empty($_SESSION['riskLevel'])){
 			$this->db->where(array('risklevel <='=>$_SESSION['riskLevel']));
 		}
 		if ( 2 == $fundtype ){

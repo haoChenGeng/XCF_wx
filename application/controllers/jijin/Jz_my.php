@@ -195,8 +195,9 @@ class Jz_my extends MY_Controller
 			$res = $this->fund_interface->AccountInfo();
 			if (!empty($res['data']['custrisk'])) {
 				$_SESSION['riskLevel'] = $res['data']['custrisk'];
-			}else{
-				$_SESSION['riskLevel'] = '05';
+			}
+			else{
+				$_SESSION['riskLevel'] = '';
 			}
 		}
 		if (1 == $type){

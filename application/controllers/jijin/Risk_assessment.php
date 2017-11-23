@@ -97,7 +97,7 @@ class Risk_assessment extends MY_Controller {
 			if ($ret['code'] == '0000') {
 				$data['ret_code'] = '0000';
 				$data['ret_msg'] = '风险评测成功';
-				if ($_SESSION['riskLevel'] > $ret['data']['custrisk']){
+				if (!empty($_SESSION['riskLevel']) && $_SESSION['riskLevel'] > $ret['data']['custrisk']){
 					$data['cautionFlag'] = 1;
 				}
 				$_SESSION['riskLevel'] = $ret['data']['custrisk'];
