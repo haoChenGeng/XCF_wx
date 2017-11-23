@@ -56,6 +56,7 @@ var keyupMoney = function(id){
 		if(val!=""){			
 			if(val.match(re)==null){
 				byId(id).value = oldVal;
+				byId(id).style.color = "#222";
 			}else{
 				oldVal = val;
 			}
