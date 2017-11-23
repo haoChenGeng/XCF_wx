@@ -457,6 +457,9 @@ body {
   flex: 2;
   min-width: 90px;
 }
+.delegate-oprate.textOver{
+    white-space: normal;
+}
 
 .delegate-amount {
   -webkit-flex: 3;

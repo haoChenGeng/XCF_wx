@@ -79,6 +79,7 @@ function stopCast(){
 								depositacct:_depositacct
 							};
 						muiAjax("/jijin/FixedInvestmentController/FixedInvestmentEnd",param,"post",function(res){
+							mui.alert("","定投计划已经终止", "确定",null );
 							castCatch("定投计划已终止");
 						},function(res){
 							mui.alert("",res.msg, "确定",null )
