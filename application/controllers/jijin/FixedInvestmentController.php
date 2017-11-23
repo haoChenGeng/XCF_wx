@@ -54,6 +54,7 @@ class FixedInvestmentController extends MY_Controller
 					$data['bank_info'][$key]['channelname'] = $channel_info[$val['channelid']]['channelname'];
 				}
 				
+				$this->load->config('jz_dict');
 				$fundinfo = &$data['fundinfo'];
 				$fundInfo = $this->db->where(array('fundcode' => $get['fundcode']))->get('fundlist')->row_array();
 				if(is_array($fundInfo)){
@@ -66,18 +67,23 @@ class FixedInvestmentController extends MY_Controller
 					$fundinfo['per_min_39'] = $fundInfo['per_min_39'];
 					$fundinfo['per_max_39'] = $fundInfo['per_max_39'];
 					$data['token'] = $_SESSION['token'] = mt_rand(100000,999999);
-					if((int)$_SESSION['riskLevel'] < (int)$fundinfo['risklevel']){
-						$data['riskmatching'] = 0;
-						if((int)$_SESSION['riskLevel'] == 1){
-							$data['riskmatching'] = 2;
-							$data['token'] = 0;
-						} 
-					}
-					else
+					if(isset($_SESSION['riskLevel'])){
+						if((int)$_SESSION['riskLevel'] < (int)$fundinfo['risklevel']){
+							$data['riskmatching'] = 0;
+							if((int)$_SESSION['riskLevel'] == 1){
+								$data['riskmatching'] = 2;
+								$data['token'] = 0;
+							} 
+						}
+						else
 						$data['riskmatching'] = 1;
-					$this->load->config('jz_dict');
+						$data['my_risklevel'] =isset($this->config->item('custrisk')[$_SESSION['riskLevel']])?$this->config->item('custrisk')[$_SESSION['riskLevel']]:null;
+					}else{
+						$data['token'] = 0;
+						$data['riskmatching'] = 3;
+					}
+					
 					$fundinfo['risklevel'] =isset($this->config->item('productrisk')[$fundinfo['risklevel']])?$this->config->item('productrisk')[$fundinfo['risklevel']]:null;
-					$data['my_risklevel'] =isset($this->config->item('custrisk')[$_SESSION['riskLevel']])?$this->config->item('custrisk')[$_SESSION['riskLevel']]:null;
 					$data['public_key'] = file_get_contents($this->config->item('RSA_publickey'));
 					$return['code'] = 0;
 					$return['data'] = $data;
