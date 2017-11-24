@@ -226,6 +226,9 @@ class Jz_fund extends MY_Controller
 		$fund_list['total_assets'] = (string)round($fund_list['total_assets']/100000000,2);
 		$manager = $this->db->select('mi.MangerName , mi.MangerResume')->where(array('m.fund_code' => $get['fundcode'],'m.Incumbent'=>1))->from('p2_fundmanager as m')->join('p2_fundmanagerinfo as mi', 'm.MangerName = mi.MangerName')->get()->result_array();
 		$file = $this->db->select('filename,url')->where('fundcode',$get['fundcode'])->get('p2_fundfile')->result_array();
+		foreach ($file as &$val){
+			$val['url'] = $this->config->item('fundFileUrl').$val['url'];
+		}
 		$asset_allocation = $this->db->select('bond , cash , other , stock , total_assets')->where('fund_code',$get['fundcode'])->get('p2_funddistribution')->row_array();
 		$asset_allocation['total_assets'] = (string)round($asset_allocation['total_assets']/100000000,2);
 		$position_allocation = $this->db->select('security_name , security_scale')->where('fund_code',$get['fundcode'])->get('p2_fundposition')->result_array();

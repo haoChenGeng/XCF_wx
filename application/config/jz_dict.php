@@ -191,3 +191,5 @@ $config['XN_company'] = array('all'=>'小牛集团','XCF'=>'小牛新财富','XN
 $config['riskSetting'] = array(0=>'01',20=>'02',40=>'03',60=>'04','80'=>'05');
 
 $config['XNPlannerUrl'] = 'http://10.10.17.91:8070/xnconvert/XNHrInterfaceServlet';
+
+$config['fundFileUrl'] = 'http://static.neo66.com.cn/';
