@@ -41,7 +41,7 @@
 			
 			</div>
 			<button data-role="submit" data-theme="b" id="riskSubmit" class="risk-btn-submit" >提交</button>
-			<button class="risk-back" onclick="history.go(-1);">返回</button>
+			<a class="risk-back" href="/jijin/Jz_my">返回</a>
 		</form>
 	</div>
 <script>

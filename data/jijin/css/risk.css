@@ -118,7 +118,7 @@ input[type="radio"] {
 	line-height: 33px;
 }
 
-.risk-btn-submit {
+.risk-btn-submit ,.risk-back{
 	float: left;
 	width: 45%;
 	height: 45px;
@@ -135,17 +135,7 @@ input[type="radio"] {
 
 .risk-back {
 	float: right;
-	width: 45%;
-	height: 45px;
-	display: block;
-	margin: 15px 2%;
-    background: #f5bc44;
-    color: #fff;
-    font-size: 20px;
-    border-radius: 5px;
-    border: 0;
-    text-align: center;
-	line-height: 33px;
+	line-height: 45px;
 }
 
 .risk-result {
