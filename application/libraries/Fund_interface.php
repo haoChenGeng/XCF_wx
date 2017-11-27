@@ -572,9 +572,14 @@ class Fund_interface
 		return ($this->getReturnData($returnData));
 	}
 	
-	function autoUpdateJZInfo($tableName = ''){
+	function autoUpdateJZInfo($tableName = '',$where=''){
 		$autoUpdateJZInfo['code'] = 'autoUpdateJZInfo';
-		$autoUpdateJZInfo['tableName'] = $tableName;
+		if (!empty($tableName)){
+			$autoUpdateJZInfo['tableName'] = $tableName;
+		}
+		if (!empty($where)){
+			$autoUpdateJZInfo['where'] = $where;
+		}
 		$submitData = $this->getSubmitData($autoUpdateJZInfo);
 		$returnData = comm_curl($this->fundUrl.'/jijin/XCFinterface',$submitData);
 		$returnData = $this->getReturnData($returnData);
