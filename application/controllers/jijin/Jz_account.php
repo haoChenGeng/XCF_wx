@@ -32,6 +32,10 @@ class Jz_account extends MY_Controller
 			}else{
 				redirect($this->base . "/jijin/Jz_fund");
 			}
+		}else{
+			if (!isset($_SESSION['customer_id'])){
+				redirect($this->base."/user/login");
+			}
 		}
 		$data['payment_channel'] = $this->fund_interface->paymentChannel();
 		$this->load->config('jz_dict');
